@@ -1,67 +1,208 @@
 <template>
   <div class="settlementGroup">
-    <div class="btn">
-      <el-button type="primary" plain @click="init(0)">刷新</el-button>
-      <el-button type="primary" plain @click="handleClick(4)">查询</el-button>
+    <div class="searchNew">
+      <div class="titleSearch" @click="searchFlag = !searchFlag"><i style="margin-right:8px;" class="el-icon-arrow-down"></i>查询</div>
+      <div v-show="searchFlag">
+        <el-row :gutter="10" class="billRow">
+          <el-col :span="8">
+            <span class="slable">流程编号</span>
+            <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="formLabelAlign.processID"></el-input>
+          </el-col>
+          <el-col :span="8">
+            <span class="slable">结付公司代码</span>
+              <el-select clearable filterable v-model="cedentModel" placeholder="请选择">
+                <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
+                  <span style="float:left">{{ item.codecode }}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+                </el-option>
+              </el-select>
+          </el-col>
+        </el-row>
+        <el-row><el-col :span="24">
+          <el-button type="primary" plain @click="handleClick(4)"><i class="iconfont iconGroup42"></i>查询</el-button>
+          <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
+        </el-col></el-row>
+      </div>
     </div>
-    <el-table :data="tableData" style="width: 100%">
+    <div class="btn">
+      <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
+      <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
+    </div>
+    <el-table :data="tableData" stripe style="width: 100%">
       <el-table-column type="expand">
         <template slot-scope="props">
-          <el-table :data="props.row.worksheetDOList" style="width: 100%">
-            <el-table-column prop="wsId" label="账单号"></el-table-column>
-            <el-table-column prop="docId" label="对应文档ID"></el-table-column>
-            <el-table-column prop="docPageNum" label="对应文档页码"></el-table-column>
-            <el-table-column prop="processId" label="流程编号"></el-table-column>
-            <el-table-column prop="sgNum" label="SG号"></el-table-column>
-            <el-table-column prop="wsStatus" label="账单状态"></el-table-column>
-            <el-table-column prop="wsTitle" label="账单标题"></el-table-column>
-            <el-table-column prop="businessId" label="业务编号"></el-table-column>
-            <el-table-column prop="section" label="section"></el-table-column>
+          <el-table stripe :data="props.row.worksheetDOList" style="width: 100%">
+            <el-table-column label="账单号">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
+                  <span class="abbreviate">{{scope.row.wsId}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="wsStatus" label="账单状态" width="100">
+              <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+            </el-table-column>
+            <el-table-column label="账单标题">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.wsTitle" placement="top-start">
+                  <span class="abbreviate">{{scope.row.wsTitle}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="业务编号">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.businessId" placement="top-start">
+                  <span class="abbreviate">{{scope.row.businessId}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="附件名称">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
+                  <span class="abbreviate">{{scope.row.docName}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="section">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.section" placement="top-start">
+                  <span class="abbreviate">{{scope.row.section}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
             <el-table-column prop="uwYear" label="业务年度"></el-table-column>
-            <el-table-column prop="businessType" label="业务类型"></el-table-column>
-            <el-table-column prop="receiptDate" label="收到账单日期"></el-table-column>
-            <el-table-column prop="cedentCode" label="分出公司代码"></el-table-column>
-            <el-table-column prop="cedentName" label="分出公司名称"></el-table-column>
-            <el-table-column prop="brokerCode" label="经纪公司代码"></el-table-column>
-            <el-table-column prop="brokerName" label="经纪公司名称"></el-table-column>
+            <el-table-column label="任务类型">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.businessType" placement="top-start">
+                  <span class="abbreviate">{{scope.row.businessType}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
+            <el-table-column label="分出公司" width="120">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.cedentCode+'-'+scope.row.cedentName" placement="top-start">
+                  <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="经纪公司" width="120">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.brokerCode+'-'+scope.row.brokerName" placement="top-start">
+                  <span class="abbreviate">{{scope.row.brokerCode}}-{{scope.row.brokerName}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
             <el-table-column prop="wsType" label="账单类型"></el-table-column>
             <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
-            <el-table-column prop="baseCompany" label="Base Company"></el-table-column>
-            <el-table-column prop="businessOrigin" label="Business Origin"></el-table-column>
-            <el-table-column prop="reportUnit" label="报告单位"></el-table-column>
+            <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
+            <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
             <el-table-column prop="dept" label="经营机构"></el-table-column>
-            <el-table-column prop="wsCurrency" label="币制"></el-table-column>
-            <el-table-column prop="wsAmount" label="金额"></el-table-column>
-            <el-table-column prop="createdBy" label="录入人"></el-table-column>
-            <el-table-column prop="createdAt" label="录入时间"></el-table-column>
-            <el-table-column prop="remark" label="备注"></el-table-column>
+            <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
+            <el-table-column label="金额">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.wsAmount" placement="top-start">
+                  <span class="abbreviate">{{scope.row.wsAmount}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="createdBy" label="录入人" width="80"></el-table-column>
+            <el-table-column prop="createdAt" label="录入时间" width="100"></el-table-column>
+            <el-table-column label="备注">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.remark" placement="top-start">
+                  <span class="abbreviate">{{scope.row.remark}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="操作"></el-table-column>
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column prop="sgNum" label="SG号"></el-table-column>
-      <el-table-column prop="processId" label="流程编号"></el-table-column>
-      <el-table-column prop="rmId" label="支票号"></el-table-column>
-      <el-table-column prop="bpCode" label="BP number"></el-table-column>
-      <el-table-column prop="bpName" label="BP名称"></el-table-column>
-      <el-table-column prop="baseCompany" label="集团产再"></el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin"></el-table-column>
+      <el-table-column label="SG号">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.sgNum" placement="top-start">
+            <span class="abbreviate">{{scope.row.sgNum}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column label="流程编号">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.processId" placement="top-start">
+            <span class="abbreviate">{{scope.row.processId}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column label="支票号">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
+            <span class="abbreviate">{{scope.row.rmId}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column prop="bpCode" label="BP number" width="90"></el-table-column>
+      <el-table-column label="BP名称">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.bpName" placement="top-start">
+            <span class="abbreviate">{{scope.row.bpName}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
       <el-table-column prop="sgStatus" label="Sg状态"></el-table-column>
       <el-table-column prop="settlementIndicator" label="结算指标"></el-table-column>
       <el-table-column prop="sgCurrency" label="币值"></el-table-column>
       <el-table-column prop="settlementAmount" label="结算总额"></el-table-column>
-      <el-table-column prop="unsettlementAmount" label="未结算金额"></el-table-column>
-      <el-table-column prop="dueDate" label="应收款日期"></el-table-column>
-      <el-table-column prop="bookingYear" label="账单年份"></el-table-column>
-      <el-table-column prop="bookingPeriod" label="账期"></el-table-column>
-      <el-table-column prop="accYear" label="统计年份"></el-table-column>
-      <el-table-column prop="accPeriod" label="统计期"></el-table-column>
-      <el-table-column prop="sgType" label="类型"></el-table-column>
-      <el-table-column prop="sgReference" label="参考"></el-table-column>
-      <el-table-column prop="createdBy" label="创建人"></el-table-column>
-      <el-table-column prop="createdAt" label="创建时间"></el-table-column>
-      <el-table-column label="操作" width="100">
+      <el-table-column prop="unsettlementAmount" label="未结算金额" width="90"></el-table-column>
+      <el-table-column label="应收款日期" width="90">
         <template slot-scope="scope">
-          <el-button v-show="!scope.row.rmId" v-if="$route.query.tag === 'approvalDone'" type="text" size="small">创建支票</el-button>
+          <el-tooltip class="item" effect="dark" :content="scope.row.dueDate" placement="top-start">
+            <span class="abbreviate">{{scope.row.dueDate}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column prop="bookingYear" label="账单年份"></el-table-column>
+      <el-table-column prop="bookingPeriod" label="账期" width="100"></el-table-column>
+      <el-table-column prop="accYear" label="统计年份"></el-table-column>
+      <el-table-column prop="accPeriod" label="统计期" width="100"></el-table-column>
+      <el-table-column label="类型">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.sgType" placement="top-start">
+            <span class="abbreviate">{{scope.row.sgType}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column label="参考">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.sgReference" placement="top-start">
+            <span class="abbreviate">{{scope.row.sgReference}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createdBy" label="创建人"></el-table-column>
+      <el-table-column label="创建时间">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.createdAt" placement="top-start">
+            <span class="abbreviate">{{scope.row.createdAt}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" width="80">
+        <template slot-scope="scope">
+          <el-dropdown>
+            <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item><el-button @click.stop="handleClick(5,scope.row)" type="text" size="small">详情</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(12,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(15,scope.row)" type="text" size="small">附件查看</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(13,scope.row)" type="text" size="small">发送邮件</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(20,scope.row)" type="text" size="small">Reverse</el-button></el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -84,33 +225,31 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="汇款人名称">
+        <!-- <el-form-item label="汇款人名称">
           <el-input v-model="formLabelAlign.rmSettleCompanyName"></el-input>
         </el-form-item>
         <el-form-item label="汇款到账日期"> 
             <el-date-picker value-format="timestamp" v-model="formLabelAlign.rmReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <!-- 以上是三个公用字段 -->
-        <!-- 以下创建编辑字段 -->
-        <el-form-item label="汇款金额" prop="rmAmount" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.rmAmount" @input.native="watchInput('rmAmount')"></el-input>
+        <el-form-item label="汇款金额" v-show="title==='编辑' || title==='创建'">
+          <input type="text" class="selfInput" v-model="formLabelAlign.rmAmount" @input="watchInput('rmAmount')">
         </el-form-item>
-        <el-form-item label="币制" prop="rmCurrency" v-show="title==='创建' || title==='编辑'">     
+        <el-form-item label="币制" v-show="title==='创建' || title==='编辑'">     
           <el-select clearable v-model="formLabelAlign.rmCurrency" placeholder="请选择">
             <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="Business Origin" prop="businessOrigin" v-show="title==='创建' || title==='编辑'"> 
           <el-select clearable v-model="formLabelAlign.businessOrigin" placeholder="请选择">
-            <el-option v-for="item in ['DOM','INT']" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="Base Company" v-show="title==='创建' || title==='编辑'" prop="baseCompany">
           <el-select clearable v-model="formLabelAlign.baseCompany" placeholder="请选择">
-            <el-option v-for="item in baseCompanyList" :key="item.a" :label="item.a" :value="item.b"></el-option>
+            <el-option v-for="item in baseCompanyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="我司销账编号" v-show="title==='编辑' || title==='创建'">
+        <!-- <el-form-item label="我司销账编号" v-show="title==='编辑' || title==='创建'">
           <el-input v-model="formLabelAlign.rmWrittenOffNum"></el-input>
         </el-form-item>
         <el-form-item label="结算人员" v-show="title==='编辑' || title==='创建'">
@@ -135,23 +274,22 @@
           <el-select clearable v-model="formLabelAlign.rmOriCurrency" placeholder="请选择" class="curAmount">
             <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
           </el-select>
-          <el-input v-model="formLabelAlign.rmOriAmount" @input.native="watchInput('rmOriAmount')" class="curAmount"></el-input>
+          <input type="text" class="selfInput" v-model="formLabelAlign.rmOriAmount" @input="watchInput('rmOriAmount')">
         </el-form-item>
         <el-form-item label="手续费币制/手续费金额" class="curAmountForm" v-show="title==='编辑' || title==='创建'">
           <el-select clearable v-model="formLabelAlign.rmChargesCurrency" placeholder="请选择" class="curAmount">
             <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
           </el-select>
-          <el-input v-model="formLabelAlign.rmChargesAmount" @input.native="watchInput('rmChargesAmount')" class="curAmount"></el-input>
-        </el-form-item>
-        <!-- 以下编辑查询字段 -->
+          <input type="text" class="selfInput" v-model="formLabelAlign.rmChargesAmount" @input="watchInput('rmChargesAmount')">
+        </el-form-item> -->
         <el-form-item label="Process ID" v-show="title==='查询'">
-          <el-input v-model.trim="formLabelAlign.processId"></el-input>
+          <el-input v-model.trim="formLabelAlign.processID"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="流程状态" v-show="title === '查询'">
+        <el-form-item label="流程状态" v-show="title === '查询'">
           <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
             <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item>
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="confirm('formLabelAlign')">确 定</el-button>
@@ -160,10 +298,15 @@
     </el-dialog>
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
-      <el-form label-width="140px" v-show="title==='流程提交'">
-        <el-form-item label="选择下一任务处理人">
-          <el-select v-model="assignee"  placeholder="请输入关键词">
+      <el-form label-width="140px" v-show="title==='流程提交' || title==='reverse'">
+        <el-form-item label="选择下一任务处理人'"  v-show="title==='流程提交'">
+          <el-select v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="选择管理员">
+          <el-select v-model="assignee"  placeholder="请选择" v-show="title==='reverse'">
+            <el-option v-for="item in TJRoptionsA" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -185,7 +328,7 @@
       <!-- 踪迹 -->
       <el-collapse v-show="title=='踪迹'">
         <el-collapse-item title="状态流转图">
-          <img :src="picture" style="width:100%">
+          <img :src="picture" style="width:100%" @click="dialogFormVisibleA=true">
         </el-collapse-item>
       </el-collapse>
       <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
@@ -203,7 +346,13 @@
         </li>
       </ul>
       <el-table stripe :data="fileData" style="width: 100%" class="document" v-show="title==='上传附件' || title==='附件查看'">
-        <el-table-column prop="docName" label="文件名"></el-table-column>
+        <el-table-column label="文件名">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
+              <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column prop="createdAt" label="时间"></el-table-column>
         <el-table-column prop="createdBy" label="任务来源"></el-table-column>
         <el-table-column label="操作" width="100">
@@ -234,6 +383,15 @@
         <el-button type="primary" @click="confirm()">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="文档预览" width="fit-content" :visible.sync="dialogFormVisibleA" :close-on-click-modal="modal">
+      <div class="browseDoc" v-show="title!='踪迹'">
+        <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
+      </div>
+      <div v-show="title=='踪迹'" style="width:1020px;height:100%;">
+        <img :src="picture" style="width:100%;height:1005;">
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -247,14 +405,13 @@ export default {
     },
   data() {
       return {
+        searchFlag:false,
         modal:false,
         tableData:[],
         ZDoptions:[
         ],
-        baseCompanyList:[
-          {a:'集团',b:'G'},
-          {a:'产再',b:'P'},
-        ],
+        businessOriginList:[],
+        baseCompanyList:[],
         rmCurrencyList:[],
         currentPage3: 5,
         hide:false,
@@ -283,6 +440,7 @@ export default {
         },
         pendingFlag:false,
         TJRoptions:[],
+        TJRoptionsA:[],
         track:[],
         assignee:'',
         mustData:{
@@ -291,11 +449,12 @@ export default {
           pageNumber:1,  // 页数
           pageSize:20,  //页面一次要展示的条数
           total:0, //总条数
-          // processType:'付款',
+          processType:'付款',
         },
         dialogFormVisible: false,
         dialogFormVisible2: false,
         dialogFormVisible3: false,
+        dialogFormVisibleA: false,
         title:'', 
         tag:'',
         fileList:[],
@@ -426,12 +585,6 @@ export default {
           businessOrigin: [
             { required: true, message: '请选择Business Origin', trigger: 'blur' }
           ],
-          rmAmount: [
-            { required: true, message: '请选择Business Origin', trigger: 'blur' }
-          ],
-          rmCurrency: [
-            { required: true, message: '请选择Business Origin', trigger: 'blur' }
-          ],
         },
         email:{
           contactName:null,
@@ -439,7 +592,7 @@ export default {
           emailContent:null,
           documentList:null,
         },
-        baseCompanyrules:{P:'产再',G:'集团'},
+        // baseCompanyrules:{P:'产再',G:'集团'},
         dialogFlag:false,
         processStatusList:[],
       };
@@ -450,17 +603,23 @@ export default {
       this.processStatusList = ['待处理','已悬停'];
     } else if(this.urlName === 'payClose'){
       this.processStatusList = ['待核销','已悬停'];
-    }
+    } 
   },
   mounted(){
     if(this.urlName === 'payment') {
       this.mustData.accountCloseFlag = '0';
+    } else if(this.urlName === 'instancyPay'){
+      this.mustData.accountCloseFlag = '1';
     }
     setTimeout(()=>{
       // 分出人+经济人
       let fcArr = JSON.parse(sessionStorage.getItem('CedentType'));
       let jArr = JSON.parse(sessionStorage.getItem('BrokerType'));
       this.cedentList = jArr.concat(fcArr);
+      // 集团产再
+      this.baseCompanyList = JSON.parse(sessionStorage.getItem('baseCompany'));
+      // 国际国内
+      this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
     },1000)
      
     this.mustData.actOperator = this.$store.state.userName;
@@ -490,15 +649,46 @@ export default {
         }
       })
     },
+    docView(row) {
+      if(row){
+        this.dialogFormVisibleA = true;
+        this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
+        if(res.status == 200){
+          console.log(res);
+          document.getElementById('iframeId').contentWindow.postMessage({
+            tokenId:res.data.tokenId,
+            userId:res.data.userId,
+            docCloudId:row.docCloudId,
+            docName:row.docName,
+            ip:res.data.ip,
+            acPort:res.data.acPort,
+            fsPort:res.data.fsPort,
+          },'*');
+          document.getElementById('iframeId').contentWindow.location.reload(true);
+        }
+      })
+      } else{
+        document.getElementById('iframeId').contentWindow.postMessage({},'*');
+        document.getElementById('iframeId').contentWindow.location.reload(true);
+      }
+    },
+    reset(){
+      for(let k in this.formLabelAlign){
+          this.formLabelAlign[k] = null;
+        }
+        this.cedentModel = null;
+    },
     handleClick(tag,row){
       this.chooseRow = Object.assign({},row);
       this.tag = tag;
+      this.assignee = null;
       switch(tag){
         case 1: //创建
-          for(let k in this.formLabelAlign){
-            this.formLabelAlign[k] = null;
-          }
-          this.cedentModel = null;
+          this.reset();
+          // for(let k in this.formLabelAlign){
+          //   this.formLabelAlign[k] = null;
+          // }
+          // this.cedentModel = null;
           this.title = '创建';
           this.dialogFormVisible = true;
           break;
@@ -506,12 +696,9 @@ export default {
 
           break;
         case 4: //查询
-          for(let k in this.formLabelAlign){
-            this.formLabelAlign[k] = null;
-          }
-          this.cedentModel = null;
           this.title = '查询';
-          this.dialogFormVisible = true;
+          // this.dialogFormVisible = true;
+          this.confirm();
           break;
         case 5: //详情
           this.title = '详情';
@@ -523,6 +710,14 @@ export default {
         case 6: //编辑
           console.log(this.chooseRow,'row');
           this.formLabelAlign = this.chooseRow;
+          if(this.chooseRow.businessOrigin){
+            let arr = this.businessOriginList.filter(el=>{ return el.name == this.chooseRow.businessOrigin })
+            this.formLabelAlign.businessOrigin = arr[0]['code'];
+          }
+          if(this.chooseRow.baseCompany){
+            let arr = this.baseCompanyList.filter(el=>{ return el.name == this.chooseRow.baseCompany })
+            this.formLabelAlign.baseCompany = arr[0]['code'];
+          }
           // 日期回显
           if(this.chooseRow.rmReceiptDate){
             this.formLabelAlign.rmReceiptDate = new Date(this.chooseRow.rmReceiptDate).valueOf();
@@ -593,7 +788,7 @@ export default {
         case 15: //附件查看
           this.$http.post('api/worksheet/sortOperation/listDocument'
             ,{actOperator:this.$store.state.userName,
-            processId:this.row.processId,
+            processId:this.chooseRow.processId,
             pageNumber:1,
             pageSize:100, 
             }).then(res =>{
@@ -601,8 +796,31 @@ export default {
                 this.fileData = res.data.rows;
               }
             })
-          this.title = '附件查看';
+            this.title = '附件查看';
+            this.dialogFormVisible2 = true;
+        break;
+        case 20: //reverse
+          this.$http.post('api/activiti/getAssigneeName',{roleName:'管理员'}).then(res =>{
+              if(res.status === 200){
+                this.TJRoptionsA = res.data;
+              }
+            }) 
+          this.title = 'reverse';
           this.dialogFormVisible2 = true;
+          // this.$confirm('是否Reverse?', '提示', {
+          //   confirmButtonText: '确定',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
+          //   this.$http.post('api/pay/teskClaim/reversePayProcess',{processId:this.chooseRow.processId,actOperator:this.$store.state.userName},{responseType:'blob'}).then(res =>{
+          //     console.log(res,'onReverse')
+          //     if(res.status === 200 && res.data.code==0){
+          //       this.$message({type: 'success', message: '成功'});
+          //     } else if(res.data.msg){
+          //       this.$message.error(res.data.msg);
+          //     }
+          //   })
+          // })
         break;
 
       }
@@ -622,6 +840,7 @@ export default {
               if(res.status === 200 && res.data.msg === '操作成功'){
                 this.dialogFormVisible = false;
                 this.init();
+                this.$refs[formName].resetFields();
                 }
               })
             }
@@ -631,7 +850,7 @@ export default {
  
           break;
         case 4: //查询
-        // if(!this.formLabelAlign.processStatus){ this.formLabelAlign.processStatus = this.processStatusCom; }
+         // if(!this.formLabelAlign.processStatus){ this.formLabelAlign.processStatus = this.processStatusCom; }
           let params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
           delete params['actOperator'];
           this.$http.post('api/integeratedQuery/sglist',params).then(res =>{
@@ -649,15 +868,23 @@ export default {
 
           break;
         case 6: //编辑
-          this.$http.post('api/pay/teskClaim/update',Object.assign({},this.mustData,this.formLabelAlign)).then(res =>{
-            if(res.status === 200 && res.data.msg === '操作成功'){
-              this.dialogFormVisible = false;
-              this.init();
+           this.$refs[formName].validate((valid) => {
+            console.log(valid,'valid');
+            if(valid) {
+              console.log(this.formLabelAlign,'this.formLabelAlign');
+              this.$http.post('api/pay/teskClaim/update',Object.assign({},this.mustData,this.formLabelAlign,{actOperator:this.$store.state.userName})).then(res =>{
+                if(res.status === 200 && res.data.msg === '操作成功'){
+                  this.dialogFormVisible = false;
+                  this.init();
+                  this.$refs[formName].resetFields();
+                }
+              })
             }
           })
+          
           break;
         case 7: //删除
-
+            
           break;
         case 8: //上传附件
 
@@ -669,8 +896,11 @@ export default {
             if(res.status === 200 && res.data.errorCode == 1){
               this.dialogFormVisible2 = false;
               this.$message({type: 'success', message: '提交成功!'});  
+              this.assignee = null;
               this.init();
-            }
+            } else if(res.data.errorCode == 0){
+                this.$message({type: 'error', message:res.data.errorMessage }); 
+              }
           })
           break;
         case 11: //踪迹
@@ -687,12 +917,27 @@ export default {
               if(res.status === 200 && res.data.errorCode == 1){
                 this.dialogFormVisible2 = false;
                 this.$message({type: 'success', message: '提交成功!'});  
+                this.assignee = null;
                 this.init();
+              } else if(res.data.errorCode == 0){
+                this.$message({type: 'error', message:res.data.errorMessage }); 
               }
             })
           break;
-
+          case 20:  //---
+            this.$http.post('api/pay/teskClaim/reversePayProcess',{processId:this.chooseRow.processId,assignee:this.assignee,actOperator:this.$store.state.userName},{responseType:'blob'}).then(res =>{
+              console.log(res,'onReverse')
+              if(res.status === 200 && res.data.code==0){
+                this.$message({type: 'success', message: '成功'});
+              } else if(res.data.msg){
+                this.$message.error(res.data.msg);
+              }
+            })
+          break;
       }
+      // setTimeout(()=>{
+        // this.$refs[formName].resetFields();
+      // },1000)
     },
     beforeAvatarUpload(file){
       this.file.push(file);
@@ -747,16 +992,20 @@ export default {
       this.$router.push({
           name: 'detailPay',
           query: {
-            tag: this.urlName,
+            tag: 'settlementGroup',
             name:this.goDetailName,
             row:JSON.stringify(row),
             }
         });
         // window.open(routeData.href, '_blank');
     },
-    watchInput(name){
+    watchInput(name){      
       if(!(/^\d+(\.\d{0,2})?$/.test(this.formLabelAlign[name]))){
-        this.formLabelAlign[name] = this.formLabelAlign[name].substr(0,this.formLabelAlign[name].length-1);
+        if(this.formLabelAlign[name]){
+          // this.formLabelAlign[name] = this.formLabelAlign[name].substr(0,this.formLabelAlign[name].length-1);
+          this.formLabelAlign[name] = '';
+          this.$message.error('请输入数字，支持到小数点后两位');
+        }
       }
     }
   }
@@ -768,7 +1017,6 @@ export default {
   padding-right: 30px;
 }
 .btn {
-  text-align: right;
   margin-bottom: 20px;
 }
 .el-pagination{
@@ -803,5 +1051,25 @@ export default {
 }
 .settlementGroup .el-input{
   width: 196px;
+}
+.browseDoc {
+  background-color: #ecf5ff;
+  width: 100%;
+  height: 100%;
+}
+.smallHand {
+  cursor: pointer;
+  color:#409EFF;
+}
+.selfInput{
+  border: 1px solid #DCDFE6;
+  width: 196px;
+  border-radius: 4px;
+  outline: none;
+}
+.searchNew .el-row .el-input{
+  width: 224px;
+  height: 32px;
+  border-radius: 2px;
 }
 </style>

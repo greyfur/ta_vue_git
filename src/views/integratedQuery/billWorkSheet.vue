@@ -1,50 +1,126 @@
 <template>
   <div class="billWorkSheet">
-    <div class="btn">
-      <el-button type="primary" plain @click="init(0)">刷新</el-button>
-      <el-button type="primary" plain @click="handleClick(1)">查询</el-button>
+    <div class="searchNew">
+      <div class="titleSearch" @click="searchFlag = !searchFlag"><i style="margin-right:8px;" class="el-icon-arrow-down"></i>查询</div>
+      <div v-show="searchFlag">
+        <el-row :gutter="10" class="billRow">
+        <el-col :span="8">
+          <span class="slable">流程编号</span>
+          <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="billSearch.processId"></el-input>
+        </el-col>
+        <el-col :span="8">
+          <span class="slable">账单类型</span>
+          <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
+            <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="8">
+          <el-button type="primary" plain @click="handleClick(1)"><i class="iconfont iconGroup42"></i>查询</el-button>
+          <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
+        </el-col>
+      </el-row>
+      </div>
     </div>
-    <el-table border :data="tableData" style="width: 100%">
-      <el-table-column label="账单号" width="140">
-        <template slot-scope="scope">
-          <span class="smallHand" @click="goDetail(scope.row)">{{scope.row.wsId}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="docId" label="对应文档ID"></el-table-column>
-      <el-table-column prop="docPageNum" label="对应文档页码"></el-table-column>
-      <el-table-column prop="processId" label="流程编号"></el-table-column>
-      <el-table-column prop="sgNum" label="SG号"></el-table-column>
-      <el-table-column prop="wsStatus" label="账单状态"></el-table-column>
-      <el-table-column prop="wsTitle" label="账单标题"></el-table-column>
-      <el-table-column prop="businessId" label="业务编号"></el-table-column>
-      <el-table-column prop="section" label="section"></el-table-column>
-      <el-table-column prop="uwYear" label="业务年度"></el-table-column>
-      <el-table-column prop="businessType" label="任务类型"></el-table-column>
-      <el-table-column prop="receiptDate" label="收到账单日期"></el-table-column>
-      <el-table-column label="分出公司" width="120">
-        <template slot-scope="scope">
-          {{scope.row.cedentName}}—{{scope.row.cedentCode}}
-        </template>      
-      </el-table-column>
-      <el-table-column label="经纪公司" width="120">
-        <template slot-scope="scope">
-          {{scope.row.brokerName}}—{{scope.row.brokerCode}}
-        </template>      
-      </el-table-column>
-      <el-table-column prop="wsType" label="账单类型"></el-table-column>
-      <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company"></el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin"></el-table-column>
-      <el-table-column prop="reportUnit" label="报告单位"></el-table-column>
-      <el-table-column prop="dept" label="经营机构"></el-table-column>
-      <el-table-column prop="wsCurrency" label="币制"></el-table-column>
-      <el-table-column prop="wsAmount" label="金额"></el-table-column>
-      <el-table-column prop="createdBy" label="录入人"></el-table-column>
-      <el-table-column prop="createdAt" label="录入时间"></el-table-column>
-      <el-table-column prop="remark" label="备注"></el-table-column>
+    <div class="btn">
+      <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91"></i>手工创建</el-button>
+      <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
+    </div> 
+    <el-table :data="tableData" stripe style="width: 100%">
+      <el-table-column label="账单号">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
+                <span class="abbreviate">{{scope.row.wsId}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column prop="wsStatus" label="账单状态" width="100">
+            <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+          </el-table-column>
+          <el-table-column label="账单标题">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.wsTitle" placement="top-start">
+                <span class="abbreviate">{{scope.row.wsTitle}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="业务编号">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.businessId" placement="top-start">
+                <span class="abbreviate">{{scope.row.businessId}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="附件名称">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
+                <span class="abbreviate">{{scope.row.docName}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="section">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.section" placement="top-start">
+                <span class="abbreviate">{{scope.row.section}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column prop="uwYear" label="业务年度"></el-table-column>
+          <el-table-column label="任务类型">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.businessType" placement="top-start">
+                <span class="abbreviate">{{scope.row.businessType}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
+          <el-table-column label="分出公司" width="120">
+             <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.cedentCode+'-'+scope.row.cedentName" placement="top-start">
+                <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="经纪公司" width="120">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.brokerCode+'-'+scope.row.brokerName" placement="top-start">
+                <span class="abbreviate">{{scope.row.brokerCode}}-{{scope.row.brokerName}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column prop="wsType" label="账单类型"></el-table-column>
+          <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
+          <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
+          <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+          <el-table-column prop="dept" label="经营机构"></el-table-column>
+          <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
+          <el-table-column label="金额">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.wsAmount" placement="top-start">
+                <span class="abbreviate">{{scope.row.wsAmount}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column prop="createdBy" label="录入人" width="80"></el-table-column>
+          <el-table-column prop="createdAt" label="录入时间" width="100"></el-table-column>
+          <el-table-column label="备注">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.remark" placement="top-start">
+                <span class="abbreviate">{{scope.row.remark}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button>
+          <!-- <el-dropdown>
+            <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item><el-button v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button v-show="urlName === 'sortOperation'" @click.stop="handleClick(3,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button type="text" v-show="urlName === 'sortOperation'" size="small" @click.stop="handleClick(4,scope.row)">删除</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button></el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown> -->
         </template>
       </el-table-column>
     </el-table>
@@ -66,21 +142,88 @@
         <!--   以上只有查询有 --------->
         <el-form-item label="账单类型" v-show="title==='手工创建' || title==='编辑' || title==='查询'">
           <el-select clearable v-model="billSearch.wsType" placeholder="请选择">
-            <el-option v-for="item in ZDoptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="账期" v-show="title==='手工创建' || title==='编辑'" class="zqForm">
-          <!-- <el-date-picker value-format="timestamp" v-model="billSearch.wsPeriod" type="month" placeholder="选择月"></el-date-picker> -->
-          <el-input v-model="zq2" placeholder="请输入" class="wsPeriod"></el-input>
+        <el-form-item label="Business Origin" prop="businessOrigin" v-show="title==='手工创建' || title==='编辑'"> 
+          <el-select clearable v-model="billSearch.businessOrigin" placeholder="请选择">
+            <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Base Company" v-show="title==='手工创建' || title==='编辑'" prop="baseCompany">
+          <el-select clearable v-model="billSearch.baseCompany" placeholder="请选择">
+            <el-option v-for="item in baseCompanyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Reporting Unit" v-show="title==='手工创建' || title==='编辑'">
+          <el-select clearable filterable v-model="billSearch.reportUnit" placeholder="请选择">
+            <el-option v-for="item in ReportUnitList" :key="item.code" :label="item.name" :value="item.code"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="账期" v-show="title==='手工创建' || title==='编辑' || title==='查询'" class="zqForm">
+          <el-input v-model.trim="zq2" placeholder="请输入" class="wsPeriod"></el-input>
           <el-select clearable v-model="zq1" placeholder="请选择" class="wsPeriod">
             <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="流程状态" v-show="title === '查询' && urlName === 'billEntry'">
+        <el-form-item label="流程状态" v-show="title === '查询' && urlName === 'billEntry'">
           <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
             <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
           </el-select>
-        </el-form-item> -->
+        </el-form-item>
+        <div v-show="title === '手工创建' || title==='编辑'">
+          <el-form-item label="任务类型" prop="wsBusinessType">
+            <el-select clearable v-model="billSearch.wsBusinessType"  placeholder="请输入关键词">
+              <el-option v-for="item in YWoptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="分出公司">
+            <el-select clearable filterable v-model="cedentModel" placeholder="请选择">
+              <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
+                <span style="float:left">{{ item.codecode }}</span>
+                <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="经纪公司">
+            <el-select clearable filterable v-model="brokerModel" placeholder="请选择">
+              <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
+                <span style="float:left">{{ item.codecode }}</span>
+                <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="账单收到日期">
+            <el-date-picker value-format="timestamp" v-model="billSearch.wsReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
+          </el-form-item>
+        </div>
+        <el-form-item label="附件上传" v-show="title==='编辑'">
+          <el-upload
+            class="sort-upload"
+            action
+            :before-upload="beforeAvatarUpload"
+            :auto-upload="true"
+            :http-request='upload'
+            :file-list="fileList">
+            <el-button size="small" type="primary">上传</el-button>
+          </el-upload> 
+          <el-table stripe :data="fileData" style="width: 100%" class="document">
+            <el-table-column label="文件名">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
+                  <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="createdAt" label="时间"></el-table-column>
+            <el-table-column prop="createdBy" label="任务来源"></el-table-column>
+            <el-table-column label="操作" width="100">
+              <template slot-scope="scope">
+                <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form-item>
         <el-form-item label="选择下一任务处理人" v-show="title==='流程提交'">
           <el-select clearable v-model="assignee"  placeholder="请输入关键词">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
@@ -89,7 +232,7 @@
       </el-form>
       <el-collapse v-show="title=='踪迹'">
         <el-collapse-item title="状态流转图">
-          <img :src="picture" style="width:100%">
+          <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
         </el-collapse-item>
       </el-collapse>
       <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
@@ -108,29 +251,19 @@
       @current-change="ZJhandleCurrentChange"  
       :current-page="ZJObj.pageNumber">
       </el-pagination>
-      <el-upload
-        v-show="title==='上传附件'"
-        class="sort-upload"
-        action
-        :before-upload="beforeAvatarUpload"
-        :auto-upload="true"
-        :http-request='upload'
-        :file-list="fileList">
-        <el-button size="small" type="primary">上传</el-button>
-      </el-upload>
-      <el-table stripe :data="fileData" style="width: 100%" class="document" v-show="title==='上传附件'">
-        <el-table-column prop="docName" label="文件名"></el-table-column>
-        <el-table-column prop="createdAt" label="时间"></el-table-column>
-        <el-table-column prop="createdBy" label="任务来源"></el-table-column>
-        <el-table-column label="操作" width="100">
-          <template slot-scope="scope">
-            <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      
       <div slot="footer" class="dialog-footer" v-show="title=='手工创建' || title=='查询' || title=='编辑' || title=='流程提交'">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirm('billSearch')">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="文档预览" width="fit-content" :visible.sync="dialogFormVisible1" :close-on-click-modal="modal">
+      <div class="browseDoc" v-show="title!='踪迹'" style="width:600px">
+        <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
+      </div>
+      <div v-show="title=='踪迹'" style="width:1020px;height:100%;">
+        <img :src="picture" style="width:100%;height:1005;">
       </div>
     </el-dialog>
   </div>
@@ -145,158 +278,175 @@ export default {
     processStatusCom:'',
   },
   data() {
-    return {
-      tableData:[],
-      assignee:'',
-      modal:false,
-      YWoptions:[
-        {value: 'T',label: '合约账单'},
-        {value: 'F',label: '临分账单'},
-        {value: 'O',label: '转分账单'},
-        {value: 'C',label: '理赔账单'},
-      ],
-      YWoptionsObj:{
-        'T':'合约账单',
-        'F':'临分账单',
-        'O':'转分账单',
-        'C':'理赔账单',
-      },
-      zqList:[
-        'Variable',
-        '10th Of 12',
-        '11th Of 12',
-        '12th Of 12',
-        '1st Of 12',
-        '1st Of 2',
-        '1st Of 3',
-        '1st Of 4',
-        '2nd Of 12',
-        '2nd Of 2',
-        '2nd Of 3',
-        '2nd Of 4',
-        '3rd Of 12',
-        '3rd Of 3',
-        '3rd Of 4',
-        '4th Of 12',
-        '4th Of 4',
-        '5th Of 12',
-        '6th Of 12',
-        '7th Of 12',
-        '8th Of 12',
-        '9th Of 12',
-        'Yearly',
-      ],
-      options:[],
-      TJRoptions:[],
-      ZDoptions:[ 
-        {value: 'AA',label: 'Additional Account'},
-        {value: 'AD',label: 'Adjustment'},
-        {value: 'CCA',label: 'Cash Claim Account'},
-        {value: 'CA',label: 'Commission Adjustment'},
-        {value: 'COMMUTATION',label: 'Commutation'},
-        {value: 'CRA',label: 'Correction Account'},
-        {value: 'FC',label: 'Fac Claim '},
-        {value: 'FP',label: 'Fac Premium'},
-        {value: 'INIA',label: 'Initial Account'},
-        {value: 'IA',label: 'Internal Account'},
-        {value: 'LP',label: 'Loss Participation'},
-        {value: 'NCB',label: 'No Claim Bonus'},
-        {value: 'OCA',label: 'Outstanding Cash Advance '},
-        {value: 'PTF',label: 'Portfolio Transfer'},
-        {value: 'PA',label: 'Premium Adjustment'},
-        {value: 'PC',label: 'Profit Commission'},
-        {value: 'RA',label: 'Regular Account'},
-        {value: 'RCA',label: 'Regular Claim Account'},
-        {value: 'RPA',label: 'Regular Premium Account'},
-        {value: 'RP',label: 'Reinstatement Premium'},
-        {value: 'SA',label: 'Supplementary Account'},
-        {value: 'SCA',label: 'Supplementary Claim Account'},
-        {value: 'SCRA',label: 'Supplementary Claim Reserve Account'},
-        {value: 'SPA',label: 'Supplementary Premium Account'},
-        {value: 'XLMDP',label: 'XL MDP'},
-      ],
-      ZDoptionsObj:{
-        'AA':'Additional Account',
-        'AD':'Adjustment',
-        'CCA':'Cash Claim Account',
-        'CA':'Commission Adjustment',
-        'COMMUTATION': 'Commutation',
-        'CRA': 'Correction Account',
-        'FC': 'Fac Claim ',
-        'FP': 'Fac Premium',
-        'INIA': 'Initial Account',
-        'IA': 'Internal Account',
-        'LP': 'Loss Participation',
-        'NCB': 'No Claim Bonus',
-        'OCA': 'Outstanding Cash Advance ',
-        'PTF': 'Portfolio Transfer',
-        'PA': 'Premium Adjustment',
-        'PC': 'Profit Commission',
-        'RA': 'Regular Account',
-        'RCA': 'Regular Claim Account',
-        'RPA': 'Regular Premium Account',
-        'RP': 'Reinstatement Premium',
-        'SA': 'Supplementary Account',
-        'SCA': 'Supplementary Claim Account',
-        'SCRA': 'Supplementary Claim Reserve Account',
-        'SPA': 'Supplementary Premium Account',
-        'XLMDP': 'XL MDP',
-      },
-      title:'',
-      hide:false,
-      dialogFormVisible: false,
-      billSearch: {
-        processId:null,
-        processStatus:null,
-        wsType:null,
-        wsPeriod:null,
-        wsBusinessType:null,
-        wsCedentCode:null,
-        wsCedentName:null,
-        wsBrokerCode:null,
-        wsBrokerName:null,
-        wsReceiptDate:null,
-      },
-      mustData:{
-        actOperator:null,
-        wsType:null,
-        // wsType:['WorkSheet'],
-        // processStatus:'',
-        pageNumber:1,  // 页数
-        pageSize:20,  //页面一次要展示的条数
-        total:0, //总条数
-      },
-      fileList:[],
-      file:[],
-      chooseRow:{},
-      dialogState:0,
-      track:[],
-      setTime:null,
-      fileData:[],
-      picture:'',
-      cedentList:[],
-      brokerList:[],
-      brokerModel:null,
-      cedentModel:null,
-      ZJObj:{
-        total:50,
-        pageNumber:1,  // 页数
-        pageSize:10,  //页面一次要展示的条数
-      },
-      ZJprocessId:'',
-      zq1:'',
-      zq2:'',
-      rules:{
-        wsBusinessType: [
-          { required: true, message: '请选择任务类型', trigger: 'blur' }
+      return {
+        searchFlag:false,
+        tableData:[],
+        assignee:'',
+        modal:false,
+        YWoptions:[
+          {value: 'T',label: '合约账单'},
+          {value: 'F',label: '临分账单'},
+          {value: 'O',label: '转分账单'},
+          {value: 'C',label: '理赔账单'},
         ],
-      },
-      pendingFlag:false,
-    };
-  },
+        tableClass:{'background-color':'#FAFAFA'},
+        StableClass:'background-color:#FAFAFA',
+        baseCompanyList:[],
+        YWoptionsObj:{
+          'T':'合约账单',
+          'F':'临分账单',
+          'O':'转分账单',
+          'C':'理赔账单',
+        },
+        zqList:[
+          'Variable',
+          '10th Of 12',
+          '11th Of 12',
+          '12th Of 12',
+          '1st Of 12',
+          '1st Of 2',
+          '1st Of 3',
+          '1st Of 4',
+          '2nd Of 12',
+          '2nd Of 2',
+          '2nd Of 3',
+          '2nd Of 4',
+          '3rd Of 12',
+          '3rd Of 3',
+          '3rd Of 4',
+          '4th Of 12',
+          '4th Of 4',
+          '5th Of 12',
+          '6th Of 12',
+          '7th Of 12',
+          '8th Of 12',
+          '9th Of 12',
+          'Yearly',
+        ],
+        options:[],
+        ReportUnitList:[],
+        TJRoptions:[],
+        ZDoptions:[ //  账单类型
+          {value: 'AA',label: 'Additional Account'},
+          {value: 'AD',label: 'Adjustment'},
+          {value: 'CCA',label: 'Cash Claim Account'},
+          {value: 'CA',label: 'Commission Adjustment'},
+          {value: 'COMMUTATION',label: 'Commutation'},
+          {value: 'CRA',label: 'Correction Account'},
+          {value: 'FC',label: 'Fac Claim '},
+          {value: 'FP',label: 'Fac Premium'},
+          {value: 'INIA',label: 'Initial Account'},
+          {value: 'IA',label: 'Internal Account'},
+          {value: 'LP',label: 'Loss Participation'},
+          {value: 'NCB',label: 'No Claim Bonus'},
+          {value: 'OCA',label: 'Outstanding Cash Advance '},
+          {value: 'PTF',label: 'Portfolio Transfer'},
+          {value: 'PA',label: 'Premium Adjustment'},
+          {value: 'PC',label: 'Profit Commission'},
+          {value: 'RA',label: 'Regular Account'},
+          {value: 'RCA',label: 'Regular Claim Account'},
+          {value: 'RPA',label: 'Regular Premium Account'},
+          {value: 'RP',label: 'Reinstatement Premium'},
+          {value: 'SA',label: 'Supplementary Account'},
+          {value: 'SCA',label: 'Supplementary Claim Account'},
+          {value: 'SCRA',label: 'Supplementary Claim Reserve Account'},
+          {value: 'SPA',label: 'Supplementary Premium Account'},
+          {value: 'XLMDP',label: 'XL MDP'},
+        ],  
+        ZDoptionsObj:{
+          'AA':'Additional Account',
+          'AD':'Adjustment',
+          'CCA':'Cash Claim Account',
+          'CA':'Commission Adjustment',
+          'COMMUTATION': 'Commutation',
+          'CRA': 'Correction Account',
+          'FC': 'Fac Claim ',
+          'FP': 'Fac Premium',
+          'INIA': 'Initial Account',
+          'IA': 'Internal Account',
+          'LP': 'Loss Participation',
+          'NCB': 'No Claim Bonus',
+          'OCA': 'Outstanding Cash Advance ',
+          'PTF': 'Portfolio Transfer',
+          'PA': 'Premium Adjustment',
+          'PC': 'Profit Commission',
+          'RA': 'Regular Account',
+          'RCA': 'Regular Claim Account',
+          'RPA': 'Regular Premium Account',
+          'RP': 'Reinstatement Premium',
+          'SA': 'Supplementary Account',
+          'SCA': 'Supplementary Claim Account',
+          'SCRA': 'Supplementary Claim Reserve Account',
+          'SPA': 'Supplementary Premium Account',
+          'XLMDP': 'XL MDP',
+        },
+        businessOriginList:[], // 国际国内
+        title:'',
+        hide:false,
+        dialogFormVisible: false,
+        dialogFormVisible1: false,
+        billSearch: {
+          processId:null,
+          processStatus:null,
+          wsType:null,
+          wsPeriod:null,
+          wsBusinessType:null,
+          wsCedentCode:null,
+          wsCedentName:null,
+          wsBrokerCode:null,
+          wsBrokerName:null,
+          wsReceiptDate:null,
+          businessOrigin:null,
+          baseCompany:null,
+          reportUnit:null,
+        },
+        mustData:{
+          actOperator:null,
+          processType:'账单',
+          processStatus:'',
+          pageNumber:1,  // 页数
+          pageSize:20,  //页面一次要展示的条数
+          total:0, //总条数
+        },
+        fileList:[],
+        file:[],
+        chooseRow:{},
+        dialogState:0,
+        track:[],
+        setTime:null,
+        fileData:[],
+        picture:'',
+        cedentList:[],
+        brokerList:[],
+        brokerModel:null,
+        cedentModel:null,
+        ZJObj:{
+          total:50,
+          pageNumber:1,  // 页数
+          pageSize:10,  //页面一次要展示的条数
+        },
+        ZJprocessId:'',
+        zq1:'',
+        zq2:'',
+        rules:{
+          wsBusinessType: [
+            { required: true, message: '请选择任务类型', trigger: 'blur' }
+          ],
+        },
+        pendingFlag:false,
+      };
+    },
   created(){
     this.mustData.processStatus = this.processStatusCom;
     this.mustData.actOperator = this.$store.state.userName;
+    if(this.urlName === 'sortOperation'){
+      this.$http.get('api/sics/basis/getReportUnitsForPC').then(res =>{
+        if(res.status === 200){
+          this.ReportUnitList = res.data;
+        }
+      })
+    }
+    
   },
   mounted(){
     this.$http.post('api/activiti/getAssigneeName',{roleName:'账单录入'}).then(res =>{
@@ -310,9 +460,38 @@ export default {
       this.cedentList = JSON.parse(sessionStorage.getItem('CedentType'));
       // 经纪人
       this.brokerList = JSON.parse(sessionStorage.getItem('BrokerType'));
+      // 账单类型
+      this.ZDoptions = JSON.parse(sessionStorage.getItem('wsType'));
+      // 集团产再
+      this.baseCompanyList = JSON.parse(sessionStorage.getItem('baseCompany'));
+      // 国际国内
+      this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
     },1000)
   },
   methods: {
+    docView(row) {
+      if(row){
+        this.dialogFormVisible1 = true;
+        this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
+        if(res.status == 200){
+          console.log(res);
+          document.getElementById('iframeId').contentWindow.postMessage({
+            tokenId:res.data.tokenId,
+            userId:res.data.userId,
+            docCloudId:row.docCloudId,
+            docName:row.docName,
+            ip:res.data.ip,
+            acPort:res.data.acPort,
+            fsPort:res.data.fsPort,
+          },'*');
+          document.getElementById('iframeId').contentWindow.location.reload(true);
+        }
+      })
+      } else{
+        document.getElementById('iframeId').contentWindow.postMessage({},'*');
+        document.getElementById('iframeId').contentWindow.location.reload(true);
+      }
+    },
     handleSizeChange(val) {
       this.mustData.pageSize = val;
       this.init();
@@ -348,12 +527,12 @@ export default {
         let obj = this.cedentList[this.cedentModel];
         this.billSearch.wsCedentCode = obj.codecode;
         this.billSearch.wsCedentName = obj.codeName;
-      }
+      } 
       if(this.brokerModel != null){
         let obj = this.brokerList[this.brokerModel];
         this.billSearch.wsBrokerCode = obj.codecode;
         this.billSearch.wsBrokerName = obj.codeName;
-      }
+      } 
       switch(this.dialogState){
         case 0:    // 创建
           this.$refs[formName].validate((valid) => {
@@ -370,7 +549,7 @@ export default {
           
           break;
         case 1:    // 查询
-        if(this.zq2 && this.zq1){
+         if(this.zq2 && this.zq1){
           this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;
         }
         // if(!this.billSearch.processStatus){ this.billSearch.processStatus = this.processStatusCom; }
@@ -392,18 +571,25 @@ export default {
         case 2:  // 编辑
         this.$http.post('api/worksheet/wSEntry/update',Object.assign({},this.billSearch,this.mustData,{processId:this.chooseRow.processId})).then(res =>{
             if(res.status === 200 && res.data.msg === '操作成功'){
-              this.dialogFormVisible = false;
               this.init();
+              this.dialogFormVisible = false;
             }
           })
           break;
         case 3:   // 流程提交
+          if(!this.assignee){
+            this.$message.error('请选择任务处理人');
+            return false;
+          }
           this.$http.post('api/worksheet/activitiForWorksheet/commonActivitiForWorksheet',{processId:this.chooseRow.processId, procInstId:this.chooseRow.processInstId, assignee:this.assignee, type:'ACTIVE',actOperator:this.$store.state.userName,}).then(res =>{
             if(res.status === 200 && res.data.errorCode == 1){
               this.dialogFormVisible = false;
               this.$message({type: 'success', message: '提交成功!'});  
+              this.assignee = null;
               this.init();
-            }
+            } else if(res.data.errorCode == 0){
+                this.$message({type: 'error', message:res.data.errorMessage }); 
+              }
           })
           // 出弹窗
           break;
@@ -412,42 +598,47 @@ export default {
           break;
       }
     },
+    reset(){
+      for(let k in this.billSearch){
+          this.billSearch[k] = null;
+        }
+        this.zq2 = null;
+        this.zq1 = null;
+        this.brokerModel = null;
+        this.cedentModel = null;
+    },
     handleClick(tag,row){
       this.dialogState = tag;
       this.chooseRow = row;
+      this.assignee = null;
       console.log(this.tableData,'tableData');
       switch(tag){
         case 0: 
-          for(let k in this.billSearch){
-            this.billSearch[k] = null;
-          }
-          this.zq2 = null;
-          this.zq1 = null;
-          this.brokerModel = null;
-          this.cedentModel = null;
+          this.reset();
+          // for(let k in this.billSearch){
+          //   this.billSearch[k] = null;
+          // }
+          // this.zq2 = null;
+          // this.zq1 = null;
+          // this.brokerModel = null;
+          // this.cedentModel = null;
           this.dialogFormVisible = true;
           this.title = '手工创建';
           break;
         case 1: 
-        for(let k in this.billSearch){
-            this.billSearch[k] = null;
-          }
-          this.zq2 = null;
-          this.zq1 = null;
-          this.brokerModel = null;
-          this.cedentModel = null;
-          this.dialogFormVisible = true;
+          // this.dialogFormVisible = true;
+          this.confirm();
           this.title = '查询';
           break;
         case 2: 
           // 账单类型
-            if(row.wsType){ this.billSearch.wsType = row.wsType;  }
+            if(row.wsType){ this.billSearch.wsType = row.wsType;} else{ this.billSearch.wsType = null; }
           // 任务类型
-            if(row.wsBusinessType){ this.billSearch.wsBusinessType = row.wsBusinessType;  }
+            if(row.wsBusinessType){ this.billSearch.wsBusinessType = row.wsBusinessType; } else{ this.billSearch.wsBusinessType = null; }
           // 账单收到日期
           if(row.wsReceiptDate){
             this.billSearch.wsReceiptDate = new Date(row.wsReceiptDate).valueOf();
-          }
+          } else{ this.billSearch.wsReceiptDate = null; }
           //  分出人cedentModel  cedentList        
           if(row.wsCedentCode){
             this.cedentList.forEach((el,i)=>{
@@ -455,7 +646,7 @@ export default {
                 this.cedentModel = i;
               }
             })
-           }
+           } else{ this.cedentModel = null; }
           // 经纪人brokerModel   brokerList
           if(row.wsBrokerCode){
             this.brokerList.forEach((el,i)=>{
@@ -463,13 +654,21 @@ export default {
                 this.brokerModel = i;
               }
             })
-           }
+           } else{ this.brokerModel = null; }
           // 账期
           if(row.wsPeriod){
             let arr = row.wsPeriod.split('-');
             this.zq2 = arr[0];
             this.zq1 = arr[1];
+          } else{
+            this.zq2 = null;
+            this.zq1 = null;
           }
+          this.$http.get(`api/worksheet/wSEntry/edit/${row.processId}`).then(res =>{
+            if(res.status === 200) {
+              this.fileData = res.data.bscDocumentVOlist;
+            }
+          })
           this.dialogFormVisible = true;
           this.title= '编辑';
           break; 
@@ -486,8 +685,8 @@ export default {
           }).then(() => {
             this.$http.post('api/worksheet/wSEntry/remove',{processId:row.processId}).then(res =>{
               if(res.status === 200 && res.data.code == 0){
-                  this.$message({type: 'success', message: '删除成功!'});  
-                  this.init();             
+                this.$message({type: 'success', message: '删除成功!'});  
+                this.init();             
               }
             })
           })
@@ -505,15 +704,9 @@ export default {
           
           break;
         case 6: // 上传附件
-          this.$http.get(`api/worksheet/wSEntry/edit/${row.processId}`).then(res =>{
-          if(res.status === 200) {
-            this.fileData = res.data.bscDocumentVOlist;
-            this.dialogFormVisible = true;
-            this.title = '上传附件';
-          }
-        })
+          
          break;
-      }  
+      } 
     },
     getZJData(id){
       this.$http.post('api/othersDO/bscProcessAction/list',Object.assign({},{processId:id,actOperator:this.$store.state.userName},this.ZJObj)).then(res =>{
@@ -577,70 +770,23 @@ export default {
       },500)
     },
     goDetail(row){
-      let routeData = this.$router.resolve({
+      if(this.urlName === 'sortOperation'){
+        return;
+      }
+      // let routeData = this.$router.resolve({
+      this.$router.push({
           name: 'detailEntry',
           query: {
             tag: 'billWorkSheet',
             num: row.processId,
             row: JSON.stringify(row),
             SIGNBACK: row.wsSignbackFlag
-            }
+          }
         });
-        window.open(routeData.href, '_blank');
+      // window.open(routeData.href, '_blank');
     },
   }
 }
 </script>
 
 <style scoped>
-.billWorkSheet {
-  padding-right: 30px;
-}
-.btn {
-  text-align: right;
-  margin-bottom: 20px;
-}
-.el-pagination{
-  text-align: right;
-  margin-top: 20px;
-}
-.el-input .el-input__inner{
-  width: 220px;
-}
-.detail-ul{
-  margin-left: 10px;
-}
-.detail-ul li{
-  margin-bottom: 10px;
-}
-.detail-ul li .detail-content{
-  color: #999;
-}
-.sort-upload{
-  margin-bottom: 20px;
-}
-.el-collapse-item:last-child{
-  margin-bottom: 20px;
-}
-.el-select, .el-select-dropdown__list{
-  width: 194px;
-}
-.el-radio-group .el-radio{
-  margin-bottom: 10px;
-}
-.zqForm .el-form-item__content{
-  display: flex;
-  border: 1px solid #DCDFE6;
-  width: fit-content;
-}
-.wsPeriod{
-  width: 120px;
-}
-.billWorkSheet .el-input{
-  width: 196px;
-}
-.smallHand {
-  cursor: pointer;
-  color:#409EFF;
-}
-</style>

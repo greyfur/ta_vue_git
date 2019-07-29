@@ -5,12 +5,12 @@
       <div v-show="searchFlag">
         <el-row :gutter="10" class="billRow">
         <el-col :span="8">
-          <span class="slable">process Id</span>
-          <el-input placeholder="请输入process Id" suffix-icon="el-icon-date" v-model.trim="formLabelAlign.processId"></el-input>
+          <span class="slable">流程编号</span>
+          <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="formLabelAlign.processId"></el-input>
         </el-col>
         <el-col :span="8">
           <span class="slable">结付公司代码</span>
-            <el-select clearable filterable v-model="cedentModel" placeholder="请选择">
+            <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司代码">
               <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
                 <span style="float:left">{{ item.codecode }}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
@@ -146,7 +146,7 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
         <el-form-item label="结付公司代码">
-          <el-select clearable filterable v-model="cedentModel" placeholder="请选择">
+          <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司代码">
             <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
               <span style="float:left">{{ item.codecode }}</span>
               <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
@@ -176,7 +176,7 @@
           <el-input v-model="formLabelAlign.rmWrittenOffNum"></el-input>
         </el-form-item> -->
         <el-form-item clearable label="币制" v-show="title==='创建' || title==='编辑'">     
-          <el-select clearable v-model="formLabelAlign.rmCurrency" placeholder="请选择">
+          <el-select clearable v-model="formLabelAlign.rmCurrency" placeholder="请选择币制">
             <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
           </el-select>
         </el-form-item>
@@ -255,7 +255,7 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
       <el-form label-width="140px" v-show="title==='流程提交'">
         <el-form-item label="选择下一任务处理人">
-          <el-select clearable v-model="assignee"  placeholder="请输入关键词">
+          <el-select clearable v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.value" :label="item.label" :value="item.label"></el-option>
           </el-select>
         </el-form-item>

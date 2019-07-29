@@ -64,7 +64,7 @@
                 <el-table-column label="操作" width="130">
                   <template slot-scope="scope">
                     <el-button :disabled="isHover" v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess'" @click.stop="handleClick(2,scope.row)" type="text" size="small">OCR</el-button>
-                    <el-button :disabled="isHover" v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess'" @click.stop="handleClick(1,scope.row)" type="text" size="small">删除</el-button>
+                    <el-button :disabled="isHover" v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack'" @click.stop="handleClick(1,scope.row)" type="text" size="small">删除</el-button>
                     <el-button :disabled="isHover" @click.stop="handleClick(3,scope.row)" type="text" size="small">下载</el-button>
                   </template>
                 </el-table-column>
@@ -90,43 +90,94 @@
 
     <el-row>
       <el-col :span="24" style="padding:0 16px;">
-        <!-- <p class="detail-word">账单信息</p> -->
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息</div>
           <p><i class="iconfont iconGroup26"></i></p>
         </div>
         <el-table v-show="searchFlag3" :data="SICSData" stripe width="100%" @row-click="handelClick3">
-          <el-table-column prop="wsId" label="账单号"></el-table-column>
-          <el-table-column prop="wsStatus" label="账单状态">
+          <el-table-column label="账单号">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
+                <span class="abbreviate">{{scope.row.wsId}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column prop="wsStatus" label="账单状态" width="100">
             <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
           </el-table-column>
-          <el-table-column prop="wsTitle" label="账单标题"></el-table-column>
-          <el-table-column prop="businessId" label="业务编号"></el-table-column>
-          <el-table-column prop="docName" label="附件名称"></el-table-column>
-          <el-table-column prop="section" label="section"></el-table-column>
+          <el-table-column label="账单标题">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.wsTitle" placement="top-start">
+                <span class="abbreviate">{{scope.row.wsTitle}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="业务编号">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.businessId" placement="top-start">
+                <span class="abbreviate">{{scope.row.businessId}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="附件名称">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
+                <span class="abbreviate">{{scope.row.docName}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="section">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.section" placement="top-start">
+                <span class="abbreviate">{{scope.row.section}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column prop="uwYear" label="业务年度"></el-table-column>
-          <el-table-column prop="businessType" label="任务类型"></el-table-column>
+          <el-table-column label="任务类型">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.businessType" placement="top-start">
+                <span class="abbreviate">{{scope.row.businessType}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
           <el-table-column label="分出公司" width="120">
-            <template slot-scope="scope">
-              {{scope.row.cedentCode}}-{{scope.row.cedentName}}
-            </template>       
+             <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.cedentCode+'-'+scope.row.cedentName" placement="top-start">
+                <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
+              </el-tooltip>
+            </template>
           </el-table-column>
           <el-table-column label="经纪公司" width="120">
             <template slot-scope="scope">
-              {{scope.row.brokerCode}}-{{scope.row.brokerName}}
-            </template>      
+              <el-tooltip class="item" effect="dark" :content="scope.row.brokerCode+'-'+scope.row.brokerName" placement="top-start">
+                <span class="abbreviate">{{scope.row.brokerCode}}-{{scope.row.brokerName}}</span>
+              </el-tooltip>
+            </template>
           </el-table-column>
           <el-table-column prop="wsType" label="账单类型"></el-table-column>
           <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
           <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
           <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
           <el-table-column prop="dept" label="经营机构"></el-table-column>
-          <el-table-column prop="wsCurrency" label="币制" ></el-table-column>
-          <el-table-column prop="wsAmount" label="金额" ></el-table-column>
-          <el-table-column prop="createdBy" label="录入人" ></el-table-column>
-          <el-table-column prop="createdAt" label="录入时间" ></el-table-column>
-          <el-table-column prop="remark" label="备注"></el-table-column>
+          <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
+          <el-table-column label="金额">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.wsAmount" placement="top-start">
+                <span class="abbreviate">{{scope.row.wsAmount}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column prop="createdBy" label="录入人" width="80"></el-table-column>
+          <el-table-column prop="createdAt" label="录入时间" width="100"></el-table-column>
+          <el-table-column label="备注">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.remark" placement="top-start">
+                <span class="abbreviate">{{scope.row.remark}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column fixed="right" label="操作">
             <template slot-scope="scope">
               <el-button :disabled="isHover" @click.stop="openSics(scope.row)" type="text" size="small">打开SICS</el-button>
@@ -144,7 +195,7 @@
           <!-- <el-button type="primary" size="mini" style="margin-left:50px" @click="itemSplit">拆分</el-button> -->
         </el-form-item>
         <el-form-item label="条目拆分理由">
-          <el-input type="textarea" :rows="4" style="width:400px" placeholder="请输入内容" v-model="reason"></el-input>
+          <el-input type="textarea" :rows="4" style="width:400px" placeholder="请输入条目拆分理由" v-model="reason"></el-input>
         </el-form-item>
         <!-- <el-form-item label="拆分金额">
           <div class="inputWrap" id="idInputWrap"></div>
@@ -231,12 +282,12 @@
             <el-date-picker v-model="value1" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="公司代码及名称">
-          <el-select v-model="value" placeholder="请输入关键词">
+          <el-select v-model="value" placeholder="请选择">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="经纪公司代码及名称">
-          <el-select v-model="value" placeholder="请输入关键词">
+          <el-select v-model="value" placeholder="请选择">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
@@ -256,12 +307,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="国际/国内业务">
-          <el-select v-model="value" placeholder="请输入关键词">
+          <el-select v-model="value" placeholder="请选择">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="BASE COMPANY">
-          <el-select v-model="value" placeholder="请输入关键词">
+          <el-select v-model="value" placeholder="请选择">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
@@ -275,7 +326,7 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible5" :close-on-click-modal="modal">
       <el-form label-position="right" label-width="140px">
         <el-form-item label="选择驳回原因" v-show="title==='复核驳回'">
-          <el-select v-model="opinion"  placeholder="请输入驳回原因">
+          <el-select v-model="opinion"  placeholder="请选择">
             <el-option v-for="item in BHoptions" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
@@ -286,17 +337,17 @@
           <el-input :disabled="opinion!='其它'" type="textarea" :rows="2" placeholder="请输入原因" v-model="textareaOpinion"></el-input>
         </el-form-item>
         <el-form-item label="选择下一任务处理人" v-show="title==='流程提交' && $route.query.tag !== 'billEntry'">
-          <el-select v-model="assignee"  placeholder="请输入关键词">
+          <el-select v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="指派任务处理人" v-show="title==='任务指派'">
-          <el-select v-model="assignee"  placeholder="请输入关键词"> 
+          <el-select v-model="assignee"  placeholder="请选择"> 
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="选择下一任务处理人" v-show="title==='流程提交' && $route.query.tag === 'billEntry'">
-          <el-select v-model="assignee"  placeholder="请输入关键词"> 
+          <el-select v-model="assignee"  placeholder="请选择"> 
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName"></el-option>
           </el-select>
         </el-form-item>

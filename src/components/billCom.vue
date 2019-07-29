@@ -5,8 +5,8 @@
       <div v-show="searchFlag">
         <el-row :gutter="10" class="billRow">
         <el-col :span="7">
-          <span class="slable">process Id</span>
-          <el-input placeholder="请输入process Id" suffix-icon="el-icon-date" v-model.trim="billSearch.processId"></el-input>
+          <span class="slable">流程编号</span>
+          <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="billSearch.processId"></el-input>
         </el-col>
         <el-col :span="7">
           <span class="slable">账单类型</span>
@@ -31,7 +31,7 @@
     <div class="btn">
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91"></i>手工创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
-    </div>
+    </div> 
     <el-table :header-row-class-name="StableClass" :data="tableData" stripe style="width: 100%">
       <el-table-column prop="createdAt" label="创建时间" width="100"></el-table-column>
       <el-table-column label="流程编号" width="120">
@@ -39,36 +39,58 @@
           <span :class="{'smallHand':urlName !== 'sortOperation'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>
       </el-table-column> 
-      <el-table-column prop="processName" label="流程名称"></el-table-column>
+      <el-table-column label="流程名称" width="100">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.processName" placement="top-start">
+            <span class="abbreviate">{{scope.row.processName}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column label="账单类型" width="80">
-        <template slot-scope="scope">{{ZDoptionsObj[scope.row.wsType]}}</template>
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.wsType" placement="top-start">
+            <span class="abbreviate">{{scope.row.wsType}}</span>
+          </el-tooltip>
+        </template>
       </el-table-column>
       <el-table-column label="任务类型" width="80">
         <template slot-scope="scope">{{YWoptionsObj[scope.row.wsBusinessType]}}</template>
       </el-table-column>
-      <el-table-column prop="wsPeriod" label="账期"></el-table-column>
+      <el-table-column label="账期">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.wsPeriod" placement="top-start">
+            <span class="abbreviate">{{scope.row.wsPeriod}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column prop="wsReceiptDate" width="120" label="账单收到日期"></el-table-column>
       <el-table-column label="分出公司" width="120">
         <template slot-scope="scope">
-          {{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}
-        </template>       
+          <el-tooltip class="item" effect="dark" :content="scope.row.wsCedentCode+'-'+scope.row.wsCedentName" placement="top-start">
+            <span class="abbreviate">{{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}</span>
+          </el-tooltip>
+        </template>
       </el-table-column>
       <el-table-column label="经纪公司" width="120">
         <template slot-scope="scope">
-          {{scope.row.wsBrokerCode}}-{{scope.row.wsBrokerName}}
-        </template>      
+          <el-tooltip class="item" effect="dark" :content="scope.row.wsBrokerCode+'-'+scope.row.wsBrokerName" placement="top-start">
+            <span class="abbreviate">{{scope.row.wsBrokerCode}}-{{scope.row.wsBrokerName}}</span>
+          </el-tooltip>
+        </template>
       </el-table-column>
-      <el-table-column prop="reportUnit" label="Reporting Unit" width="120"></el-table-column>
+      <el-table-column label="Reporting Unit" width="120">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.reportUnit" placement="top-start">
+            <span class="abbreviate">{{scope.row.reportUnit}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
       <el-table-column prop="curOperator" label="任务来源"></el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
-          <!-- <el-button v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" type="text" size="small">编辑</el-button>
-          <el-button v-show="urlName === 'sortOperation'" @click.stop="handleClick(3,scope.row)" type="text" size="small">流程提交</el-button>
-          <el-button type="text" v-show="urlName === 'sortOperation'" size="small" @click.stop="handleClick(4,scope.row)">删除</el-button>
-          <el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button> -->
           <el-dropdown>
             <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown">
@@ -76,9 +98,6 @@
               <el-dropdown-item><el-button v-show="urlName === 'sortOperation'" @click.stop="handleClick(3,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
               <el-dropdown-item><el-button type="text" v-show="urlName === 'sortOperation'" size="small" @click.stop="handleClick(4,scope.row)">删除</el-button></el-dropdown-item>
               <el-dropdown-item><el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button></el-dropdown-item>
-              <!-- <el-dropdown-item><el-button @click.stop="handleClick(5,scope.row)" type="text" size="small">详情</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button @click.stop="handleClick(12,scope.row)" type="text" size="small">附件查看</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button @click.stop="handleClick(11,scope.row)" type="text" size="small">踪迹</el-button></el-dropdown-item> -->
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -96,49 +115,49 @@
     <!-- 弹窗 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-form label-position="right" label-width="140px" :model="billSearch" :rules="rules" ref="billSearch">
-        <el-form-item label="Process ID" v-show="title==='查询'">
-          <el-input v-model.trim="billSearch.processId" placeholder="请输入内容"></el-input>
+        <el-form-item label="流程编号" v-show="title==='查询'">
+          <el-input v-model.trim="billSearch.processId" placeholder="请输入流程编号"></el-input>
         </el-form-item>
         <!--   以上只有查询有 --------->
         <el-form-item label="账单类型" v-show="title==='手工创建' || title==='编辑' || title==='查询'">
-          <el-select clearable v-model="billSearch.wsType" placeholder="请选择">
+          <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
             <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="Business Origin" prop="businessOrigin" v-show="title==='手工创建' || title==='编辑'"> 
-          <el-select clearable v-model="billSearch.businessOrigin" placeholder="请选择">
+          <el-select clearable v-model="billSearch.businessOrigin" placeholder="请选择Business Origin">
             <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="Base Company" v-show="title==='手工创建' || title==='编辑'" prop="baseCompany">
-          <el-select clearable v-model="billSearch.baseCompany" placeholder="请选择">
+          <el-select clearable v-model="billSearch.baseCompany" placeholder="请选择Base Company">
             <el-option v-for="item in baseCompanyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="Reporting Unit" v-show="title==='手工创建' || title==='编辑'">
-          <el-select clearable filterable v-model="billSearch.reportUnit" placeholder="请选择">
+          <el-select clearable filterable v-model="billSearch.reportUnit" placeholder="请选择Reporting Unit">
             <el-option v-for="item in ReportUnitList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="账期" v-show="title==='手工创建' || title==='编辑' || title==='查询'" class="zqForm">
-          <el-input v-model.trim="zq2" placeholder="请输入" class="wsPeriod"></el-input>
-          <el-select clearable v-model="zq1" placeholder="请选择" class="wsPeriod">
+          <el-input v-model.trim="zq2" placeholder="请输入年份" class="wsPeriod"></el-input>
+          <el-select clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
             <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="流程状态" v-show="title === '查询' && urlName === 'billEntry'">
-          <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
+          <el-select clearable v-model="billSearch.processStatus" placeholder="请选择流程状态">
             <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <div v-show="title === '手工创建' || title==='编辑'">
           <el-form-item label="任务类型" prop="wsBusinessType">
-            <el-select clearable v-model="billSearch.wsBusinessType"  placeholder="请输入关键词">
+            <el-select clearable v-model="billSearch.wsBusinessType"  placeholder="请选择任务类型">
               <el-option v-for="item in YWoptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="分出公司">
-            <el-select clearable filterable v-model="cedentModel" placeholder="请选择">
+            <el-select clearable filterable v-model="cedentModel" placeholder="请选择分出公司">
               <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
                 <span style="float:left">{{ item.codecode }}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
@@ -146,7 +165,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="经纪公司">
-            <el-select clearable filterable v-model="brokerModel" placeholder="请选择">
+            <el-select clearable filterable v-model="brokerModel" placeholder="请选择经纪公司">
               <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
                 <span style="float:left">{{ item.codecode }}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
@@ -185,7 +204,7 @@
           </el-table>
         </el-form-item>
         <el-form-item label="选择下一任务处理人" v-show="title==='流程提交'">
-          <el-select clearable v-model="assignee"  placeholder="请输入关键词">
+          <el-select clearable v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>

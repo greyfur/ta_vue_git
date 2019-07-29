@@ -5,12 +5,12 @@
       <div v-show="searchFlag">
         <el-row :gutter="10" class="billRow">
         <el-col :span="8">
-          <span class="slable">process Id</span>
-          <el-input placeholder="请输入process Id" suffix-icon="el-icon-date" v-model.trim="formLabelAlign.processID"></el-input>
+          <span class="slable">流程编号</span>
+          <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="formLabelAlign.processID"></el-input>
         </el-col>
         <el-col :span="8">
           <span class="slable">结付公司代码</span>
-            <el-select clearable filterable v-model="cedentModel" placeholder="请选择">
+            <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司代码">
               <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
                 <span style="float:left">{{ item.codecode }}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
@@ -19,7 +19,7 @@
         </el-col>
         <el-col :span="8" v-show="processStatusList.length">
           <span class="slable">流程状态</span>
-          <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
+          <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择流程状态">
             <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-col>
@@ -33,43 +33,24 @@
     <div class="btn">
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
-      <!-- <el-button type="primary" plain @click="handleClick(4)">查询</el-button> -->
     </div>
     <el-table :data="tableData" stripe style="width: 100%">
-      <!-- <el-table-column prop="processId" label="ProcessID" width="120"></el-table-column> -->
       <el-table-column label="流程编号" width="120">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
       <el-table-column prop="rmSettleCompanyCode" width="110" label="结付公司代码"></el-table-column>
-      <!-- <el-table-column prop="rmSettleCompanyName" width="150" label="汇款人名称"></el-table-column> -->
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
-      <!-- <el-table-column prop="rmReceiptDate" width="100" label="汇款到账日期"></el-table-column> -->
       <el-table-column prop="businessOrigin" width="120" label="Business Origin"></el-table-column>
-      <el-table-column label="Base Company" width="120" prop="baseCompany">
-        <!-- <template slot-scope="scope">{{baseCompanyrules[scope.row.baseCompany]}}</template> -->
-      </el-table-column>
+      <el-table-column label="Base Company" width="120" prop="baseCompany"></el-table-column>
       <el-table-column prop="rmAmount" label="汇款金额"></el-table-column>
       <el-table-column prop="curOperator" label="操作员"></el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
-      <!-- <el-table-column prop="rmWrittenOffNum" label="我司销账编号"></el-table-column> -->
-      <!-- <el-table-column prop="rmOriSettleCompanyName" width="150" label="原收款公司名称"></el-table-column> -->
-      <!-- <el-table-column prop="rmOriCurrency" width="55" label="原收款币制"></el-table-column> -->
-      <!-- <el-table-column prop="rmOriAmount" label="原收款金额"></el-table-column> -->
       <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column>
       <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column>
-      <!-- <el-table-column prop="rmSettleUser" label="结算人员"></el-table-column> -->
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
-          <!-- <el-button @click.stop="handleClick(5,scope.row)" type="text" size="small">详情</el-button>
-          <el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button>
-          <el-button @click.stop="handleClick(11,scope.row)" type="text" size="small">踪迹</el-button>
-          <el-button v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" type="text" size="small">流程提交</el-button>
-          <el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(12,scope.row)" type="text" size="small">流程提交</el-button>
-          <el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(15,scope.row)" type="text" size="small">附件查看</el-button>
-          <el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(13,scope.row)" type="text" size="small">发送邮件</el-button>
-          <el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(20,scope.row)" type="text" size="small">Reverse</el-button> -->
           <el-dropdown>
             <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown">
@@ -98,7 +79,7 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
         <el-form-item label="结付公司代码">
-          <el-select clearable filterable v-model="cedentModel" placeholder="请选择">
+          <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司代码">
             <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
               <span style="float:left">{{ item.codecode }}</span>
               <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
@@ -120,12 +101,12 @@
           </el-select>
         </el-form-item> -->
         <el-form-item label="Business Origin" prop="businessOrigin" v-show="title==='创建' || title==='编辑'"> 
-          <el-select clearable v-model="formLabelAlign.businessOrigin" placeholder="请选择">
+          <el-select clearable v-model="formLabelAlign.businessOrigin" placeholder="请选择Business Origin">
             <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="Base Company" v-show="title==='创建' || title==='编辑'" prop="baseCompany">
-          <el-select clearable v-model="formLabelAlign.baseCompany" placeholder="请选择">
+          <el-select clearable v-model="formLabelAlign.baseCompany" placeholder="请选择Base Company">
             <el-option v-for="item in baseCompanyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
@@ -162,14 +143,6 @@
           </el-select>
           <input type="text" class="selfInput" v-model="formLabelAlign.rmChargesAmount" @input="watchInput('rmChargesAmount')">
         </el-form-item> -->
-        <el-form-item label="Process ID" v-show="title==='查询'">
-          <el-input v-model.trim="formLabelAlign.processID"></el-input>
-        </el-form-item>
-        <el-form-item label="流程状态" v-show="title === '查询'">
-          <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
-            <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item>
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="confirm('formLabelAlign')">确 定</el-button>

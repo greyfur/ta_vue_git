@@ -9,8 +9,6 @@
             <span class="enWord">CHINA RE P&C</span>
           </span>
           <span class="line" v-show="!fold"></span>
-          <!-- <span style="font-size:16px;color:#fff;" v-show="!fold">TATEST</span> -->
-          <!-- <span style="font-size:12px;color:#fff;" v-show="!fold">Accounts/Settlement</span> -->
           <span class="word" v-show="!fold">
             <span style="font-size:15px;display: inline-block;transform: scale(.9);">账单结算管理系统</span><br/> 
             <span class="enWord">Accounts/Settlement</span>
@@ -29,7 +27,8 @@
           active-text-color="#fff">
           <el-submenu :index="el.name" v-for="(el,index) in urlArr" :key="index">
             <template slot="title">
-              <i class="el-icon-location"></i>
+              <!-- <i class="iconfont iconGroup171"></i> -->
+              <i style="color:#fff;" :class="iconEmnu[el.name]"></i>
               <span>{{el.title}}</span>
             </template>
               <el-menu-item v-for="(item,i) in el.children" :key="i" :index="item.name">
@@ -38,7 +37,6 @@
           </el-submenu>
         </el-menu>
       </div>
-      <!-- <p class="fold" @click="fold=!fold;" :class="{'marginFold':fold}"><i class="iconfont iconGroup73"></i></p> -->
     </div>
     <div class="logOut">
       <span style="color:#999;">
@@ -65,6 +63,13 @@ import {computeName} from '@/assets/js/util.js'
         UName:'',
         fold:true,
         transtionflag:false,
+        iconEmnu:{
+          'bill':'el-icon-tickets',
+          'receipt':'el-icon-coin',
+          'pay':'el-icon-bank-card',
+          'integratedQuery':'el-icon-s-opportunity',
+          'admin':'el-icon-s-check',
+        }
       };
     },
     created() {  // 获取公共数据
