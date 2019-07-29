@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="./dist/anyshare.desktop.css">
+
+    <!--[if IE 8]>
+        <script src="./libs/es5-shim.min.js"></script>
+        <script src="./libs/es5-sham.custom.min.js"></script>
+    <![endif]-->
+
+    <script src="./libs/es6-shim.min.js"></script>
+    <script src="./libs/es6-sham.min.js"></script>
+    <script src="./libs/es6-promise.auto.min.js"></script>
+    <script src="./libs/es7-shim.min.js"></script>
+    <script src="./libs/hls.js/dist/hls.min.js"></script>
+    <script src="./libs/pdfjs-dist/build/pdf.combined.js"></script>
+    <script src="./dist/anyshare.desktop.js"></script>
+
+    <style type="text/css">
+      *{padding:0;margin:0}
+      .wrap,body,html{height:100%;font-size:13px;font-family:arial,"微软雅黑",sans-serif;background:#fff}
+      img,li,ul{border:none}
+      #preview{position:fixed;top:0;right:0;left:0;bottom:0}
+    </style>
+
+    <!-- 设置PDFJS -->
+    <script type="text/javascript">
+      PDFJS.cMapUrl = './libs/pdfjs-dist/cmaps/';
+      PDFJS.cMapPacked = true;
+      PDFJS.workerSrc = './libs/pdfjs-dist/build/pdf.worker.entry.js';
+    </script>
+</head>
+
+<body>
+    <div id="preview"></div>
+
+    <script>
+        
+        (function () {
+            window.addEventListener('message',function(e){ 
+                sessionStorage.setItem('data',JSON.stringify(e.data));
+            }) 
+            setTimeout(function(){
+                var obj = JSON.parse(sessionStorage.getItem('data'));
+                if(Object.keys(obj).length){
+                var AS = AnyShare({
+                locale: 'zh-cn',
+                host: 'http://172.25.147.132', // 需替换成实际的部署地址
+                EACPPort: 9998, // 如果部署地址使用http，则填写9998
+                EFSPPort: 9123, // 如果部署地址使用http，则填写9123
+                userid: function () {
+                    // 替换用户自己的userid
+                    // return '76e414a8-785c-11e9-a0aa-00163e010158'
+                    return obj.userId
+                },
+                tokenid: function () {
+                    // 替换用户自己的tokenid
+                    // return '09d90385-bd98-4162-b5a2-18cf6c7bcef7'
+                    return obj.tokenId
+                },
+            })
+
+            AS.Components.Preview({
+                doc: {
+                    docid: obj.docCloudId,
+                    name: obj.docName,
+                    // docid: 'gns://AED2628A240C40159194263C4D2BED37/F9FD3BF810A54B18A1136B8CA1F70A2D/D7E75300A8A74540B4E4FA8787281322/51E7FF8C497549C786F3956E6186828B/CF26F5CA58AB490A9299C582DC018F70',
+                    // name: '猎你简历-王先生.pdf'
+                },
+                canEdit: false
+            }, document.querySelector('#preview'))
+                }
+             },1000)
+        })()
+        
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1487 @@
+<template> 
+  <div class="detailCred">
+    <router-link :to="{name:$route.query.tag}" style="color:#333;position:absolute;top:20px;left:70px;z-index:100;">
+      <span class="arrows">＜</span>
+      <span class="word">返回上一级</span>
+    </router-link>
+    <!-- 核销完成 -->
+    <div class="btn" v-if="$route.query.tag === 'collectiongEnd'">
+      <el-button type="primary" plain @click="getSg">同步状态</el-button>
+      <el-button type="primary" plain @click="makeReport">生成核销报告</el-button>
+      <el-button type="primary" plain @click="mailSend(2,'附件查看')">附件查看</el-button>
+      <el-button type="primary" plain @click="getTaxInfo">增值税信息获取</el-button>
+      <el-button type="primary" plain @click="openReverse">Reversed</el-button>
+    </div>
+    <!-- 操作 -->
+    <div class="btn" v-if="$route.query.tag === 'credOperation'">
+      <el-button type="primary" :disabled="czState" plain @click="mailSend(1,'上传附件')">上传附件</el-button>
+      <el-button type="primary" :disabled="czState" plain @click="mailSend(2,'附件查看')">附件查看</el-button>
+      <el-button type="primary" :disabled="czState" plain @click="submite(2,'任务指派','操作','收款录入')">任务指派</el-button>
+      <el-button type="primary" :disabled="czState" plain @click="submite(3,'置废')">置废</el-button>
+      <el-button :type="czState?'info':'primary'" @click="gangUp('操作')" plain>{{!czState?'挂起':'悬停'}}</el-button>
+      <el-button type="primary" :disabled="czState" plain @click="creatRM('a')">支票创建</el-button>
+      <el-button type="primary" :disabled="czState" plain @click="submite(1,'流程提交','收款复核')">流程提交</el-button>
+    </div>   
+    <!-- 复核 -->
+    <div class="btn" v-if="$route.query.tag === 'credReview'">
+      <el-button type="primary" plain @click="submite(2,'任务指派','复核','收款复核')">任务指派</el-button>
+      <el-button type="primary" plain @click="getSg">同步状态</el-button>
+      <el-button type="primary" plain @click="submite(4,'复核驳回')">复核驳回</el-button>
+      <el-button type="primary" plain @click="submite(1,'复核通过','收款录入')">复核通过</el-button>
+    </div>
+    <!-- 核销 -->
+    <div class="btn" v-if="$route.query.tag === 'credVerification'">
+      <el-button type="primary" :disabled="hxState" plain @click="submite(1,'流程提交','收款录入')">流程提交</el-button>
+      <el-button type="primary" :disabled="hxState" @click="tbState" plain>同步状态</el-button>
+      <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BPSICS</el-button>
+      <el-button :type="hxState?'info':'primary'" @click="gangUp('核销')" plain>{{!hxState?'挂起':'暂挂待销'}}</el-button>
+    </div>
+    <!-- 暂挂 -->
+    <div class="btn" v-if="$route.query.tag === 'viewInvalidate'">
+      <el-button type="primary" plain @click="mailSend(2,'附件查看')">附件查看</el-button>
+      <el-button type="primary" plain @click="submite(5,'状态恢复')">状态恢复</el-button>
+    </div>
+
+    <!-- 详情 -->
+    <div class="searchNew">
+      <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
+        <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>详情</div>
+        <p class="info" style="color:#666;">流程编号: 
+          <el-tooltip class="item" effect="dark" content="点击复制" placement="top">
+            <span style="color:#000;" id="proNum" @click.stop="copy('proNum')">{{row.processId}}</span>
+          </el-tooltip>
+        </p>
+      </div>
+      <ul class="detail-ul" v-show="searchFlag1">
+        <li v-for="(item,i) in listData" :key="i" class="detail-item">
+          <span class="detail-name">{{item.a}} : </span><span class="detail-content">{{item.b}}</span>
+        </li>
+      </ul>
+    </div>
+
+    <el-row v-if="$route.query.tag === 'credVerification'">
+      <el-col :span="24">
+        <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
+          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>组信息</div>
+          <p><i class="iconfont iconGroup26"></i></p>
+        </div>
+        <el-table v-show="searchFlag3" stripe :data="SgData" style="width: 100%">
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-table stripe :data="props.row.worksheetDOList" style="width: 100%">
+                <el-table-column prop="wsId" label="账单号"></el-table-column>
+                <el-table-column prop="wsStatus" label="账单状态">
+                  <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+                </el-table-column>
+                <el-table-column prop="wsTitle" label="账单标题"></el-table-column>
+                <el-table-column prop="businessId" label="业务编号"></el-table-column>
+                <el-table-column prop="docName" label="附件名称"></el-table-column>
+                <el-table-column prop="section" label="section"></el-table-column>
+                <el-table-column prop="uwYear" label="业务年度"></el-table-column>
+                <el-table-column prop="businessType" label="任务类型"></el-table-column>
+                <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
+                <el-table-column label="分出公司" width="120">
+                  <template slot-scope="scope">
+                    {{scope.row.cedentCode}}-{{scope.row.cedentName}}
+                  </template>       
+                </el-table-column>
+                <el-table-column label="经纪公司" width="120">
+                  <template slot-scope="scope">
+                    {{scope.row.brokerCode}}-{{scope.row.brokerName}}
+                  </template>      
+                </el-table-column>
+                <el-table-column prop="wsType" label="账单类型"></el-table-column>
+                <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
+                <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
+                <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+                <el-table-column prop="dept" label="经营机构"></el-table-column>
+                <el-table-column prop="wsCurrency" label="币制" ></el-table-column>
+                <el-table-column prop="wsAmount" label="金额" ></el-table-column>
+                <el-table-column prop="createdBy" label="录入人" ></el-table-column>
+                <el-table-column prop="createdAt" label="录入时间" ></el-table-column>
+                <el-table-column prop="remark" label="备注"></el-table-column>
+                <el-table-column fixed="right" label="操作" width="100">
+                  <template slot-scope="scope">
+                    <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </template>
+          </el-table-column>
+          <el-table-column prop="sgNum" label="SG号"></el-table-column>
+          <el-table-column prop="processId" label="流程编号"></el-table-column>
+          <el-table-column prop="rmId" label="支票号"></el-table-column>
+          <el-table-column prop="bpCode" label="BP number" width="90"></el-table-column>
+          <el-table-column prop="bpName" label="BP名称"></el-table-column>
+          <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+          <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
+          <el-table-column prop="sgStatus" label="Sg状态"></el-table-column>
+          <el-table-column prop="settlementIndicator" label="结算指标"></el-table-column>
+          <el-table-column prop="sgCurrency" label="币值"></el-table-column>
+          <el-table-column prop="settlementAmount" label="结算总额"></el-table-column>
+          <el-table-column prop="unsettlementAmount" label="未结算金额" width="90"></el-table-column>
+          <el-table-column prop="dueDate" label="应收款日期" width="90"></el-table-column>
+          <el-table-column prop="bookingYear" label="账单年份"></el-table-column>
+          <el-table-column prop="bookingPeriod" label="账期"></el-table-column>
+          <el-table-column prop="accYear" label="统计年份"></el-table-column>
+          <el-table-column prop="accPeriod" label="统计期"></el-table-column>
+          <el-table-column prop="sgType" label="类型"></el-table-column>
+          <el-table-column prop="sgReference" label="参考"></el-table-column>
+          <el-table-column prop="createdBy" label="创建人"></el-table-column>
+          <el-table-column prop="createdAt" label="创建时间"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="100">
+            <template slot-scope="scope">
+              <el-button type="text" @click.stop="openSICS(scope.row,'sgNum')" size="mini">打开SICS</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-col :span="24">
+        <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag2 = !searchFlag2">
+          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>支票信息</div>
+          <p><el-button size="mini" @click="getSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
+        </div>
+        <el-table v-show="searchFlag2" stripe :data="RMData" style="width:100%">
+          <el-table-column prop="rmId" label="remittance号" width="100"></el-table-column>
+          <el-table-column prop="processId" label="流程编号"></el-table-column>
+          <el-table-column label="支票状态">
+            <template slot-scope="scope">{{scope.row.rmStatusName}}-{{scope.row.rmStatus}}</template>
+          </el-table-column>
+          <el-table-column prop="paymentType" label="支付方式"></el-table-column>
+          <el-table-column prop="bankCurrency" label="实收/支币制" width="100"></el-table-column>
+          <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column>
+          <el-table-column prop="chargesAmount" label="手续费金额" width="100"></el-table-column>
+          <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+          <el-table-column prop="bankAccountName" label="银行账户"></el-table-column>
+          <el-table-column prop="valueDate" label="起息日"></el-table-column>
+          <el-table-column prop="dueDate" label="到期日"></el-table-column>
+          <el-table-column prop="partnerCode" label="汇款人代码" width="90"></el-table-column>
+          <el-table-column prop="partnerName" label="汇款人名称" width="90"></el-table-column>
+          <el-table-column prop="businessPartnerRef" label="BP Reference信息" width="130"></el-table-column>
+          <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="140">
+            <template slot-scope="scope">
+              <el-button type="text" @click.stop="openSICS(scope.row,'rmId')" size="mini">打开SICS</el-button>
+              <el-button type="text" v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'" @click.stop="openSICS(scope.row,'rmId','R')" size="mini">Reverse</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+
+    <el-row v-if="$route.query.tag === 'credVerification'">
+      <el-col :span="24">
+        <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag4 = !searchFlag4">
+          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息</div>
+          <p><i class="iconfont iconGroup26"></i></p>
+        </div>
+        <el-table v-show="searchFlag4" stripe :data="WSData" style="width: 100%">
+          <el-table-column prop="wsId" label="账单号"></el-table-column>
+          <el-table-column prop="wsStatus" label="账单状态">
+            <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+          </el-table-column>
+          <el-table-column prop="wsTitle" label="账单标题"></el-table-column>
+          <el-table-column prop="businessId" label="业务编号"></el-table-column>
+          <el-table-column prop="docName" label="附件名称"></el-table-column>
+          <el-table-column prop="section" label="section"></el-table-column>
+          <el-table-column prop="uwYear" label="业务年度"></el-table-column>
+          <el-table-column prop="businessType" label="任务类型"></el-table-column>
+          <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
+          <el-table-column label="分出公司" width="120">
+            <template slot-scope="scope">
+              {{scope.row.cedentCode}}-{{scope.row.cedentName}}
+            </template>       
+          </el-table-column>
+          <el-table-column label="经纪公司" width="120">
+            <template slot-scope="scope">
+              {{scope.row.brokerCode}}-{{scope.row.brokerName}}
+            </template>      
+          </el-table-column>
+          <el-table-column prop="wsType" label="账单类型"></el-table-column>
+          <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
+          <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
+          <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+          <el-table-column prop="dept" label="经营机构"></el-table-column>
+          <el-table-column prop="wsCurrency" label="币制" ></el-table-column>
+          <el-table-column prop="wsAmount" label="金额" ></el-table-column>
+          <el-table-column prop="createdBy" label="录入人" ></el-table-column>
+          <el-table-column prop="createdAt" label="录入时间" ></el-table-column>
+          <el-table-column prop="remark" label="备注"></el-table-column>
+          <el-table-column fixed="right" label="操作">
+            <template slot-scope="scope">
+              <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+
+      <!-- 弹窗区域 -->
+      <el-dialog :title="title" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal">
+        <el-form label-width="140px">
+          <el-form-item label="选择驳回原因" v-show="title==='复核驳回'">
+            <el-select v-model="opinion"  placeholder="请输入驳回原因" @change="changeOpinion">
+              <el-option v-for="item in BHoptions" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="原因填写" v-show="title==='复核驳回'">
+            <el-input :disabled="opinion!='其它'" type="textarea" :rows="2" placeholder="请输入原因" v-model="rebut"></el-input>
+          </el-form-item>
+          <el-form-item label="输入悬停原因" v-show="title==='悬停'">
+            <el-input type="textarea" :rows="2" placeholder="请输入悬停原因" v-model="pendingReason"></el-input>
+          </el-form-item>
+          <el-form-item label="选择下一任务处理人" v-show="putIn=='n'">
+            <el-select v-model="assignee"  placeholder="请输入关键词">
+              <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item :label="title === '任务指派'?'选择任务指派人':'选择下一任务处理人'" v-show="title === '任务指派' || putIn=='b'">
+            <el-select v-model="assignee"  placeholder="请输入关键词">
+              <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="confirm">确定</el-button>
+            <el-button @click="dialogFormVisible3 = false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+
+      <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
+        <el-form :label-position="labelPosition" label-width="180px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
+          <el-form-item label="Process ID">
+            <el-input v-model.trim="formLabelAlign.processId" disabled style="width:194px"></el-input>
+          </el-form-item>
+          <el-form-item label="支票状态" prop="rmStatusIndex">
+            <el-select v-model="formLabelAlign.rmStatusIndex" placeholder="请选择">
+              <el-option v-for="(item,i) in rmStatusList" :key="item.n" :label="item.n" :value="i"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="支付方式" prop="paymentTypeIndex">
+            <el-select v-model="formLabelAlign.paymentTypeIndex" placeholder="请选择">
+              <el-option v-for="(item,i) in paymentTypeList" :key="item.n" :label="item.n" :value="i"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Base Company" prop="baseCompany">
+            <el-select disabled v-model="formLabelAlign.baseCompany" placeholder="请选择" @change="baseCompanyChange">
+              <el-option v-for="item in baseCompanyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Business Origin" prop="businessOrigin"> 
+            <el-select v-model="formLabelAlign.businessOrigin" placeholder="请选择">
+              <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="汇款人" prop="brokerModel">
+            <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择">
+              <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
+                <span style="float:left">{{ item.codecode }}</span>
+                <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="银行账户" prop="bankAccount1">
+            <el-select v-model="formLabelAlign.bankAccount1" placeholder="请选择">
+              <el-option v-for="(item,i) in BankAccountList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="i"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="起息日" prop="valueDate">
+            <el-date-picker value-format="timestamp" v-model="formLabelAlign.valueDate" type="date" placeholder="选择日期"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="到期日" prop="dueDate">
+            <el-date-picker value-format="timestamp" v-model="formLabelAlign.dueDate" type="date" placeholder="选择日期"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="币制/金额" required>
+            <el-col :span="10">
+              <el-form-item prop="bankCurrency">
+                <el-select v-model="formLabelAlign.bankCurrency" placeholder="请选择" class="curAmount" @change="bankCurrencyChange">
+                  <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item prop="bankAmount">
+                <input type="text" class="selfInput" v-model="formLabelAlign.bankAmount" @input="watchInput('bankAmount')">
+                <!-- <el-input v-model="formLabelAlign.bankAmount" @input.native="watchInput('bankAmount')" class="curAmount"></el-input> -->
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="手续费币制/手续费金额" required>
+            <el-col :span="10">
+              <el-form-item prop="chargesCurrency">
+                <el-select v-model="formLabelAlign.chargesCurrency" placeholder="请选择" class="curAmount">
+                  <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item prop="chargesAmount">
+                <input type="text" class="selfInput" v-model="formLabelAlign.chargesAmount" @input="watchInput('chargesAmount')">
+                <!-- <el-input v-model="formLabelAlign.chargesAmount" @input.native="watchInput('chargesAmount')" class="curAmount"></el-input> -->
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="creatRM(1,'formLabelAlign')">确定</el-button>
+            <el-button @click="dialogFormVisible = false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+     
+    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
+      <el-form label-width="120px">
+        <el-form-item label="选择附件" v-show="title ==='上传附件'">
+          <el-upload
+            class="upload-demo"
+            action
+            :before-upload="beforeAvatarUpload"
+            :auto-upload="true"
+            :http-request='upload'
+            :file-list="fileList">
+            <el-button size="small" type="primary">上传</el-button>
+          </el-upload>
+          </el-form-item>
+      </el-form>
+      <el-table stripe :data="fileData" style="width: 100%" class="document" v-show="title==='附件查看'">
+        <el-table-column label="文件名">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
+              <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createdAt" label="时间"></el-table-column>
+        <el-table-column prop="createdBy" label="任务来源"></el-table-column>
+        <el-table-column label="操作" width="100">
+          <template slot-scope="scope">
+            <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-table stripe :data="TaxList" style="width: 100%" class="document" v-show="title==='增值税信息获取'">
+        <el-table-column prop="invoiceId" label="增值税号"></el-table-column>
+        <el-table-column prop="rmId" label="支票号"></el-table-column>
+        <el-table-column prop="sgNum" label="SG号"></el-table-column>
+        <el-table-column prop="invoicePurchaser" label="购买方"></el-table-column>
+        <el-table-column prop="invoiceSeller" label="销售方"></el-table-column>
+        <el-table-column prop="invoiceChecker" label="核实人"></el-table-column>
+        <el-table-column prop="invoiceAmount" label="开票金额"></el-table-column>
+        <el-table-column prop="invoiceDrawer" label="开票人"></el-table-column>
+        <el-table-column prop="invoiceDate" label="开票日期"></el-table-column>
+        <el-table-column prop="createdBy" label="创建人"></el-table-column>
+        <el-table-column prop="createdAt" label="创建日期"></el-table-column>
+        <el-table-column prop="remark" label="备注"></el-table-column>
+      </el-table>
+    </el-dialog>
+
+     <el-dialog title="文档预览" :visible.sync="dialogFormVisibleA" :close-on-click-modal="modal">
+      <div class="browseDoc">
+        <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'detailCred',
+  data() {
+      return {
+        searchFlag1:true,
+        searchFlag2:true,
+        searchFlag3:true,
+        searchFlag4:true,
+        modal:false,
+        tableData:[],
+        SICSData:[],
+        RMData:[],
+        listData:[
+          {
+            a:'流程编号',
+            b:'',
+            c:'processId'
+          },
+          {
+            a:'结付公司代码',
+            b:'',
+            c:'rmSettleCompanyCode',
+          },
+          {
+            a:'汇款人名称',
+            b:'',
+            c:'rmSettleCompanyName',
+          },
+          {
+            a:'币制',
+            b:'',
+            c:'rmCurrency',
+          },
+          {
+            a:'到账日期',
+            b:'',
+            c:'rmReceiptDate',
+          },
+          {
+            a:'Business Origin',
+            b:'',
+            c:'businessOrigin'
+          },
+          {
+            a:'汇款金额',
+            b:'',
+            c:'rmAmount',
+          },
+          {
+            a:'Base Company',
+            b:'',
+            c:'baseCompany',
+          },
+          {
+            a:'操作员',
+            b:'',
+            c:'modifiedBy'
+          },
+          {
+            a:'我司销账编号',
+            b:'',
+            c:'rmWrittenOffNum',
+          },
+
+          {
+            a:'原收款公司名称',
+            b:'',
+            c:'rmOriSettleCompanyName',
+          },
+          {
+            a:'原收款币制',
+            b:'',
+            c:'rmOriCurrency',
+          },
+          {
+            a:'原收款金额',
+            b:'',
+            c:'rmOriAmount',
+          },
+          {
+            a:'手续费币制',
+            b:'',
+            c:'rmChargesCurrency',
+          },
+          {
+            a:'手续费金额',
+            b:'',
+            c:'rmChargesAmount',
+          },
+          {
+            a:'结算人员',
+            b:'',
+            c:'rmSettleUser',
+          },
+        ],
+        formLabelAlign:{
+          rmStatus:'',
+          rmStatusName:'',
+          processId:'',
+          paymentType:'',
+          paymentTypeName:'',
+          bankCurrency:'CNY',
+          bankAmount:'',
+          baseCompany:null,
+          bankAccount:'', //objectId
+          valueDate:'',
+          dueDate:'',
+          businessPartnerRef:'',
+          businessOrigin:'',
+          createdBy:'',
+          chargesCurrency:'',
+          chargesAmount:'',
+          partnerCode:'',
+          partnerName:'',
+          bankCurrency:'',
+          bankAccountName:'',
+          bankAccount1:null,
+          rmStatusIndex:'',
+          bookingPeriodName:'Month 05',
+          bookingPeriodCode:'M05',
+          bookingYear:'2019',
+          paymentTypeIndex:'',
+          brokerModel:null,
+        },
+        TaxList:[],
+        xtname:'',
+        pendingReason:null,
+        rmStatusList:[{'n':'In Progress','v':'PROG'},{'n':'In Execution','v':'INEX'}],
+        paymentTypeList:[{'n':'Wire','v':'WIRE'},{'n':'Void P-wire','v':'VP_WIRE'}],
+        businessOriginList:[{a:'DOM',b:'RC_DOMESTIC'},{a:'INT',b:'RC_INTL'},],
+        brokerList:[],
+        rmCurrencyList:[],
+        assignee:'',
+        TJRoptions:[],
+        dialogFormVisible3:false,
+        dialogFormVisible2:false,
+        dialogFormVisible:false,
+        dialogFormVisibleA:false,
+        title:'',
+        currentPage3: 5,
+        hide:false,
+        radio: '1',
+        options:[],
+        flag:'',
+        specialName:'',
+        row:{},
+        czState:false,
+        hxState:false,
+        BHoptions:['金额','币制','SECTION','合同号','未决','ENTRYCODE','日期','其它'],
+        opinion:'',
+        rebut:'',
+        baseCompanyList:[],
+        mustData:{
+          actOperator:'',
+          processStatus:'',
+          pageNumber:1,  // 页数
+          pageSize:20,  //页面一次要展示的条数
+          total:0, //总条数
+        },
+        labelPosition:'right',
+        pageNumber:1,  // 页数
+        pageSize:20,  //页面一次要展示的条数
+        BankAccountList:[],
+        file:[],
+        fileList:[],
+        fileData:[],
+        SgData:[],
+        WSData:[],
+        rules:{
+          rmStatusIndex: [
+            { required: true, message: '请选择支票状态', trigger: 'blur' }
+          ],
+          businessOrigin: [
+            { required: true, message: '请选择Business Origin', trigger: 'blur' }
+          ],
+          paymentTypeIndex: [
+            { required: true, message: '请选择支付方式', trigger: 'blur' }
+          ],
+          baseCompany: [
+            { required: true, message: '请选择Base Company', trigger: 'blur' }
+          ],
+          brokerModel: [
+            { required: true, message: '请选择汇款人', trigger: 'blur' }
+          ],
+          bankAccount1: [
+            { required: true, message: '请选择银行账户', trigger: 'blur' }
+          ],
+          bankCurrency: [
+            { required: true, message: '请选择币制', trigger: 'blur' }
+          ],
+          chargesCurrency: [
+            { required: true, message: '请选择手续费币制', trigger: 'blur' }
+          ],
+          valueDate: [
+            { type: 'date', required: true, message: '请选择起息日', trigger: 'blur' }
+          ],
+          dueDate: [
+            { type: 'date', required: true, message: '请选择到期日', trigger: 'blur' }
+          ],
+          input: [
+            { required: true, message: '请输入汇款金额', trigger: 'blur' },
+          ],
+          bankAmount:[
+            { required: true, message: '请输入金额', trigger: 'blur' }
+          ],
+          chargesAmount:[
+            { required: true, message: '请输入手续费金额', trigger: 'blur' }
+          ],
+        },
+        putIn:false,
+      };
+    },
+  created(){
+    sessionStorage.setItem('data',JSON.stringify({}));
+    this.row = JSON.parse(this.$route.query.row);
+    this.mustData.actOperator = this.$store.state.userName;
+    this.mustData.processStatus = this.$route.query.row.processStatus;
+    // 查询单条数据，根据processId
+    let param = {
+      curOperator: this.$store.state.userName,
+      pageNumber: 1,
+      pageSize: 20,
+      processId: this.row.processId,
+      processType: "收款",
+    }
+    if(this.$route.query.tag === 'credOperation' || this.$route.query.tag === 'credVerification'){
+      this.$http.post('api/receipt/finaCreat/list',param).then(res =>{
+        if(res.status == 200 ){
+          if(this.$route.query.tag === 'credOperation' && res.data.rows[0].processStatus == '已悬停'){
+            this.czState = true;
+          } else{ this.czState = false; }
+          if(this.$route.query.tag === 'credVerification' && res.data.rows[0].processStatus == '已悬停'){
+            this.hxState = true;
+          } else{ this.hxState = false; }
+        }
+      })
+    }
+    this.formLabelAlign.valueDate = new Date().getTime();
+    this.formLabelAlign.dueDate = new Date().getTime();
+  },
+  mounted(){
+    setTimeout(()=>{
+      // 分出人+经济人
+      let fcArr = JSON.parse(sessionStorage.getItem('CedentType'));
+      let jArr = JSON.parse(sessionStorage.getItem('BrokerType'));
+      this.brokerList = jArr.concat(fcArr);
+      //获取币制
+      this.rmCurrencyList = JSON.parse(sessionStorage.getItem('CurrencyList'));
+      // 集团产再
+      this.baseCompanyList = JSON.parse(sessionStorage.getItem('baseCompany'));
+      // 国际国内
+      this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
+      if(this.$route.query.tag === 'credOperation'){ // 操作
+        // 获取银行账户列表
+        this.AllBankAccountList = JSON.parse(sessionStorage.getItem('AllBankAccountList'));
+        this.rmWriteBack(); 
+      }
+    },1000)
+    if(this.$route.query.tag === 'credVerification'){
+      this.dataBaseSG();
+    } else{ this.queryRM(); }
+    // 详情
+    this.listData.forEach(el=>{
+      el['b'] = this.row[el['c']];
+    })
+  },
+  methods: {
+    docView(row) {
+      if(row){
+        this.dialogFormVisibleA = true;
+        this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
+        if(res.status == 200){
+          console.log(res);
+          document.getElementById('iframeId').contentWindow.postMessage({
+            tokenId:res.data.tokenId,
+            userId:res.data.userId,
+            docCloudId:row.docCloudId,
+            docName:row.docName,
+            ip:res.data.ip,
+            acPort:res.data.acPort,
+            fsPort:res.data.fsPort,
+          },'*');
+          document.getElementById('iframeId').contentWindow.location.reload(true);
+        }
+      })
+      } else{
+        document.getElementById('iframeId').contentWindow.postMessage({},'*');
+        document.getElementById('iframeId').contentWindow.location.reload(true);
+      }
+    },
+    copy(id){
+      let Url2=document.getElementById(id).innerText;
+      let oInput = document.createElement('input');
+      oInput.value = Url2;
+      document.body.appendChild(oInput);
+      oInput.select(); // 选择对象
+      document.execCommand("Copy"); // 执行浏览器复制命令
+      oInput.className = 'oInput';
+      oInput.remove();
+      this.$message({message: '复制成功',type: 'success'});
+    },
+    changeOpinion(){
+      if(this.opinion!='其它'){ this.rebut = null; }
+    },
+    openBPSICS(){
+      if(!this.row.rmSettleCompanyCode){
+        this.$message({type: 'error', message:'process中rmSettleCompanyCode无值，打不开'});
+        return false;
+      }
+      this.$http.post('api/sics/liveDesktop/openBpLedger',{modifiedBy:this.mustData.actOperator,bpId:this.row.rmSettleCompanyCode}).then(res =>{
+        console.log(res,'打开SICS');
+      })
+    },
+    openReverse(){
+      this.$http.post('api/pay/teskClaim/reversePayProcess',{actOperator:this.$store.state.userName,processId:this.row.processId}).then(res =>{
+        console.log(res,'打开SICS')
+      })
+    },
+    openSICS(row,id){
+        if(id == 'rmId'){
+          this.$http.post('api/sics/liveDesktop/openRemittance',{modifiedBy:this.$store.state.userName,remitId:row.rmId}).then(res =>{
+            console.log(res,'打开SICS')
+          })
+        } else{
+          this.$http.post('api/sics/liveDesktop/openWorksheet',{modifiedBy:this.$store.state.userName,worksheetId:row[id]}).then(res =>{
+            console.log(res,'打开SICS')
+            // if(res.status === 200 && res.data.rows){
+            //   this.SICSData = res.data.rows;
+            // }
+          })
+        }
+    },
+    dataBaseSG(){
+      this.$http.post('api/sics/basis/getSGAndRemitList',{actOperator:this.mustData.actOperator,processId:this.row.processId}).then(res =>{
+        console.log(res,'dataBaseSG');
+        if(res.status === 200){
+          this.SgData = res.data.worksheetsgDOlist;
+          this.RMData = res.data.remitDOlist;
+          this.WSData = res.data.workSheetDOlsit;
+        }
+      })
+    },
+    makeReport(){
+      this.$http.post('api/sics/basis/getPairingExelByProcessId',{processId:this.row.processId}).then(res =>{
+        console.log(res,'makeReport');
+        if(res.status === 200 && res.data){
+          this.$message({message:'生成核销报告成功',type: 'success'});
+        }
+      })
+    }, 
+    getTaxInfo(){  // 增值税信息获取
+      this.title = '增值税信息获取';
+      this.$http.post('api/vat/message/save',{processId:this.row.processId}).then(res =>{
+        console.log(res,'getTaxInfo');
+        if(res.status === 200 && res.data){
+          this.TaxList = res.data;
+          this.dialogFormVisible2 = true;
+        } else{ this.$message.error('无数据或者后端报错'); }
+      })
+    },
+    tbState(){
+      this.$http.post('api/sics/basis/receiptSynchronize',{actOperator:this.mustData.actOperator,processId:this.row.processId}).then(res =>{
+        console.log(res,'getSg');
+        if(res.status === 200){
+          this.SgData = res.data.worksheetsgDOlist;
+          this.RMData = res.data.remitDOlist;
+          this.WSData = res.data.workSheetDOlsit;
+        }
+      })
+    },
+    getSg(){ 
+      if(this.RMData){
+        let rmIds = '';
+        this.RMData.forEach(el=>{
+          rmIds += `${el.rmId},`
+        })
+        // this.$http.post('api/sics/basis/receiptSynchronize',{actOperator:this.mustData.actOperator,processId:this.row.processId}).then(res =>{
+        this.$http.post('api/sics/basis/getPayRemitFromSics',{actOperator:this.mustData.actOperator,processId:this.row.processId,rmIds:rmIds}).then(res =>{
+          console.log(res,'getSg');
+          if(res.status === 200){
+            this.SgData = res.data.worksheetsgDOlist;
+            this.RMData = res.data.remitDOlist;
+            this.WSData = res.data.workSheetDOlsit;
+          }
+        })
+      } else{ this.$message.error('无账单，无法更新信息'); }
+      
+    },
+    rmWriteBack() {
+      // 不能写方法循环遍历，只能手写一点点对字段，有坑
+      this.formLabelAlign.processId = this.row.processId;
+      // if(this.row.baseCompany === 'G'){
+      //   this.formLabelAlign.baseCompany = 'BP2'
+      // } else if(this.row.baseCompany === 'P'){
+      //   this.formLabelAlign.baseCompany = 'BP1'
+      // }
+       // 带过来的结付公司代码 === 汇款人
+      if(this.row.rmSettleCompanyCode){
+        this.brokerList.forEach((el,i)=>{
+          if(el.codecode == this.row.rmSettleCompanyCode){
+            this.formLabelAlign.brokerModel = i;
+          }
+        })
+        }
+      this.formLabelAlign.businessPartnerRef = this.row.processId;
+      this.formLabelAlign.bankCurrency = this.row.rmCurrency;
+      this.formLabelAlign.bankAmount = this.row.rmAmount;
+      this.formLabelAlign.chargesCurrency = this.row.rmChargesCurrency;
+      this.formLabelAlign.chargesAmount = this.row.rmChargesAmount;
+      if(this.row.businessOrigin == 'DOM'){
+        this.formLabelAlign.businessOrigin = 'RC_DOMESTIC';
+      } else if(this.row.businessOrigin == 'INT'){
+        this.formLabelAlign.businessOrigin = 'RC_INTL';
+      }
+    },
+    bankCurrencyChange(){   //  获取银行账户     bankCurrency 币制
+      this.baseCompanyChange();
+      this.formLabelAlign.bankAccount1 = null;
+        if(this.BankAccountList.length){
+          let arr1 =  this.BankAccountList.filter(el=>{
+            return el.currency === this.formLabelAlign.bankCurrency;
+          })
+          if(arr1.length){ 
+            this.BankAccountList = arr1; 
+          } else{ 
+            this.$message.error('选择的币制和银行账户不匹配'); 
+            this.BankAccountList = [];
+          }
+        }
+       
+    },
+    baseCompanyChange(){
+      if(this.AllBankAccountList.length){
+        let Glist = [], Plist = [];
+        this.AllBankAccountList.forEach(el=>{
+          if(el.bpName === 'China Re Group'){ Glist.push(el);}
+          if(el.bpName === 'China Re P&C'){ Plist.push(el);}
+        })
+        if(this.formLabelAlign.baseCompany === 'BP2'){  // 集团
+          this.BankAccountList = Glist;
+        } else if(this.formLabelAlign.baseCompany === 'BP1'){  // 产再
+          this.BankAccountList = Plist;
+        } else{
+          this.$message.error('请选择Base Company'); 
+          this.BankAccountList = this.AllBankAccountList;
+        }
+      }
+    },
+    queryRM() {
+      this.$http.post('api/receipt/credOperation/queryRemit',{
+        processId:this.row.processId,
+        pageNumber:this.pageNumber,
+        pageSize:this.pageSize,
+        }).then(res =>{
+        console.log(res,'queryRM');
+        if(res.status === 200){
+          this.RMData = res.data.rows;
+          // this.formLabelAlign = res.data.rows;
+          // 创建编辑啥的不能回显
+        }
+      })
+    },
+    watchInput(name){      
+      if(!(/^\d+(\.\d{0,2})?$/.test(this.formLabelAlign[name]))){
+        if(this.formLabelAlign[name]){
+          // this.formLabelAlign[name] = this.formLabelAlign[name].substr(0,this.formLabelAlign[name].length-1);
+          this.formLabelAlign[name] = '';
+          this.$message.error('请输入数字，支持到小数点后两位');
+        }
+      }
+    },
+    creatRM(tag,formName){
+      if(this.formLabelAlign.brokerModel != null){
+        let obj = this.brokerList[this.formLabelAlign.brokerModel];
+        this.formLabelAlign.partnerCode = obj.codecode;
+        this.formLabelAlign.partnerName = obj.codeName;
+      }
+      if(tag == 1){  // 确定
+        let val = this.BankAccountList[this.formLabelAlign.bankAccount1];
+        if(val){
+          this.formLabelAlign.bankAccount = val.objectId;
+          this.formLabelAlign.bankAccountName = val.bankName;
+        }
+        let val3 = this.rmStatusList[this.formLabelAlign.rmStatusIndex];
+        if(val3){
+          this.formLabelAlign.rmStatus = val3.v;
+          this.formLabelAlign.rmStatusName = val3.n;
+        }
+        let val2 = this.paymentTypeList[this.formLabelAlign.paymentTypeIndex];
+        if(val2){
+          this.formLabelAlign.paymentType = val2.v;
+          this.formLabelAlign.paymentTypeName = val2.n;
+        }
+        this.formLabelAlign.createdBy = this.$store.state.userName;
+        this.$refs[formName].validate((valid) => {
+          if(valid) {
+            this.$http.post('api/receipt/credOperation/createRemit',Object.assign(this.formLabelAlign,this.mustData)).then(res =>{
+              this.dialogFormVisible = false;
+              if(res.status === 200 && res.data.errorCode == 1){
+                this.$message({message: '创建成功',type: 'success'});
+                this.queryRM();
+              } else if(res.data.errorCode == 0 && res.data.errorMessage){
+                this.$message.error(res.data.errorMessage);
+              }
+            })
+          }
+        })
+      } else if(tag == 'a'){   // 创建支票
+        this.rmFlag = 'a';
+        this.rmWriteBack(); 
+        this.dialogFormVisible = true;
+        this.bankCurrencyChange();
+      } else if(tag == 'b'){   // 编辑支票
+        this.rmFlag = 'b';
+        this.dialogFormVisible = true;
+      } 
+    },
+    getName(name){
+      // 任务指派人，下一级提交人 
+      this.$http.post('api/activiti/getAssigneeName',{roleName:name}).then(res =>{
+        if(res.status === 200){
+          this.TJRoptions = res.data;
+        }
+      }) 
+    },
+    gangUp(name){
+      this.pendingReason = null;
+      if(name === '操作'){
+        if(!this.czState){
+          this.title = '悬停';
+          this.dialogFormVisible3 = true;
+          this.flag = 13;
+          this.xtname = name;
+          // this.$confirm('是否状态挂起？', '提示', {
+          //   confirmButtonText: '确定',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          //   }).then(() => {
+          //     this.$http.post('api/receipt/activitiForReceipt/commonActivitiForReceipt'
+          //     ,{processId:this.row.processId, 
+          //     procInstId:this.row.processInstId, 
+          //     assignee:this.$store.state.userName, 
+          //     type:'PENDING',
+          //     actOperator:this.$store.state.userName})
+          //     .then(res =>{
+          //       console.log(res,'悬停');
+          //     if(res.status === 200 && res.data.errorCode == 1){
+          //       this.czState = !this.czState;
+          //     } else if(res.data.errorCode == 0){
+          //       this.$message({type: 'error', message:res.data.errorMessage }); 
+          //     }
+          //   })
+          // })
+        } else{  // 恢复
+            this.$confirm('是否恢复？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+            }).then(() => {
+              this.$http.post('api/receipt/activitiForReceipt/commonActivitiForReceipt',
+              {processId:this.row.processId, 
+              procInstId:this.row.processInstId, 
+              assignee:this.$store.state.userName, 
+              type:'RECOVERY',
+              actOperator:this.$store.state.userName})
+              .then(res =>{
+                console.log(res,'恢复');
+              if(res.status === 200 && res.data.errorCode == 1){
+                this.czState = !this.czState;
+              } else if(res.data.errorCode == 0){
+                this.$message({type: 'error', message:res.data.errorMessage }); 
+              }
+            })
+          })
+        }
+
+      } else{  // 核销
+        if(!this.hxState){
+          this.title = '悬停';
+          this.dialogFormVisible3 = true;
+          this.flag = 13;
+          this.xtname = name;
+          // this.$confirm('是否状态挂起？', '提示', {
+          //   confirmButtonText: '确定',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          //   }).then(() => {
+          //     this.$http.post('api/receipt/activitiForReceipt/commonActivitiForReceipt'
+          //     ,{processId:this.row.processId, 
+          //     procInstId:this.row.processInstId, 
+          //     assignee:this.$store.state.userName, 
+          //     type:'PENDING',hasRecheckFlag:'1',actOperator:this.$store.state.userName})
+          //     .then(res =>{
+          //       console.log(res,'悬停');
+          //     if(res.status === 200 && res.data.errorCode == 1){
+          //       this.hxState = !this.hxState;
+          //     } else if(res.data.errorCode == 0){
+          //       this.$message({type: 'error', message:res.data.errorMessage }); 
+          //     }
+          //   })
+          // })
+        } else{  // 恢复
+            this.$confirm('是否恢复？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+            }).then(() => {
+              this.$http.post('api/receipt/activitiForReceipt/commonActivitiForReceipt',
+              {processId:this.row.processId, 
+              procInstId:this.row.processInstId,
+               assignee:this.$store.state.userName, 
+               type:'RECOVERY',hasRecheckFlag:'1',actOperator:this.$store.state.userName})
+              .then(res =>{
+                console.log(res,'恢复');
+              if(res.status === 200 && res.data.errorCode == 1){
+                this.hxState = !this.hxState;
+              } else if(res.data.errorCode == 0){
+                this.$message({type: 'error', message:res.data.errorMessage }); 
+              }
+            })
+          })
+        }
+      }
+    },
+    submite(tag,name,specialName,gname){
+      this.flag = tag;
+      this.title = name;
+      this.assignee = null;
+      switch(tag){
+        case 1:   // 流程提交、复核通过   
+          if(this.$route.query.tag === 'credOperation'){ 
+            if(!this.row.businessOrigin){
+              this.$message.error('请填写Business Origin');
+              return false;
+            }
+            if(this.RMData==null || !this.RMData.length){
+              this.$message.error('无支票信息，请获取支票信息');
+              return false;
+            }
+          }
+          if(this.$route.query.tag === 'credReview'){
+            this.$http.post('api/sics/basis/getReceiptReviewMessage',{modifiedBy:this.$store.state.userName,processId:this.row.processId}).then(res =>{
+              if(res.status === 200 && res.data.code==0){   // 7.15 复核通过改为不选人
+                this.$confirm('确认复核通过？', '提示', {     
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                  }).then(() => {
+                    this.$http.post('api/receipt/activitiForReceipt/commonActivitiForReceipt'
+                      ,{processId:this.row.processId, procInstId:this.row.processInstId, assignee:this.row.entryOperator, type:this.$route.query.name,actOperator:this.$store.state.userName})
+                      .then(res =>{
+                        if(res.status === 200 && res.data.errorCode == 1){
+                          this.dialogFormVisible3 = false;
+                          this.$router.push({name:this.$route.query.tag}); 
+                        } else if(res.data.errorCode == 0){
+                          this.$message({type: 'error', message:res.data.errorMessage }); 
+                        }
+                      })
+                  })
+              } else if(res.data.code==1 && res.data.msg){ this.$message.error(res.data.msg); }
+           })
+          } else if(this.$route.query.tag === 'credVerification'){
+            this.$confirm('是否核销通过？', '提示', {     
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+              }).then(() => {
+                this.$http.post('api/receipt/activitiForReceipt/commonActivitiForReceipt'
+                  ,{processId:this.row.processId, procInstId:this.row.processInstId, assignee:this.$store.state.userName, type:this.$route.query.name,actOperator:this.$store.state.userName})
+                  .then(res =>{
+                    if(res.status === 200 && res.data.errorCode == 1){
+                      this.$router.push({name:this.$route.query.tag}); 
+                    } else if(res.data.errorCode == 0){
+                      this.$message({type: 'error', message:res.data.errorMessage }); 
+                    }
+                  })
+              })
+          } else{
+              this.getName(specialName);
+              this.dialogFormVisible3 = true;
+            } 
+        break;
+        case 2:  // 任务指派 
+        this.getName(gname);
+          this.specialName = specialName;
+          this.dialogFormVisible3 = true;
+        break;
+        case 3:  // 置废 
+          this.$confirm('是否置废？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$http.post('api/receipt/activitiForReceipt/commonActivitiForReceipt'
+            ,{processId:this.row.processId, procInstId:this.row.processInstId, assignee:this.$store.state.userName, type:'INACTIVE',actOperator:this.$store.state.userName})
+            .then(res =>{
+              if(res.status === 200 && res.data.errorCode == 1){
+                this.dialogFormVisible3 = false;
+                this.$router.push({name:this.$route.query.tag});
+              } else if(res.data.errorCode == 0){
+                this.$message({type: 'error', message:res.data.errorMessage }); 
+              }
+            })
+          })  
+        break;
+        case 4:  // 复核驳回
+          this.dialogFormVisible3 = true;
+        break;
+        case 5:  // 状态恢复
+          this.$confirm('是否恢复？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+            }).then(() => {
+              this.$http.post('api/receipt/activitiForReceipt/commonActivitiForReceipt',
+              {processId:this.row.processId, 
+              procInstId:this.row.processInstId,
+               assignee:this.$store.state.userName, 
+               type:'RECOVERY',hasRecheckFlag:'1',actOperator:this.$store.state.userName})
+              .then(res =>{
+                if(res.status === 200 && res.data.errorCode == 1){
+                  this.$router.push({name:this.$route.query.tag}); 
+                } else if(res.data.errorCode == 0){
+                this.$message({type: 'error', message:res.data.errorMessage }); 
+              }
+            })
+          })
+        break;
+      }
+      
+    },
+    confirm(){
+      switch(this.flag){
+        case 1:  // 流程提交、复核通过
+          if(!this.assignee){
+            this.$message.error('请选择任务处理人');
+            return false;
+          }
+          this.$http.post('api/receipt/activitiForReceipt/commonActivitiForReceipt'
+            ,{processId:this.row.processId, procInstId:this.row.processInstId, assignee:this.assignee, type:this.$route.query.name,actOperator:this.$store.state.userName})
+            .then(res =>{
+              if(res.status === 200 && res.data.errorCode == 1){
+                this.dialogFormVisible3 = false;
+                this.$router.push({name:this.$route.query.tag}); 
+              } else if(res.data.errorCode == 0){
+                this.$message({type: 'error', message:res.data.errorMessage }); 
+              }
+            })
+        break;
+        case 2:  // 任务指派 
+          if(!this.assignee){
+            this.$message.error('请选择任务指派人');
+            return false;
+          }
+          if(this.specialName === '操作') {
+            this.$http.post('api/activiti/setAssignee',
+            { processId:this.row.processId, 
+              procInstId:this.row.processInstId, 
+              assignee:this.assignee, 
+              taskName:'待处理',
+              actOperator:this.$store.state.userName,
+              processInstanceKey:'taProcess02'
+            })
+            .then(res =>{
+              if(res.status === 200 && res.data.errorCode == 1){
+                this.dialogFormVisible3 = false;
+                this.$router.push({name:this.$route.query.tag});
+              } else if(res.data.errorCode == 0){
+                this.$message({type: 'error', message:res.data.errorMessage }); 
+              }
+            })
+          } else{   // 复核
+            this.$http.post('api/activiti/setAssignee',
+            { processId:this.row.processId, 
+              procInstId:this.row.processInstId, 
+              assignee:this.assignee, 
+              taskName:'待复核',
+              actOperator:this.$store.state.userName,
+              processInstanceKey:'taProcess02'
+            })
+            .then(res =>{
+              if(res.status === 200 && res.data.errorCode == 1){
+                this.dialogFormVisible3 = false;
+                this.$router.push({name:this.$route.query.tag});
+              } else if(res.data.errorCode == 0){
+                this.$message({type: 'error', message:res.data.errorMessage }); 
+              }
+            })
+          }
+
+        break;
+        case 4: // 复核驳回
+          if(!this.opinion){
+            this.$message.error('请选择驳回原因');
+            return;
+          }
+          if(this.opinion == '其它' && !this.opinion){
+            this.$message.error('请填写驳回原因');
+            return;
+          }
+        this.$http.post('api/receipt/activitiForReceipt/commonActivitiForReceipt',
+          {processId:this.row.processId,
+           procInstId:this.row.processInstId,
+           assignee:this.row.entryOperator,
+           opinion:this.opinion == '其它'? this.rebut : this.opinion,
+           type:'REJECT',
+           actOperator:this.$store.state.userName})
+          .then(res =>{
+            if(res.status === 200 && res.data.errorCode == 1){
+              this.dialogFormVisible3 = false;
+              this.$router.push({name:this.$route.query.tag});
+            } else if(res.data.errorCode == 0){
+                this.$message({type: 'error', message:res.data.errorMessage }); 
+              }
+          })
+        break;
+        case 13:  // 悬停
+          if(!this.pendingReason){
+            this.$message.error('请填写悬停原因');
+            return false;
+          }
+          if(this.xtname === '操作'){
+            this.$http.post('api/receipt/activitiForReceipt/commonActivitiForReceipt'
+              ,{processId:this.row.processId, 
+              procInstId:this.row.processInstId, 
+              assignee:this.$store.state.userName,
+              pendingReason:this.pendingReason,
+              type:'PENDING',
+              actOperator:this.$store.state.userName})
+              .then(res =>{
+                console.log(res,'悬停');
+              if(res.status === 200 && res.data.errorCode == 1){
+                this.czState = !this.czState;
+                this.dialogFormVisible3 = false;
+              } else if(res.data.errorMessage){
+                this.$message.error(res.data.errorMessage);
+              }
+            })
+          } else{
+            this.$http.post('api/receipt/activitiForReceipt/commonActivitiForReceipt'
+              ,{processId:this.row.processId, 
+              procInstId:this.row.processInstId, 
+              assignee:this.$store.state.userName, 
+              pendingReason:this.pendingReason,
+              type:'PENDING',
+              hasRecheckFlag:'1',
+              actOperator:this.$store.state.userName})
+              .then(res =>{
+                console.log(res,'悬停');
+              if(res.status === 200 && res.data.errorCode == 1){
+                this.hxState = !this.hxState;
+                this.dialogFormVisible3 = false;
+              } else if(res.data.errorMessage){
+                this.$message.error(res.data.errorMessage);
+              }
+            })
+          }
+        break;
+      }
+    
+    
+    },
+    handleClick(){
+    },
+    handleClick2(){
+    },
+    handelClick3(row, column, event) {
+      let data = [
+        {a:'remittance号',c:'rmId'},
+        {a:'process号',c:'processId'},
+        {a:'支票状态',c:'rmStatus'},
+        {a:'支付方式',c:'paymentType'},
+        {a:'实收/支币制',c:'bankCurrency'},
+        {a:'手续费币制',c:'chargesCurrency'},
+        {a:'手续费金额',c:'chargesAmount'},
+        {a:'Base Company',c:'baseCompany'},
+        {a:'银行账户',c:'bankAccountName'},
+        {a:'起息日',c:'valueDate'},
+        {a:'到期日',c:'dueDate'},
+        {a:'汇款人代码',c:'partnerCode'},
+        {a:'汇款人名称',c:'partnerName'},
+        {a:'BP Reference信息',c:'businessPartnerRef'},
+        {a:'Business Origin',c:'businessOrigin'},
+      ]
+        let str = '';
+        data.forEach(el=>{
+          str += `${el['a']}：${row[el['c']]}<br/>`
+        })
+       this.$alert(str, '详情', {
+          dangerouslyUseHTMLString: true,
+        });
+    },
+    remoteMethod(){
+    },
+    beforeAvatarUpload(file){
+      this.file.push(file);
+    },
+    upload(file){
+      let resFile = new FormData();
+      resFile.append('file', this.file[0]);
+      resFile.append('actOperator',this.$store.state.userName);
+      resFile.append('processId', this.row.processId);
+      this.$http.post('api/anyShare/fileOperation/uploadFilesForPage',resFile,{headers:{ 'Content-Type': "application/json;charset=UTF-8" }}).then(res =>{
+        this.fileList = [];
+        this.file = [];
+        if(res.status === 200 && res.data.errorCode == 1){
+          this.dialogFormVisible2 = false;
+          this.$message({message: '上传成功',type: 'success'});
+        }else if(res.data.errorCode && res.data.errorCode == 0){
+            this.$message.error(res.data.errorMessage);
+          }
+      })
+    },
+    mailSend(tag,name){
+      this.title = name;
+      this.dialogFormVisible2 = true;
+      if(tag == 2){  //附件查看   1为附件上传
+        this.$http.post('api/worksheet/sortOperation/listDocument'
+        ,{actOperator:this.$store.state.userName,
+        processId:this.row.processId,
+        pageNumber:1,
+        pageSize:100, 
+        }).then(res =>{
+          if(res.status === 200){
+            this.fileData = res.data.rows;
+          }
+        })
+      }
+    },
+     detailRemove(row){
+      this.$confirm('是否删除？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => { 
+        this.$http.post('api/anyShare/fileOperation/deleteFilesForPage',
+        {docPath:row.docPath, docName:row.docName, processId:this.row.processId, actOperator:this.$store.state.userName})
+        .then(res =>{
+          this.mailSend(2,'附件查看');
+        })
+      })
+    },
+  },
+  watch:{
+    title:function(n,o){
+      console.log(n,'nnnnnn');
+      if(n === '流程提交' && this.$route.query.tag === 'credOperation'){
+        this.putIn = 'b';
+      } else if(n === '流程提交'){
+        this.putIn = 'n';
+      } else if(n === '复核通过'){
+        this.putIn = 'n';
+      } else{ this.putIn = false; }
+      
+    }
+  }
+}
+</script>
+
+<style scoped>
+.detailCred{
+  padding: 20px 30px;
+  width: 100%;
+  padding-left: 80px;
+}
+.credContent {
+  width: 100%;
+  display: flex;
+}
+.btn {
+  margin-bottom: 20px;
+}
+.btn .el-button{
+  margin-bottom: 10px;
+  margin-left: 0;
+  margin-right: 10px;
+  border: 1px solid #005C8D;
+  background-color: #fff;
+  color: #005C8D;
+}
+.detail-word {
+  background-color: #ecf5ff;
+  margin-bottom: 20px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.detail-word .title{
+  font-weight: 700;
+  font-size: 16px;
+}
+.browseDoc {
+  background-color: #ecf5ff;
+  width: 100%;
+  height: 600px;
+  margin-bottom: 20px;
+  margin-top: 20px
+}
+.left {
+  min-width: 640px;
+  margin-right: 20px;
+}
+.detailCred .right {
+  width: 1400px;
+  height: 100%;
+}
+.detail-ul{
+  margin-left: 10px;
+  padding: 10px 16px;
+}
+.detail-ul li{
+  margin-bottom: 10px;
+}
+.detail-ul li .detail-content{
+  color: #999;
+}
+.detail-ul li .detail-name{
+  white-space: nowrap;
+}
+ul.detail-ul{
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 0;
+  background-color: #fff;
+  margin-top: 10px;
+}
+li.detail-item{
+  display: flex;
+  width: 33%;
+}
+.detailSearch{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.btn .el-button.is-plain:focus, .btn .el-button.is-plain:hover {
+  background: #f5f5f5;
+  border-color: #f5f5f5;
+  border: 1px solid #005C8D;
+}
+.detailCred .el-collapse .el-collapse-item {
+  padding: 0 20px;
+  background-color: #fff;
+  margin-bottom: 20px;
+  -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  border-radius: 8px;
+}
+.detailCred .el-collapse {
+  width: 500px;
+  border: none;
+}
+.fy2{
+  text-align: right;
+  margin-top: 20px;
+}
+.fy1{
+  padding-left: 0;
+}
+.goBack{
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}
+.goBack .arrows{
+  font-weight: 700;
+  color: #2B3E50;
+}
+.goBack .word{
+  font-size: 12px;
+  color: #2B3E50;
+}
+.curAmountForm div.el-form-item__content{
+  display: flex;
+}
+.curAmountForm div.el-form-item__content .el-select{
+  margin-right: 20px;
+}
+.curAmountForm div.el-form-item__content .curAmount{
+  width: 200px;
+}
+.browseDoc {
+  background-color: #ecf5ff;
+  width: 100%;
+  height: 100%;
+}
+.selfInput{
+  border: 1px solid #DCDFE6;
+  width: 196px;
+  border-radius: 4px;
+  outline: none;
+}
+.smallHand {
+  cursor: pointer;
+  color:#409EFF;
+}
+</style>
