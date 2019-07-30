@@ -1040,7 +1040,7 @@ export default {
           })
         })
       } else if(tag == 3){  // 下载
-        this.$http.post('api/anyShare/fileOperation/previewDocument',Object.assign({},row,{processId:this.chooseRow.processId}),{responseType:'blob'}).then(res =>{
+        this.$http.post('api/anyShare/fileOperation/downloadDocument',Object.assign({},row,{processId:this.chooseRow.processId}),{responseType:'blob'}).then(res =>{
           if(res.status === 200){
             console.log(res);
             // this.path = res.data;

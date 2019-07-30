@@ -6,7 +6,7 @@
         <el-row :gutter="10" class="billRow">
         <el-col :span="8">
           <span class="slable">流程编号</span>
-          <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="billSearch.processId"></el-input>
+          <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
         </el-col>
         <el-col :span="8">
           <span class="slable">账单类型</span>

@@ -6,7 +6,7 @@
         <el-row :gutter="10" class="billRow">
         <el-col :span="8">
           <span class="slable">流程编号</span>
-          <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="formLabelAlign.processId"></el-input>
+          <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processId"></el-input>
         </el-col>
         <el-col :span="8">
           <span class="slable">结付公司代码</span>
@@ -19,7 +19,7 @@
         </el-col>
         <el-col :span="8">
           <span class="slable">汇款人名称</span>
-          <el-input placeholder="请输入汇款人名称" suffix-icon="el-icon-date" v-model.trim="formLabelAlign.rmSettleCompanyName"></el-input>
+          <el-input placeholder="请输入汇款人名称" v-model.trim="formLabelAlign.rmSettleCompanyName"></el-input>
         </el-col>
         </el-row>
         <el-row :gutter="10" class="billRow">

@@ -34,7 +34,7 @@ let data = [
   // Tab页-账单
   {
     level:1,
-    title:'账单管理',
+    title:'账单',
     path: '/bill',
     name: 'bill',
     components:{
@@ -50,25 +50,25 @@ let data = [
       //   component: () => import("@/views/bill/mailReceive"), 
       // },
       {
-        title:'分拣操作',
+        title:'分配',
         path: '/sortOperation',
         name: 'sortOperation',
         component: () => import("@/views/bill/sortOperation"),
       },
       {
-        title:'账单录入',
+        title:'录入',
         path: '/billEntry',
         name: 'billEntry',
         component: () => import("@/views/bill/billEntry"), 
       },
       {
-        title:'账单复核',
+        title:'复核',
         path: '/billCheck',
         name: 'billCheck',
         component: () => import("@/views/bill/billCheck"), 
       },
       {
-        title:'账单签回',
+        title:'签回',
         path: '/billSignBack',
         name: 'billSignBack',
         component: () => import("@/views/bill/billSignBack"), 
@@ -78,7 +78,7 @@ let data = [
   // Tab页-收款
   {
     level:1,
-    title:'结算收款',
+    title:'收款',
     path: '/receipt',
     name: 'receipt',
     components:{
@@ -88,43 +88,43 @@ let data = [
     redirect:'/financialCreat',
     children:[
       {
-        title:'财务创建',
+        title:'创建',
         path: '/financialCreat',
         name: 'financialCreat',
         component: () => import("@/views/receipt/financialCreat"),
       },
       {
-        title:'任务认领',
+        title:'认领',
         path: '/taskClaim',
         name: 'taskClaim',
         component: () => import("@/views/receipt/taskClaim"),
       },
       {
-        title:'收款操作',
+        title:'操作',
         path: '/credOperation',
         name: 'credOperation',
         component: () => import("@/views/receipt/credOperation"),
       },
       {
-        title:'收款复核',
+        title:'复核',
         path: '/credReview',
         name: 'credReview',
         component: () => import("@/views/receipt/credReview"),
       },
       {
-        title:'收款核销',
+        title:'核销',
         path: '/credVerification',
         name: 'credVerification',
         component: () => import("@/views/receipt/credVerification"),
       },
       {
-        title:'暂挂待销',
+        title:'待销',
         path: '/viewInvalidate',
         name: 'viewInvalidate',
         component: () => import("@/views/receipt/viewInvalidate"),
       },
       { 
-        title:'收款完结',
+        title:'完结',
         path: '/collectiongEnd',
         name: 'collectiongEnd',
         component: () => import("@/views/receipt/collectiongEnd"),
@@ -134,7 +134,7 @@ let data = [
    // Tab页-付款
    {
     level:1,
-    title:'结算付款',
+    title:'付款',
     path: '/pay',
     name: 'pay',
     components:{
@@ -150,55 +150,55 @@ let data = [
       //   component: () => import("@/views/pay/taskCreation"),
       // },
       {
-        title:'付款操作',
+        title:'操作',
         path: '/payOperation',
         name: 'payOperation',
         component: () => import("@/views/pay/payOperation"),
       },
       {
-        title:'付款审批',
+        title:'审批',
         path: '/payVerification',
         name: 'payVerification',
         component: () => import("@/views/pay/payVerification"),
       },
       {
-        title:'付款支票',
+        title:'支票',
         path: '/approvalDone',
         name: 'approvalDone',
         component: () => import("@/views/pay/approvalDone"),
       },
       {
-        title:'付款复核',
+        title:'复核',
         path: '/payReview',
         name: 'payReview',
         component: () => import("@/views/pay/payReview"),
       },
       {
-        title:'付款核销',
+        title:'核销',
         path: '/payClose',
         name: 'payClose',
         component: () => import("@/views/pay/payClose"),
       },
       {
-        title:'财务支付',
+        title:'支付',
         path: '/payment',
         name: 'payment',
         component: () => import("@/views/pay/payment"),
       },
       {
-        title:'partial完结',
+        title:'partial',
         path: '/partialDone',
         name: 'partialDone',
         component: () => import("@/views/pay/partialDone"),
       },
       {
-        title:'紧急付款',
+        title:'紧急',
         path: '/instancyPay',
         name: 'instancyPay',
         component: () => import("@/views/pay/instancyPay"),
       },
       {
-        title:'邮件通知',
+        title:'邮件',
         path: '/emailNotify',
         name: 'emailNotify',
         component: () => import("@/views/pay/emailNotify"),
@@ -218,13 +218,15 @@ let data = [
     redirect:'/billProcess',
     children:[
       {
-        title:'账单Process',
+        // title:'账单Process',
+        title:'账单流程',
         path: '/billProcess',
         name: 'billProcess',
         component: () => import("@/views/integratedQuery/billProcess"),
       },
       {
-        title:'账单workSheet',
+        // title:'账单workSheet',
+        title:'账单',
         path: '/billWorkSheet',
         name: 'billWorkSheet',
         component: () => import("@/views/integratedQuery/billWorkSheet"), 
@@ -236,13 +238,14 @@ let data = [
         component: () => import("@/views/integratedQuery/remit"), 
       },
       {
-        title:'SettlementGroup',
+        // title:'SettlementGroup',
+        title:'结算清单',
         path: '/settlementGroup',
         name: 'settlementGroup',
         component: () => import("@/views/integratedQuery/settlementGroup"), 
       },
       {
-        title:'结算Process',
+        title:'结算流程',
         path: '/accountProcess',
         name: 'accountProcess',
         component: () => import("@/views/integratedQuery/accountProcess"), 
@@ -262,13 +265,15 @@ let data = [
     // redirect:'/closeAccount',
     children:[
       {
-        title:'关账控制',
+        // title:'关账控制',
+        title:'设置',
         path: '/closeAccount',
         name: 'closeAccount',
         component: () => import("@/views/admin/closeAccount"),
       },
       {
-        title:'时间统计',
+        // title:'时间统计',
+        title:'统计',
         path: '/timeStatistical',
         name: 'timeStatistical',
         component: () => import("@/views/admin/timeStatistical"), 

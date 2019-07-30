@@ -1009,7 +1009,9 @@ export default {
           if(arr1.length){ 
             this.BankAccountList = arr1; 
           } else{ 
-            this.$message.error('选择的币制和银行账户不匹配'); 
+            setTimeout(()=>{
+              this.$message.error('选择的币制和银行账户不匹配'); 
+            },500)
             this.BankAccountList = [];
           }
         }
