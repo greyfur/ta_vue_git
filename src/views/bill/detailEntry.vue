@@ -955,7 +955,7 @@ export default {
           break;
         case 6: // 流程提交 === 两种
           if(!this.assignee){
-            this.$message.error('请选择下一任务处理人');
+            this.$message.error('选择处理人');
             return false;
           }
           if(this.tagName === '录入提交') {

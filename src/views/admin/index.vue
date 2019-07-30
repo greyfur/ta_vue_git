@@ -31,9 +31,8 @@ import {computeSidebar} from '@/assets/js/util.js'
       this.urlArr = computeSidebar('管理员',this.$store.state.deFineRout);
     },
     mounted(){
-     
-    },
 
+    },
     methods: {
       handleChange(key, keyPath){
         this.$router.push({name:key});
