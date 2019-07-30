@@ -51,16 +51,23 @@
             <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
               <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
               <p v-if="$route.query.tag === 'billEntry'"><el-button size="small" :disabled="isHover" @click="mailSend(2)"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button></p>
-            </div>
+            </div> 
               <el-table height='367' v-show="searchFlag2" stripe :data="tableData" style="width: 100%;margin-top:10px;" class="document">
-                <el-table-column label="文件名">
+                <el-table-column label="文件名" width="140">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                      <el-button :disabled="isHover" type="text" @click="docView(scope.row)">{{scope.row.docName}}</el-button>
+                      <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
-                <el-table-column prop="createdBy" label="任务来源"></el-table-column>
+                <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
+                <el-table-column label="任务来源" width="140">
+                  <template slot-scope="scope">
+                    <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
+                      <span class="abbreviate">{{scope.row.createdBy}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
                 <el-table-column label="操作" width="130">
                   <template slot-scope="scope">
                     <el-button :disabled="isHover" v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess'" @click.stop="handleClick(2,scope.row)" type="text" size="small">OCR</el-button>
@@ -201,8 +208,8 @@
           <div class="inputWrap" id="idInputWrap"></div>
         </el-form-item> -->
         <el-form-item>
-          <el-button type="primary" @click="split()">确定</el-button>
-          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" plain @click="split()">确定</el-button>
+          <el-button size="small" @click="dialogFormVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -252,7 +259,7 @@
             :http-request='upload'
             :headers='head'
             :file-list="fileList">
-            <el-button size="small" :type="uploadType!=1?'info':'primary'">上传</el-button>
+            <el-button plain :type="uploadType!=1?'info':'primary'">上传</el-button>
           </el-upload>
         </el-form-item>
         <el-form-item label="选择附件" v-show="title==='邮件通知'">
@@ -263,8 +270,8 @@
       </el-form>
       
       <div slot="footer" class="dialog-footer" v-show="title==='邮件通知' || title==='OCR上传'">
-        <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-        <el-button type="primary" @click="send">确 定</el-button>
+        <el-button size="small" @click="dialogFormVisible2 = false">取 消</el-button>
+        <el-button type="primary" plain @click="send">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -318,8 +325,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible3 = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible3 = false">确 定</el-button>
+        <el-button size="small" @click="dialogFormVisible3 = false">取 消</el-button>
+        <el-button type="primary" plain @click="dialogFormVisible3 = false">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -357,8 +364,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click=" dialogFormVisible5 = false">取 消</el-button>
-        <el-button type="primary" @click="confirm">确 定</el-button>
+        <el-button size="small" @click="dialogFormVisible5 = false">取 消</el-button>
+        <el-button type="primary" plain @click="confirm">确 定</el-button>
       </div>
     </el-dialog>
     
@@ -392,33 +399,33 @@ export default {
       BHoptions:['金额','币制','SECTION','合同号','未决','ENTRYCODE','日期','其它'],
       tableData:[],
       SICSData:[
-        {
-          processId:'',
-          sgNum:'',
-          wsStatus:'',
-          wsTitle:'',
-          businessId:'',
-          section:'',
-          uwYear:'',
-          businessType:'',
-          receiptDate:'',
-          cedentCode:'',
-          cedentName:'',
-          brokerCode:'',
-          brokerName:'',
-          wsType:'',
-          wsPeriod:'',
-          businessOrigin:'',
-          baseCompany:'',
-          dept:'',
-          wsCurrency:'',
-          wsAmount:'',
-          createdBy:'',
-          createdAt:'',
-          modifiedBy:'',
-          modifiedAt:'',
-          remark:'',
-        }
+        // {
+        //   processId:'',
+        //   sgNum:'',
+        //   wsStatus:'',
+        //   wsTitle:'',
+        //   businessId:'',
+        //   section:'',
+        //   uwYear:'',
+        //   businessType:'',
+        //   receiptDate:'',
+        //   cedentCode:'',
+        //   cedentName:'',
+        //   brokerCode:'',
+        //   brokerName:'',
+        //   wsType:'',
+        //   wsPeriod:'',
+        //   businessOrigin:'',
+        //   baseCompany:'',
+        //   dept:'',
+        //   wsCurrency:'',
+        //   wsAmount:'',
+        //   createdBy:'',
+        //   createdAt:'',
+        //   modifiedBy:'',
+        //   modifiedAt:'',
+        //   remark:'',
+        // }
       ],
       listData:[
         {
@@ -810,6 +817,10 @@ export default {
             break;
           case 6:  // 流程提交 ===== 2种
             if(name === '录入提交'){
+              if(this.SICSData == null || !this.SICSData.length){
+                this.$message({type: 'error', message:'无账单信息，无法提交'}); 
+                return false;
+              }
               this.getName('账单复核'); 
               this.dialogFormVisible5 = true;
               this.title = '流程提交';

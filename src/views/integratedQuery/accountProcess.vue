@@ -6,7 +6,7 @@
         <el-row :gutter="10" class="billRow">
           <el-col :span="8">
             <span class="slable">流程编号</span>
-            <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="formLabelAlign.processID"></el-input>
+            <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="formLabelAlign.processId"></el-input>
           </el-col>
           <el-col :span="8">
             <span class="slable">结付公司代码</span>
@@ -155,7 +155,7 @@
           <input type="text" class="selfInput" v-model="formLabelAlign.rmChargesAmount" @input="watchInput('rmChargesAmount')">
         </el-form-item> -->
         <el-form-item label="Process ID" v-show="title==='查询'">
-          <el-input v-model.trim="formLabelAlign.processID"></el-input>
+          <el-input v-model.trim="formLabelAlign.processId"></el-input>
         </el-form-item>
         <el-form-item label="流程状态" v-show="title === '查询'">
           <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
@@ -321,7 +321,7 @@ export default {
           pageNumber:1,  // 页数
           pageSize:20,  //页面一次要展示的条数
           total:0, //总条数
-          processType:'付款',
+          processType:['付款','收款']
         },
         dialogFormVisible: false,
         dialogFormVisible2: false,
@@ -495,7 +495,7 @@ export default {
     },1000)
      
     this.mustData.actOperator = this.$store.state.userName;
-    this.formLabelAlign.modifiedBy = this.$store.state.userName;
+    //this.formLabelAlign.modifiedBy = this.$store.state.userName;
 
     //获取币制
     this.rmCurrencyList = JSON.parse(sessionStorage.getItem('CurrencyList'));
@@ -510,9 +510,9 @@ export default {
   methods: {
     init(tag){
       // 进首页查询
-      let params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName})
+      let params = Object.assign({},this.mustData)
       delete params['actOperator'];
-      this.$http.post('api/pay/teskClaim/list',params).then(res =>{
+      this.$http.post('api/integeratedQuery/ProcessMessagelist',params).then(res =>{
         if(res.status === 200 ) {
           this.tableData = res.data.rows;
           this.mustData.total = res.data.total;
@@ -729,9 +729,10 @@ export default {
           break;
         case 4: //查询
         if(!this.formLabelAlign.processStatus){ this.formLabelAlign.processStatus = this.processStatusCom; }
-          let params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
+          let params = Object.assign({},this.mustData,this.formLabelAlign);
+         // let params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
           delete params['actOperator'];
-          this.$http.post('api/pay/teskClaim/list',params).then(res =>{
+          this.$http.post('api/integeratedQuery/ProcessMessagelist',params).then(res =>{
             if(res.status === 200){
               if(!res.data.rows.length){
                 this.$message({type: 'warning', message: '未查询出数据'}); 

@@ -101,6 +101,7 @@ input::-webkit-inner-spin-button {
   color: #fff;
   font-weight: 400;
   border: none;
+  font-size: 12px;
 }
 .el-button--primary.is-plain .iconfont{
   margin-right: 8px;
@@ -156,3 +157,10 @@ input::-webkit-inner-spin-button {
 }
 .el-select .el-input .el-select__caret{ margin-top: 10px; }
 .el-select .el-input .el-select__caret.is-reverse{ margin-top: 0px; }
+.blueColor{ color: #005C8D; font-size: 12px; font-weight: 700;}
+.el-message-box__wrapper .el-message-box__btns button:nth-child(2){
+  background-color: #005C8D;
+  background: #005C8D;
+  border: none;
+  color: #fff;
+}

@@ -91,18 +91,24 @@
                 </p>            
               </div>
               <el-table stripe :data="fileData" style="width:100%;min-height:220px;max-height:500px;" class="document">
-                <el-table-column label="文件名">
+                <el-table-column label="文件名" width="140">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                      <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                      <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
-                <el-table-column prop="createdAt" label="时间"></el-table-column>
-                <el-table-column prop="createdBy" label="任务来源"></el-table-column>
-                <el-table-column label="操作" width="100" v-show="$route.query.tag !== 'payClose' && $route.query.tag !== 'payment' && $route.query.tag !== 'instancyPay' && $route.query.tag !== 'partialDone'">
+                <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
+                <el-table-column label="任务来源" width="140">
                   <template slot-scope="scope">
-                    <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
+                    <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
+                      <span class="abbreviate">{{scope.row.createdBy}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作" width="100" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'">
+                  <template slot-scope="scope">
+                    <el-button v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -380,20 +386,21 @@
     <!-- 弹窗区域 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal">
       <el-form label-width="160px">
-        <el-form-item label="选择驳回原因" v-show="title==='复核驳回'">
+        <el-form-item label="选择驳回原因" v-show="title==='复核驳回' || title==='审批驳回'">
           <el-select v-model="opinion"  placeholder="请输入驳回原因" @change="changeOpinion">
             <el-option v-for="item in BHoptions" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="原因填写" v-show="title==='复核驳回'">
-          <el-input :disabled="opinion!='其它'" type="textarea" :rows="2" placeholder="请输入原因" v-model="rebut"></el-input>
-        </el-form-item>
+        <el-form-item label="原因填写" v-show="title==='复核驳回' || title==='审批驳回'">
+          <!-- <el-input :disabled="opinion!='其它'" type="textarea" :rows="2" placeholder="请输入原因" v-model="rebut"></el-input> -->
+          <el-input type="textarea" :rows="2" placeholder="请输入原因" v-model="rebut"></el-input>
+        </el-form-item> 
         <el-form-item label="输入悬停原因" v-show="title==='悬停'">
           <el-input type="textarea" :rows="2" placeholder="请输入悬停原因" v-model="pendingReason"></el-input>
         </el-form-item>
-        <el-form-item label="原因填写" v-show="title==='审批驳回'">
+        <!-- <el-form-item label="原因填写" v-show="title==='审批驳回'">
           <el-input type="textarea" :rows="2" placeholder="请输入原因" v-model="rebut"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="选择下一任务处理人" v-show="putIn=='n'">
           <el-select v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
@@ -405,8 +412,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="confirm">确定</el-button>
-          <el-button @click="dialogFormVisible3 = false">取消</el-button>
+          <el-button type="primary" plain @click="confirm">确定</el-button>
+          <el-button size="small" @click="dialogFormVisible3 = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -421,7 +428,7 @@
             :auto-upload="true"
             :http-request='upload'
             :file-list="fileList">
-            <el-button size="small" type="primary">上传</el-button>
+            <el-button plain type="primary">上传</el-button>
           </el-upload>
           </el-form-item>
       </el-form>
@@ -516,8 +523,8 @@
           </el-col>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="creatRM('formLabelAlign')">确定</el-button>
-          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button plain type="primary" @click="creatRM('formLabelAlign')">确定</el-button>
+          <el-button size="small" @click="dialogFormVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog> 
@@ -605,8 +612,8 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item>
-          <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-          <el-button type="primary" @click="makeDoc(2,'makeDocList')">确 定</el-button>
+          <el-button size="small" @click="dialogFormVisible2 = false">取 消</el-button>
+          <el-button type="primary" plain @click="makeDoc(2,'makeDocList')">确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -1455,7 +1462,7 @@ export default {
             this.$message.error('请选择驳回原因');
             return;
           }
-          if(this.opinion == '其它' && !this.opinion){
+          if(this.opinion == '其它' && !this.rebut){
             this.$message.error('请填写驳回原因');
             return;
           }
@@ -1463,7 +1470,7 @@ export default {
             {processId:this.row.processId,
             procInstId:this.row.processInstId,
             assignee:this.row.entryOperator,
-            opinion:this.opinion == '其它'? this.rebut : this.opinion,
+            opinion:`${this.opinion} ${this.rebut}`,
             type:'REJECT',
             hasRecheckFlag:'1',
             actOperator:this.$store.state.userName})
@@ -1575,11 +1582,19 @@ export default {
             })
         break;
         case 9:   // 审批驳回
+          if(!this.opinion){
+            this.$message.error('请选择驳回原因');
+            return;
+          }
+          if(this.opinion == '其它' && !this.rebut){
+            this.$message.error('请填写驳回原因');
+            return;
+          }
           this.$http.post('api/pay/activitiForPay/commonActivitiForPay',
             {processId:this.row.processId,
             procInstId:this.row.processInstId,
             assignee:this.row.entryOperator,
-            opinion:this.rebut,
+            opinion:`${this.opinion} ${this.rebut}`,
             approvalLevel:this.row.approvalLevel,
             type:'REJECT',
             hasRecheckFlag:'0',

@@ -94,10 +94,10 @@
           <el-dropdown>
             <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><el-button v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'sortOperation'" @click.stop="handleClick(3,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button type="text" v-show="urlName === 'sortOperation'" size="small" @click.stop="handleClick(4,scope.row)">删除</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button></el-dropdown-item>
+              <el-dropdown-item><span v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" class="blueColor">编辑</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="urlName === 'sortOperation'" @click.stop="handleClick(3,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="urlName === 'sortOperation'" @click.stop="handleClick(4,scope.row)" class="blueColor">删除</span></el-dropdown-item>
+              <el-dropdown-item><span @click.stop="handleClick(5,scope.row)" class="blueColor">踪迹</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -184,18 +184,24 @@
             :auto-upload="true"
             :http-request='upload'
             :file-list="fileList">
-            <el-button size="small" type="primary">上传</el-button>
+            <el-button type="primary" plain>上传</el-button>
           </el-upload> 
           <el-table stripe :data="fileData" style="width: 100%" class="document">
-            <el-table-column label="文件名">
+            <el-table-column label="文件名" width="140">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                  <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                  <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="createdAt" label="时间"></el-table-column>
-            <el-table-column prop="createdBy" label="任务来源"></el-table-column>
+            <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
+            <el-table-column label="任务来源" width="140">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
+                  <span class="abbreviate">{{scope.row.createdBy}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
                 <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
@@ -232,8 +238,8 @@
       </el-pagination>
       
       <div slot="footer" class="dialog-footer" v-show="title=='手工创建' || title=='查询' || title=='编辑' || title=='流程提交'">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirm('billSearch')">确 定</el-button>
+        <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" plain @click="confirm('billSearch')">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -418,7 +424,7 @@ export default {
   created(){
     this.mustData.processStatus = this.processStatusCom;
     this.mustData.actOperator = this.$store.state.userName;
-    if(this.urlName === 'sortOperation'){
+    if(this.urlName === 'sortOperation' || this.urlName === 'billEntry'){
       this.$http.get('api/sics/basis/getReportUnitsForPC').then(res =>{
         if(res.status === 200){
           this.ReportUnitList = res.data;
@@ -630,7 +636,11 @@ export default {
           break;
         case 2: 
           // 账单类型
-            if(row.wsType){ this.billSearch.wsType = row.wsType;} else{ this.billSearch.wsType = null; }
+            if(row.wsType){ 
+              this.ZDoptions.forEach((el,i)=>{
+                if(el.name == row.wsType){ this.billSearch.wsType = el.code; }
+              })
+              } else{ this.billSearch.wsType = null; }
           // 任务类型
             if(row.wsBusinessType){ this.billSearch.wsBusinessType = row.wsBusinessType; } else{ this.billSearch.wsBusinessType = null; }
           // 账单收到日期

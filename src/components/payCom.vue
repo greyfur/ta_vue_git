@@ -54,14 +54,14 @@
           <el-dropdown>
             <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><el-button @click.stop="handleClick(5,scope.row)" type="text" size="small">详情</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(12,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(15,scope.row)" type="text" size="small">附件查看</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(13,scope.row)" type="text" size="small">发送邮件</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(20,scope.row)" type="text" size="small">Reverse</el-button></el-dropdown-item>
+              <el-dropdown-item><span @click.stop="handleClick(5,scope.row)" class="blueColor">详情</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" class="blueColor">编辑</span></el-dropdown-item>
+              <el-dropdown-item><span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(12,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(15,scope.row)" class="blueColor">附件查看</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(13,scope.row)" class="blueColor">发送邮件</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(20,scope.row)" class="blueColor">Reverse</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -144,8 +144,8 @@
           <input type="text" class="selfInput" v-model="formLabelAlign.rmChargesAmount" @input="watchInput('rmChargesAmount')">
         </el-form-item> -->
         <el-form-item>
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="confirm('formLabelAlign')">确 定</el-button>
+          <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" plain @click="confirm('formLabelAlign')">确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -199,20 +199,26 @@
         </li>
       </ul>
       <el-table stripe :data="fileData" style="width: 100%" class="document" v-show="title==='上传附件' || title==='附件查看'">
-        <el-table-column label="文件名">
+        <el-table-column label="文件名" width="140">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-              <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
+              <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="createdAt" label="时间"></el-table-column>
-        <el-table-column prop="createdBy" label="任务来源"></el-table-column>
-        <el-table-column label="操作" width="100">
+        <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
+        <el-table-column label="任务来源" width="140">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
+              <span class="abbreviate">{{scope.row.createdBy}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column label="操作" width="100">
           <template slot-scope="scope">
             <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </el-dialog>
 

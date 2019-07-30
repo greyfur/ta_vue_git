@@ -30,17 +30,17 @@
       <el-button type="primary" plain @click="submite(1,'复核通过','收款录入')">复核通过</el-button>
     </div>
     <!-- 核销 -->
-    <div class="btn" v-if="$route.query.tag === 'credVerification'">
+    <div class="btn" v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'">
       <el-button type="primary" :disabled="hxState" plain @click="submite(1,'流程提交','收款录入')">流程提交</el-button>
       <el-button type="primary" :disabled="hxState" @click="tbState" plain>同步状态</el-button>
       <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BPSICS</el-button>
       <el-button :type="hxState?'info':'primary'" @click="gangUp('核销')" plain>{{!hxState?'挂起':'暂挂待销'}}</el-button>
     </div>
     <!-- 暂挂 -->
-    <div class="btn" v-if="$route.query.tag === 'viewInvalidate'">
+    <!-- <div class="btn" v-if="$route.query.tag === 'viewInvalidate'">
       <el-button type="primary" plain @click="mailSend(2,'附件查看')">附件查看</el-button>
       <el-button type="primary" plain @click="submite(5,'状态恢复')">状态恢复</el-button>
-    </div>
+    </div> -->
 
     <!-- 详情 -->
     <div class="searchNew">
@@ -431,15 +431,14 @@
               <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
             </el-select>
           </el-form-item>
-
           <el-form-item :label="title === '任务指派'?'选择任务指派人':'选择下一任务处理人'" v-show="title === '任务指派' || putIn=='b'">
             <el-select v-model="assignee"  placeholder="请选择">
               <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="confirm">确定</el-button>
-            <el-button @click="dialogFormVisible3 = false">取消</el-button>
+            <el-button type="primary" plain @click="confirm">确定</el-button>
+            <el-button size="small" @click="dialogFormVisible3 = false">取消</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -519,8 +518,8 @@
             </el-col>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="creatRM(1,'formLabelAlign')">确定</el-button>
-            <el-button @click="dialogFormVisible = false">取消</el-button>
+            <el-button type="primary" plain @click="creatRM(1,'formLabelAlign')">确定</el-button>
+            <el-button size="small" @click="dialogFormVisible = false">取消</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -535,23 +534,29 @@
             :auto-upload="true"
             :http-request='upload'
             :file-list="fileList">
-            <el-button size="small" type="primary">上传</el-button>
+            <el-button plain type="primary">上传</el-button>
           </el-upload>
           </el-form-item>
       </el-form>
       <el-table stripe :data="fileData" style="width: 100%" class="document" v-show="title==='附件查看'">
-        <el-table-column label="文件名">
+        <el-table-column label="文件名" width="140">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-              <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
+              <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="createdAt" label="时间"></el-table-column>
-        <el-table-column prop="createdBy" label="任务来源"></el-table-column>
+        <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
+        <el-table-column label="任务来源" width="140">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
+              <span class="abbreviate">{{scope.row.createdBy}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="100" v-show="$route.query.tag !== 'credVerification' && $route.query.tag !== 'viewInvalidate' && $route.query.tag !== 'collectiongEnd'">
           <template slot-scope="scope">
-            <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
+            <el-button v-show="$route.query.tag !== 'credVerification' && $route.query.tag !== 'viewInvalidate' && $route.query.tag !== 'collectiongEnd'" @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -1244,7 +1249,7 @@ export default {
                   })
               } else if(res.data.code==1 && res.data.msg){ this.$message.error(res.data.msg); }
            })
-          } else if(this.$route.query.tag === 'credVerification'){
+          } else if(this.$route.query.tag === 'credVerification' || this.$route.query.tag === 'viewInvalidate'){
             this.$confirm('是否核销通过？', '提示', {     
               confirmButtonText: '确定',
               cancelButtonText: '取消',
@@ -1254,7 +1259,10 @@ export default {
                   ,{processId:this.row.processId, procInstId:this.row.processInstId, assignee:this.$store.state.userName, type:this.$route.query.name,actOperator:this.$store.state.userName})
                   .then(res =>{
                     if(res.status === 200 && res.data.errorCode == 1){
-                      this.$router.push({name:this.$route.query.tag}); 
+                      if(res.data.errorMessage){ this.$message({type: 'warning', message:res.data.errorMessage });  }
+                      setTimeout(()=>{
+                        this.$router.push({name:this.$route.query.tag}); 
+                      },1000)
                     } else if(res.data.errorCode == 0){
                       this.$message({type: 'error', message:res.data.errorMessage }); 
                     }

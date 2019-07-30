@@ -77,9 +77,9 @@
           <el-dropdown>
             <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><el-button @click.stop="handleClick(5,scope.row)" type="text" size="small">详情</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button @click.stop="handleClick(12,scope.row)" type="text" size="small">附件查看</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button @click.stop="handleClick(11,scope.row)" type="text" size="small">踪迹</el-button></el-dropdown-item>
+              <el-dropdown-item><span @click.stop="handleClick(5,scope.row)" class="blueColor">详情</span></el-dropdown-item>
+              <el-dropdown-item><span @click.stop="handleClick(12,scope.row)" class="blueColor">附件查看</span></el-dropdown-item>
+              <el-dropdown-item><span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -124,11 +124,11 @@
           <el-dropdown>
             <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><el-button @click.stop="handleClick(5,scope.row)" type="text" size="small">详情</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'financialCreat'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'financialCreat'" @click.stop="handleClick(7,scope.row)" type="text" size="small">删除</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button @click.stop="handleClick(11,scope.row)" type="text" size="small">踪迹</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'financialCreat'" @click.stop="handleClick(10,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
+              <el-dropdown-item><span @click.stop="handleClick(5,scope.row)" class="blueColor">详情</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="pendingFlag || urlName === 'financialCreat'" @click.stop="handleClick(6,scope.row)" class="blueColor">编辑</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="urlName === 'financialCreat'" @click.stop="handleClick(7,scope.row)" class="blueColor">删除</span></el-dropdown-item>
+              <el-dropdown-item><span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="urlName === 'financialCreat'" @click.stop="handleClick(10,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -227,18 +227,24 @@
             :auto-upload="true"
             :http-request='upload'
             :file-list="fileList">
-            <el-button size="small" type="primary">上传</el-button>
+            <el-button plain type="primary">上传</el-button>
           </el-upload>
           <el-table stripe :data="fileData" style="width: 100%" class="document" v-show="title==='编辑'">
-            <el-table-column label="文件名">
+            <el-table-column label="文件名" width="140">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                  <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                  <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="createdAt" label="时间"></el-table-column>
-            <el-table-column prop="createdBy" label="任务来源"></el-table-column>
+            <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
+            <el-table-column label="任务来源" width="140">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
+                  <span class="abbreviate">{{scope.row.createdBy}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
                 <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
@@ -247,8 +253,8 @@
           </el-table>
         </el-form-item>
         <el-form-item>
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="confirm('formLabelAlign')">确 定</el-button>
+          <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" plain @click="confirm('formLabelAlign')">确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -260,8 +266,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="confirm">确定</el-button>
-          <el-button @click="dialogFormVisible2 = false">取消</el-button>
+          <el-button type="primary" plain @click="confirm">确定</el-button>
+          <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
         </el-form-item>
       </el-form>
         <!-- 上传附件/批量创建 -->
@@ -296,15 +302,21 @@
         </li>
       </ul>
       <el-table stripe :data="fileData" style="width: 100%" class="document" v-show="title==='附件查看'">
-        <el-table-column label="文件名">
+        <el-table-column label="文件名" width="140">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-              <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
+              <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="createdAt" label="时间"></el-table-column>
-        <el-table-column prop="createdBy" label="任务来源"></el-table-column>
+        <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
+        <el-table-column label="任务来源" width="140">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
+              <span class="abbreviate">{{scope.row.createdBy}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="100">
           <template slot-scope="scope">
             <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>

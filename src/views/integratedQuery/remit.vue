@@ -6,7 +6,7 @@
         <el-row :gutter="10" class="billRow">
           <el-col :span="8">
             <span class="slable">流程编号</span>
-            <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="formLabelAlign.processID"></el-input>
+            <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="formLabelAlign.processId"></el-input>
           </el-col>
           <el-col :span="8">
             <span class="slable">结付公司代码</span>
@@ -175,7 +175,7 @@
           <input type="text" class="selfInput" v-model="formLabelAlign.rmChargesAmount" @input="watchInput('rmChargesAmount')">
         </el-form-item> -->
         <el-form-item label="Process ID" v-show="title==='查询'">
-          <el-input v-model.trim="formLabelAlign.processID"></el-input>
+          <el-input v-model.trim="formLabelAlign.processId"></el-input>
         </el-form-item>
         <el-form-item label="流程状态" v-show="title === '查询'">
           <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
@@ -341,7 +341,7 @@ export default {
           pageNumber:1,  // 页数
           pageSize:20,  //页面一次要展示的条数
           total:0, //总条数
-          processType:'付款',
+       //   processType:'付款',
         },
         dialogFormVisible: false,
         dialogFormVisible2: false,
@@ -515,7 +515,7 @@ export default {
     },1000)
      
     this.mustData.actOperator = this.$store.state.userName;
-    this.formLabelAlign.modifiedBy = this.$store.state.userName;
+   // this.formLabelAlign.modifiedBy = this.$store.state.userName;
 
     //获取币制
     this.rmCurrencyList = JSON.parse(sessionStorage.getItem('CurrencyList'));
@@ -721,7 +721,7 @@ export default {
     confirm(formName){
       if(this.cedentModel != null){
         let obj = this.cedentList[this.cedentModel];
-        this.formLabelAlign.rmSettleCompanyCode = obj.codecode;
+        this.formLabelAlign.partnerCode = obj.codecode;
       }
       switch(this.tag){
         case 1: //创建

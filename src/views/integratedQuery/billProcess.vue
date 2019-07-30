@@ -381,7 +381,7 @@ export default {
         },
         mustData:{
           actOperator:null,
-          processType:'账单',
+          processType:['账单'],
           processStatus:'',
           pageNumber:1,  // 页数
           pageSize:20,  //页面一次要展示的条数
@@ -487,12 +487,13 @@ export default {
       // 进首页查询
       let params = null;
       if(this.urlName != 'sortOperation'){ 
-        params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
+     //   params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
+         params = Object.assign({},this.mustData);
        } else{
         params = Object.assign({},this.mustData);
        }
       delete params['actOperator'];
-      this.$http.post('api/worksheet/wSEntry/list',params).then(res =>{
+      this.$http.post('api/integeratedQuery/ProcessMessagelist',params).then(res =>{
         if(res.status === 200 ) {
           this.tableData = res.data.rows;
           this.mustData.total = res.data.total;
@@ -548,12 +549,13 @@ export default {
         }
         if(!this.billSearch.processStatus){ this.billSearch.processStatus = this.processStatusCom; }
         if(this.urlName != 'sortOperation'){ 
-          params = Object.assign({},this.mustData,this.billSearch,{curOperator:this.$store.state.userName});
+       //   params = Object.assign({},this.mustData,this.billSearch,{curOperator:this.$store.state.userName});
+         params = Object.assign({},this.mustData,this.billSearch);
         } else{
           params = Object.assign({},this.mustData,this.billSearch);
         }
         delete params['actOperator'];
-          this.$http.post('api/worksheet/wSEntry/list',params).then(res =>{
+          this.$http.post('api/integeratedQuery/ProcessMessagelist',params).then(res =>{
               if(res.status === 200){
                 if(!res.data.rows.length){
                   this.$message({type: 'warning', message: '未查询出数据'}); 
