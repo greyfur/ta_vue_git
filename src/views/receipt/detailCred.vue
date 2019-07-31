@@ -419,7 +419,7 @@
             <el-select v-model="opinion"  placeholder="请输入驳回原因" @change="changeOpinion">
               <el-option v-for="item in BHoptions" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> 
           <el-form-item label="原因填写" v-show="title==='复核驳回'">
             <el-input :disabled="opinion!='其它'" type="textarea" :rows="2" placeholder="请输入原因" v-model="rebut"></el-input>
           </el-form-item>
@@ -439,6 +439,20 @@
           <el-form-item>
             <el-button type="primary" plain @click="confirm">确定</el-button>
             <el-button size="small" @click="dialogFormVisible3 = false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+
+      <el-dialog title="任务指派" :visible.sync="dialogFormVisibleFHRWZF" :close-on-click-modal="modal">
+        <el-form :label-position="labelPosition" label-width="160px">
+          <el-form-item label="选择任务指派人">
+            <el-select v-model="assignee" placeholder="请选择">
+              <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName || item.username == row.entryOperator"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" plain @click="confirm">确定</el-button>
+            <el-button size="small" @click="dialogFormVisibleFHRWZF = false">取消</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -723,6 +737,7 @@ export default {
         dialogFormVisible2:false,
         dialogFormVisible:false,
         dialogFormVisibleA:false,
+        dialogFormVisibleFHRWZF:false,
         title:'',
         currentPage3: 5,
         hide:false,
@@ -1278,7 +1293,7 @@ export default {
         case 2:  // 任务指派 
         this.getName(gname);
           this.specialName = specialName;
-          this.dialogFormVisible3 = true;
+          specialName=='复核'?this.dialogFormVisibleFHRWZF = true:this.dialogFormVisible3 = true;
         break;
         case 3:  // 置废 
           this.$confirm('是否置废？', '提示', {
@@ -1376,6 +1391,7 @@ export default {
             .then(res =>{
               if(res.status === 200 && res.data.errorCode == 1){
                 this.dialogFormVisible3 = false;
+                this.dialogFormVisibleFHRWZF = false;
                 this.$router.push({name:this.$route.query.tag});
               } else if(res.data.errorCode == 0){
                 this.$message({type: 'error', message:res.data.errorMessage }); 

@@ -448,7 +448,21 @@
         <el-table-column prop="remark" label="备注"></el-table-column>
       </el-table>
     </el-dialog>
- 
+
+    <el-dialog title="任务指派" :visible.sync="dialogFormVisibleFHRWZF" :close-on-click-modal="modal">
+      <el-form :label-position="labelPosition" label-width="160px">
+        <el-form-item label="选择任务指派人">
+          <el-select v-model="assignee"  placeholder="请选择">
+            <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName || item.username == row.entryOperator"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" plain @click="confirm">确定</el-button>
+          <el-button size="small" @click="dialogFormVisibleFHRWZF = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
     <el-dialog title="支票创建" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="180px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
         <el-form-item label="Process ID">
@@ -632,26 +646,7 @@ export default {
         searchFlag4:true,
         searchFlag5:true,
         modal:false,
-        tableData:[
-          {
-            doc:'XXXXXXXXX.doc',
-            a1:'2019-09-24',
-            a2:'嘿嘿嘿',
-            a3:'3811983',
-          },
-          {
-            doc:'XXXXXXXXX.doc',
-            a1:'2019-09-24',
-            a2:'嘿嘿嘿',
-            a3:'3811983',
-          },
-          {
-            doc:'XXXXXXXXX.doc',
-            a1:'2019-09-24',
-            a2:'嘿嘿嘿',
-            a3:'3811983',
-          },
-        ],
+        tableData:[],
         col:11,
         selsectList:[],
         makeDocNum:0,
@@ -756,6 +751,7 @@ export default {
         dialogFormVisible:false,
         dialogFormVisible2:false,
         dialogFormVisibleA:false,
+        dialogFormVisibleFHRWZF:false,
         title:'',
         currentPage3: 5,
         currentPage4: 2,
@@ -1287,7 +1283,7 @@ export default {
           } else if(this.specialName === '审批'){
             this.getName(this.emnuGetName[this.row.approvalLevel-1]);
           }
-          this.dialogFormVisible3 = true;
+          this.specialName === '复核'?this.dialogFormVisibleFHRWZF = true:this.dialogFormVisible3 = true;
         break;
         case 3:  // 置废     支票、操作    assign:auto
           this.$confirm('是否置废？', '提示', {
@@ -1450,6 +1446,7 @@ export default {
           this.$http.post('api/activiti/setAssignee',params).then(res =>{
               if(res.status === 200 && res.data.errorCode == 1){
                 this.dialogFormVisible3 = false;
+                this.dialogFormVisibleFHRWZF = false;
                 this.$router.push({name:this.$route.query.tag});
                 this.assignee = null;
               } else if(res.data.errorCode == 0 && res.data.errorMessage){
