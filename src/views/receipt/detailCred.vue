@@ -134,7 +134,7 @@
       </el-col>
     </el-row>
 
-    <el-row v-if="$route.query.tag === 'credVerification'">
+    <el-row v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>组信息</div>
@@ -313,7 +313,7 @@
       </el-col>
     </el-row>
 
-    <el-row v-if="$route.query.tag === 'credVerification'">
+    <el-row v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag4 = !searchFlag4">
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息</div>
@@ -516,16 +516,16 @@
               </el-form-item>
             </el-col>
           </el-form-item>
-          <el-form-item label="手续费币制/手续费金额" required>
+          <el-form-item label="手续费币制/手续费金额">
             <el-col :span="10">
-              <el-form-item prop="chargesCurrency">
+              <el-form-item>
                 <el-select v-model="formLabelAlign.chargesCurrency" placeholder="请选择" class="curAmount">
                   <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="10">
-              <el-form-item prop="chargesAmount">
+              <el-form-item>
                 <input type="text" class="selfInput" v-model="formLabelAlign.chargesAmount" @input="watchInput('chargesAmount')">
                 <!-- <el-input v-model="formLabelAlign.chargesAmount" @input.native="watchInput('chargesAmount')" class="curAmount"></el-input> -->
               </el-form-item>
@@ -790,9 +790,9 @@ export default {
           bankCurrency: [
             { required: true, message: '请选择币制', trigger: 'blur' }
           ],
-          chargesCurrency: [
-            { required: true, message: '请选择手续费币制', trigger: 'blur' }
-          ],
+          // chargesCurrency: [
+          //   { required: true, message: '请选择手续费币制', trigger: 'blur' }
+          // ],
           valueDate: [
             { type: 'date', required: true, message: '请选择起息日', trigger: 'blur' }
           ],
@@ -805,9 +805,9 @@ export default {
           bankAmount:[
             { required: true, message: '请输入金额', trigger: 'blur' }
           ],
-          chargesAmount:[
-            { required: true, message: '请输入手续费金额', trigger: 'blur' }
-          ],
+          // chargesAmount:[
+          //   { required: true, message: '请输入手续费金额', trigger: 'blur' }
+          // ],
         },
         putIn:false,
       };
@@ -1474,32 +1474,6 @@ export default {
     handleClick(){
     },
     handleClick2(){
-    },
-    handelClick3(row, column, event) {
-      let data = [
-        {a:'remittance号',c:'rmId'},
-        {a:'process号',c:'processId'},
-        {a:'支票状态',c:'rmStatus'},
-        {a:'支付方式',c:'paymentType'},
-        {a:'实收/支币制',c:'bankCurrency'},
-        {a:'手续费币制',c:'chargesCurrency'},
-        {a:'手续费金额',c:'chargesAmount'},
-        {a:'Base Company',c:'baseCompany'},
-        {a:'银行账户',c:'bankAccountName'},
-        {a:'起息日',c:'valueDate'},
-        {a:'到期日',c:'dueDate'},
-        {a:'汇款人代码',c:'partnerCode'},
-        {a:'汇款人名称',c:'partnerName'},
-        {a:'BP Reference信息',c:'businessPartnerRef'},
-        {a:'Business Origin',c:'businessOrigin'},
-      ]
-        let str = '';
-        data.forEach(el=>{
-          str += `${el['a']}：${row[el['c']]}<br/>`
-        })
-       this.$alert(str, '详情', {
-          dangerouslyUseHTMLString: true,
-        });
     },
     remoteMethod(){
     },

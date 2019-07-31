@@ -521,16 +521,16 @@
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item label="手续费币制/手续费金额" required>
+        <el-form-item label="手续费币制/手续费金额">
           <el-col :span="10">
-            <el-form-item prop="chargesCurrency">
+            <el-form-item>
               <el-select v-model="formLabelAlign.chargesCurrency" placeholder="请选择" class="curAmount">
                 <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
           <el-col :span="10">
-            <el-form-item prop="chargesAmount">
+            <el-form-item>
               <input type="text" class="selfInput" v-model="formLabelAlign.chargesAmount" @input="watchInput('chargesAmount')">
               <!-- <el-input v-model="formLabelAlign.chargesAmount" @input.native="watchInput('chargesAmount')" class="curAmount"></el-input> -->
             </el-form-item>

@@ -140,7 +140,7 @@
       </el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
-      <el-table-column prop="curOperator" label="任务来源" width="85"></el-table-column>
+      <el-table-column prop="curOperator" label="任务来源" width="110"></el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <el-table-column label="状态" v-if="urlName === 'billEntry'">
         <template slot-scope="scope" v-show="urlName === 'billEntry'">
@@ -627,11 +627,7 @@ export default {
       this.brokerList = JSON.parse(sessionStorage.getItem("BrokerType"));
       // 账单类型
       this.ZDoptions = JSON.parse(sessionStorage.getItem("wsType"));
-
-      let objbc = JSON.parse(sessionStorage.getItem("baseCompany"));
-      this.baseCompanyList = objbc.filter(el => {
-        return el.code != "Both";
-      });
+      this.baseCompanyList = JSON.parse(sessionStorage.getItem("baseCompany"));
       // 国际国内
       this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
       // 判断是否是管理员   66
@@ -683,10 +679,11 @@ export default {
     init(tag) {
       // 进首页查询
       let params = null;
-      if(this.urlName == 'sortOperation' || this.admFlag){ 
-        params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
-       } else{
+      if(this.urlName == 'sortOperation'){ 
         params = Object.assign({},this.mustData);
+       } else if(this.admFlag){params = Object.assign({},this.mustData);}
+       else{
+        params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
        }
       delete params['actOperator'];
       this.$http.post('api/worksheet/wSEntry/list',params).then(res =>{
@@ -754,10 +751,12 @@ export default {
           this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;
         }
         if(!this.billSearch.processStatus){ this.billSearch.processStatus = this.processStatusCom; }
-        if(this.urlName != 'sortOperation' || this.admFlag){ 
-          params = Object.assign({},this.mustData,this.billSearch,{curOperator:this.$store.state.userName});
-        } else{
-          params = Object.assign({},this.mustData,this.billSearch);
+
+        if(this.urlName == 'sortOperation'){ 
+          params = Object.assign({},this.mustData);
+        } else if(this.admFlag){params = Object.assign({},this.mustData);}
+        else{
+          params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
         }
         delete params['actOperator'];
           this.$http.post('api/worksheet/wSEntry/list',params).then(res =>{
