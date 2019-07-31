@@ -31,7 +31,7 @@
               <i style="color:#fff;" :class="iconEmnu[el.name]"></i>
               <span>{{el.title}}</span>
             </template>
-              <el-menu-item v-for="(item,i) in el.children" :key="i" :index="item.name">
+              <el-menu-item v-for="(item,i) in el.children" :key="i" :index="item.name"  :class="{'is-active':$route.name == item.name}">
                 <span slot="title">{{item.title}}</span>
               </el-menu-item>
           </el-submenu>
@@ -160,11 +160,11 @@ import {computeName} from '@/assets/js/util.js'
       } else{ this.fold = false; }
 
       this.urlArr = computeNavbar(this.$store.state.deFineRout);
-  //   if(computeName(this.$route.name,this.$store.state.deFineRout)){
-  //       this.name = computeName(this.$route.name,this.$store.state.deFineRout);
-  //     } else{
-  //       window.location.href = `${window.location.href}${this.firstName}`
-  //     }
+    if(computeName(this.$route.name,this.$store.state.deFineRout)){
+        this.name = computeName(this.$route.name,this.$store.state.deFineRout);
+      } else{
+        window.location.href = `${window.location.href}${this.firstName}`
+      }
     },
     methods: {
       handleSelect(key, keyPath) {

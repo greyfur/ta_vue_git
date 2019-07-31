@@ -140,7 +140,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="bpCode" label="BP number" width="90"></el-table-column>
+      <el-table-column prop="bpCode" label="BP number" width="100"></el-table-column>
       <el-table-column label="BP名称">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.bpName" placement="top-start">
@@ -148,14 +148,20 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
       <el-table-column prop="sgStatus" label="Sg状态"></el-table-column>
-      <el-table-column prop="settlementIndicator" label="结算指标"></el-table-column>
+      <el-table-column prop="settlementIndicator" label="结算指标" width="95"></el-table-column>
       <el-table-column prop="sgCurrency" label="币值"></el-table-column>
-      <el-table-column prop="settlementAmount" label="结算总额"></el-table-column>
-      <el-table-column prop="unsettlementAmount" label="未结算金额" width="90"></el-table-column>
-      <el-table-column label="应收款日期" width="90">
+      <el-table-column label="结算总额">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.settlementAmount" placement="top-start">
+            <span class="abbreviate">{{scope.row.settlementAmount}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column prop="unsettlementAmount" label="未结算金额" width="100"></el-table-column>
+      <el-table-column label="应收款日期" width="100">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.dueDate" placement="top-start">
             <span class="abbreviate">{{scope.row.dueDate}}</span>
@@ -180,8 +186,8 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="createdBy" label="创建人"></el-table-column>
-      <el-table-column label="创建时间">
+      <el-table-column prop="createdBy" label="创建人" width="95"></el-table-column>
+      <el-table-column label="创建时间" width="95">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.createdAt" placement="top-start">
             <span class="abbreviate">{{scope.row.createdAt}}</span>

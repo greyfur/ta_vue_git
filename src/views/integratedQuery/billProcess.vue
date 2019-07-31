@@ -84,9 +84,9 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
-      <el-table-column prop="curOperator" label="任务来源"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
+      <el-table-column prop="curOperator" label="任务来源" width="120"></el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">

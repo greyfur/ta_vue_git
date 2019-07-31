@@ -1,5 +1,3 @@
-import store from "../../store/index";
-import routData from '@/assets/js/arrRoute.js';
 export function computeSidebar(name,arr) {
     let resArr = [];
     if(arr.length > 0){

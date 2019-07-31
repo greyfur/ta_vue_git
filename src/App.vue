@@ -21,15 +21,6 @@ export default {
   created() {  // 获取公共数据
     this.UName = sessionStorage.getItem('userCName');
   },
-  methods:{
-    logOut() {
-      sessionStorage.removeItem('resMenuList');
-      sessionStorage.removeItem('roleIdList');
-      cookie.remove('jwttoken');
-      cookie.remove('jwttokenInfo');
-      window.location.href = `http://${cip.loginUrl}:2222/logout?service=http://${cip.currentIp}:${cip.currentPort}/indexPage`;
-    }
-  }
 }
 </script>
 

@@ -100,7 +100,7 @@
       </el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
       <el-table-column prop="rmReceiptDate" width="120" label="汇款到账日期"></el-table-column>
-      <el-table-column prop="businessOrigin" width="125" label="Business Origin"></el-table-column>
+      <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
       <el-table-column label="Base Company" prop="baseCompany" width="130"></el-table-column>
       <el-table-column label="汇款金额">
         <template slot-scope="scope">
@@ -115,7 +115,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
-      <el-table-column prop="curOperator" width="95" label="操作员"></el-table-column>
+      <el-table-column prop="curOperator" width="110" label="操作员"></el-table-column>
       <el-table-column prop="rmOriSettleCompanyName" width="150" label="原收款公司名称"></el-table-column>
       <el-table-column fixed="right" label="操作" width="170">
         <template slot-scope="scope">
@@ -178,7 +178,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
-      <el-table-column prop="curOperator" width="95" label="操作员"></el-table-column>
+      <el-table-column prop="curOperator" width="110" label="操作员"></el-table-column>
       <el-table-column width="150" label="原收款公司名称">
         <template slot-scope="scope">
           <el-tooltip

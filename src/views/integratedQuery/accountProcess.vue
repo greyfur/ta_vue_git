@@ -45,18 +45,29 @@
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div>
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column label="流程编号" width="120">
+      <el-table-column label="流程编号" width="125">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
       <el-table-column prop="rmSettleCompanyCode" width="110" label="结付公司代码"></el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
-      <el-table-column prop="businessOrigin" width="120" label="Business Origin"></el-table-column>
-      <el-table-column label="Base Company" width="120" prop="baseCompany">
+      <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
+      <el-table-column label="Base Company" width="130" prop="baseCompany">
       </el-table-column>
-      <el-table-column prop="rmAmount" label="汇款金额"></el-table-column>
-      <el-table-column prop="curOperator" label="操作员"></el-table-column>
+      <el-table-column prop="rmAmount" label="汇款金额" width="120">
+        <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="scope.row.rmAmount"
+            placement="top-start"
+          >
+            <span class="abbreviate">{{scope.row.rmAmount}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column prop="curOperator" label="操作员" width="95"></el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column>
       <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column>
