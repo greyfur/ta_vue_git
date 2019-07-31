@@ -89,12 +89,14 @@
       <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
       <el-table-column prop="curOperator" label="任务来源"></el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
-      <!-- <el-table-column label="状态">
-        <template slot-scope="scope">
-          <span class="point"></span>
-
+      <el-table-column label="状态" v-if="urlName === 'billEntry'">
+        <template slot-scope="scope" v-show="urlName === 'billEntry'">
+          <div style="display: flex;align-items: center;" v-show="urlName === 'billEntry'">
+            <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
+            <span>{{scope.row.rejectedFlag == '1'?'异常':'正常'}}</span>
+          </div>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>

@@ -40,15 +40,23 @@
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
-      <el-table-column prop="rmSettleCompanyCode" width="110" label="结付公司代码"></el-table-column>
+      <el-table-column prop="rmSettleCompanyCode" width="120" label="结付公司代码"></el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
       <el-table-column prop="businessOrigin" width="120" label="Business Origin"></el-table-column>
       <el-table-column label="Base Company" width="120" prop="baseCompany"></el-table-column>
-      <el-table-column prop="rmAmount" label="汇款金额"></el-table-column>
+      <el-table-column prop="rmAmount" label="汇款金额" width="120"></el-table-column>
       <el-table-column prop="curOperator" label="操作员"></el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
-      <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column>
-      <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column>
+      <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->
+      <!-- <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column> -->
+      <el-table-column label="状态" v-if="urlName === 'payOperation' || urlName === 'approvalDone'">
+        <template slot-scope="scope" v-show="urlName === 'payOperation' || urlName === 'approvalDone'">
+          <div style="display: flex;align-items: center;" v-show="urlName === 'payOperation' || urlName === 'approvalDone'">
+            <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
+            <span>{{scope.row.rejectedFlag == '1'?'异常':'正常'}}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
@@ -159,12 +167,12 @@
         </el-form-item>
         <el-form-item label="选择管理员">
           <el-select v-model="assignee"  placeholder="请选择" v-show="title==='reverse'">
-            <el-option v-for="item in TJRoptionsA" :key="item.userId" :label="item.name" :value="item.username"></el-option>
+            <el-option v-for="(item,i) in TJRoptionsA" :key="i" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="confirm">确定</el-button>
-          <el-button @click="dialogFormVisible2 = false">取消</el-button>
+          <el-button type="primary" plain @click="confirm">确定</el-button>
+          <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
         </el-form-item>
       </el-form>
         <!-- 上传附件 -->
@@ -671,22 +679,8 @@ export default {
                 this.TJRoptionsA = res.data;
               }
             }) 
-          this.title = 'reverse';
+          this.title='reverse';
           this.dialogFormVisible2 = true;
-          // this.$confirm('是否Reverse?', '提示', {
-          //   confirmButtonText: '确定',
-          //   cancelButtonText: '取消',
-          //   type: 'warning'
-          // }).then(() => {
-          //   this.$http.post('api/pay/teskClaim/reversePayProcess',{processId:this.chooseRow.processId,actOperator:this.$store.state.userName},{responseType:'blob'}).then(res =>{
-          //     console.log(res,'onReverse')
-          //     if(res.status === 200 && res.data.code==0){
-          //       this.$message({type: 'success', message: '成功'});
-          //     } else if(res.data.msg){
-          //       this.$message.error(res.data.msg);
-          //     }
-          //   })
-          // })
         break;
 
       }
@@ -792,11 +786,11 @@ export default {
             })
           break;
           case 20:  //---
-            this.$http.post('api/pay/teskClaim/reversePayProcess',{processId:this.chooseRow.processId,assignee:this.assignee,actOperator:this.$store.state.userName},{responseType:'blob'}).then(res =>{
+            this.$http.post('api/pay/teskClaim/reversePayProcess',{processId:this.chooseRow.processId,assignee:this.assignee,actOperator:this.$store.state.userName}).then(res =>{
               console.log(res,'onReverse')
               if(res.status === 200 && res.data.code==0){
                 this.$message({type: 'success', message: '成功'});
-              } else if(res.data.msg){
+              } else if(res.data.code=='1'){
                 this.$message.error(res.data.msg);
               }
             })

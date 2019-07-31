@@ -117,7 +117,7 @@
       <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
       <el-table-column prop="curOperator" label="操作员"></el-table-column>
       <el-table-column prop="rmOriSettleCompanyName" width="150" label="原收款公司名称"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="170">
+      <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
             <span class="el-dropdown-link">
@@ -189,6 +189,14 @@
           >
             <span class="abbreviate">{{scope.row.rmOriSettleCompanyName}}</span>
           </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" v-if="urlName === 'credOperation'">
+        <template slot-scope="scope" v-show="urlName === 'credOperation'">
+          <div style="display: flex;align-items: center;" v-show="urlName === 'credOperation'">
+            <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
+            <span>{{scope.row.rejectedFlag == '1'?'异常':'正常'}}</span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
