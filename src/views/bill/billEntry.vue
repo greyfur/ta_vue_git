@@ -16,4 +16,22 @@ export default {
   }
 }
 </script>
+<style scoped>
+    /* .el-select__caret {
+    margin-top: 0 !important;
+    background: red;
+}
+ .el-pagination__sizes{
+    background: red;
+  }
+.el-pagination
+  > .el-pagination__sizes
+  > .el-select
+  > .el-input__suffix
+  > .el-input__suffix-inner
+  > .el-select__caret {
+  background: red;
+} */
+
+</style>
 

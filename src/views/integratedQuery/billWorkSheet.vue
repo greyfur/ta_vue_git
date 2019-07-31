@@ -88,9 +88,9 @@
             </template>
           </el-table-column>
           <el-table-column prop="wsType" label="账单类型"></el-table-column>
-          <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
-          <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
-          <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+          <el-table-column prop="wsPeriod" label="账单期" width="95"></el-table-column>
+          <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
+          <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
           <el-table-column prop="dept" label="经营机构"></el-table-column>
           <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
           <el-table-column label="金额">
@@ -100,7 +100,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="createdBy" label="录入人" width="80"></el-table-column>
+          <el-table-column prop="createdBy" label="录入人" width="90"></el-table-column>
           <el-table-column prop="createdAt" label="录入时间" width="100"></el-table-column>
           <el-table-column label="备注">
             <template slot-scope="scope">
