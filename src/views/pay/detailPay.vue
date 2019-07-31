@@ -241,7 +241,7 @@
                 <el-table-column label="附件名称">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
-                      <span class="abbreviate">{{scope.row.docName}}</span>
+                      <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -377,6 +377,7 @@
           <el-table-column fixed="right" label="操作" width="100">
             <template slot-scope="scope">
               <el-button v-show="!scope.row.rmId" @click="remitCreat(scope.row)" v-if="$route.query.tag === 'approvalDone'" type="text" size="small">创建支票</el-button>
+              <!-- <el-button v-if="$route.query.tag === 'approvalDone'" @click="openSGSICS(scope.row)" type="text" size="small">创建支票</el-button> -->
             </template>
           </el-table-column>
         </el-table>
@@ -987,6 +988,9 @@ export default {
     // },1000)
   },
   methods: {
+    openSGSICS(row){
+
+    },
     copy(id){
       let Url2=document.getElementById(id).innerText;
       let oInput = document.createElement('input');
@@ -1802,7 +1806,10 @@ export default {
           if(arr1.length){ 
             this.BankAccountList = arr1; 
           } else{ 
-            this.$message.error('选择的币制和银行账户不匹配'); 
+            setTimeout(()=>{
+              this.$message.error('选择的币制和银行账户不匹配'); 
+            },500)
+            
             this.BankAccountList = [];
           }
         }
@@ -2036,7 +2043,10 @@ export default {
       // title === '流程提交' || title==='审批通过' title === '复核通过'
       if(n === '流程提交' && this.$route.query.tag === 'payOperation'){
         this.putIn = 'b';
-      } else if(n === '流程提交'){
+      } else if(n === '流程提交' && this.$route.query.tag === 'approvalDone'){
+        this.putIn = 'b';
+      }
+      else if(n === '流程提交'){
         this.putIn = 'n';
       } else if(n === '复核通过'){
         this.putIn = 'n';

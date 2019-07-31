@@ -6,7 +6,7 @@
         <el-row :gutter="10" class="billRow">
         <el-col :span="8">
           <span class="slable">流程编号</span>
-          <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="formLabelAlign.processID"></el-input>
+          <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processID"></el-input>
         </el-col>
         <el-col :span="8">
           <span class="slable">结付公司代码</span>
@@ -95,7 +95,7 @@
         <el-form-item label="汇款金额" v-show="title==='编辑' || title==='创建'">
           <input type="text" class="selfInput" v-model="formLabelAlign.rmAmount" @input="watchInput('rmAmount')">
         </el-form-item>
-        <el-form-item label="币制" v-show="title==='创建' || title==='编辑'">     
+        <el-form-item label="币制" v-show="title==='编辑'">     
           <el-select clearable v-model="formLabelAlign.rmCurrency" placeholder="请选择">
             <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
           </el-select>
@@ -152,7 +152,7 @@
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
       <el-form label-width="140px" v-show="title==='流程提交' || title==='reverse'">
-        <el-form-item label="选择下一任务处理人'"  v-show="title==='流程提交'">
+        <el-form-item label="选择下一任务处理人"  v-show="title==='流程提交'">
           <el-select v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
@@ -476,7 +476,8 @@ export default {
       let jArr = JSON.parse(sessionStorage.getItem('BrokerType'));
       this.cedentList = jArr.concat(fcArr);
       // 集团产再
-      this.baseCompanyList = JSON.parse(sessionStorage.getItem('baseCompany'));
+      let objbc = JSON.parse(sessionStorage.getItem('baseCompany'));
+      this.baseCompanyList = objbc.filter(el=>{ return el.code != 'Both' });
       // 国际国内
       this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
     },1000)

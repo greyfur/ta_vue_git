@@ -6,7 +6,7 @@
         <el-row :gutter="10" class="billRow">
         <el-col :span="8">
           <span class="slable">流程编号</span>
-          <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="billSearch.processId"></el-input>
+          <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
         </el-col>
         <el-col :span="8">
           <span class="slable">账单类型</span>
@@ -48,12 +48,12 @@
               <el-tooltip class="item" effect="dark" :content="scope.row.businessId" placement="top-start">
                 <span class="abbreviate">{{scope.row.businessId}}</span>
               </el-tooltip>
-            </template>
+            </template> 
           </el-table-column>
           <el-table-column label="附件名称">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
-                <span class="abbreviate">{{scope.row.docName}}</span>
+                <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
               </el-tooltip>
             </template>
           </el-table-column>

@@ -129,7 +129,7 @@
           <el-table-column label="附件名称">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
-                <span class="abbreviate">{{scope.row.docName}}</span>
+                <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1040,7 +1040,7 @@ export default {
           })
         })
       } else if(tag == 3){  // 下载
-        this.$http.post('api/anyShare/fileOperation/previewDocument',Object.assign({},row,{processId:this.chooseRow.processId}),{responseType:'blob'}).then(res =>{
+        this.$http.post('api/anyShare/fileOperation/downloadDocument',Object.assign({},row,{processId:this.chooseRow.processId}),{responseType:'blob'}).then(res =>{
           if(res.status === 200){
             console.log(res);
             // this.path = res.data;

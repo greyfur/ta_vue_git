@@ -171,7 +171,7 @@
                 <el-table-column label="附件名称">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
-                      <span class="abbreviate">{{scope.row.docName}}</span>
+                      <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -347,7 +347,7 @@
           <el-table-column label="附件名称">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
-                <span class="abbreviate">{{scope.row.docName}}</span>
+                <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1009,7 +1009,9 @@ export default {
           if(arr1.length){ 
             this.BankAccountList = arr1; 
           } else{ 
-            this.$message.error('选择的币制和银行账户不匹配'); 
+            setTimeout(()=>{
+              this.$message.error('选择的币制和银行账户不匹配'); 
+            },500)
             this.BankAccountList = [];
           }
         }

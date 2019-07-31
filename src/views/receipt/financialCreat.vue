@@ -1,19 +1,18 @@
 <template>
   <div class="financialCreat">
-    <receipt-com goDetailName='' processStatusCom='已创建' urlName='financialCreat'></receipt-com>
+    <receipt-com goDetailName processStatusCom="已创建" urlName="financialCreat"></receipt-com>
   </div>
 </template>
 <script>
-import receiptCom from '@/components/receiptCom.vue'
+import receiptCom from "@/components/receiptCom.vue";
 export default {
-  components:{
+  components: {
     receiptCom
   },
   data() {
-    return {
-      
-    }
+    return {};
   }
-}
+};
 </script>
-
+<style scoped>
+</style>

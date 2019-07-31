@@ -6,7 +6,7 @@
         <el-row :gutter="10" class="billRow">
         <el-col :span="7">
           <span class="slable">流程编号</span>
-          <el-input placeholder="请输入流程编号" suffix-icon="el-icon-date" v-model.trim="billSearch.processId"></el-input>
+          <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
         </el-col>
         <el-col :span="7">
           <span class="slable">账单类型</span>
@@ -34,7 +34,7 @@
     </div> 
     <el-table :header-row-class-name="StableClass" :data="tableData" stripe style="width: 100%">
       <el-table-column prop="createdAt" label="创建时间" width="100"></el-table-column>
-      <el-table-column label="流程编号" width="120">
+      <el-table-column label="流程编号" width="125">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName !== 'sortOperation'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>
@@ -85,10 +85,16 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="125"></el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
       <el-table-column prop="curOperator" label="任务来源"></el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
+      <!-- <el-table-column label="状态">
+        <template slot-scope="scope">
+          <span class="point"></span>
+
+        </template>
+      </el-table-column> -->
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
@@ -448,7 +454,9 @@ export default {
       // 账单类型
       this.ZDoptions = JSON.parse(sessionStorage.getItem('wsType'));
       // 集团产再
-      this.baseCompanyList = JSON.parse(sessionStorage.getItem('baseCompany'));
+      // this.baseCompanyList = JSON.parse(sessionStorage.getItem('baseCompany'));
+      let objbc = JSON.parse(sessionStorage.getItem('baseCompany'));
+      this.baseCompanyList = objbc.filter(el=>{ return el.code != 'Both' });
       // 国际国内
       this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
     },1000)
