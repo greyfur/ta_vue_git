@@ -82,7 +82,6 @@
             </li>
           </ul>
         </div>
-
         <div class="searchNew" style="border-bottom:none;margin-top:16px;">
             <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
               <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
@@ -90,7 +89,7 @@
                   <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
                 </p>            
               </div>
-              <el-table stripe :data="fileData" style="width:100%;min-height:220px;max-height:500px;" class="document">
+              <el-table stripe :data="fileData" style="width:100%;min-height:350px;max-height:500px;" class="document">
                 <el-table-column label="文件名" width="140">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -197,7 +196,7 @@
           <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
           <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
-              <el-button @click="onOpenSICS(scope.row,'rmId',)" v-if="$route.query.tag === 'payClose' || $route.query.tag === 'payment' || $route.query.tag === 'instancyPay' || $route.query.tag === 'partialDone'" type="text" size="small">Reverse</el-button>
+              <el-button @click="onOpenSICS(scope.row,'rmId')" v-if="$route.query.tag === 'payClose' || $route.query.tag === 'payment' || $route.query.tag === 'instancyPay' || $route.query.tag === 'partialDone'" type="text" size="small">Reverse</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -666,19 +665,9 @@ export default {
             c:'rmSettleCompanyCode',
           },
           {
-            a:'汇款人名称',
-            b:'',
-            c:'rmSettleCompanyName',
-          },
-          {
             a:'币制',
             b:'',
             c:'rmCurrency',
-          },
-          {
-            a:'到账日期',
-            b:'',
-            c:'rmReceiptDate',
           },
           {
             a:'Business Origin',
@@ -701,40 +690,9 @@ export default {
             c:'modifiedBy'
           },
           {
-            a:'我司销账编号',
+            a:'流程状态',
             b:'',
-            c:'rmWrittenOffNum',
-          },
-
-          {
-            a:'原收款公司名称',
-            b:'',
-            c:'rmOriSettleCompanyName',
-          },
-          {
-            a:'原收款币制',
-            b:'',
-            c:'rmOriCurrency',
-          },
-          {
-            a:'原收款金额',
-            b:'',
-            c:'rmOriAmount',
-          },
-          {
-            a:'手续费币制',
-            b:'',
-            c:'rmChargesCurrency',
-          },
-          {
-            a:'手续费金额',
-            b:'',
-            c:'rmChargesAmount',
-          },
-          {
-            a:'结算人员',
-            b:'',
-            c:'rmSettleUser',
+            c:'processStatus'
           },
         ],
         currencyRateList:[],
@@ -2036,11 +1994,11 @@ export default {
   },
    watch:{
     title:function(n,o){
-      console.log(n,'nnnnnn');
+      console.log(n,'nnnnnn'); // b可以选自己，n不可以，0开账，1关账，关账支票可选自己
       // title === '流程提交' || title==='审批通过' title === '复核通过'
       if(n === '流程提交' && this.$route.query.tag === 'payOperation'){
         this.putIn = 'b';
-      } else if(n === '流程提交' && this.$route.query.tag === 'approvalDone'){
+      } else if(n === '流程提交' && this.$route.query.tag === 'approvalDone' && this.row.accountCloseFlag=='0'){
         this.putIn = 'b';
       }
       else if(n === '流程提交'){

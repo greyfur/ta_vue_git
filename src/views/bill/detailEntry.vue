@@ -1057,7 +1057,7 @@ export default {
                 window.location = this.path
               } else {
                 a.href = this.path
-                a.download = res.data
+                a.download = row.docName;
                 document.body.appendChild(a)
                 a.click()
                 a.remove()

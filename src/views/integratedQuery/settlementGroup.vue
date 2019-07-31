@@ -193,7 +193,6 @@
           <el-dropdown>
             <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><el-button @click.stop="handleClick(5,scope.row)" type="text" size="small">详情</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
               <el-dropdown-item><el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
@@ -339,12 +338,6 @@
         <el-table-column prop="reason" label="操作原因"></el-table-column>
         <el-table-column prop="remark" label="操作备注"></el-table-column>
       </el-table>
-      <!-- 详情 -->
-      <ul class="detail-ul" v-show="title=='详情'">
-        <li v-for="(item,i) in listData" :key="i" class="detail-item">
-          <span class="detail-name">{{item.a}} : </span><span class="detail-content">{{item.b}}</span>
-        </li>
-      </ul>
       <el-table stripe :data="fileData" style="width: 100%" class="document" v-show="title==='上传附件' || title==='附件查看'">
         <el-table-column label="文件名">
           <template slot-scope="scope">
@@ -700,13 +693,6 @@ export default {
           // this.dialogFormVisible = true;
           this.confirm();
           break;
-        case 5: //详情
-          this.title = '详情';
-          this.dialogFormVisible2 = true;
-          this.listData.forEach(el=>{
-            el['b'] = this.chooseRow[el['c']];
-          })
-          break;
         case 6: //编辑
           console.log(this.chooseRow,'row');
           this.formLabelAlign = this.chooseRow;
@@ -863,9 +849,6 @@ export default {
               }
             }
           })
-          break;
-        case 5: //详情
-
           break;
         case 6: //编辑
            this.$refs[formName].validate((valid) => {

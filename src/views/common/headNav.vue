@@ -160,11 +160,12 @@ import {computeName} from '@/assets/js/util.js'
       } else{ this.fold = false; }
 
       this.urlArr = computeNavbar(this.$store.state.deFineRout);
-  //   if(computeName(this.$route.name,this.$store.state.deFineRout)){
-  //       this.name = computeName(this.$route.name,this.$store.state.deFineRout);
-  //     } else{
-  //       window.location.href = `${window.location.href}${this.firstName}`
-  //     }
+      if(computeName(this.$route.name,this.$store.state.deFineRout)){
+        this.name = computeName(this.$route.name,this.$store.state.deFineRout);
+      } else{
+        window.location.href = `${window.location.href}${this.firstName}`
+      }
+
     },
     methods: {
       handleSelect(key, keyPath) {
@@ -265,7 +266,7 @@ import {computeName} from '@/assets/js/util.js'
     background: #00486F!important;
     color: rgba(255,255,255,.7)!important;
   }
-  .is-active{
+  .vertical .is-active{
     background: linear-gradient(270deg,rgba(0,72,111,1) 0%,rgba(64,152,195,0.37) 31%,rgba(64,152,195,0.37) 71%,rgba(0,72,111,1) 100%)!important;
     background-color: linear-gradient(270deg,rgba(0,72,111,1) 0%,rgba(64,152,195,0.37) 31%,rgba(64,152,195,0.37) 71%,rgba(0,72,111,1) 100%)!important;
     color: rgba(255,255,255,1)!important;

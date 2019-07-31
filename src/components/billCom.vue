@@ -380,6 +380,7 @@ export default {
         hide:false,
         dialogFormVisible: false,
         dialogFormVisible1: false,
+        admFlag:false,
         billSearch: {
           processId:null,
           processStatus:null,
@@ -458,12 +459,14 @@ export default {
       // 账单类型
       this.ZDoptions = JSON.parse(sessionStorage.getItem('wsType'));
       // 集团产再
-      // this.baseCompanyList = JSON.parse(sessionStorage.getItem('baseCompany'));
-      let objbc = JSON.parse(sessionStorage.getItem('baseCompany'));
-      this.baseCompanyList = objbc.filter(el=>{ return el.code != 'Both' });
+      this.baseCompanyList = JSON.parse(sessionStorage.getItem('baseCompany'));
       // 国际国内
       this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
+      // 判断是否是管理员   66
+      let admArr = JSON.parse(sessionStorage.getItem('roleIdList'));
+      admArr.indexOf(66) == -1?this.admFlag = false:this.admFlag = true;
     },1000)
+    
   },
   methods: {
     docView(row) {
@@ -504,7 +507,7 @@ export default {
     init(tag) {
       // 进首页查询
       let params = null;
-      if(this.urlName != 'sortOperation'){ 
+      if(this.urlName == 'sortOperation' || this.admFlag){ 
         params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
        } else{
         params = Object.assign({},this.mustData);
@@ -565,7 +568,7 @@ export default {
           this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;
         }
         if(!this.billSearch.processStatus){ this.billSearch.processStatus = this.processStatusCom; }
-        if(this.urlName != 'sortOperation'){ 
+        if(this.urlName != 'sortOperation' || this.admFlag){ 
           params = Object.assign({},this.mustData,this.billSearch,{curOperator:this.$store.state.userName});
         } else{
           params = Object.assign({},this.mustData,this.billSearch);
