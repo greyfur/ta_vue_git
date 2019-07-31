@@ -66,7 +66,7 @@
           <p><el-button size="mini" @click="getSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
         <el-table v-show="searchFlag2" stripe :data="RMData" style="width:100%">
-          <el-table-column label="remittance号" width="100">
+          <el-table-column label="remittance号" width="110">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
                 <span class="abbreviate">{{scope.row.rmId}}</span>
@@ -114,15 +114,15 @@
           </el-table-column>
           <el-table-column prop="valueDate" label="起息日" width="100"></el-table-column>
           <el-table-column prop="dueDate" label="到期日" width="100"></el-table-column>
-          <el-table-column prop="partnerCode" label="汇款人代码" width="90"></el-table-column>
-          <el-table-column label="汇款人名称" width="90">
+          <el-table-column prop="partnerCode" label="汇款人代码" width="100"></el-table-column>
+          <el-table-column label="汇款人名称" width="100">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.partnerName" placement="top-start">
                 <span class="abbreviate">{{scope.row.partnerName}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="businessPartnerRef" label="BP Reference信息" width="130"></el-table-column>
+          <el-table-column prop="businessPartnerRef" label="BP Reference信息" width="140"></el-table-column>
           <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
           <el-table-column label="操作" width="140">
             <template slot-scope="scope">
