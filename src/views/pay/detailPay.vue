@@ -194,7 +194,7 @@
           </el-table-column>
           <el-table-column prop="businessPartnerRef" label="BP Reference信息" width="140"></el-table-column>
           <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="140">
+          <el-table-column label="操作" width="140">
             <template slot-scope="scope">
               <el-button @click="onOpenSICS(scope.row,'rmId')" v-if="$route.query.tag === 'payClose' || $route.query.tag === 'payment' || $route.query.tag === 'instancyPay' || $route.query.tag === 'partialDone'" type="text" size="small">Reverse</el-button>
             </template>

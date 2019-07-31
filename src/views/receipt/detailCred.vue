@@ -124,7 +124,7 @@
           </el-table-column>
           <el-table-column prop="businessPartnerRef" label="BP Reference信息" width="130"></el-table-column>
           <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="140">
+          <el-table-column label="操作" width="140">
             <template slot-scope="scope">
               <el-button type="text" @click.stop="openSICS(scope.row,'rmId')" size="mini">打开SICS</el-button>
               <el-button type="text" v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'" @click.stop="openSICS(scope.row,'rmId','R')" size="mini">Reverse</el-button>
@@ -227,7 +227,7 @@
                     </el-tooltip>
                   </template>
                 </el-table-column>
-                <el-table-column fixed="right" label="操作" width="100">
+                <el-table-column label="操作" width="120">
                   <template slot-scope="scope">
                     <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
                   </template>
@@ -304,7 +304,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="100">
+          <el-table-column label="操作" width="120">
             <template slot-scope="scope">
               <el-button type="text" @click.stop="openSICS(scope.row,'sgNum')" size="mini">打开SICS</el-button>
             </template>
@@ -403,7 +403,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作">
+          <el-table-column label="操作" width="120">
             <template slot-scope="scope">
               <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
             </template>
