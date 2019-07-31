@@ -101,7 +101,7 @@
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
       <el-table-column prop="rmReceiptDate" width="120" label="汇款到账日期"></el-table-column>
       <el-table-column prop="businessOrigin" width="125" label="Business Origin"></el-table-column>
-      <el-table-column label="Base Company" prop="baseCompany" width="120"></el-table-column>
+      <el-table-column label="Base Company" prop="baseCompany" width="130"></el-table-column>
       <el-table-column label="汇款金额">
         <template slot-scope="scope">
           <el-tooltip
@@ -115,9 +115,9 @@
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
-      <el-table-column prop="curOperator" label="操作员"></el-table-column>
+      <el-table-column prop="curOperator" width="95" label="操作员"></el-table-column>
       <el-table-column prop="rmOriSettleCompanyName" width="150" label="原收款公司名称"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="80">
+      <el-table-column fixed="right" label="操作" width="170">
         <template slot-scope="scope">
           <el-dropdown>
             <span class="el-dropdown-link">
@@ -140,7 +140,7 @@
       </el-table-column>
     </el-table>
     <el-table v-show="urlName!='taskClaim'" :data="tableData" stripe style="width: 100%">
-      <el-table-column label="流程编号" width="120">
+      <el-table-column label="流程编号" width="125">
         <template slot-scope="scope">
           <span
             :class="{'smallHand':urlName!=='financialCreat' && urlName!=='taskClaim'}"
@@ -164,7 +164,7 @@
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
       <el-table-column prop="rmReceiptDate" width="120" label="汇款到账日期"></el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
-      <el-table-column label="Base Company" width="120" prop="baseCompany"></el-table-column>
+      <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
       <el-table-column label="汇款金额">
         <template slot-scope="scope">
           <el-tooltip
@@ -178,7 +178,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
-      <el-table-column prop="curOperator" label="操作员"></el-table-column>
+      <el-table-column prop="curOperator" width="95" label="操作员"></el-table-column>
       <el-table-column width="150" label="原收款公司名称">
         <template slot-scope="scope">
           <el-tooltip
@@ -189,14 +189,6 @@
           >
             <span class="abbreviate">{{scope.row.rmOriSettleCompanyName}}</span>
           </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" v-if="urlName === 'credOperation'">
-        <template slot-scope="scope" v-show="urlName === 'credOperation'">
-          <div style="display: flex;align-items: center;" v-show="urlName === 'credOperation'">
-            <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
-            <span>{{scope.row.rejectedFlag == '1'?'异常':'正常'}}</span>
-          </div>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="80">

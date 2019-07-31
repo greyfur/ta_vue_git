@@ -66,15 +66,17 @@
       <el-table-column prop="wsReceiptDate" width="120" label="账单收到日期"></el-table-column>
       <el-table-column label="分出公司" width="120">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" :content="scope.row.wsCedentCode+'-'+scope.row.wsCedentName" placement="top-start">
-            <span class="abbreviate">{{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}</span>
+          <el-tooltip class="item" effect="dark" :content="scope.row.wsCedentCode&&scope.row.wsCedentName?scope.row.wsCedentCode+'-'+scope.row.wsCedentName:''" placement="top-start">
+            <span class="abbreviate" v-if="scope.row.wsCedentCode&&scope.row.wsCedentName">{{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}</span>
+            <span class="abbreviate" v-else></span>
           </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="经纪公司" width="120">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" :content="scope.row.wsBrokerCode+'-'+scope.row.wsBrokerName" placement="top-start">
-            <span class="abbreviate">{{scope.row.wsBrokerCode}}-{{scope.row.wsBrokerName}}</span>
+          <el-tooltip class="item" effect="dark" :content="scope.row.wsBrokerCode&&scope.row.wsBrokerName?scope.row.wsBrokerCode+'-'+scope.row.wsBrokerName:''" placement="top-start">
+            <span class="abbreviate" v-if="scope.row.wsBrokerCode&&scope.row.wsBrokerName">{{scope.row.wsBrokerCode}}-{{scope.row.wsBrokerName}}</span>
+            <span class="abbreviate" v-else></span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -85,9 +87,9 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin" width="125"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
-      <el-table-column prop="curOperator" label="任务来源"></el-table-column>
+      <el-table-column prop="curOperator" label="任务来源" width="85"></el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <el-table-column label="状态" v-if="urlName === 'billEntry'">
         <template slot-scope="scope" v-show="urlName === 'billEntry'">
@@ -231,7 +233,7 @@
       <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
         <el-table-column prop="processId" label="流程编号" width="200"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
-        <el-table-column prop="actOperator" label="任务来源"></el-table-column>
+        <el-table-column prop="actOperator" label="任务来源" width="85"></el-table-column>
         <el-table-column prop="actTime" label="操作时间"></el-table-column>
         <el-table-column prop="reason" label="操作原因"></el-table-column>
         <el-table-column prop="remark" label="操作备注"></el-table-column>
