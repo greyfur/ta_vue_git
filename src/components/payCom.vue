@@ -62,7 +62,6 @@
           <el-dropdown>
             <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><span @click.stop="handleClick(5,scope.row)" class="blueColor">详情</span></el-dropdown-item>
               <el-dropdown-item><span v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" class="blueColor">编辑</span></el-dropdown-item>
               <el-dropdown-item><span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
@@ -200,12 +199,7 @@
         <el-table-column prop="reason" label="操作原因"></el-table-column>
         <el-table-column prop="remark" label="操作备注"></el-table-column>
       </el-table>
-      <!-- 详情 -->
-      <ul class="detail-ul" v-show="title=='详情'">
-        <li v-for="(item,i) in listData" :key="i" class="detail-item">
-          <span class="detail-name">{{item.a}} : </span><span class="detail-content">{{item.b}}</span>
-        </li>
-      </ul>
+     
       <el-table stripe :data="fileData" style="width: 100%" class="document" v-show="title==='上传附件' || title==='附件查看'">
         <el-table-column label="文件名" width="140">
           <template slot-scope="scope">
@@ -272,6 +266,7 @@ export default {
     },
   data() {
       return {
+        admFlag:false,
         searchFlag:false,
         modal:false,
         tableData:[],
@@ -488,6 +483,9 @@ export default {
       this.baseCompanyList = objbc.filter(el=>{ return el.code != 'Both' });
       // 国际国内
       this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
+      // 判断是否是管理员   66
+      let admArr = JSON.parse(sessionStorage.getItem('roleIdList'));
+      admArr.indexOf(66) == -1?this.admFlag = false:this.admFlag = true;
     },1000)
      
     this.mustData.actOperator = this.$store.state.userName;
@@ -506,7 +504,12 @@ export default {
   methods: {
     init(tag){
       // 进首页查询
-      let params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName})
+      let params = null;
+      if(this.admFlag){ 
+        params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
+       } else{
+        params = Object.assign({},this.mustData);
+       }
       delete params['actOperator'];
       this.$http.post('api/pay/teskClaim/list',params).then(res =>{
         if(res.status === 200 ) {
@@ -573,13 +576,6 @@ export default {
           this.title = '查询';
           // this.dialogFormVisible = true;
           this.confirm();
-          break;
-        case 5: //详情
-          this.title = '详情';
-          this.dialogFormVisible2 = true;
-          this.listData.forEach(el=>{
-            el['b'] = this.chooseRow[el['c']];
-          })
           break;
         case 6: //编辑
           console.log(this.chooseRow,'row');
@@ -711,7 +707,13 @@ export default {
           break;
         case 4: //查询
         if(!this.formLabelAlign.processStatus){ this.formLabelAlign.processStatus = this.processStatusCom; }
-          let params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
+          // let params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
+          let params = null;
+          if(this.admFlag){ 
+            params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
+          } else{
+            params = Object.assign({},this.mustData);
+          }
           delete params['actOperator'];
           this.$http.post('api/pay/teskClaim/list',params).then(res =>{
             if(res.status === 200){
@@ -724,9 +726,6 @@ export default {
               }
             }
           })
-          break;
-        case 5: //详情
-
           break;
         case 6: //编辑
            this.$refs[formName].validate((valid) => {

@@ -552,15 +552,15 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="指派任务处理人" v-show="title==='任务指派'">
-          <el-select v-model="assignee" placeholder="请选择">
-            <el-option
-              v-for="item in TJRoptions"
-              :key="item.userId"
-              :label="item.name"
-              :value="item.username"
-              :disabled="item.username == $store.state.userName"
-            ></el-option>
+        <el-form-item label="指派任务处理人" v-show="title==='任务指派' && $route.query.tag !== 'billCheck'">
+          <el-select v-model="assignee"  placeholder="请选择"> 
+            <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName"></el-option>
+          </el-select>
+        </el-form-item> 
+         <!-- 复核指派 -->
+        <el-form-item label="指派任务处理人" v-show="title==='任务指派' && $route.query.tag === 'billCheck'">
+          <el-select v-model="assignee"  placeholder="请选择"> 
+            <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName || item.username == chooseRow.entryOperator"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="选择下一任务处理人" v-show="title==='流程提交' && $route.query.tag === 'billEntry'">
@@ -1455,14 +1455,12 @@ export default {
                   window.location = this.path;
                 } else {
                   a.href = this.path;
-                  a.download = res.data;
+                  a.download = row.docName;
                   document.body.appendChild(a);
                   a.click();
                   a.remove();
                 }
-              } else {
-                window.location = this.path;
-              }
+              } 
             }
           });
       } else {

@@ -82,7 +82,6 @@
             </li>
           </ul>
         </div>
-
         <div class="searchNew" style="border-bottom:none;margin-top:16px;">
             <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
               <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
@@ -90,7 +89,7 @@
                   <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
                 </p>            
               </div>
-              <el-table stripe :data="fileData" style="width:100%;min-height:220px;max-height:500px;" class="document">
+              <el-table stripe :data="fileData" style="width:100%;min-height:350px;max-height:500px;" class="document">
                 <el-table-column label="文件名" width="140">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -448,7 +447,21 @@
         <el-table-column prop="remark" label="备注"></el-table-column>
       </el-table>
     </el-dialog>
- 
+
+    <el-dialog title="任务指派" :visible.sync="dialogFormVisibleFHRWZF" :close-on-click-modal="modal">
+      <el-form :label-position="labelPosition" label-width="160px">
+        <el-form-item label="选择任务指派人">
+          <el-select v-model="assignee"  placeholder="请选择">
+            <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName || item.username == row.entryOperator"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" plain @click="confirm">确定</el-button>
+          <el-button size="small" @click="dialogFormVisibleFHRWZF = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
     <el-dialog title="支票创建" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="180px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
         <el-form-item label="Process ID">
@@ -632,26 +645,7 @@ export default {
         searchFlag4:true,
         searchFlag5:true,
         modal:false,
-        tableData:[
-          {
-            doc:'XXXXXXXXX.doc',
-            a1:'2019-09-24',
-            a2:'嘿嘿嘿',
-            a3:'3811983',
-          },
-          {
-            doc:'XXXXXXXXX.doc',
-            a1:'2019-09-24',
-            a2:'嘿嘿嘿',
-            a3:'3811983',
-          },
-          {
-            doc:'XXXXXXXXX.doc',
-            a1:'2019-09-24',
-            a2:'嘿嘿嘿',
-            a3:'3811983',
-          },
-        ],
+        tableData:[],
         col:11,
         selsectList:[],
         makeDocNum:0,
@@ -671,19 +665,9 @@ export default {
             c:'rmSettleCompanyCode',
           },
           {
-            a:'汇款人名称',
-            b:'',
-            c:'rmSettleCompanyName',
-          },
-          {
             a:'币制',
             b:'',
             c:'rmCurrency',
-          },
-          {
-            a:'到账日期',
-            b:'',
-            c:'rmReceiptDate',
           },
           {
             a:'Business Origin',
@@ -706,40 +690,9 @@ export default {
             c:'modifiedBy'
           },
           {
-            a:'我司销账编号',
+            a:'流程状态',
             b:'',
-            c:'rmWrittenOffNum',
-          },
-
-          {
-            a:'原收款公司名称',
-            b:'',
-            c:'rmOriSettleCompanyName',
-          },
-          {
-            a:'原收款币制',
-            b:'',
-            c:'rmOriCurrency',
-          },
-          {
-            a:'原收款金额',
-            b:'',
-            c:'rmOriAmount',
-          },
-          {
-            a:'手续费币制',
-            b:'',
-            c:'rmChargesCurrency',
-          },
-          {
-            a:'手续费金额',
-            b:'',
-            c:'rmChargesAmount',
-          },
-          {
-            a:'结算人员',
-            b:'',
-            c:'rmSettleUser',
+            c:'processStatus'
           },
         ],
         currencyRateList:[],
@@ -756,6 +709,7 @@ export default {
         dialogFormVisible:false,
         dialogFormVisible2:false,
         dialogFormVisibleA:false,
+        dialogFormVisibleFHRWZF:false,
         title:'',
         currentPage3: 5,
         currentPage4: 2,
@@ -1287,7 +1241,7 @@ export default {
           } else if(this.specialName === '审批'){
             this.getName(this.emnuGetName[this.row.approvalLevel-1]);
           }
-          this.dialogFormVisible3 = true;
+          this.specialName === '复核'?this.dialogFormVisibleFHRWZF = true:this.dialogFormVisible3 = true;
         break;
         case 3:  // 置废     支票、操作    assign:auto
           this.$confirm('是否置废？', '提示', {
@@ -1450,6 +1404,7 @@ export default {
           this.$http.post('api/activiti/setAssignee',params).then(res =>{
               if(res.status === 200 && res.data.errorCode == 1){
                 this.dialogFormVisible3 = false;
+                this.dialogFormVisibleFHRWZF = false;
                 this.$router.push({name:this.$route.query.tag});
                 this.assignee = null;
               } else if(res.data.errorCode == 0 && res.data.errorMessage){
@@ -2039,11 +1994,11 @@ export default {
   },
    watch:{
     title:function(n,o){
-      console.log(n,'nnnnnn');
+      console.log(n,'nnnnnn'); // b可以选自己，n不可以，0开账，1关账，关账支票可选自己
       // title === '流程提交' || title==='审批通过' title === '复核通过'
       if(n === '流程提交' && this.$route.query.tag === 'payOperation'){
         this.putIn = 'b';
-      } else if(n === '流程提交' && this.$route.query.tag === 'approvalDone'){
+      } else if(n === '流程提交' && this.$route.query.tag === 'approvalDone' && this.row.accountCloseFlag=='0'){
         this.putIn = 'b';
       }
       else if(n === '流程提交'){
