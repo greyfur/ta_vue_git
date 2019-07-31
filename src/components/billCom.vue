@@ -152,27 +152,28 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="80">
+      <el-table-column fixed="right" label="操作" width="180">
         <template slot-scope="scope">
           <el-dropdown>
-            <span class="el-dropdown-link">更多
+            <span
+              v-show="urlName === 'sortOperation' || pendingFlag"
+              @click.stop="handleClick(2,scope.row)"
+              style="margin-right:8px;cursor: pointer;"
+            >编辑</span>
+          </el-dropdown>
+          <el-dropdown>
+            <span
+              v-show="urlName === 'sortOperation'"
+              @click.stop="handleClick(3,scope.row)"
+              style="margin-right:8px;cursor: pointer;"
+            >分配</span>
+          </el-dropdown>
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              更多
               <i style="margin-left:8px;" class="el-icon-arrow-down"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>
-                <span
-                  v-show="urlName === 'sortOperation' || pendingFlag"
-                  @click.stop="handleClick(2,scope.row)"
-                  class="blueColor"
-                >编辑</span>
-              </el-dropdown-item>
-              <el-dropdown-item>
-                <span
-                  v-show="urlName === 'sortOperation'"
-                  @click.stop="handleClick(3,scope.row)"
-                  class="blueColor"
-                >流程提交</span>
-              </el-dropdown-item>
               <el-dropdown-item>
                 <span
                   v-show="urlName === 'sortOperation'"
@@ -441,166 +442,167 @@ export default {
     processStatusCom: ""
   },
   data() {
-      return {
-        searchFlag:false,
-        tableData:[],
-        assignee:'',
-        modal:false,
-        YWoptions:[
-          {value: 'T',label: '合约账单'},
-          {value: 'F',label: '临分账单'},
-          {value: 'O',label: '转分账单'},
-          {value: 'C',label: '理赔账单'},
-        ],
-        tableClass:{'background-color':'#FAFAFA'},
-        StableClass:'background-color:#FAFAFA',
-        baseCompanyList:[],
-        YWoptionsObj:{
-          'T':'合约账单',
-          'F':'临分账单',
-          'O':'转分账单',
-          'C':'理赔账单',
-        },
-        zqList:[
-          'Variable',
-          '10th Of 12',
-          '11th Of 12',
-          '12th Of 12',
-          '1st Of 12',
-          '1st Of 2',
-          '1st Of 3',
-          '1st Of 4',
-          '2nd Of 12',
-          '2nd Of 2',
-          '2nd Of 3',
-          '2nd Of 4',
-          '3rd Of 12',
-          '3rd Of 3',
-          '3rd Of 4',
-          '4th Of 12',
-          '4th Of 4',
-          '5th Of 12',
-          '6th Of 12',
-          '7th Of 12',
-          '8th Of 12',
-          '9th Of 12',
-          'Yearly',
-        ],
-        options:[],
-        ReportUnitList:[],
-        TJRoptions:[],
-        ZDoptions:[ //  账单类型
-          {value: 'AA',label: 'Additional Account'},
-          {value: 'AD',label: 'Adjustment'},
-          {value: 'CCA',label: 'Cash Claim Account'},
-          {value: 'CA',label: 'Commission Adjustment'},
-          {value: 'COMMUTATION',label: 'Commutation'},
-          {value: 'CRA',label: 'Correction Account'},
-          {value: 'FC',label: 'Fac Claim '},
-          {value: 'FP',label: 'Fac Premium'},
-          {value: 'INIA',label: 'Initial Account'},
-          {value: 'IA',label: 'Internal Account'},
-          {value: 'LP',label: 'Loss Participation'},
-          {value: 'NCB',label: 'No Claim Bonus'},
-          {value: 'OCA',label: 'Outstanding Cash Advance '},
-          {value: 'PTF',label: 'Portfolio Transfer'},
-          {value: 'PA',label: 'Premium Adjustment'},
-          {value: 'PC',label: 'Profit Commission'},
-          {value: 'RA',label: 'Regular Account'},
-          {value: 'RCA',label: 'Regular Claim Account'},
-          {value: 'RPA',label: 'Regular Premium Account'},
-          {value: 'RP',label: 'Reinstatement Premium'},
-          {value: 'SA',label: 'Supplementary Account'},
-          {value: 'SCA',label: 'Supplementary Claim Account'},
-          {value: 'SCRA',label: 'Supplementary Claim Reserve Account'},
-          {value: 'SPA',label: 'Supplementary Premium Account'},
-          {value: 'XLMDP',label: 'XL MDP'},
-        ],  
-        ZDoptionsObj:{
-          'AA':'Additional Account',
-          'AD':'Adjustment',
-          'CCA':'Cash Claim Account',
-          'CA':'Commission Adjustment',
-          'COMMUTATION': 'Commutation',
-          'CRA': 'Correction Account',
-          'FC': 'Fac Claim ',
-          'FP': 'Fac Premium',
-          'INIA': 'Initial Account',
-          'IA': 'Internal Account',
-          'LP': 'Loss Participation',
-          'NCB': 'No Claim Bonus',
-          'OCA': 'Outstanding Cash Advance ',
-          'PTF': 'Portfolio Transfer',
-          'PA': 'Premium Adjustment',
-          'PC': 'Profit Commission',
-          'RA': 'Regular Account',
-          'RCA': 'Regular Claim Account',
-          'RPA': 'Regular Premium Account',
-          'RP': 'Reinstatement Premium',
-          'SA': 'Supplementary Account',
-          'SCA': 'Supplementary Claim Account',
-          'SCRA': 'Supplementary Claim Reserve Account',
-          'SPA': 'Supplementary Premium Account',
-          'XLMDP': 'XL MDP',
-        },
-        businessOriginList:[], // 国际国内
-        title:'',
-        hide:false,
-        dialogFormVisible: false,
-        dialogFormVisible1: false,
-        admFlag:false,
-        billSearch: {
-          processId:null,
-          processStatus:null,
-          wsType:null,
-          wsPeriod:null,
-          wsBusinessType:null,
-          wsCedentCode:null,
-          wsCedentName:null,
-          wsBrokerCode:null,
-          wsBrokerName:null,
-          wsReceiptDate:null,
-          businessOrigin:null,
-          baseCompany:null,
-          reportUnit:null,
-        },
-        mustData:{
-          actOperator:null,
-          processType:'账单',
-          processStatus:'',
-          pageNumber:1,  // 页数
-          pageSize:20,  //页面一次要展示的条数
-          total:0, //总条数
-        },
-        fileList:[],
-        file:[],
-        chooseRow:{},
-        dialogState:0,
-        track:[],
-        setTime:null,
-        fileData:[],
-        picture:'',
-        cedentList:[],
-        brokerList:[],
-        brokerModel:null,
-        cedentModel:null,
-        ZJObj:{
-          total:50,
-          pageNumber:1,  // 页数
-          pageSize:10,  //页面一次要展示的条数
-        },
-        ZJprocessId:'',
-        zq1:'',
-        zq2:'',
-        rules:{
-          wsBusinessType: [
-            { required: true, message: '请选择任务类型', trigger: 'blur' }
-          ],
-        },
-        pendingFlag:false,
-      };
-    },
-  created(){
+    return {
+      searchFlag: false,
+      tableData: [],
+      assignee: "",
+      modal: false,
+      YWoptions: [
+        { value: "T", label: "合约账单" },
+        { value: "F", label: "临分账单" },
+        { value: "O", label: "转分账单" },
+        { value: "C", label: "理赔账单" }
+      ],
+      tableClass: { "background-color": "#FAFAFA" },
+      StableClass: "background-color:#FAFAFA",
+      baseCompanyList: [],
+      YWoptionsObj: {
+        T: "合约账单",
+        F: "临分账单",
+        O: "转分账单",
+        C: "理赔账单"
+      },
+      zqList: [
+        "Variable",
+        "10th Of 12",
+        "11th Of 12",
+        "12th Of 12",
+        "1st Of 12",
+        "1st Of 2",
+        "1st Of 3",
+        "1st Of 4",
+        "2nd Of 12",
+        "2nd Of 2",
+        "2nd Of 3",
+        "2nd Of 4",
+        "3rd Of 12",
+        "3rd Of 3",
+        "3rd Of 4",
+        "4th Of 12",
+        "4th Of 4",
+        "5th Of 12",
+        "6th Of 12",
+        "7th Of 12",
+        "8th Of 12",
+        "9th Of 12",
+        "Yearly"
+      ],
+      options: [],
+      ReportUnitList: [],
+      TJRoptions: [],
+      ZDoptions: [
+        //  账单类型
+        { value: "AA", label: "Additional Account" },
+        { value: "AD", label: "Adjustment" },
+        { value: "CCA", label: "Cash Claim Account" },
+        { value: "CA", label: "Commission Adjustment" },
+        { value: "COMMUTATION", label: "Commutation" },
+        { value: "CRA", label: "Correction Account" },
+        { value: "FC", label: "Fac Claim " },
+        { value: "FP", label: "Fac Premium" },
+        { value: "INIA", label: "Initial Account" },
+        { value: "IA", label: "Internal Account" },
+        { value: "LP", label: "Loss Participation" },
+        { value: "NCB", label: "No Claim Bonus" },
+        { value: "OCA", label: "Outstanding Cash Advance " },
+        { value: "PTF", label: "Portfolio Transfer" },
+        { value: "PA", label: "Premium Adjustment" },
+        { value: "PC", label: "Profit Commission" },
+        { value: "RA", label: "Regular Account" },
+        { value: "RCA", label: "Regular Claim Account" },
+        { value: "RPA", label: "Regular Premium Account" },
+        { value: "RP", label: "Reinstatement Premium" },
+        { value: "SA", label: "Supplementary Account" },
+        { value: "SCA", label: "Supplementary Claim Account" },
+        { value: "SCRA", label: "Supplementary Claim Reserve Account" },
+        { value: "SPA", label: "Supplementary Premium Account" },
+        { value: "XLMDP", label: "XL MDP" }
+      ],
+      ZDoptionsObj: {
+        AA: "Additional Account",
+        AD: "Adjustment",
+        CCA: "Cash Claim Account",
+        CA: "Commission Adjustment",
+        COMMUTATION: "Commutation",
+        CRA: "Correction Account",
+        FC: "Fac Claim ",
+        FP: "Fac Premium",
+        INIA: "Initial Account",
+        IA: "Internal Account",
+        LP: "Loss Participation",
+        NCB: "No Claim Bonus",
+        OCA: "Outstanding Cash Advance ",
+        PTF: "Portfolio Transfer",
+        PA: "Premium Adjustment",
+        PC: "Profit Commission",
+        RA: "Regular Account",
+        RCA: "Regular Claim Account",
+        RPA: "Regular Premium Account",
+        RP: "Reinstatement Premium",
+        SA: "Supplementary Account",
+        SCA: "Supplementary Claim Account",
+        SCRA: "Supplementary Claim Reserve Account",
+        SPA: "Supplementary Premium Account",
+        XLMDP: "XL MDP"
+      },
+      businessOriginList: [], // 国际国内
+      title: "",
+      hide: false,
+      dialogFormVisible: false,
+      dialogFormVisible1: false,
+      admFlag: false,
+      billSearch: {
+        processId: null,
+        processStatus: null,
+        wsType: null,
+        wsPeriod: null,
+        wsBusinessType: null,
+        wsCedentCode: null,
+        wsCedentName: null,
+        wsBrokerCode: null,
+        wsBrokerName: null,
+        wsReceiptDate: null,
+        businessOrigin: null,
+        baseCompany: null,
+        reportUnit: null
+      },
+      mustData: {
+        actOperator: null,
+        processType: "账单",
+        processStatus: "",
+        pageNumber: 1, // 页数
+        pageSize: 20, //页面一次要展示的条数
+        total: 0 //总条数
+      },
+      fileList: [],
+      file: [],
+      chooseRow: {},
+      dialogState: 0,
+      track: [],
+      setTime: null,
+      fileData: [],
+      picture: "",
+      cedentList: [],
+      brokerList: [],
+      brokerModel: null,
+      cedentModel: null,
+      ZJObj: {
+        total: 50,
+        pageNumber: 1, // 页数
+        pageSize: 10 //页面一次要展示的条数
+      },
+      ZJprocessId: "",
+      zq1: "",
+      zq2: "",
+      rules: {
+        wsBusinessType: [
+          { required: true, message: "请选择任务类型", trigger: "blur" }
+        ]
+      },
+      pendingFlag: false
+    };
+  },
+  created() {
     this.mustData.processStatus = this.processStatusCom;
     this.mustData.actOperator = this.$store.state.userName;
     if (this.urlName === "sortOperation" || this.urlName === "billEntry") {
@@ -629,11 +631,13 @@ export default {
       this.ZDoptions = JSON.parse(sessionStorage.getItem("wsType"));
       this.baseCompanyList = JSON.parse(sessionStorage.getItem("baseCompany"));
       // 国际国内
-      this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
+      this.businessOriginList = JSON.parse(
+        sessionStorage.getItem("businessOrigin")
+      );
       // 判断是否是管理员   66
-      let admArr = JSON.parse(sessionStorage.getItem('roleIdList'));
-      admArr.indexOf(66) == -1?this.admFlag = false:this.admFlag = true;
-    },1000)
+      let admArr = JSON.parse(sessionStorage.getItem("roleIdList"));
+      admArr.indexOf(66) == -1 ? (this.admFlag = false) : (this.admFlag = true);
+    }, 1000);
   },
   methods: {
     docView(row) {
@@ -787,7 +791,7 @@ export default {
               }
             });
           break;
-        case 3: // 流程提交
+        case 3: // 分配
           if (!this.assignee) {
             this.$message.error("请选择任务处理人");
             return false;
