@@ -94,12 +94,12 @@
         </el-form-item>
         <el-form-item label="汇款金额" v-show="title==='编辑' || title==='创建'">
           <input type="text" class="selfInput" v-model="formLabelAlign.rmAmount" @input="watchInput('rmAmount')">
-        </el-form-item>-->
+        </el-form-item>
         <el-form-item label="币制" v-show="title==='编辑'">     
           <el-select clearable v-model="formLabelAlign.rmCurrency" placeholder="请选择">
             <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
           </el-select>
-        </el-form-item> 
+        </el-form-item> -->
         <el-form-item label="Business Origin" prop="businessOrigin" v-show="title==='创建' || title==='编辑'"> 
           <el-select clearable v-model="formLabelAlign.businessOrigin" placeholder="请选择Business Origin">
             <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
@@ -476,7 +476,8 @@ export default {
       let jArr = JSON.parse(sessionStorage.getItem('BrokerType'));
       this.cedentList = jArr.concat(fcArr);
       // 集团产再
-      this.baseCompanyList = JSON.parse(sessionStorage.getItem('baseCompany'));
+      let objbc = JSON.parse(sessionStorage.getItem('baseCompany'));
+      this.baseCompanyList = objbc.filter(el=>{ return el.code != 'Both' });
       // 国际国内
       this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
     },1000)

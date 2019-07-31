@@ -89,6 +89,12 @@
       <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
       <el-table-column prop="curOperator" label="任务来源"></el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
+      <!-- <el-table-column label="状态">
+        <template slot-scope="scope">
+          <span class="point"></span>
+
+        </template>
+      </el-table-column> -->
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
@@ -448,7 +454,9 @@ export default {
       // 账单类型
       this.ZDoptions = JSON.parse(sessionStorage.getItem('wsType'));
       // 集团产再
-      this.baseCompanyList = JSON.parse(sessionStorage.getItem('baseCompany'));
+      // this.baseCompanyList = JSON.parse(sessionStorage.getItem('baseCompany'));
+      let objbc = JSON.parse(sessionStorage.getItem('baseCompany'));
+      this.baseCompanyList = objbc.filter(el=>{ return el.code != 'Both' });
       // 国际国内
       this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
     },1000)
