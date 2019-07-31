@@ -11,8 +11,8 @@ import '@/assets/css/font/iconfont.css'
 // Object.keys(filters).forEach(key => Vue.filter(key, filters[key]))
 
 Vue.use(http);
-// import '@/permission.js' // 权限控制
-import '@/permission2.js' // 权限控制
+import '@/permission.js' // 权限控制
+// import '@/permission2.js' // 权限控制
 
 Vue.use(ElementUI);
 
