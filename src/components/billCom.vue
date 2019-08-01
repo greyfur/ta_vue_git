@@ -2,45 +2,48 @@
   <div class="billCom">
     <div class="searchNew">
       <div class="titleSearch" @click="searchFlag = !searchFlag">
-        <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询
+        <i
+          style="margin-right:8px;"
+          :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"
+        ></i>查询
       </div>
       <el-collapse-transition>
-      <div v-show="searchFlag">
-        <el-row :gutter="10" class="billRow" class-name="transition-box">
-          <el-col :span="7">
-            <span class="slable">流程编号</span>
-            <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
-          </el-col>
-          <el-col :span="7">
-            <span class="slable">账单类型</span>
-            <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
-              <el-option
-                v-for="item in ZDoptions"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="10">
-            <span class="slable">账期</span>
-            <el-input v-model.trim="zq2" placeholder="请输入年份" class="wsPeriod"></el-input>
-            <el-select clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
-              <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
-            </el-select>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-button type="primary" plain @click="handleClick(1)">
-              <i class="iconfont iconGroup42"></i>查询
-            </el-button>
-            <el-button type="primary" plain @click="reset">
-              <i class="iconfont iconGroup39"></i>重置
-            </el-button>
-          </el-col>
-        </el-row>
-      </div>
+        <div v-show="searchFlag">
+          <el-row :gutter="10" class="billRow" class-name="transition-box">
+            <el-col :span="7">
+              <span class="slable">流程编号</span>
+              <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
+            </el-col>
+            <el-col :span="7">
+              <span class="slable">账单类型</span>
+              <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
+                <el-option
+                  v-for="item in ZDoptions"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
+                ></el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="10">
+              <span class="slable">账期</span>
+              <el-input v-model.trim="zq2" placeholder="请输入年份" class="wsPeriod"></el-input>
+              <el-select clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
+                <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-button type="primary" plain @click="handleClick(1)">
+                <i class="iconfont iconGroup42"></i>查询
+              </el-button>
+              <el-button type="primary" plain @click="reset">
+                <i class="iconfont iconGroup39"></i>重置
+              </el-button>
+            </el-col>
+          </el-row>
+        </div>
       </el-collapse-transition>
     </div>
     <div class="btn">
@@ -213,6 +216,16 @@
           <el-input v-model.trim="billSearch.processId" placeholder="请输入流程编号"></el-input>
         </el-form-item>
         <!--   以上只有查询有 --------->
+        <el-form-item label="任务类型" prop="wsBusinessType">
+          <el-select clearable v-model="billSearch.wsBusinessType" placeholder="请选择任务类型">
+            <el-option
+              v-for="item in YWoptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="账单类型" v-show="title==='手工创建' || title==='编辑' || title==='查询'">
           <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
             <el-option
@@ -282,16 +295,6 @@
           </el-select>
         </el-form-item>
         <div v-show="title === '手工创建' || title==='编辑'">
-          <el-form-item label="任务类型" prop="wsBusinessType">
-            <el-select clearable v-model="billSearch.wsBusinessType" placeholder="请选择任务类型">
-              <el-option
-                v-for="item in YWoptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
           <el-form-item label="分出公司">
             <el-select clearable filterable v-model="cedentModel" placeholder="请选择分出公司">
               <el-option
@@ -1128,8 +1131,7 @@ export default {
 .billCom .el-input {
   width: 196px;
 }
-
-.el-form-item:nth-child(6) .el-input:nth-child(1) {
+.el-form-item:nth-child(7) .el-input:nth-child(1) {
   width: 70px;
 }
 .browseDoc {

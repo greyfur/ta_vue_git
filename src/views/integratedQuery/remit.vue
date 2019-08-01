@@ -48,7 +48,7 @@
       </el-button>
     </div>
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column label="remittance号" width="100">
+      <el-table-column label="支票号" width="100">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
             <span class="abbreviate">{{scope.row.rmId}}</span>

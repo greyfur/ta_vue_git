@@ -154,7 +154,7 @@
         </el-form-item> -->
         <el-form-item>
           <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" plain @click="confirm('formLabelAlign')">确 定</el-button>
+          <el-button size="small" type="primary" plain @click="confirm('formLabelAlign')">确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -172,7 +172,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" plain @click="confirm">确定</el-button>
+          <el-button size="small" type="primary" plain @click="confirm">确定</el-button>
           <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
         </el-form-item>
       </el-form>
