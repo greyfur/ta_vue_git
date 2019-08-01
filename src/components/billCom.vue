@@ -269,7 +269,7 @@
           v-show="title==='手工创建' || title==='编辑' || title==='查询'"
           class="zqForm"
         >
-          <el-input v-model.trim="zq2" placeholder="请输入年份" class="wsPeriod"></el-input>
+          <el-input v-model.trim="zq2" placeholder="年份" class="wsPeriod" maxlength="4"></el-input>
           <el-select clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
             <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
@@ -1090,12 +1090,16 @@ export default {
   text-align: right;
   margin-top: 20px;
 }
+/* .el-pagination {
+  background: red;
+  font-size: 18px;
+  color: #fff;
+}
+.el-pagination .el-pagination__total{
+  font-size: 24px !important;
+} */
 .el-input .el-input__inner {
   width: 220px;
-}
-.el-pagination span.el-pagination__sizes {
-  display: block;
-  background: red;
 }
 .detail-ul {
   margin-left: 10px;
@@ -1129,6 +1133,10 @@ export default {
 }
 .billCom .el-input {
   width: 196px;
+}
+
+.el-form-item:nth-child(6) .el-input:nth-child(1){
+  width: 70px;
 }
 .browseDoc {
   background-color: #ecf5ff;
