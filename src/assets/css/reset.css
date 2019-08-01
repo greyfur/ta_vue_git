@@ -156,6 +156,7 @@ input::-webkit-inner-spin-button {
   cursor: pointer;
 }
 .el-select .el-input .el-select__caret{ margin-top: 10px; }
+.el-pagination .el-pagination__sizes .el-select .el-input .el-input__suffix .el-input__suffix-inner .el-select__caret{margin-top: 0;}
 .el-select .el-input .el-select__caret.is-reverse{ margin-top: 0px; }
 .blueColor{ color: #005C8D; font-size: 12px; font-weight: 700;}
 .el-message-box__wrapper .el-message-box__btns button:nth-child(2){
