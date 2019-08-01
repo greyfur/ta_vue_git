@@ -132,9 +132,10 @@
     <el-row v-if="$route.query.tag !== 'payOperation' && $route.query.tag !== 'payVerification'" style="padding:0 16px;">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag2 = !searchFlag2">
-          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>支票信息</div>
+          <div><i style="margin-right:8px;"  :class="searchFlag2===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>支票信息</div>
           <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getRMSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
+         <el-collapse-transition>
         <el-table v-show="searchFlag2" stripe :data="RMData" style="width:100%">
           <el-table-column label="支票号" width="110">
             <template slot-scope="scope">
@@ -200,6 +201,7 @@
             </template>
           </el-table-column>
         </el-table>
+         </el-collapse-transition>
       </el-col>
     </el-row>
 
@@ -456,7 +458,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" plain @click="confirm">确定</el-button>
+          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
           <el-button size="small" @click="dialogFormVisibleFHRWZF = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -537,7 +539,7 @@
           </el-col>
         </el-form-item>
         <el-form-item>
-          <el-button plain type="primary" @click="creatRM('formLabelAlign')">确定</el-button>
+          <el-button size="small" plain type="primary" @click="creatRM('formLabelAlign')" style="padding:0 16px;">确定</el-button>
           <el-button size="small" @click="dialogFormVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -586,7 +588,7 @@
         </el-form-item>
         <el-form-item label="原币币制/金额" required>
           <el-form-item>
-            <el-select style="width:90%;height:41px;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
+            <el-select style="width: 90%;height:41px;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
               <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
             </el-select>
           </el-form-item>
@@ -627,7 +629,7 @@
         </el-form-item>
         <el-form-item>
           <el-button size="small" @click="dialogFormVisible2 = false">取 消</el-button>
-          <el-button type="primary" plain @click="makeDoc(2,'makeDocList')">确 定</el-button>
+          <el-button size="small" type="primary" plain @click="makeDoc(2,'makeDocList')" style="padding:0 16px;">确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>

@@ -425,7 +425,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer" v-show="title==='邮件通知' || title==='OCR上传'">
         <el-button size="small" @click="dialogFormVisible2 = false">取 消</el-button>
-        <el-button type="primary" plain @click="send">确 定</el-button>
+        <el-button size="small" type="primary" plain @click="send" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
     <el-dialog :title="title" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal">
@@ -519,7 +519,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogFormVisible3 = false">取 消</el-button>
-        <el-button type="primary" plain @click="dialogFormVisible3 = false">确 定</el-button>
+        <el-button size="small" type="primary" plain @click="dialogFormVisible3 = false" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
     <el-dialog :title="title" :visible.sync="dialogFormVisible5" :close-on-click-modal="modal">
@@ -580,7 +580,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogFormVisible5 = false">取 消</el-button>
-        <el-button type="primary" plain @click="confirm">确 定</el-button>
+        <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
   </div>

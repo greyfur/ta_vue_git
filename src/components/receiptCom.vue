@@ -139,7 +139,7 @@
       </el-table-column>
     </el-table>
     <el-table v-show="urlName!='taskClaim'" :data="tableData" stripe style="width: 100%">
-      <el-table-column label="流程编号" width="125">
+      <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span
             :class="{'smallHand':urlName!=='financialCreat' && urlName!=='taskClaim'}"
@@ -402,7 +402,7 @@
         </el-form-item>
         <el-form-item>
           <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" plain @click="confirm('formLabelAlign')">确 定</el-button>
+          <el-button size="small" type="primary" plain @click="confirm('formLabelAlign')" style="padding:0 16px;">确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -419,7 +419,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" plain @click="confirm">确定</el-button>
+          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
           <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -442,7 +442,7 @@
         </el-collapse-item>
       </el-collapse>
       <el-table :data="track" border="" style="width: 100%" v-show="title==='踪迹'">
-        <el-table-column prop="processId" label="流程编号" width="120"></el-table-column>
+        <el-table-column prop="processId" label="流程编号" width="140"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
         <el-table-column prop="actOperator" label="任务来源"></el-table-column>
         <el-table-column prop="actTime" label="操作时间"></el-table-column>

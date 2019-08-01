@@ -1,6 +1,6 @@
 <template>
   <div class="headNav">
-    <div style="position: relative;">
+    <div style="position: fixed;left:0;top:0;">
       <div class="vertical" :class="{'widthNum':fold}">
         <div class="logo">
           <img :class="{'marginImg':fold}" src="@/assets/img/ball.png" alt="">

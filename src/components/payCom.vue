@@ -37,7 +37,7 @@
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div>
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column label="流程编号" width="125">
+      <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
@@ -154,7 +154,7 @@
         </el-form-item> -->
         <el-form-item>
           <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-          <el-button size="small" type="primary" plain @click="confirm('formLabelAlign')">确 定</el-button>
+          <el-button size="small" type="primary" plain @click="confirm('formLabelAlign')" style="padding:0 16px;">确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -194,7 +194,7 @@
         </el-collapse-item>
       </el-collapse>
       <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
-        <el-table-column prop="processId" label="流程编号" width="125"></el-table-column>
+        <el-table-column prop="processId" label="流程编号" width="145"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
         <el-table-column prop="actOperator" label="任务来源"></el-table-column>
         <el-table-column prop="actTime" label="操作时间"></el-table-column>
