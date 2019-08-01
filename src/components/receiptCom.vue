@@ -2,10 +2,11 @@
   <div class="receiptCom">
     <div class="searchNew">
       <div class="titleSearch" @click="searchFlag = !searchFlag">
-        <i style="margin-right:8px;" class="el-icon-arrow-down"></i>查询
+        <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询
       </div>
+      <el-collapse-transition>
       <div v-show="searchFlag">
-        <el-row :gutter="10" class="billRow">
+        <el-row :gutter="10" class="billRow" class-name="transition-box">
           <el-col :span="8">
             <span class="slable">流程编号</span>
             <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processId"></el-input>
@@ -57,6 +58,7 @@
           </el-col>
         </el-row>
       </div>
+      </el-collapse-transition>
     </div>
     <div class="btn">
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'financialCreat'">
