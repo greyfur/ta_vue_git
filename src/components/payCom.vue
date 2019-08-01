@@ -475,6 +475,8 @@ export default {
     } else if(this.urlName === 'instancyPay'){
       this.mustData.accountCloseFlag = '1';
     }
+    this.mustData.actOperator = this.$store.state.userName;
+    this.formLabelAlign.modifiedBy = this.$store.state.userName;
     setTimeout(()=>{
       // 分出人+经济人
       let fcArr = JSON.parse(sessionStorage.getItem('CedentType'));
@@ -485,29 +487,25 @@ export default {
       this.baseCompanyList = objbc.filter(el=>{ return el.code != 'Both' });
       // 国际国内
       this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
+      //获取币制
+      this.rmCurrencyList = JSON.parse(sessionStorage.getItem('CurrencyList'));
       // 判断是否是管理员   66
       let admArr = JSON.parse(sessionStorage.getItem('roleIdList'));
-      admArr.indexOf(66) == -1?this.admFlag = false:this.admFlag = true;
+      admArr.some(el=>{return el==66;}) ? (this.admFlag = true) : (this.admFlag = false);
+      this.init();
     },1000)
-     
-    this.mustData.actOperator = this.$store.state.userName;
-    this.formLabelAlign.modifiedBy = this.$store.state.userName;
-
-    //获取币制
-    this.rmCurrencyList = JSON.parse(sessionStorage.getItem('CurrencyList'));
-
     this.$http.post('api/activiti/getAssigneeName',{roleName:'付款录入'}).then(res =>{
       if(res.status === 200) {
         this.TJRoptions = res.data;
       }
     })
-    this.init();
+    
   },
   methods: {
     init(tag){
       // 进首页查询
       let params = null;
-      if(this.admFlag){ 
+      if(!this.admFlag){ 
         params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
        } else{
         params = Object.assign({},this.mustData);
@@ -711,7 +709,7 @@ export default {
         if(!this.formLabelAlign.processStatus){ this.formLabelAlign.processStatus = this.processStatusCom; }
           // let params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
           let params = null;
-          if(this.admFlag){ 
+          if(!this.admFlag){ 
             params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
           } else{
             params = Object.assign({},this.mustData);

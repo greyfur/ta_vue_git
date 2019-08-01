@@ -124,7 +124,7 @@
       </el-table-column>
       <el-table-column prop="businessPartnerRef" label="BP Reference信息" width="140"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="80">
+      <!-- <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
             <span class="el-dropdown-link">更多
@@ -185,7 +185,7 @@
             </el-dropdown-menu>
           </el-dropdown>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <el-pagination
       @size-change="handleSizeChange"
@@ -196,208 +196,6 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="mustData.total"
     ></el-pagination>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
-      <el-form
-        :label-position="labelPosition"
-        label-width="140px"
-        :model="formLabelAlign"
-        :rules="rules"
-        ref="formLabelAlign"
-      >
-        <el-form-item label="结付公司代码">
-          <el-select clearable filterable v-model="cedentModel" placeholder="请选择">
-            <el-option
-              v-for="(item,index) in cedentList"
-              :key="index"
-              :label="item.codecode+' - '+item.codeName"
-              :value="index"
-            >
-              <span style="float:left">{{ item.codecode }}</span>
-              <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <!-- <el-form-item label="汇款人名称">
-          <el-input v-model="formLabelAlign.rmSettleCompanyName"></el-input>
-        </el-form-item>
-        <el-form-item label="汇款到账日期"> 
-            <el-date-picker value-format="timestamp" v-model="formLabelAlign.rmReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="汇款金额" v-show="title==='编辑' || title==='创建'">
-          <input type="text" class="selfInput" v-model="formLabelAlign.rmAmount" @input="watchInput('rmAmount')">
-        </el-form-item>
-        <el-form-item label="币制" v-show="title==='创建' || title==='编辑'">     
-          <el-select clearable v-model="formLabelAlign.rmCurrency" placeholder="请选择">
-            <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
-          </el-select>
-        </el-form-item>-->
-        <el-form-item
-          label="Business Origin"
-          prop="businessOrigin"
-          v-show="title==='创建' || title==='编辑'"
-        >
-          <el-select clearable v-model="formLabelAlign.businessOrigin" placeholder="请选择">
-            <el-option
-              v-for="item in businessOriginList"
-              :key="item.code"
-              :label="item.name"
-              :value="item.code"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Base Company" v-show="title==='创建' || title==='编辑'" prop="baseCompany">
-          <el-select clearable v-model="formLabelAlign.baseCompany" placeholder="请选择">
-            <el-option
-              v-for="item in baseCompanyList"
-              :key="item.code"
-              :label="item.name"
-              :value="item.code"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <!-- <el-form-item label="我司销账编号" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.rmWrittenOffNum"></el-input>
-        </el-form-item>
-        <el-form-item label="结算人员" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.rmSettleUser"></el-input>
-        </el-form-item>
-        <el-form-item label="付款人名称" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.payerName"></el-input>
-        </el-form-item>
-        <el-form-item label="付款人账号" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.payerAccountNumber"></el-input>
-        </el-form-item>
-        <el-form-item label="付款人开户行名" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.payerBankName"></el-input>
-        </el-form-item>
-        <el-form-item label="付款人开户行号" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.payerBankNumber"></el-input>
-        </el-form-item>
-        <el-form-item label="原收款公司名称" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.rmOriSettleCompanyName"></el-input>
-        </el-form-item> 
-        <el-form-item label="原收款公司币制/原收款公司金额" class="curAmountForm" v-show="title==='编辑' || title==='创建'">
-          <el-select clearable v-model="formLabelAlign.rmOriCurrency" placeholder="请选择" class="curAmount">
-            <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
-          </el-select>
-          <input type="text" class="selfInput" v-model="formLabelAlign.rmOriAmount" @input="watchInput('rmOriAmount')">
-        </el-form-item>
-        <el-form-item label="手续费币制/手续费金额" class="curAmountForm" v-show="title==='编辑' || title==='创建'">
-          <el-select clearable v-model="formLabelAlign.rmChargesCurrency" placeholder="请选择" class="curAmount">
-            <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
-          </el-select>
-          <input type="text" class="selfInput" v-model="formLabelAlign.rmChargesAmount" @input="watchInput('rmChargesAmount')">
-        </el-form-item>-->
-        <el-form-item label="Process ID" v-show="title==='查询'">
-          <el-input v-model.trim="formLabelAlign.processId"></el-input>
-        </el-form-item>
-        <el-form-item label="流程状态" v-show="title === '查询'">
-          <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
-            <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="confirm('formLabelAlign')">确 定</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
-      <el-form label-width="140px" v-show="title==='流程提交' || title==='reverse'">
-        <el-form-item label="选择下一任务处理人'" v-show="title==='流程提交'">
-          <el-select v-model="assignee" placeholder="请选择">
-            <el-option
-              v-for="item in TJRoptions"
-              :key="item.userId"
-              :label="item.name"
-              :value="item.username"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="选择管理员">
-          <el-select v-model="assignee" placeholder="请选择" v-show="title==='reverse'">
-            <el-option
-              v-for="item in TJRoptionsA"
-              :key="item.userId"
-              :label="item.name"
-              :value="item.username"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="confirm">确定</el-button>
-          <el-button @click="dialogFormVisible2 = false">取消</el-button>
-        </el-form-item>
-      </el-form>
-      <!-- 上传附件 -->
-      <el-upload
-        v-show="title==='上传附件'"
-        class="upload-demo"
-        action=""
-        :before-upload="beforeAvatarUpload"
-        :auto-upload="true"
-        :http-request="upload"
-        :file-list="fileList"
-      >
-        <el-button size="small" type="primary">上传</el-button>
-      </el-upload>
-      <!-- 踪迹 -->
-      <el-collapse v-show="title=='踪迹'">
-        <el-collapse-item title="状态流转图">
-          <img :src="picture" style="width:100%" @click="dialogFormVisibleA=true">
-        </el-collapse-item>
-      </el-collapse>
-      <el-table :data="track" border="" style="width: 100%" v-show="title==='踪迹'">
-        <el-table-column prop="processId" label="流程编号" width="120"></el-table-column>
-        <el-table-column prop="actName" label="操作名称"></el-table-column>
-        <el-table-column prop="actOperator" label="任务来源"></el-table-column>
-        <el-table-column prop="actTime" label="操作时间"></el-table-column>
-        <el-table-column prop="reason" label="操作原因"></el-table-column>
-        <el-table-column prop="remark" label="操作备注"></el-table-column>
-      </el-table>
-      <el-table
-        stripe
-        :data="fileData"
-        style="width: 100%"
-        class="document"
-        v-show="title==='上传附件' || title==='附件查看'"
-      >
-        <el-table-column label="文件名">
-          <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-              <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
-            </el-tooltip>
-          </template>
-        </el-table-column>
-        <el-table-column prop="createdAt" label="时间"></el-table-column>
-        <el-table-column prop="createdBy" label="任务来源"></el-table-column>
-        <el-table-column label="操作" width="100">
-          <template slot-scope="scope">
-            <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-dialog>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal">
-      <el-form :label-position="labelPosition" label-width="140px" :model="email">
-        <el-form-item label="收件人姓名">
-          <el-input v-model="email.contactName"></el-input>
-        </el-form-item>
-        <el-form-item label="收件人邮箱">
-          <el-input v-model="email.emailAddr"></el-input>
-        </el-form-item>
-        <el-form-item label="邮件内容">
-          <el-input v-model="email.emailContent"></el-input>
-        </el-form-item>
-        <el-form-item label="附件上传">
-          <el-input v-model="email.documentList"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirm()">确 定</el-button>
-      </div>
-    </el-dialog>
     <el-dialog
       title="文档预览"
       width="fit-content"

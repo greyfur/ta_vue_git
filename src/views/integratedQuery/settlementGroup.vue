@@ -198,20 +198,10 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
-          <el-dropdown>
-            <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(12,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(15,scope.row)" type="text" size="small">附件查看</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(13,scope.row)" type="text" size="small">发送邮件</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(20,scope.row)" type="text" size="small">Reverse</el-button></el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+          <!-- <el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button> -->
+          <el-button @click.stop="openSICS(scope.row)" type="text" size="mini">打开SICS</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> 
     </el-table>
     <el-pagination
       @size-change="handleSizeChange"
@@ -637,6 +627,15 @@ export default {
     this.init();
   },
   methods: {
+    openSICS(row){
+      console
+      this.$http.post('api/sics/liveDesktop/openWorksheet',{modifiedBy:this.$store.state.userName,worksheetId:row['sgNum']}).then(res =>{
+          console.log(res,'打开SICS')
+          // if(res.status === 200 && res.data.rows){
+          //   this.SICSData = res.data.rows;
+          // }
+        })
+    },
     init(tag){
       // 进首页查询
       this.$http.post('api/integeratedQuery/sglist',Object.assign({},this.mustData,{actName:this.$store.state.userName,actOperator:this.$store.state.userName})).then(res =>{

@@ -626,7 +626,6 @@ export default {
           this.TJRoptions = res.data;
         }
       });
-    this.init();
     setTimeout(() => {
       // 分出人
       this.cedentList = JSON.parse(sessionStorage.getItem("CedentType"));
@@ -645,7 +644,8 @@ export default {
       );
       // 判断是否是管理员   66
       let admArr = JSON.parse(sessionStorage.getItem("roleIdList"));
-      admArr.indexOf(66) == -1 ? (this.admFlag = false) : (this.admFlag = true);
+      admArr.some(el=>{return el==66;}) ? (this.admFlag = true) : (this.admFlag = false);
+      this.init();
     }, 1000);
   },
   methods: {
@@ -692,12 +692,13 @@ export default {
     init(tag) {
       // 进首页查询
       let params = null;
+      console.log(this.admFlag,'this.admFlag');
       if (this.urlName == "sortOperation" || this.admFlag) {
-        params = Object.assign({}, this.mustData, {
+        params = Object.assign({}, this.mustData);
+      } else {
+         params = Object.assign({}, this.mustData, {
           curOperator: this.$store.state.userName
         });
-      } else {
-        params = Object.assign({}, this.mustData);
       }
       delete params["actOperator"];
       this.$http.post("api/worksheet/wSEntry/list", params).then(res => {
@@ -767,12 +768,13 @@ export default {
           if (!this.billSearch.processStatus) {
             this.billSearch.processStatus = this.processStatusCom;
           }
-          if (this.urlName != "sortOperation" || this.admFlag) {
+          if (this.urlName == "sortOperation" || this.admFlag) {
+            params = Object.assign({}, this.mustData, this.billSearch);
+          } 
+          else {
             params = Object.assign({}, this.mustData, this.billSearch, {
               curOperator: this.$store.state.userName
             });
-          } else {
-            params = Object.assign({}, this.mustData, this.billSearch);
           }
           delete params["actOperator"];
           this.$http.post("api/worksheet/wSEntry/list", params).then(res => {

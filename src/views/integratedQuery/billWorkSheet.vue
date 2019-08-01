@@ -232,13 +232,13 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <el-collapse v-show="title=='踪迹'">
+      <!-- <el-collapse v-show="title=='踪迹'">
         <el-collapse-item title="状态流转图">
           <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
         </el-collapse-item>
-      </el-collapse>
+      </el-collapse> -->
       <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
-        <el-table-column prop="processId" label="流程编号" width="200"></el-table-column>
+        <el-table-column prop="wsId" label="流程编号" width="200"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
         <el-table-column prop="actOperator" label="任务来源"></el-table-column>
         <el-table-column prop="actTime" label="操作时间"></el-table-column>
@@ -423,7 +423,7 @@ export default {
         brokerModel:null,
         cedentModel:null,
         ZJObj:{
-          total:50,
+          total:20,
           pageNumber:1,  // 页数
           pageSize:10,  //页面一次要展示的条数
         },
@@ -503,6 +503,7 @@ export default {
       this.init();
     },
     ZJhandleCurrentChange(val) {
+      console.log('00000000');
       this.ZJObj.pageNumber = val;
       this.getZJData(this.ZJprocessId);
     },
@@ -697,12 +698,12 @@ export default {
           this.title = '踪迹'; 
           this.ZJprocessId = row.processId;
           this.getZJData(row.processId);
-          this.$http.post('api/activiti/getProcPicture',{procInstId:row.processInstId},{responseType:'blob'}).then(res =>{
-            if(res.status === 200 ) {
-              this.picture = window.URL.createObjectURL(res.data);
-              console.log(res,'流程图');
-            }
-          })
+          // this.$http.post('api/activiti/getProcPicture',{procInstId:row.processInstId},{responseType:'blob'}).then(res =>{
+          //   if(res.status === 200 ) {
+          //     this.picture = window.URL.createObjectURL(res.data);
+          //     console.log(res,'流程图');
+          //   }
+          // })
           
           break;
         case 6: // 上传附件
@@ -711,7 +712,7 @@ export default {
       } 
     },
     getZJData(id){
-      this.$http.post('api/othersDO/bscProcessAction/list',Object.assign({},{processId:id,actOperator:this.$store.state.userName},this.ZJObj)).then(res =>{
+      this.$http.post('api/othersDO/worksheetaction/list',Object.assign({},{wsId:id},this.ZJObj)).then(res =>{
         console.log(res,'踪迹列表');
         if(res.status === 200 ) {
           this.track = res.data.rows;

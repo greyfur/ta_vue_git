@@ -115,130 +115,6 @@
       :total="mustData.total">      
     </el-pagination>
     <!-- 弹窗 -->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
-      <el-form label-position="right" label-width="140px" :model="billSearch" :rules="rules" ref="billSearch">
-        <el-form-item label="Process ID" v-show="title==='查询'">
-          <el-input v-model.trim="billSearch.processId" placeholder="请输入内容"></el-input>
-        </el-form-item>
-        <!--   以上只有查询有 --------->
-        <el-form-item label="账单类型" v-show="title==='手工创建' || title==='编辑' || title==='查询'">
-          <el-select clearable v-model="billSearch.wsType" placeholder="请选择">
-            <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Business Origin" prop="businessOrigin" v-show="title==='手工创建' || title==='编辑'"> 
-          <el-select clearable v-model="billSearch.businessOrigin" placeholder="请选择">
-            <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Base Company" v-show="title==='手工创建' || title==='编辑'" prop="baseCompany">
-          <el-select clearable v-model="billSearch.baseCompany" placeholder="请选择">
-            <el-option v-for="item in baseCompanyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Reporting Unit" v-show="title==='手工创建' || title==='编辑'">
-          <el-select clearable filterable v-model="billSearch.reportUnit" placeholder="请选择">
-            <el-option v-for="item in ReportUnitList" :key="item.code" :label="item.name" :value="item.code"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="账期" v-show="title==='手工创建' || title==='编辑' || title==='查询'" class="zqForm">
-          <el-input v-model.trim="zq2" placeholder="请输入" class="wsPeriod"></el-input>
-          <el-select clearable v-model="zq1" placeholder="请选择" class="wsPeriod">
-            <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="流程状态" v-show="title === '查询' && urlName === 'billEntry'">
-          <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
-            <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
-        <div v-show="title === '手工创建' || title==='编辑'">
-          <el-form-item label="任务类型" prop="wsBusinessType">
-            <el-select clearable v-model="billSearch.wsBusinessType"  placeholder="请输入关键词">
-              <el-option v-for="item in YWoptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="分出公司">
-            <el-select clearable filterable v-model="cedentModel" placeholder="请选择">
-              <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
-                <span style="float:left">{{ item.codecode }}</span>
-                <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="经纪公司">
-            <el-select clearable filterable v-model="brokerModel" placeholder="请选择">
-              <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
-                <span style="float:left">{{ item.codecode }}</span>
-                <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="账单收到日期">
-            <el-date-picker value-format="timestamp" v-model="billSearch.wsReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
-          </el-form-item>
-        </div>
-        <el-form-item label="附件上传" v-show="title==='编辑'">
-          <el-upload
-            class="sort-upload"
-            action
-            :before-upload="beforeAvatarUpload"
-            :auto-upload="true"
-            :http-request='upload'
-            :file-list="fileList">
-            <el-button size="small" type="primary">上传</el-button>
-          </el-upload> 
-          <el-table stripe :data="fileData" style="width: 100%" class="document">
-            <el-table-column label="文件名">
-              <template slot-scope="scope">
-                <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                  <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-            <el-table-column prop="createdAt" label="时间"></el-table-column>
-            <el-table-column prop="createdBy" label="任务来源"></el-table-column>
-            <el-table-column label="操作" width="100">
-              <template slot-scope="scope">
-                <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-form-item>
-        <el-form-item label="选择下一任务处理人" v-show="title==='流程提交'">
-          <el-select clearable v-model="assignee"  placeholder="请输入关键词">
-            <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <el-collapse v-show="title=='踪迹'">
-        <el-collapse-item title="状态流转图">
-          <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
-        </el-collapse-item>
-      </el-collapse>
-      <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
-        <el-table-column prop="processId" label="流程编号" width="200"></el-table-column>
-        <el-table-column prop="actName" label="操作名称"></el-table-column>
-        <el-table-column prop="actOperator" label="任务来源"></el-table-column>
-        <el-table-column prop="actTime" label="操作时间"></el-table-column>
-        <el-table-column prop="reason" label="操作原因"></el-table-column>
-        <el-table-column prop="remark" label="操作备注"></el-table-column>
-      </el-table>
-      <el-pagination small 
-      v-show="title=='踪迹'"
-      layout="prev, pager, next" 
-      :total="ZJObj.total" 
-      :page-size="ZJObj.pageSize"
-      @current-change="ZJhandleCurrentChange"  
-      :current-page="ZJObj.pageNumber">
-      </el-pagination>
-      
-      <div slot="footer" class="dialog-footer" v-show="title=='手工创建' || title=='查询' || title=='编辑' || title=='流程提交'">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirm('billSearch')">确 定</el-button>
-      </div>
-    </el-dialog>
-
     <el-dialog title="文档预览" width="fit-content" :visible.sync="dialogFormVisible1" :close-on-click-modal="modal">
       <div class="browseDoc" v-show="title!='踪迹'" style="width:600px">
         <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
@@ -711,7 +587,7 @@ export default {
       } 
     },
     getZJData(id){
-      this.$http.post('api/othersDO/bscProcessAction/list',Object.assign({},{processId:id,actOperator:this.$store.state.userName},this.ZJObj)).then(res =>{
+      this.$http.post('api/othersDO/bscProcessAction/list',Object.assign({},{processId:id},this.ZJObj)).then(res =>{
         console.log(res,'踪迹列表');
         if(res.status === 200 ) {
           this.track = res.data.rows;
