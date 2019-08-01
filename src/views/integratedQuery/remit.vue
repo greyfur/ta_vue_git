@@ -124,7 +124,7 @@
       </el-table-column>
       <el-table-column prop="businessPartnerRef" label="BP Reference信息" width="140"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="80">
+      <!-- <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
             <span class="el-dropdown-link">更多
@@ -185,7 +185,7 @@
             </el-dropdown-menu>
           </el-dropdown>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <el-pagination
       @size-change="handleSizeChange"
@@ -196,6 +196,7 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="mustData.total"
     ></el-pagination>
+<<<<<<< HEAD
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-form
         :label-position="labelPosition"
@@ -398,6 +399,8 @@
         <el-button type="primary" @click="confirm()">确 定</el-button>
       </div>
     </el-dialog>
+=======
+>>>>>>> bdf1eb08a077b30f388f72b4f0806d87922108e8
     <el-dialog
       title="文档预览"
       width="fit-content"

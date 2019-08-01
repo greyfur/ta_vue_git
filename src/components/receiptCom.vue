@@ -714,7 +714,6 @@ export default {
   mounted() {
     this.mustData.actOperator = this.$store.state.userName;
     this.formLabelAlign.modifiedBy = this.$store.state.userName;
-    this.init();
     setTimeout(() => {
       // 分出人+经济人
       let fcArr = JSON.parse(sessionStorage.getItem("CedentType"));
@@ -734,14 +733,15 @@ export default {
       );
       // 判断是否是管理员   66
       let admArr = JSON.parse(sessionStorage.getItem('roleIdList'));
-      admArr.indexOf(66) == -1?this.admFlag = false:this.admFlag = true;
+      admArr.some(el=>{return el==66;}) ? (this.admFlag = true) : (this.admFlag = false);
+      this.init();
     }, 1000);
   },
   methods: {
     init(tag) {
       // 进首页查询
       let params = null;
-      if(this.admFlag){ 
+      if(!this.admFlag){ 
         params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
        } else{
         params = Object.assign({},this.mustData);

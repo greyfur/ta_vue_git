@@ -208,7 +208,7 @@
     <el-row style="padding:0 16px;">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
-          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>组信息</div>
+          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单</div>
           <p v-if="$route.query.tag === 'payOperation' || $route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
         <el-table v-show="searchFlag3" stripe :data="SgData" style="width: 100%">
@@ -377,8 +377,7 @@
           </el-table-column>
           <el-table-column  label="操作" width="120">
             <template slot-scope="scope">
-              <el-button v-show="!scope.row.rmId" @click="remitCreat(scope.row)" v-if="$route.query.tag === 'approvalDone'" type="text" size="small">创建支票</el-button>
-              <!-- <el-button v-if="$route.query.tag === 'approvalDone'" @click="openSGSICS(scope.row)" type="text" size="small">创建支票</el-button> -->
+              <el-button v-show="!scope.row.rmId" @click="remitCreat(scope.row)" v-if="$route.query.tag === 'approvalDone' || $route.query.tag === 'payClose'" type="text" size="small">创建支票</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -588,7 +587,7 @@
         </el-form-item>
         <el-form-item label="原币币制/金额" required>
           <el-form-item>
-            <el-select style="width: 90%;height:41px;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
+            <el-select style="width:90%;height:40px;line-height:40px;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
               <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
             </el-select>
           </el-form-item>
@@ -1703,7 +1702,7 @@ export default {
        this.formLabelAlign.createdBy = this.$store.state.userName;
        this.$refs[formName].validate((valid) => {
         if(valid) {
-          this.$http.post('api/receipt/credOperation/createRemit',Object.assign(this.formLabelAlign,this.mustData)).then(res =>{
+          this.$http.post('api/receipt/credOperation/createRemit',Object.assign(this.formLabelAlign,this.mustData,{rmType:'P'})).then(res =>{
             this.dialogFormVisible = false;
             if(res.status === 200 && res.data.errorCode == 1){
               this.$message({message: '创建成功',type: 'success'});

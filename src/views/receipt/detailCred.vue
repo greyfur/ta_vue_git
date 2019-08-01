@@ -1573,22 +1573,17 @@ export default {
           this.formLabelAlign.paymentTypeName = val2.n;
         }
         this.formLabelAlign.createdBy = this.$store.state.userName;
-        this.$refs[formName].validate(valid => {
-          if (valid) {
-            this.$http
-              .post(
-                "api/receipt/credOperation/createRemit",
-                Object.assign(this.formLabelAlign, this.mustData)
-              )
-              .then(res => {
-                this.dialogFormVisible = false;
-                if (res.status === 200 && res.data.errorCode == 1) {
-                  this.$message({ message: "创建成功", type: "success" });
-                  this.queryRM();
-                } else if (res.data.errorCode == 0 && res.data.errorMessage) {
-                  this.$message.error(res.data.errorMessage);
-                }
-              });
+        this.$refs[formName].validate((valid) => {
+          if(valid) {
+            this.$http.post('api/receipt/credOperation/createRemit',Object.assign(this.formLabelAlign,this.mustData,{rmType:'R'})).then(res =>{
+              this.dialogFormVisible = false;
+              if(res.status === 200 && res.data.errorCode == 1){
+                this.$message({message: '创建成功',type: 'success'});
+                this.queryRM();
+              } else if(res.data.errorCode == 0 && res.data.errorMessage){
+                this.$message.error(res.data.errorMessage);
+              }
+            })
           }
         });
       } else if (tag == "a") {

@@ -27,7 +27,6 @@
           active-text-color="#fff">
           <el-submenu :index="el.name" v-for="(el,index) in urlArr" :key="index">
             <template slot="title">
-              <!-- <i class="iconfont iconGroup171"></i> -->
               <i style="color:#fff;" :class="iconEmnu[el.name]"></i>
               <span>{{el.title}}</span>
             </template>

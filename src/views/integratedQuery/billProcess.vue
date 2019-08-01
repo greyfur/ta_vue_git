@@ -115,6 +115,7 @@
       :total="mustData.total">      
     </el-pagination>
     <!-- 弹窗 -->
+<<<<<<< HEAD
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-form label-position="right" label-width="140px" :model="billSearch" :rules="rules" ref="billSearch">
         <el-form-item label="Process ID" v-show="title==='查询'">
@@ -239,6 +240,8 @@
       </div>
     </el-dialog>
 
+=======
+>>>>>>> bdf1eb08a077b30f388f72b4f0806d87922108e8
     <el-dialog title="文档预览" width="fit-content" :visible.sync="dialogFormVisible1" :close-on-click-modal="modal">
       <div class="browseDoc" v-show="title!='踪迹'" style="width:600px">
         <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
@@ -711,7 +714,7 @@ export default {
       } 
     },
     getZJData(id){
-      this.$http.post('api/othersDO/bscProcessAction/list',Object.assign({},{processId:id,actOperator:this.$store.state.userName},this.ZJObj)).then(res =>{
+      this.$http.post('api/othersDO/bscProcessAction/list',Object.assign({},{processId:id},this.ZJObj)).then(res =>{
         console.log(res,'踪迹列表');
         if(res.status === 200 ) {
           this.track = res.data.rows;
