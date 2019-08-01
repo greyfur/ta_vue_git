@@ -1090,14 +1090,6 @@ export default {
   text-align: right;
   margin-top: 20px;
 }
-/* .el-pagination {
-  background: red;
-  font-size: 18px;
-  color: #fff;
-}
-.el-pagination .el-pagination__total{
-  font-size: 24px !important;
-} */
 .el-input .el-input__inner {
   width: 220px;
 }
