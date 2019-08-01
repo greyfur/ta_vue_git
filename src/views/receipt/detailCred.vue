@@ -1097,7 +1097,7 @@ export default {
         this.formLabelAlign.createdBy = this.$store.state.userName;
         this.$refs[formName].validate((valid) => {
           if(valid) {
-            this.$http.post('api/receipt/credOperation/createRemit',Object.assign(this.formLabelAlign,this.mustData)).then(res =>{
+            this.$http.post('api/receipt/credOperation/createRemit',Object.assign(this.formLabelAlign,this.mustData,{rmType:'R'})).then(res =>{
               this.dialogFormVisible = false;
               if(res.status === 200 && res.data.errorCode == 1){
                 this.$message({message: '创建成功',type: 'success'});

@@ -375,8 +375,7 @@
           </el-table-column>
           <el-table-column  label="操作" width="120">
             <template slot-scope="scope">
-              <el-button v-show="!scope.row.rmId" @click="remitCreat(scope.row)" v-if="$route.query.tag === 'approvalDone'" type="text" size="small">创建支票</el-button>
-              <!-- <el-button v-if="$route.query.tag === 'approvalDone'" @click="openSGSICS(scope.row)" type="text" size="small">创建支票</el-button> -->
+              <el-button v-show="!scope.row.rmId" @click="remitCreat(scope.row)" v-if="$route.query.tag === 'approvalDone' || $route.query.tag === 'payClose'" type="text" size="small">创建支票</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -1700,7 +1699,7 @@ export default {
        this.formLabelAlign.createdBy = this.$store.state.userName;
        this.$refs[formName].validate((valid) => {
         if(valid) {
-          this.$http.post('api/receipt/credOperation/createRemit',Object.assign(this.formLabelAlign,this.mustData)).then(res =>{
+          this.$http.post('api/receipt/credOperation/createRemit',Object.assign(this.formLabelAlign,this.mustData,{rmType:'P'})).then(res =>{
             this.dialogFormVisible = false;
             if(res.status === 200 && res.data.errorCode == 1){
               this.$message({message: '创建成功',type: 'success'});

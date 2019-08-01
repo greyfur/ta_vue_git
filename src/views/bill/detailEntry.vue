@@ -14,9 +14,9 @@
         <!-- 签回 -->
         <div class="btn" v-if="$route.query.tag === 'billSignBack'">
           <el-button size="small" @click="onReverse" plain>Reverse</el-button>
-          <el-button size="small" @click="mailSend(1)" plain>邮件通知</el-button>
+          <el-button size="small" @click="mailSend(1)" plain>邮件通知</el-button>,
           <el-button size="small" plain @click="submit(6,'签回提交')">流程提交</el-button>
-          <el-button size="small" plain @click="submit(7)">标记签回</el-button>
+          <!-- <el-button size="small" plain @click="submit(7)">标记签回</el-button> -->
         </div>
         <!-- 录入 -->
         <div class="btn" v-if="$route.query.tag === 'billEntry'">
@@ -325,7 +325,7 @@
           <!-- <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column> -->
           <!-- <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column> -->
           <!-- <el-table-column prop="dept" label="经营机构"></el-table-column> -->
-          <el-table-column fixed="right" label="操作">
+          <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
               <el-button
                 :disabled="isHover"
@@ -333,6 +333,12 @@
                 type="text"
                 size="small"
               >打开SICS</el-button>
+              <el-button
+                :disabled="isHover"
+                @click.stop="addRemark(scope.row)"
+                type="text"
+                size="small"
+              >添加意见</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -577,6 +583,14 @@
           <el-radio v-model="radio" label="1">是</el-radio>
           <el-radio v-model="radio" label="0">否</el-radio>
         </el-form-item>
+        <el-form-item label="添加意见" v-show="title==='添加意见'">
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="请输入原因"
+            v-model="textareaOpinion"
+          ></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogFormVisible5 = false">取 消</el-button>
@@ -770,6 +784,13 @@ export default {
     });
   },
   methods: {
+    addRemark(row){
+      this.title = '添加意见';
+      this.dialogState = 8;
+      this.textareaOpinion = "";
+      this.dialogFormVisible5 = true;
+      this.remarkRow = row;
+    },
     copy(id) {
       let Url2 = document.getElementById(id).innerText;
       let oInput = document.createElement("input");
@@ -1359,7 +1380,22 @@ export default {
           }
           break;
         case 7: // 签回
-          break;
+        break;
+        case 8: // 
+          if(!this.textareaOpinion){
+            this.$message({ type: "error", message: "请添加意见" });
+            return false;
+          }
+          this.$http
+          .post("api/worksheet/wSCheck/update", { wsId:this.remarkRow.wsId,remark:this.textareaOpinion })
+          .then(res => {
+            if (res.status === 200 && res.data.code == '0') {
+              this.$message({ type: "success", message: res.data.msg });
+              this.textareaOpinion = "";
+              this.dialogFormVisible5 = false;
+            } else if(res.data.code == '1'){ this.$message({ type: "error", message: res.data.msg }); }
+          });
+        break;
       }
     },
     docView(row) {
