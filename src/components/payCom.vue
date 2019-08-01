@@ -1,9 +1,10 @@
 <template>
   <div class="payCom">
     <div class="searchNew">
-      <div class="titleSearch" @click="searchFlag = !searchFlag"><i style="margin-right:8px;" class="el-icon-arrow-down"></i>查询</div>
+      <div class="titleSearch" @click="searchFlag = !searchFlag"><i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询</div>
+      <el-collapse-transition>
       <div v-show="searchFlag">
-        <el-row :gutter="10" class="billRow">
+        <el-row :gutter="10" class="billRow" class-name="transition-box">
         <el-col :span="8">
           <span class="slable">流程编号</span>
           <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processID"></el-input>
@@ -29,6 +30,7 @@
           <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
         </el-col></el-row>
       </div>
+      </el-collapse-transition>
     </div>
     <div class="btn">
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
@@ -152,7 +154,7 @@
         </el-form-item> -->
         <el-form-item>
           <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" plain @click="confirm('formLabelAlign')">确 定</el-button>
+          <el-button size="small" type="primary" plain @click="confirm('formLabelAlign')">确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -170,7 +172,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" plain @click="confirm">确定</el-button>
+          <el-button size="small" type="primary" plain @click="confirm">确定</el-button>
           <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
         </el-form-item>
       </el-form>

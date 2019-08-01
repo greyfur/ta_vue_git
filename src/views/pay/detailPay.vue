@@ -136,7 +136,7 @@
           <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getRMSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
         <el-table v-show="searchFlag2" stripe :data="RMData" style="width:100%">
-          <el-table-column label="remittance号" width="110">
+          <el-table-column label="支票号" width="110">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
                 <span class="abbreviate">{{scope.row.rmId}}</span>
@@ -411,8 +411,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" plain @click="confirm">确定</el-button>
-          <el-button size="small" @click="dialogFormVisible3 = false">取消</el-button>
+          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
+          <el-button size="small" @click="dialogFormVisible3 = false" >取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -585,7 +585,7 @@
         </el-form-item>
         <el-form-item label="原币币制/金额" required>
           <el-form-item>
-            <el-select style="width: 90%;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
+            <el-select style="width:90%;height:41px;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
               <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
             </el-select>
           </el-form-item>
@@ -1277,6 +1277,7 @@ export default {
                     this.$confirm('是否审批通过', '提示', {
                       confirmButtonText: '确定',
                       cancelButtonText: '取消',
+                      confirmButtonClass:'confirmBtn',
                       type: 'warning'
                     }).then(() => {
                       this.$http.post('api/pay/activitiForPay/commonActivitiForPay'

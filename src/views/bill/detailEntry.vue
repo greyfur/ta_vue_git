@@ -240,7 +240,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="uwYear" label="业务年度"></el-table-column>
-          <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
+          <el-table-column prop="wsPeriod" label="账单期" width="100"></el-table-column>
           <el-table-column label="账单标题">
             <template slot-scope="scope">
               <el-tooltip
