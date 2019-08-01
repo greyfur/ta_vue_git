@@ -189,7 +189,6 @@
           :data="SICSData"
           stripe
           width="100%"
-          @row-click="handelClick3"
         >
           <el-table-column label="账单号">
             <template slot-scope="scope">
@@ -257,10 +256,10 @@
           <el-table-column prop="wsStatus" label="账单状态" width="100">
             <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
           </el-table-column>
-          <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
-          <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
-          <el-table-column prop="closedBy" label="复核人" width="80"></el-table-column>
-          <el-table-column prop="closedAt" label="复核时间" width="100"></el-table-column>
+          <el-table-column prop="registBy" label="录入人" width="110"></el-table-column>
+          <el-table-column prop="registAt" label="录入时间" width="160"></el-table-column>
+          <el-table-column prop="closedBy" label="复核人" width="110"></el-table-column>
+          <el-table-column prop="closedAt" label="复核时间" width="160"></el-table-column>
           <el-table-column label="备注">
             <template slot-scope="scope">
               <el-tooltip
@@ -1469,42 +1468,6 @@ export default {
         this.title = "OCR上传";
         this.ocrRow = row;
       }
-    },
-    handelClick3(row, column, event) {
-      let data = [
-        { a: "ProcessID", c: "processId" },
-        { a: "账单号", c: "wsId" },
-        { a: "账单状态", c: "wsStatus" },
-        { a: "账单标题", c: "wsTitle" },
-        { a: "业务编号", c: "businessId" },
-        { a: "section", c: "section" },
-        { a: "业务年度", c: "uwYear" },
-        { a: "任务类型", c: "businessType" },
-        { a: "收到账单日期", c: "receiptDate" },
-        { a: "分出公司名称", c: "cedentName" },
-        { a: "分出公司代码", c: "cedentCode" },
-        { a: "经纪公司代码", c: "brokerCode" },
-        { a: "经纪公司名称", c: "brokerName" },
-        { a: "账单类型", c: "wsType" },
-        { a: "账单期", c: "wsPeriod" },
-        { a: "Business Origin", c: "businessOrigin" },
-        { a: "Base Company", c: "baseCompany" },
-        { a: "经营机构", c: "dept" },
-        { a: "币制", c: "wsCurrency" },
-        { a: "金额", c: "wsAmount" },
-        { a: "账单录入的user", c: "registBy" },
-        { a: "账单录入时间", c: "registAt" },
-        { a: "修改时间", c: "modifiedAt" },
-        { a: "修改人", c: "modifiedBy" },
-        { a: "备注", c: "remark" }
-      ];
-      let str = "";
-      data.forEach(el => {
-        str += `${el["a"]}：${row[el["c"]]}<br/>`;
-      });
-      this.$alert(str, "详情", {
-        dangerouslyUseHTMLString: true
-      });
     },
     beforeAvatarUpload(file) {
       this.file.push(file);
