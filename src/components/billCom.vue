@@ -173,7 +173,10 @@
               style="margin-right:8px;cursor: pointer;"
             >分配</span>
           </el-dropdown>
-          <el-dropdown>
+          <el-dropdown v-if="urlName !== 'sortOperation'">
+                <span @click.stop="handleClick(5,scope.row)" style="cursor: pointer;">踪迹</span>
+          </el-dropdown>
+          <el-dropdown v-else>
             <span class="el-dropdown-link">
               更多
               <i style="margin-left:8px;" class="el-icon-arrow-down"></i>

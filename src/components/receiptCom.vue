@@ -2,62 +2,70 @@
   <div class="receiptCom">
     <div class="searchNew">
       <div class="titleSearch" @click="searchFlag = !searchFlag">
-        <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询
+        <i
+          style="margin-right:8px;"
+          :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"
+        ></i>查询
       </div>
       <el-collapse-transition>
-      <div v-show="searchFlag">
-        <el-row :gutter="10" class="billRow" class-name="transition-box">
-          <el-col :span="8">
-            <span class="slable">流程编号</span>
-            <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processId"></el-input>
-          </el-col>
-          <el-col :span="8">
-            <span class="slable">结付公司代码</span>
-            <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司代码">
-              <el-option
-                v-for="(item,index) in cedentList"
-                :key="index"
-                :label="item.codecode+' - '+item.codeName"
-                :value="index"
-              >
-                <span style="float:left">{{ item.codecode }}</span>
-                <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="8">
-            <span class="slable">汇款人名称</span>
-            <el-input placeholder="请输入汇款人名称" v-model.trim="formLabelAlign.rmSettleCompanyName"></el-input>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10" class="billRow">
-          <el-col :span="8">
-            <span class="slable">汇款到账日期</span>
-            <el-date-picker
-              value-format="timestamp"
-              v-model="formLabelAlign.rmReceiptDate"
-              type="date"
-              placeholder="选择日期"
-            ></el-date-picker>
-          </el-col>
-          <el-col :span="8" v-show="processStatusList.length">
-            <span class="slable">流程状态</span>
-            <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
-              <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
-            </el-select>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-button type="primary" plain @click="handleClick(4)">
-              <i class="iconfont iconGroup42"></i>查询
-            </el-button>
-            <el-button type="primary" plain @click="reset">
-              <i class="iconfont iconGroup39"></i>重置
-            </el-button>
-          </el-col>
-        </el-row>
-      </div>
+        <div v-show="searchFlag">
+          <el-row :gutter="10" class="billRow" class-name="transition-box">
+            <el-col :span="8">
+              <span class="slable">流程编号</span>
+              <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processId"></el-input>
+            </el-col>
+            <el-col :span="8">
+              <span class="slable">结付公司代码</span>
+              <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司代码">
+                <el-option
+                  v-for="(item,index) in cedentList"
+                  :key="index"
+                  :label="item.codecode+' - '+item.codeName"
+                  :value="index"
+                >
+                  <span style="float:left">{{ item.codecode }}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+                </el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="8">
+              <span class="slable">汇款人名称</span>
+              <el-input placeholder="请输入汇款人名称" v-model.trim="formLabelAlign.rmSettleCompanyName"></el-input>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10" class="billRow">
+            <el-col :span="8">
+              <span class="slable">汇款到账日期</span>
+              <el-date-picker
+                value-format="timestamp"
+                v-model="formLabelAlign.rmReceiptDate"
+                type="date"
+                placeholder="选择日期"
+              ></el-date-picker>
+            </el-col>
+            <el-col :span="8" v-show="processStatusList.length">
+              <span class="slable">流程状态</span>
+              <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
+                <el-option
+                  v-for="item in processStatusList"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-button type="primary" plain @click="handleClick(4)">
+                <i class="iconfont iconGroup42"></i>查询
+              </el-button>
+              <el-button type="primary" plain @click="reset">
+                <i class="iconfont iconGroup39"></i>重置
+              </el-button>
+            </el-col>
+          </el-row>
+        </div>
       </el-collapse-transition>
     </div>
     <div class="btn">
@@ -121,7 +129,13 @@
       <el-table-column prop="rmOriSettleCompanyName" width="150" label="原收款公司名称"></el-table-column>
       <el-table-column fixed="right" label="操作" width="170">
         <template slot-scope="scope">
-          <el-dropdown>
+            <el-dropdown>
+                <span @click.stop="handleClick(12,scope.row)">附件查看</span>
+              </el-dropdown>
+              <el-dropdown>
+                <span @click.stop="handleClick(11,scope.row)">踪迹</span>
+              </el-dropdown>
+          <!-- <el-dropdown>
             <span class="el-dropdown-link">
               更多
               <i style="margin-left:8px;" class="el-icon-arrow-down"></i>
@@ -134,7 +148,7 @@
                 <span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
               </el-dropdown-item>
             </el-dropdown-menu>
-          </el-dropdown>
+          </el-dropdown> -->
         </template>
       </el-table-column>
     </el-table>
@@ -190,21 +204,38 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="80">
+      <el-table-column fixed="right" label="操作" :width="urlName !== 'financialCreat'?100:180" >
         <template slot-scope="scope">
           <el-dropdown>
+            <span
+              v-show="pendingFlag || urlName === 'financialCreat'"
+              @click.stop="handleClick(6,scope.row)"
+              style="margin-right:8px;cursor: pointer;"
+            >编辑</span>
+          </el-dropdown>
+          <el-dropdown>
+            <span
+              v-show="urlName === 'financialCreat'"
+              @click.stop="handleClick(10,scope.row)"
+              style="margin-right:8px;cursor: pointer;"
+            >分配</span>
+          </el-dropdown>
+          <el-dropdown>
+            <span
+              v-show="urlName === 'sortOperation'"
+              @click.stop="handleClick(3,scope.row)"
+              style="margin-right:8px;cursor: pointer;"
+            >分配</span>
+          </el-dropdown>
+          <el-dropdown v-if="urlName !== 'financialCreat'">
+            <span @click.stop="handleClick(11,scope.row)">踪迹</span>
+          </el-dropdown>
+          <el-dropdown v-else>
             <span class="el-dropdown-link">
               更多
               <i style="margin-left:8px;" class="el-icon-arrow-down"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>
-                <span
-                  v-show="pendingFlag || urlName === 'financialCreat'"
-                  @click.stop="handleClick(6,scope.row)"
-                  class="blueColor"
-                >编辑</span>
-              </el-dropdown-item>
               <el-dropdown-item>
                 <span
                   v-show="urlName === 'financialCreat'"
@@ -214,13 +245,6 @@
               </el-dropdown-item>
               <el-dropdown-item>
                 <span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
-              </el-dropdown-item>
-              <el-dropdown-item>
-                <span
-                  v-show="urlName === 'financialCreat'"
-                  @click.stop="handleClick(10,scope.row)"
-                  class="blueColor"
-                >流程提交</span>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -402,7 +426,13 @@
         </el-form-item>
         <el-form-item>
           <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-          <el-button size="small" type="primary" plain @click="confirm('formLabelAlign')" style="padding:0 16px;">确 定</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            plain
+            @click="confirm('formLabelAlign')"
+            style="padding:0 16px;"
+          >确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -681,7 +711,7 @@ export default {
       cedentList: [],
       picture: "",
       singlePId: "",
-      admFlag:false,
+      admFlag: false,
       rules: {
         baseCompany: [
           { required: true, message: "请选择Base Company", trigger: "blur" }
@@ -732,8 +762,12 @@ export default {
         sessionStorage.getItem("businessOrigin")
       );
       // 判断是否是管理员   66
-      let admArr = JSON.parse(sessionStorage.getItem('roleIdList'));
-      admArr.some(el=>{return el==66;}) ? (this.admFlag = true) : (this.admFlag = false);
+      let admArr = JSON.parse(sessionStorage.getItem("roleIdList"));
+      admArr.some(el => {
+        return el == 66;
+      })
+        ? (this.admFlag = true)
+        : (this.admFlag = false);
       this.init();
     }, 1000);
   },
@@ -741,11 +775,13 @@ export default {
     init(tag) {
       // 进首页查询
       let params = null;
-      if(!this.admFlag){ 
-        params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
-       } else{
-        params = Object.assign({},this.mustData);
-       }
+      if (!this.admFlag) {
+        params = Object.assign({}, this.mustData, {
+          curOperator: this.$store.state.userName
+        });
+      } else {
+        params = Object.assign({}, this.mustData);
+      }
       delete params.actOperator;
       if (this.urlName === "taskClaim") {
         delete params.curOperator;
@@ -1069,10 +1105,12 @@ export default {
             this.formLabelAlign.processStatus = this.processStatusCom;
           }
           let params = null;
-          if(this.admFlag){ 
-            params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
-          } else{
-            params = Object.assign({},this.mustData);
+          if (this.admFlag) {
+            params = Object.assign({}, this.mustData, {
+              curOperator: this.$store.state.userName
+            });
+          } else {
+            params = Object.assign({}, this.mustData);
           }
           delete params.actOperator;
           this.$http.post("api/receipt/finaCreat/list", params).then(res => {
