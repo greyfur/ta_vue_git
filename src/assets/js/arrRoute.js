@@ -192,7 +192,7 @@ let data = [
         component: () => import("@/views/pay/partialDone"),
       },
       {
-        title:'紧急',
+        title:'单据',
         path: '/instancyPay',
         name: 'instancyPay',
         component: () => import("@/views/pay/instancyPay"),

@@ -10,8 +10,8 @@
           <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processID"></el-input>
         </el-col>
         <el-col :span="8">
-          <span class="slable">结付公司代码</span>
-            <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司代码">
+          <span class="slable">结付公司</span>
+            <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
               <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
                 <span style="float:left">{{ item.codecode }}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
@@ -42,12 +42,18 @@
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
-      <el-table-column prop="rmSettleCompanyCode" width="120" label="结付公司代码"></el-table-column>
+      <el-table-column prop="rmSettleCompanyName" width="260" label="结付公司"></el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
       <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
       <el-table-column prop="rmAmount" label="汇款金额" width="120"></el-table-column>
       <el-table-column prop="curOperator" label="操作员" width="120"></el-table-column>
+      <el-table-column label="任务来源" width="110">
+        <template slot-scope="scope">
+            <span>{{nameList[scope.row.curOperator]}}</span>
+          </template>
+      </el-table-column>
+
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->
       <!-- <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column> -->
@@ -56,6 +62,14 @@
           <div style="display: flex;align-items: center;" v-show="urlName === 'payOperation' || urlName === 'approvalDone'">
             <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
             <span>{{scope.row.rejectedFlag == '1'?'异常':'正常'}}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="是否紧急" v-if="urlName === 'payment'">
+        <template slot-scope="scope" v-show="urlName === 'payment'">
+          <div style="display: flex;align-items: center;" v-show="urlName === 'payment'">
+            <span :class="scope.row.accountCloseFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
+            <span>{{scope.row.accountCloseFlag == '1'?'紧急':'正常'}}</span>
           </div>
         </template>
       </el-table-column>
@@ -87,8 +101,8 @@
     </el-pagination>
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
-        <el-form-item label="结付公司代码">
-          <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司代码">
+        <el-form-item label="结付公司">
+          <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
             <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
               <span style="float:left">{{ item.codecode }}</span>
               <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
@@ -161,7 +175,7 @@
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
       <el-form label-width="140px" v-show="title==='流程提交' || title==='reverse'">
-        <el-form-item label="选择下一任务处理人"  v-show="title==='流程提交'">
+        <el-form-item label="选择处理人"  v-show="title==='流程提交'">
           <el-select v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
@@ -196,7 +210,11 @@
       <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
         <el-table-column prop="processId" label="流程编号" width="145"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
-        <el-table-column prop="actOperator" label="任务来源"></el-table-column>
+        <el-table-column abel="任务来源">
+          <template slot-scope="scope">
+            <span>{{nameList[scope.row.actOperator]}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="actTime" label="操作时间"></el-table-column>
         <el-table-column prop="reason" label="操作原因"></el-table-column>
         <el-table-column prop="remark" label="操作备注"></el-table-column>
@@ -213,8 +231,8 @@
         <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
         <el-table-column label="任务来源" width="140">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
-              <span class="abbreviate">{{scope.row.createdBy}}</span>
+            <el-tooltip class="item" effect="dark" :content="nameList[scope.row.createdBy]" placement="top">
+              <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -268,6 +286,7 @@ export default {
     },
   data() {
       return {
+        nameList:{},
         admFlag:false,
         searchFlag:false,
         modal:false,
@@ -331,7 +350,7 @@ export default {
             c:'processId'
           },
           {
-            a:'结付公司代码',
+            a:'结付公司',
             b:'',
             c:'rmSettleCompanyCode',
           },
@@ -366,7 +385,7 @@ export default {
             c:'baseCompany',
           },
           {
-            a:'操作员',
+            a:'任务来源',
             b:'',
             c:'modifiedBy'
           },
@@ -468,13 +487,14 @@ export default {
     } else if(this.urlName === 'payClose'){
       this.processStatusList = ['待核销','已悬停'];
     } 
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){
-    if(this.urlName === 'payment') {
-      this.mustData.accountCloseFlag = '0';
-    } else if(this.urlName === 'instancyPay'){
-      this.mustData.accountCloseFlag = '1';
-    }
+    // if(this.urlName === 'payment') {
+    //   this.mustData.accountCloseFlag = '0';
+    // } else if(this.urlName === 'instancyPay'){
+    //   this.mustData.accountCloseFlag = '1';
+    // }
     this.mustData.actOperator = this.$store.state.userName;
     this.formLabelAlign.modifiedBy = this.$store.state.userName;
     setTimeout(()=>{
@@ -489,11 +509,11 @@ export default {
       this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
       //获取币制
       this.rmCurrencyList = JSON.parse(sessionStorage.getItem('CurrencyList'));
-      // 判断是否是管理员   66
+    },500)
+    // 判断是否是管理员   66
       let admArr = JSON.parse(sessionStorage.getItem('roleIdList'));
       admArr.some(el=>{return el==66;}) ? (this.admFlag = true) : (this.admFlag = false);
       this.init();
-    },1000)
     this.$http.post('api/activiti/getAssigneeName',{roleName:'付款录入'}).then(res =>{
       if(res.status === 200) {
         this.TJRoptions = res.data;
@@ -592,7 +612,7 @@ export default {
           if(this.chooseRow.rmReceiptDate){
             this.formLabelAlign.rmReceiptDate = new Date(this.chooseRow.rmReceiptDate).valueOf();
           }
-          // 结付公司代码回显
+          // 结付公司回显
           if(this.chooseRow.rmSettleCompanyCode){
             this.cedentList.forEach((el,i)=>{
               if(el.codecode == this.chooseRow.rmSettleCompanyCode){

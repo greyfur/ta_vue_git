@@ -40,7 +40,7 @@
           <span :class="{'smallHand':urlName !== 'sortOperation'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>
       </el-table-column> 
-      <el-table-column label="流程名称">
+      <el-table-column label="流程名称" width="350">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.processName" placement="top-start">
             <span class="abbreviate">{{scope.row.processName}}</span>
@@ -88,7 +88,11 @@
       </el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
-      <el-table-column prop="curOperator" label="任务来源" width="120"></el-table-column>
+      <el-table-column prop="curOperator" label="任务来源" width="120">
+        <template slot-scope="scope">
+          <span>{{nameList[scope.row.curOperator]}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
@@ -136,6 +140,7 @@ export default {
   },
   data() {
       return {
+        nameList:{},
         searchFlag:false,
         tableData:[],
         assignee:'',
@@ -303,7 +308,7 @@ export default {
         }
       })
     }
-    
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){
     this.$http.post('api/activiti/getAssigneeName',{roleName:'账单录入'}).then(res =>{

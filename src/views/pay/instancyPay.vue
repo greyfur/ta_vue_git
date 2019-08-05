@@ -1,6 +1,7 @@
 <template>
   <div class="instancyPay">
-    <pay-com goDetailName='CONDITIONALCOMPLETE' processStatusCom='待支付' urlName='instancyPay'></pay-com>
+    单据
+    <!-- <pay-com goDetailName='CONDITIONALCOMPLETE' processStatusCom='待支付' urlName='instancyPay'></pay-com> -->
   </div>
 </template>
 <script>

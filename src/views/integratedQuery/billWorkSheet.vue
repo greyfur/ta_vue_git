@@ -218,7 +218,11 @@
               </template>
             </el-table-column>
             <el-table-column prop="createdAt" label="时间"></el-table-column>
-            <el-table-column prop="createdBy" label="任务来源"></el-table-column>
+            <el-table-column label="任务来源">
+              <template slot-scope="scope">
+                <span>{{nameList[scope.row.createdBy]}}</span>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
                 <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
@@ -226,7 +230,7 @@
             </el-table-column>
           </el-table>
         </el-form-item>
-        <el-form-item label="选择下一任务处理人" v-show="title==='流程提交'">
+        <el-form-item label="选择处理人" v-show="title==='流程提交'">
           <el-select clearable v-model="assignee"  placeholder="请输入关键词">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
@@ -238,9 +242,13 @@
         </el-collapse-item>
       </el-collapse> -->
       <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
-        <el-table-column prop="processId" label="流程编号" width="220"></el-table-column>
+        <el-table-column prop="wsId" label="流程编号" width="220"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
-        <el-table-column prop="actOperator" label="任务来源"></el-table-column>
+        <el-table-column label="任务来源">
+          <template slot-scope="scope">
+            <span>{{nameList[scope.row.actOperator]}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="actTime" label="操作时间"></el-table-column>
         <el-table-column prop="reason" label="操作原因"></el-table-column>
         <el-table-column prop="remark" label="操作备注"></el-table-column>
@@ -281,6 +289,7 @@ export default {
   },
   data() {
       return {
+        nameList:{},
         searchFlag:false,
         tableData:[],
         assignee:'',
@@ -448,7 +457,7 @@ export default {
         }
       })
     }
-    
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){
     this.$http.post('api/activiti/getAssigneeName',{roleName:'账单录入'}).then(res =>{
@@ -505,7 +514,7 @@ export default {
     ZJhandleCurrentChange(val) {
       console.log('00000000');
       this.ZJObj.pageNumber = val;
-      this.getZJData(this.ZJprocessId);
+      this.getZJData(this.getZJDataRow);
     },
     init(tag) {
       // 进首页查询
@@ -697,7 +706,8 @@ export default {
         case 5: // 踪迹待定
           this.title = '踪迹'; 
           this.ZJprocessId = row.processId;
-          this.getZJData(row.processId);
+          this.getZJData(row);
+          this.getZJDataRow = row;
           // this.$http.post('api/activiti/getProcPicture',{procInstId:row.processInstId},{responseType:'blob'}).then(res =>{
           //   if(res.status === 200 ) {
           //     this.picture = window.URL.createObjectURL(res.data);
@@ -711,8 +721,8 @@ export default {
          break;
       } 
     },
-    getZJData(id){
-      this.$http.post('api/othersDO/worksheetaction/list',Object.assign({},{wsId:id},this.ZJObj)).then(res =>{
+    getZJData(row){
+      this.$http.post('api/othersDO/worksheetaction/list',Object.assign({},{wsId:row.wsId},this.ZJObj)).then(res =>{
         console.log(res,'踪迹列表');
         if(res.status === 200 ) {
           this.track = res.data.rows;

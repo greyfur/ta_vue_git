@@ -53,15 +53,19 @@
     </div>
     <!-- 暂挂 -->
     <!-- <div class="btn" v-if="$route.query.tag === 'viewInvalidate'">
-      <el-button type="primary" plain @click="mailSend(2,'附件查看')">附件查看</el-button>
-      <el-button type="primary" plain @click="submite(5,'状态恢复')">状态恢复</el-button>
-    </div>-->
+	<el-button type="primary" plain @click="mailSend(2,'附件查看')">附件查看</el-button>
+	<el-button type="primary" plain @click="submite(5,'状态恢复')">状态恢复</el-button>
+</div>
+    -->
 
     <!-- 详情 -->
     <div class="searchNew">
       <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
         <div>
-          <i style="margin-right:8px;"  :class="searchFlag1===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>详情
+          <i
+            style="margin-right:8px;"
+            :class="searchFlag1===false?'el-icon-arrow-down':'el-icon-arrow-up'"
+          ></i>详情
         </div>
         <p class="info" style="color:#666;">流程编号:
           <el-tooltip class="item" effect="dark" content="点击复制" placement="top">
@@ -70,12 +74,12 @@
         </p>
       </div>
       <el-collapse-transition>
-      <ul class="detail-ul" v-show="searchFlag1">
-        <li v-for="(item,i) in listData" :key="i" class="detail-item">
-          <span class="detail-name">{{item.a}} :</span>
-          <span class="detail-content">{{item.b}}</span>
-        </li>
-      </ul>
+        <ul class="detail-ul" v-show="searchFlag1">
+          <li v-for="(item,i) in listData" :key="i" class="detail-item">
+            <span class="detail-name">{{item.a}} :</span>
+            <span class="detail-content">{{item.b}}</span>
+          </li>
+        </ul>
       </el-collapse-transition>
     </div>
     <el-row>
@@ -99,11 +103,7 @@
         </div>
         <el-collapse-transition>
           <div v-show="searchFlag2">
-            <el-table
-              stripe
-              :data="RMData"
-              style="width:100%"
-            >
+            <el-table stripe :data="RMData" style="width:100%">
               <el-table-column label="支票号" width="110">
                 <template slot-scope="scope">
                   <el-tooltip
@@ -182,7 +182,7 @@
               </el-table-column>
               <el-table-column prop="valueDate" label="起息日" width="100"></el-table-column>
               <el-table-column prop="dueDate" label="到期日" width="100"></el-table-column>
-              <el-table-column label="结付公司" width="100">
+              <el-table-column label="结付公司" width="260">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
@@ -220,280 +220,283 @@
           @click="searchFlag3 = !searchFlag3"
         >
           <div>
-            <i style="margin-right:8px;" :class="searchFlag3===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>结算清单
+            <i
+              style="margin-right:8px;"
+              :class="searchFlag3===false?'el-icon-arrow-down':'el-icon-arrow-up'"
+            ></i>结算清单
           </div>
           <p>
             <i class="iconfont iconGroup26"></i>
           </p>
         </div>
         <el-collapse-transition>
-        <el-table v-show="searchFlag3" stripe :data="SgData" style="width: 100%">
-          <el-table-column type="expand">
-            <template slot-scope="props">
-              <el-table stripe :data="props.row.worksheetDOList" style="width: 100%">
-                <el-table-column label="账单号">
-                  <template slot-scope="scope">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      :content="scope.row.wsId"
-                      placement="top-start"
-                    >
-                      <span class="abbreviate">{{scope.row.wsId}}</span>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="wsStatus" label="账单状态" width="100">
-                  <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
-                </el-table-column>
-                <el-table-column label="账单标题">
-                  <template slot-scope="scope">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      :content="scope.row.wsTitle"
-                      placement="top-start"
-                    >
-                      <span class="abbreviate">{{scope.row.wsTitle}}</span>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column label="业务编号">
-                  <template slot-scope="scope">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      :content="scope.row.businessId"
-                      placement="top-start"
-                    >
-                      <span class="abbreviate">{{scope.row.businessId}}</span>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column label="附件名称">
-                  <template slot-scope="scope">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      :content="scope.row.docName"
-                      placement="top-start"
-                    >
-                      <span
-                        class="smallHand abbreviate"
-                        @click="docView(scope.row)"
-                      >{{scope.row.docName}}</span>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column label="section">
-                  <template slot-scope="scope">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      :content="scope.row.section"
-                      placement="top-start"
-                    >
-                      <span class="abbreviate">{{scope.row.section}}</span>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="uwYear" label="业务年度"></el-table-column>
-                <el-table-column label="任务类型">
-                  <template slot-scope="scope">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      :content="scope.row.businessType"
-                      placement="top-start"
-                    >
-                      <span class="abbreviate">{{scope.row.businessType}}</span>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
-                <el-table-column label="分出公司" width="120">
-                  <template slot-scope="scope">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      :content="scope.row.cedentCode+'-'+scope.row.cedentName"
-                      placement="top-start"
-                    >
-                      <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column label="经纪公司" width="120">
-                  <template slot-scope="scope">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      :content="scope.row.brokerCode+'-'+scope.row.brokerName"
-                      placement="top-start"
-                    >
-                      <span class="abbreviate">{{scope.row.brokerCode}}-{{scope.row.brokerName}}</span>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="wsType" label="账单类型"></el-table-column>
-                <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
-                <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-                <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
-                <el-table-column prop="dept" label="经营机构"></el-table-column>
-                <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
-                <el-table-column label="金额">
-                  <template slot-scope="scope">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      :content="scope.row.wsAmount"
-                      placement="top-start"
-                    >
-                      <span class="abbreviate">{{scope.row.wsAmount}}</span>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
-                <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
-                <el-table-column label="备注">
-                  <template slot-scope="scope">
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      :content="scope.row.remark"
-                      placement="top-start"
-                    >
-                      <span class="abbreviate">{{scope.row.remark}}</span>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column label="操作" width="120">
-                  <template slot-scope="scope">
-                    <el-button
-                      type="text"
-                      @click.stop="openSICS(scope.row,'wsId')"
-                      size="mini"
-                    >打开SICS</el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </template>
-          </el-table-column>
-          <el-table-column label="结算清单编号" width="110">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.sgNum"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.sgNum}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="流程编号">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.processId"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.processId}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="支票号">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.rmId"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.rmId}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column prop="bpCode" label="BP number" width="100"></el-table-column>
-          <el-table-column label="BP名称">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.bpName"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.bpName}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
-          <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-          <el-table-column prop="sgStatus" label="结算清单状态" width="110"></el-table-column>
-          <el-table-column prop="settlementIndicator" label="结算指标"></el-table-column>
-          <el-table-column prop="sgCurrency" label="币制"></el-table-column>
-          <el-table-column prop="settlementAmount" label="结算总额"></el-table-column>
-          <el-table-column prop="unsettlementAmount" label="未结算金额" width="100"></el-table-column>
-          <el-table-column label="应收款日期" width="100">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.dueDate"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.dueDate}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column prop="bookingYear" label="账单年份"></el-table-column>
-          <el-table-column prop="bookingPeriod" label="账期" width="100"></el-table-column>
-          <el-table-column prop="accYear" label="统计年份"></el-table-column>
-          <el-table-column prop="accPeriod" label="统计期" width="100"></el-table-column>
-          <el-table-column label="类型">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.sgType"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.sgType}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="参考">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.sgReference"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.sgReference}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column prop="createdBy" label="创建人"></el-table-column>
-          <el-table-column label="创建时间">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.createdAt"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.createdAt}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" width="120">
-            <template slot-scope="scope">
-              <el-button type="text" @click.stop="openSICS(scope.row,'sgNum')" size="mini">打开SICS</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+          <el-table v-show="searchFlag3" stripe :data="SgData" style="width: 100%">
+            <el-table-column type="expand">
+              <template slot-scope="props">
+                <el-table stripe :data="props.row.worksheetDOList" style="width: 100%">
+                  <el-table-column label="账单号">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.wsId"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.wsId}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="wsStatus" label="账单状态" width="100">
+                    <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+                  </el-table-column>
+                  <el-table-column label="账单标题">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.wsTitle"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.wsTitle}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="业务编号">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.businessId"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.businessId}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="附件名称">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.docName"
+                        placement="top-start"
+                      >
+                        <span
+                          class="smallHand abbreviate"
+                          @click="docView(scope.row)"
+                        >{{scope.row.docName}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="section">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.section"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.section}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="uwYear" label="业务年度"></el-table-column>
+                  <el-table-column label="任务类型">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.businessType"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.businessType}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
+                  <el-table-column label="分出公司" width="120">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.cedentCode+'-'+scope.row.cedentName"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="经纪公司" width="120">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.brokerCode+'-'+scope.row.brokerName"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.brokerCode}}-{{scope.row.brokerName}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="wsType" label="账单类型"></el-table-column>
+                  <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
+                  <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
+                  <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+                  <el-table-column prop="dept" label="经营机构"></el-table-column>
+                  <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
+                  <el-table-column label="金额">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.wsAmount"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.wsAmount}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
+                  <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
+                  <el-table-column label="备注">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.remark"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.remark}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作" width="120">
+                    <template slot-scope="scope">
+                      <el-button
+                        type="text"
+                        @click.stop="openSICS(scope.row,'wsId')"
+                        size="mini"
+                      >打开SICS</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </template>
+            </el-table-column>
+            <el-table-column label="结算清单编号" width="110">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.sgNum"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.sgNum}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="流程编号">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.processId"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.processId}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="支票号">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.rmId"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.rmId}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="bpCode" label="BP number" width="100"></el-table-column>
+            <el-table-column label="BP名称">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.bpName"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.bpName}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
+            <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
+            <el-table-column prop="sgStatus" label="结算清单状态" width="110"></el-table-column>
+            <el-table-column prop="settlementIndicator" label="结算指标"></el-table-column>
+            <el-table-column prop="sgCurrency" label="币制"></el-table-column>
+            <el-table-column prop="settlementAmount" label="结算总额"></el-table-column>
+            <el-table-column prop="unsettlementAmount" label="未结算金额" width="100"></el-table-column>
+            <el-table-column label="应收款日期" width="100">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.dueDate"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.dueDate}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="bookingYear" label="账单年份"></el-table-column>
+            <el-table-column prop="bookingPeriod" label="账期" width="100"></el-table-column>
+            <el-table-column prop="accYear" label="统计年份"></el-table-column>
+            <el-table-column prop="accPeriod" label="统计期" width="100"></el-table-column>
+            <el-table-column label="类型">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.sgType"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.sgType}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="参考">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.sgReference"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.sgReference}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="createdBy" label="创建人"></el-table-column>
+            <el-table-column label="创建时间">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.createdAt"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.createdAt}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="120">
+              <template slot-scope="scope">
+                <el-button type="text" @click.stop="openSICS(scope.row,'sgNum')" size="mini">打开SICS</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-collapse-transition>
       </el-col>
     </el-row>
@@ -505,153 +508,159 @@
           @click="searchFlag4 = !searchFlag4"
         >
           <div>
-            <i style="margin-right:8px;" :class="searchFlag4===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>账单信息
+            <i
+              style="margin-right:8px;"
+              :class="searchFlag4===false?'el-icon-arrow-down':'el-icon-arrow-up'"
+            ></i>账单信息
           </div>
           <p>
             <i class="iconfont iconGroup26"></i>
           </p>
         </div>
         <el-collapse-transition>
-        <el-table v-show="searchFlag4" stripe :data="WSData" style="width: 100%">
-          <el-table-column label="账单号">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.wsId"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.wsId}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column prop="wsStatus" label="账单状态" width="100">
-            <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
-          </el-table-column>
-          <el-table-column label="账单标题">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.wsTitle"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.wsTitle}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="业务编号">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.businessId"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.businessId}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="附件名称">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.docName"
-                placement="top-start"
-              >
-                <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="section">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.section"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.section}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column prop="uwYear" label="业务年度"></el-table-column>
-          <el-table-column label="任务类型">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.businessType"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.businessType}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
-          <el-table-column label="分出公司" width="120">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.cedentCode+'-'+scope.row.cedentName"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="经纪公司" width="120">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.brokerCode+'-'+scope.row.brokerName"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.brokerCode}}-{{scope.row.brokerName}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column prop="wsType" label="账单类型"></el-table-column>
-          <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
-          <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-          <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
-          <el-table-column prop="dept" label="经营机构"></el-table-column>
-          <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
-          <el-table-column label="金额">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.wsAmount"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.wsAmount}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
-          <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
-          <el-table-column label="备注">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.remark"
-                placement="top-start"
-              >
-                <span class="abbreviate">{{scope.row.remark}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" width="120">
-            <template slot-scope="scope">
-              <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+          <el-table v-show="searchFlag4" stripe :data="WSData" style="width: 100%">
+            <el-table-column label="账单号">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.wsId"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.wsId}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="wsStatus" label="账单状态" width="100">
+              <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+            </el-table-column>
+            <el-table-column label="账单标题">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.wsTitle"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.wsTitle}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="业务编号">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.businessId"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.businessId}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="附件名称">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.docName"
+                  placement="top-start"
+                >
+                  <span
+                    class="smallHand abbreviate"
+                    @click="docView(scope.row)"
+                  >{{scope.row.docName}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="section">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.section"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.section}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="uwYear" label="业务年度"></el-table-column>
+            <el-table-column label="任务类型">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.businessType"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.businessType}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
+            <el-table-column label="分出公司" width="120">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.cedentCode+'-'+scope.row.cedentName"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="经纪公司" width="120">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.brokerCode+'-'+scope.row.brokerName"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.brokerCode}}-{{scope.row.brokerName}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="wsType" label="账单类型"></el-table-column>
+            <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
+            <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
+            <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+            <el-table-column prop="dept" label="经营机构"></el-table-column>
+            <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
+            <el-table-column label="金额">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.wsAmount"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.wsAmount}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
+            <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
+            <el-table-column label="备注">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.remark"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.remark}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="120">
+              <template slot-scope="scope">
+                <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-collapse-transition>
       </el-col>
     </el-row>
@@ -675,7 +684,7 @@
         <el-form-item label="输入悬停原因" v-show="title==='悬停'">
           <el-input type="textarea" :rows="2" placeholder="请输入悬停原因" v-model="pendingReason"></el-input>
         </el-form-item>
-        <el-form-item label="选择下一任务处理人" v-show="putIn=='n'">
+        <el-form-item label="选择处理人" v-show="putIn=='n'">
           <el-select v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
@@ -686,7 +695,7 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          :label="title === '任务指派'?'选择任务指派人':'选择下一任务处理人'"
+          :label="title === '任务指派'?'选择任务指派人':'选择处理人'"
           v-show="title === '任务指派' || putIn=='b'"
         >
           <el-select v-model="assignee" placeholder="请选择">
@@ -747,10 +756,9 @@
         </el-form-item>
         <el-form-item label="Base Company" prop="baseCompany">
           <el-select
-            disabled
             v-model="formLabelAlign.baseCompany"
             placeholder="请选择"
-            @change="baseCompanyChange"
+            @change="bankCurrencyChange"
           >
             <el-option
               v-for="item in baseCompanyList"
@@ -906,8 +914,13 @@
         <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
         <el-table-column label="任务来源" width="140">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
-              <span class="abbreviate">{{scope.row.createdBy}}</span>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="nameList[scope.row.createdBy]"
+              placement="top"
+            >
+              <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -961,12 +974,12 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
 export default {
   name: "detailCred",
   data() {
     return {
+      nameList: {},
       searchFlag1: true,
       searchFlag2: true,
       searchFlag3: true,
@@ -982,7 +995,7 @@ export default {
           c: "processId"
         },
         {
-          a: "结付公司代码",
+          a: "结付公司",
           b: "",
           c: "rmSettleCompanyCode"
         },
@@ -1017,7 +1030,7 @@ export default {
           c: "baseCompany"
         },
         {
-          a: "操作员",
+          a: "任务来源",
           b: "",
           c: "modifiedBy"
         },
@@ -1026,7 +1039,6 @@ export default {
           b: "",
           c: "rmWrittenOffNum"
         },
-
         {
           a: "原收款公司名称",
           b: "",
@@ -1084,7 +1096,7 @@ export default {
         bookingPeriodName: "Month 05",
         bookingPeriodCode: "M05",
         bookingYear: "2019",
-        paymentTypeIndex: "",
+        paymentTypeIndex: "Wire",
         brokerModel: null
       },
       TaxList: [],
@@ -1096,7 +1108,7 @@ export default {
       ],
       paymentTypeList: [
         { n: "Wire", v: "WIRE" },
-        { n: "Void P-wire", v: "VP_WIRE" }
+        { n: "Void P-Wire", v: "VP_WIRE" }
       ],
       businessOriginList: [
         { a: "DOM", b: "RC_DOMESTIC" },
@@ -1240,6 +1252,7 @@ export default {
     }
     this.formLabelAlign.valueDate = new Date().getTime();
     this.formLabelAlign.dueDate = new Date().getTime();
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
     setTimeout(() => {
@@ -1250,7 +1263,10 @@ export default {
       //获取币制
       this.rmCurrencyList = JSON.parse(sessionStorage.getItem("CurrencyList"));
       // 集团产再
-      this.baseCompanyList = JSON.parse(sessionStorage.getItem("baseCompany"));
+      let objbc = JSON.parse(sessionStorage.getItem("baseCompany"));
+      this.baseCompanyList = objbc.filter(el => {
+        return el.code != "Both";
+      });
       // 国际国内
       this.businessOriginList = JSON.parse(
         sessionStorage.getItem("businessOrigin")
@@ -1272,6 +1288,9 @@ export default {
     // 详情
     this.listData.forEach(el => {
       el["b"] = this.row[el["c"]];
+      if (el["a"] == "任务来源") {
+        el["b"] = this.nameList[this.row[el["c"]]];
+      }
     });
   },
   methods: {
@@ -1455,7 +1474,7 @@ export default {
     rmWriteBack() {
       // 不能写方法循环遍历，只能手写一点点对字段，有坑
       this.formLabelAlign.processId = this.row.processId;
-      // 带过来的结付公司代码 === 汇款人
+      // 带过来的结付公司 === 汇款人
       if (this.row.rmSettleCompanyCode) {
         this.brokerList.forEach((el, i) => {
           if (el.codecode == this.row.rmSettleCompanyCode) {
@@ -1571,19 +1590,29 @@ export default {
         if (val2) {
           this.formLabelAlign.paymentType = val2.v;
           this.formLabelAlign.paymentTypeName = val2.n;
+        } else {
+          this.formLabelAlign.paymentType = "WIRE";
+          this.formLabelAlign.paymentTypeName = "Wire";
         }
         this.formLabelAlign.createdBy = this.$store.state.userName;
-        this.$refs[formName].validate((valid) => {
-          if(valid) {
-            this.$http.post('api/receipt/credOperation/createRemit',Object.assign(this.formLabelAlign,this.mustData,{rmType:'R'})).then(res =>{
-              this.dialogFormVisible = false;
-              if(res.status === 200 && res.data.errorCode == 1){
-                this.$message({message: '创建成功',type: 'success'});
-                this.queryRM();
-              } else if(res.data.errorCode == 0 && res.data.errorMessage){
-                this.$message.error(res.data.errorMessage);
-              }
-            })
+        this.$refs[formName].validate(valid => {
+          if (valid) {
+            this.$http
+              .post(
+                "api/receipt/credOperation/createRemit",
+                Object.assign(this.formLabelAlign, this.mustData, {
+                  rmType: "R"
+                })
+              )
+              .then(res => {
+                this.dialogFormVisible = false;
+                if (res.status === 200 && res.data.errorCode == 1) {
+                  this.$message({ message: "创建成功", type: "success" });
+                  this.queryRM();
+                } else if (res.data.errorCode == 0 && res.data.errorMessage) {
+                  this.$message.error(res.data.errorMessage);
+                }
+              });
           }
         });
       } else if (tag == "a") {
@@ -1969,7 +1998,6 @@ export default {
                 }
               });
           }
-
           break;
         case 4: // 复核驳回
           if (!this.opinion) {
@@ -2129,7 +2157,6 @@ export default {
   }
 };
 </script>
-
 <style scoped>
 .detailCred {
   padding: 20px 30px;

@@ -145,7 +145,11 @@
       </el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
-      <el-table-column prop="curOperator" label="任务来源" width="110"></el-table-column>
+      <el-table-column label="任务来源" width="110">
+        <template slot-scope="scope">
+          <span>{{nameList[scope.row.curOperator]}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <el-table-column label="状态" v-if="urlName === 'billEntry'">
         <template slot-scope="scope" v-show="urlName === 'billEntry'">
@@ -352,7 +356,7 @@
                     class="smallHand abbreviate"
                     @click="docView(scope.row)"
                   >{{scope.row.docName}}</span>
-                </el-tooltip>
+                </el-tooltip> 
               </template>
             </el-table-column>
             <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
@@ -361,10 +365,10 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  :content="scope.row.createdBy"
+                  :content="scope.row.nameList[scope.row.createdBy]"
                   placement="top"
                 >
-                  <span class="abbreviate">{{scope.row.createdBy}}</span>
+                  <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -375,7 +379,7 @@
             </el-table-column>
           </el-table>
         </el-form-item>
-        <el-form-item label="选择下一任务处理人" v-show="title==='流程提交'">
+        <el-form-item label="选择处理人" v-show="title==='流程提交'">
           <el-select clearable v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
@@ -394,7 +398,11 @@
       <el-table :data="track" border="" style="width: 100%" v-show="title==='踪迹'">
         <el-table-column prop="processId" label="流程编号" width="220"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
-        <el-table-column prop="actOperator" label="任务来源" width="85"></el-table-column>
+        <el-table-column label="任务来源" width="85">
+          <template slot-scope="scope">
+            <span>{{nameList[scope.row.actOperator]}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="actTime" label="操作时间"></el-table-column>
         <el-table-column prop="reason" label="操作原因"></el-table-column>
         <el-table-column prop="remark" label="操作备注"></el-table-column>
@@ -451,6 +459,7 @@ export default {
   },
   data() {
     return {
+      nameList:{},
       searchFlag: false,
       tableData: [],
       assignee: "",
@@ -620,6 +629,7 @@ export default {
         }
       });
     }
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
     this.$http
@@ -645,11 +655,11 @@ export default {
       this.businessOriginList = JSON.parse(
         sessionStorage.getItem("businessOrigin")
       );
-      // 判断是否是管理员   66
+    }, 1000);
+    // 判断是否是管理员   66
       let admArr = JSON.parse(sessionStorage.getItem("roleIdList"));
       admArr.some(el=>{return el==66;}) ? (this.admFlag = true) : (this.admFlag = false);
       this.init();
-    }, 1000);
   },
   methods: {
     docView(row) {
