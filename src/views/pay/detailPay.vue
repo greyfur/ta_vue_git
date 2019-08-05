@@ -42,6 +42,7 @@
           <el-button size="small" plain @click="submite(2,'任务指派','支票')">任务指派</el-button>
           <el-button size="small" plain @click="submite(7,'流程提交',0,'审批完成')">流程提交</el-button>
           <el-button size="small" plain @click="onRemitCreat">支票创建</el-button>
+          <el-button size="small" plain @click="urgencyPay">紧急付款</el-button>
         </div> 
         <!-- 复核 -->
         <div class="btn" v-if="$route.query.tag === 'payReview'">
@@ -100,8 +101,8 @@
                 <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
                 <el-table-column label="任务来源" width="140">
                   <template slot-scope="scope">
-                    <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
-                      <span class="abbreviate">{{scope.row.createdBy}}</span>
+                    <el-tooltip class="item" effect="dark" :content="nameList[scope.row.createdBy]" placement="top">
+                      <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -132,11 +133,12 @@
     <el-row v-if="$route.query.tag !== 'payOperation' && $route.query.tag !== 'payVerification'" style="padding:0 16px;">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag2 = !searchFlag2">
-          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>支票信息</div>
+          <div><i style="margin-right:8px;"  :class="searchFlag2===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>支票信息</div>
           <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getRMSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
+         <el-collapse-transition>
         <el-table v-show="searchFlag2" stripe :data="RMData" style="width:100%">
-          <el-table-column label="remittance号" width="110">
+          <el-table-column label="支票号" width="110">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
                 <span class="abbreviate">{{scope.row.rmId}}</span>
@@ -200,13 +202,14 @@
             </template>
           </el-table-column>
         </el-table>
+         </el-collapse-transition>
       </el-col>
     </el-row>
 
     <el-row style="padding:0 16px;">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
-          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>组信息</div>
+          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单</div>
           <p v-if="$route.query.tag === 'payOperation' || $route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
         <el-table v-show="searchFlag3" stripe :data="SgData" style="width: 100%">
@@ -372,11 +375,11 @@
                 <span class="abbreviate">{{scope.row.createdAt}}</span>
               </el-tooltip>
             </template>
-          </el-table-column>
+          </el-table-column> 
           <el-table-column  label="操作" width="120">
             <template slot-scope="scope">
-              <el-button v-show="!scope.row.rmId" @click="remitCreat(scope.row)" v-if="$route.query.tag === 'approvalDone'" type="text" size="small">创建支票</el-button>
-              <!-- <el-button v-if="$route.query.tag === 'approvalDone'" @click="openSGSICS(scope.row)" type="text" size="small">创建支票</el-button> -->
+              <el-button v-show="!scope.row.rmId" @click="remitCreat(scope.row)" v-if="$route.query.tag === 'approvalDone' || $route.query.tag === 'payClose'" type="text" size="small">创建支票</el-button>
+              <el-button type="text" @click.stop="openSGSICS(scope.row,'sgNum')" size="mini">打开SICS</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -401,19 +404,19 @@
         <!-- <el-form-item label="原因填写" v-show="title==='审批驳回'">
           <el-input type="textarea" :rows="2" placeholder="请输入原因" v-model="rebut"></el-input>
         </el-form-item> -->
-        <el-form-item label="选择下一任务处理人" v-show="putIn=='n'">
+        <el-form-item label="选择处理人" v-show="putIn=='n'">
           <el-select v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="title === '任务指派'?'选择任务指派人':'选择下一任务处理人'" v-show="title === '任务指派' || putIn=='b'">
+        <el-form-item :label="title === '任务指派'?'选择任务指派人':'选择处理人'" v-show="title === '任务指派' || putIn=='b'">
           <el-select v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" plain @click="confirm">确定</el-button>
-          <el-button size="small" @click="dialogFormVisible3 = false">取消</el-button>
+          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
+          <el-button size="small" @click="dialogFormVisible3 = false" >取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -456,7 +459,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" plain @click="confirm">确定</el-button>
+          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
           <el-button size="small" @click="dialogFormVisibleFHRWZF = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -478,7 +481,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="Base Company" prop="baseCompany">
-          <el-select disabled v-model="formLabelAlign.baseCompany" placeholder="请选择" @change="baseCompanyChange">
+          <el-select v-model="formLabelAlign.baseCompany" placeholder="请选择" @change="baseCompanyChange">
             <el-option v-for="item in baseCompanyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
@@ -487,7 +490,7 @@
             <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="汇款人" prop="brokerModel">
+        <el-form-item label="收款人" prop="brokerModel">
           <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择">
             <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
               <span style="float:left">{{ item.codecode }}</span>
@@ -495,7 +498,12 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="银行账户" prop="bankAccount1">
+        <!-- <el-form-item label="收款账户" prop="partnerBankAccount">
+          <el-select v-model="formLabelAlign.partnerBankAccount" placeholder="请选择">
+            <el-option v-for="(item,i) in " :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="i"></el-option>
+          </el-select>
+        </el-form-item> -->
+        <el-form-item label="付款账户" prop="bankAccount1">
           <el-select v-model="formLabelAlign.bankAccount1" placeholder="请选择">
             <el-option v-for="(item,i) in BankAccountList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="i"></el-option>
           </el-select>
@@ -521,23 +529,23 @@
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item label="手续费币制/手续费金额" required>
+        <el-form-item label="手续费币制/手续费金额">
           <el-col :span="10">
-            <el-form-item prop="chargesCurrency">
+            <el-form-item>
               <el-select v-model="formLabelAlign.chargesCurrency" placeholder="请选择" class="curAmount">
                 <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
           <el-col :span="10">
-            <el-form-item prop="chargesAmount">
+            <el-form-item>
               <input type="text" class="selfInput" v-model="formLabelAlign.chargesAmount" @input="watchInput('chargesAmount')">
               <!-- <el-input v-model="formLabelAlign.chargesAmount" @input.native="watchInput('chargesAmount')" class="curAmount"></el-input> -->
             </el-form-item>
           </el-col>
         </el-form-item>
         <el-form-item>
-          <el-button plain type="primary" @click="creatRM('formLabelAlign')">确定</el-button>
+          <el-button size="small" plain type="primary" @click="creatRM('formLabelAlign')" style="padding:0 16px;">确定</el-button>
           <el-button size="small" @click="dialogFormVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -586,7 +594,7 @@
         </el-form-item>
         <el-form-item label="原币币制/金额" required>
           <el-form-item>
-            <el-select style="width: 90%;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
+            <el-select style="width:90%;height:40px;line-height:40px;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
               <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
             </el-select>
           </el-form-item>
@@ -627,7 +635,7 @@
         </el-form-item>
         <el-form-item>
           <el-button size="small" @click="dialogFormVisible2 = false">取 消</el-button>
-          <el-button type="primary" plain @click="makeDoc(2,'makeDocList')">确 定</el-button>
+          <el-button size="small" type="primary" plain @click="makeDoc(2,'makeDocList')" style="padding:0 16px;">确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -639,6 +647,7 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        nameList:{},
         searchFlag1:true,
         searchFlag2:true,
         searchFlag3:true,
@@ -660,7 +669,7 @@ export default {
             c:'processId'
           },
           {
-            a:'结付公司代码',
+            a:'结付公司',
             b:'',
             c:'rmSettleCompanyCode',
           },
@@ -685,7 +694,7 @@ export default {
             c:'baseCompany',
           },
           {
-            a:'操作员',
+            a:'任务来源',
             b:'',
             c:'modifiedBy'
           },
@@ -722,6 +731,7 @@ export default {
           rmStatusName:'',
           processId:'',
           paymentType:'',
+          partnerBankAccount:'048016192B5F11E789B4FB9A24D8DF5C',
           paymentTypeName:'',
           bankCurrency:'CNY',
           bankAmount:'',
@@ -744,7 +754,7 @@ export default {
           bookingPeriodName:'',
           bookingPeriodCode:'',
           bookingYear:'',
-          paymentTypeIndex:'',
+          paymentTypeIndex:'Wire',
         },
         makeDocList:{
           remark:null,
@@ -770,7 +780,7 @@ export default {
         pendingReason:null,
         cedentList:[],
         rmStatusList:[{'n':'In Progress','v':'PROG'},{'n':'In Execution','v':'INEX'}],
-        paymentTypeList:[{'n':'Wire','v':'WIRE'},{'n':'Void P-wire','v':'VP_WIRE'}],
+        paymentTypeList:[{'n':'Wire','v':'WIRE'},{'n':'Void R-Wire','v':'VR_WIRE'}],
         baseCompanyList:[],
         businessOriginList:[],
         brokerList:[],
@@ -887,8 +897,10 @@ export default {
     }
     this.formLabelAlign.valueDate = new Date().getTime();
     this.formLabelAlign.dueDate = new Date().getTime();
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){ 
+    console.log(this.row.approvalLevel,'this.row.approvalLevel');
     this.mustData.actOperator = this.$store.state.userName;
     let strArr = [];
     if(this.row.approvalLevel != null || this.row.approvalLevel != 'undefined'){
@@ -909,7 +921,8 @@ export default {
       //获取币制
       this.rmCurrencyList = JSON.parse(sessionStorage.getItem('CurrencyList'));
       // 集团产再
-      this.baseCompanyList = JSON.parse(sessionStorage.getItem('baseCompany'));
+      let objbc = JSON.parse(sessionStorage.getItem('baseCompany'));
+      this.baseCompanyList = objbc.filter(el=>{ return el.code != 'Both' });
       // 国际国内
       this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
 
@@ -936,14 +949,51 @@ export default {
     this.docView(this.fileData[0]);
     this.listData.forEach(el=>{
       el['b'] = this.row[el['c']];
+      if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
     })
     // setTimeout(()=>{
     //   console.log(this.filterCurrencyRateList('CNY','iii'),'yyyyyy');
     // },1000)
+    // console.log(this.$refs.www,'www');
+    // console.log(document.querySelectorAll('arrow'),'arrow');
   },
   methods: {
+    urgencyPay(){
+      this.$confirm('是否紧急付款？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+        }).then(() => {
+          this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
+            ,{processId:this.row.processId, 
+              procInstId:this.row.processInstId, 
+              assignee:this.$store.state.userName, 
+              actOperator:this.$store.state.userName,
+              accountCloseFlag:'1',
+              type:'PAYING',
+              })
+            .then(res =>{
+              if(res.status === 200 && res.data.errorCode == 1){
+                this.$router.push({name:this.$route.query.tag}); 
+              } else if(res.data.errorCode == 0){
+                this.$message({type: 'error', message:res.data.errorMessage }); 
+              }
+            })
+        
+      })
+    },
     openSGSICS(row){
-
+      this.$http
+          .post("api/sics/liveDesktop/openWorksheet", {
+            modifiedBy: this.$store.state.userName,
+            worksheetId: row['sgNum']
+          })
+          .then(res => {
+            console.log(res, "打开SICS");
+            // if(res.status === 200 && res.data.rows){
+            //   this.SICSData = res.data.rows;
+            // }
+          });
     },
     copy(id){
       let Url2=document.getElementById(id).innerText;
@@ -1187,7 +1237,7 @@ export default {
                   return el.docType == 'S0';
                 })
                 if(arr.length){ 
-                  this.getName('付款录入');
+                  this.getName(getname);
                   this.dialogFormVisible3 = true;
                  } else{ this.$message.error('请先生成审批文档'); }
               } else{ this.$message.error('请先生成审批文档'); }
@@ -1278,6 +1328,7 @@ export default {
                     this.$confirm('是否审批通过', '提示', {
                       confirmButtonText: '确定',
                       cancelButtonText: '取消',
+                      confirmButtonClass:'confirmBtn',
                       type: 'warning'
                     }).then(() => {
                       this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
@@ -1696,11 +1747,14 @@ export default {
         if(val2){
           this.formLabelAlign.paymentType = val2['v'];
           this.formLabelAlign.paymentTypeName = val2['n'];
+        } else{
+          this.formLabelAlign.paymentType = 'WIRE';
+          this.formLabelAlign.paymentTypeName = 'Wire';
         }
        this.formLabelAlign.createdBy = this.$store.state.userName;
        this.$refs[formName].validate((valid) => {
         if(valid) {
-          this.$http.post('api/receipt/credOperation/createRemit',Object.assign(this.formLabelAlign,this.mustData)).then(res =>{
+          this.$http.post('api/receipt/credOperation/createRemit',Object.assign(this.formLabelAlign,this.mustData,{rmType:'P'})).then(res =>{
             this.dialogFormVisible = false;
             if(res.status === 200 && res.data.errorCode == 1){
               this.$message({message: '创建成功',type: 'success'});
@@ -1726,7 +1780,7 @@ export default {
     rmWriteBack(){
       // 不能写方法循环遍历，只能手写一点点对字段，有坑
       this.formLabelAlign.processId = this.row.processId;
-      // 带过来的结付公司代码 === 汇款人
+      // 带过来的结付公司 === 汇款人
       if(this.row.rmSettleCompanyCode){
         this.brokerList.forEach((el,i)=>{
           if(el.codecode == this.row.rmSettleCompanyCode){
