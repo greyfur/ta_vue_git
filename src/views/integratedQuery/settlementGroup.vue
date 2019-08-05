@@ -618,7 +618,7 @@ export default {
         {
           a: "汇款人名称",
           b: "",
-          c: "rmSettleCompanyName"
+          c: "payerName"
         },
         {
           a: "币制",

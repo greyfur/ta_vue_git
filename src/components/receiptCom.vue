@@ -96,22 +96,22 @@
           <el-tooltip
             class="item"
             effect="dark"
-            :content="scope.row.processName"
+            :content="scope.row.rmSettleCompanyName"
             placement="top-start"
           >
-            <span class="abbreviate">{{nameList[scope.row.rmSettleCompanyName]}}</span>
+            <span class="abbreviate">{{scope.row.rmSettleCompanyName}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column width="120" label="汇款人名称">
-        <template slot-scope="scope">
+         <template slot-scope="scope">
           <el-tooltip
             class="item"
             effect="dark"
-            :content="scope.row.rmSettleCompanyName"
-            placement="top"
+            :content="scope.row.payerName"
+            placement="top-start"
           >
-            <span class="abbreviate">{{scope.row.rmSettleCompanyName}}</span>
+            <span class="abbreviate">{{scope.row.payerName}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -186,10 +186,15 @@
         </el-table-column>
       <el-table-column width="120" label="汇款人名称">
          <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :content="scope.row.partnerName" placement="top-start">
-                <span class="abbreviate">{{scope.row.partnerName}}</span>
-              </el-tooltip>
-            </template>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="scope.row.payerName"
+            placement="top-start"
+          >
+            <span class="abbreviate">{{scope.row.payerName}}</span>
+          </el-tooltip>
+        </template>
       </el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
       <el-table-column prop="rmReceiptDate" width="120" label="汇款到账日期"></el-table-column>
@@ -635,7 +640,7 @@ export default {
         {
           a: "汇款人名称",
           b: "",
-          c: "rmSettleCompanyName"
+          c: "payerName"
         },
         {
           a: "币制",

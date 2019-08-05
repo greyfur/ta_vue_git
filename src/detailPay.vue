@@ -189,10 +189,15 @@
           <el-table-column prop="partnerCode" label="汇款人代码" width="100"></el-table-column>
           <el-table-column label="汇款人名称" width="100">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :content="scope.row.partnerName" placement="top-start">
-                <span class="abbreviate">{{scope.row.partnerName}}</span>
-              </el-tooltip>
-            </template>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="scope.row.payerName"
+            placement="top-start"
+          >
+            <span class="abbreviate">{{scope.row.payerName}}</span>
+          </el-tooltip>
+        </template>
           </el-table-column>
           <el-table-column prop="businessPartnerRef" label="BP Reference信息" width="140"></el-table-column>
           <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
