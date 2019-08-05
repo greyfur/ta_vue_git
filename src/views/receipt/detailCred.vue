@@ -128,6 +128,17 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
+              <el-table-column label="支票金额">
+                <template slot-scope="scope">
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    :content="scope.row.bankAmount"
+                    placement="top-start">
+                    <span class="abbreviate">{{scope.row.bankAmount}}</span>
+                  </el-tooltip>
+                </template>
+              </el-table-column>
               <el-table-column label="支票状态">
                 <template slot-scope="scope">
                   <el-tooltip

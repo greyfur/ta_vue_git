@@ -70,6 +70,9 @@
       <el-button type="primary" plain @click="handleClick(2)" v-show="urlName === 'financialCreat'">
         <i class="iconfont iconGroup91"></i>批量创建
       </el-button>
+      <el-button type="primary" plain @click="handleClick(14)" v-show="urlName === 'financialCreat'">
+        <i class="iconfont iconGroup91"></i>批量分配
+      </el-button>
       <el-button type="primary" plain @click="handleClick(13)" v-show="urlName === 'taskClaim'">
         <i class="iconfont iconpaperclip"></i>任务认领
       </el-button>
@@ -79,15 +82,14 @@
       <!-- <el-button type="primary" plain @click="handleClick(4)">查询</el-button> -->
     </div>
     <el-table
-      v-show="urlName=='taskClaim'"
+      v-show="urlName=='taskClaim' || urlName=='financialCreat'"
       :data="tableData"
       ref="multipleTable"
       tooltip-effect="dark"
       stripe
       style="width: 100%"
       @selection-change="handleSelectionChange"
-      @row-click="goDetail"
-    >
+      @row-click="goDetail">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="processId" label="ProcessID" width="120"></el-table-column>
       <el-table-column prop="rmSettleCompanyName" width="110" label="结付公司"></el-table-column>
@@ -126,14 +128,20 @@
         </template>
       </el-table-column>
       <el-table-column prop="rmOriSettleCompanyName" width="150" label="原收款公司名称"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="170">
+      <el-table-column fixed="right" label="操作" width="160">
         <template slot-scope="scope">
-            <el-dropdown>
-                <span @click.stop="handleClick(12,scope.row)">附件查看</span>
-              </el-dropdown>
-              <el-dropdown>
-                <span @click.stop="handleClick(11,scope.row)">踪迹</span>
-              </el-dropdown>
+          <!-- <el-dropdown> -->
+            <span v-show="urlName === 'financialCreat'" @click.stop="handleClick(6,scope.row)" class="blueColor">编辑</span>
+          <!-- </el-dropdown> -->
+          <!-- <el-dropdown-item> -->
+            <span v-show="urlName === 'financialCreat'" @click.stop="handleClick(7,scope.row)" class="blueColor">删除</span>
+          <!-- </el-dropdown-item> -->
+          <!-- <el-dropdown> -->
+            <span v-show="urlName === 'taskClaim'" @click.stop="handleClick(12,scope.row)" class="blueColor">附件查看</span>
+          <!-- </el-dropdown> -->
+          <!-- <el-dropdown> -->
+            <span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
+          <!-- </el-dropdown> -->
           <!-- <el-dropdown>
             <span class="el-dropdown-link">
               更多
@@ -151,7 +159,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-table v-show="urlName!='taskClaim'" :data="tableData" stripe style="width: 100%">
+    <el-table v-show="urlName!='taskClaim' && urlName!='financialCreat'" :data="tableData" stripe style="width: 100%">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span
@@ -207,7 +215,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" :width="urlName !== 'financialCreat'?100:180" >
+      <el-table-column fixed="right" label="操作" width="100" >
         <template slot-scope="scope">
           <el-dropdown>
             <span
@@ -216,20 +224,20 @@
               style="margin-right:8px;cursor: pointer;"
             >编辑</span>
           </el-dropdown>
-          <el-dropdown>
+          <!-- <el-dropdown>
             <span
               v-show="urlName === 'financialCreat'"
               @click.stop="handleClick(10,scope.row)"
               style="margin-right:8px;cursor: pointer;"
             >分配</span>
-          </el-dropdown>
-          <el-dropdown>
+          </el-dropdown> -->
+          <!-- <el-dropdown>
             <span
               v-show="urlName === 'sortOperation'"
               @click.stop="handleClick(3,scope.row)"
               style="margin-right:8px;cursor: pointer;"
             >分配</span>
-          </el-dropdown>
+          </el-dropdown> -->
           <el-dropdown v-if="urlName !== 'financialCreat'">
             <span @click.stop="handleClick(11,scope.row)">踪迹</span>
           </el-dropdown>
@@ -519,8 +527,7 @@
       title="文档预览"
       width="fit-content"
       :visible.sync="dialogFormVisibleA"
-      :close-on-click-modal="modal"
-    >
+      :close-on-click-modal="modal">
       <div class="browseDoc" v-show="title!='踪迹'">
         <iframe
           src="../../static/Preview/index.html"
@@ -1019,8 +1026,7 @@ export default {
             this.multipleSelection.length &&
             this.multipleSelection.length > 1
           ) {
-            url =
-              "api/receipt/activitiForReceipt/commonActivitiForReceiptForActive";
+            url ="api/receipt/activitiForReceipt/commonActivitiForReceiptForActive";
             let str = "";
             this.multipleSelection.forEach(el => {
               str += `${el.processId},`;
@@ -1067,6 +1073,73 @@ export default {
               });
           });
           break;
+
+        case 14: // 批量分配
+          let url1 = null;
+          let obj1 = null;
+          if (
+            this.multipleSelection.length &&
+            this.multipleSelection.length == 1
+          ) {
+            // 一个用原来的接口
+            url1 = "api/receipt/activitiForReceipt/commonActivitiForReceipt";
+            obj1 = {
+              processId: this.multipleSelection[0].processId,
+              procInstId: this.multipleSelection[0].processInstId
+            };
+          } else if (
+            this.multipleSelection.length &&
+            this.multipleSelection.length > 1
+          ) {
+            url1 ="api/receipt/activitiForReceipt/commonActivitiForReceiptForOpen";
+            let str = "";
+            this.multipleSelection.forEach(el => {
+              str += `${el.processId},`;
+            });
+            str = str.substr(0, str.length - 1);
+            obj1 = { processId: str };
+          } else {
+            this.$message.error("请选择process");
+            return false;
+          }
+
+          this.$confirm("是否批量分配？", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(() => {
+            this.$http
+              .post(
+                url1,
+                Object.assign({}, obj1, {
+                  assignee: this.$store.state.userName,
+                  type: "WAITING",
+                  actOperator: this.$store.state.userName
+                })
+              )
+              .then(res => {
+                if (
+                  this.multipleSelection.length == 1 &&
+                  res.data.errorCode == 1
+                ) {
+                  this.dialogFormVisible2 = false;
+                  this.$message({ type: "success", message: "提交成功" });
+                  this.init();
+                } else {
+                  if (res.status === 200 && res.data.errorMessage) {
+                    this.dialogFormVisible2 = false;
+                    this.$message({
+                      type: "WAITING",
+                      message: res.data.errorMessage
+                    });
+                    this.init();
+                  }
+                }
+              });
+          });
+
+        break;
+      
       }
     },
     confirm(formName) {

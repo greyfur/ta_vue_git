@@ -199,6 +199,7 @@
           <el-table-column label="操作" width="140">
             <template slot-scope="scope">
               <el-button @click="onOpenSICS(scope.row,'rmId')" v-if="$route.query.tag === 'payClose' || $route.query.tag === 'payment' || $route.query.tag === 'instancyPay' || $route.query.tag === 'partialDone'" type="text" size="small">Reverse</el-button>
+              <el-button @click="onOpenSICS(scope.row,'rmId')"  type="text" size="small">打开SICS</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -1771,6 +1772,7 @@ export default {
         } else{
           this.SgData = res.data.worksheetsgDOlist;
           this.RMData = res.data.remitDOlist;
+          // this.dataBaseSG();
         }
       })
     },

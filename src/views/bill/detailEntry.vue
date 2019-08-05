@@ -14,9 +14,9 @@
         <!-- 签回 -->
         <div class="btn" v-if="$route.query.tag === 'billSignBack'">
           <el-button size="small" @click="onReverse" plain>Reverse</el-button>
-          <el-button size="small" @click="mailSend(1)" plain>邮件通知</el-button>,
+          <el-button size="small" @click="mailSend(1)" plain>邮件通知</el-button>
           <el-button size="small" plain @click="submit(6,'签回提交')">流程提交</el-button>
-          <!-- <el-button size="small" plain @click="submit(7)">标记签回</el-button> -->
+          <el-button size="small" plain @click="submit(7)">标记签回</el-button>
         </div>
         <!-- 录入 -->
         <div class="btn" v-if="$route.query.tag === 'billEntry'">
@@ -1207,13 +1207,14 @@ export default {
             //   此处assign 也需要录入人
             this.$http
               .post(
-                "api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
+                "api/worksheet/wSEntry/update",
                 {
                   processId: this.chooseRow.processId,
-                  procInstId: this.chooseRow.processInstId,
-                  assignee: this.chooseRow.entryOperator,
-                  type: "SIGNBACK",
-                  actOperator: this.chooseRow.curOperator
+                  hasRecheckFlag:'1',
+                  // procInstId: this.chooseRow.processInstId,
+                  // assignee: this.chooseRow.entryOperator,
+                  // type: "SIGNBACK",
+                  // actOperator: this.chooseRow.curOperator,
                 }
               )
               .then(res => {
