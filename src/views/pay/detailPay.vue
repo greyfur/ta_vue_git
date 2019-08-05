@@ -481,7 +481,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="Base Company" prop="baseCompany">
-          <el-select v-model="formLabelAlign.baseCompany" placeholder="请选择" @change="baseCompanyChange">
+          <el-select v-model="formLabelAlign.baseCompany" placeholder="请选择" @change="bankCurrencyChange">
             <el-option v-for="item in baseCompanyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
@@ -491,18 +491,18 @@
           </el-select>
         </el-form-item>
         <el-form-item label="收款人" prop="brokerModel">
-          <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择">
+          <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择" @change="recepitBankList">
             <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
               <span style="float:left">{{ item.codecode }}</span>
               <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
             </el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="收款账户" prop="partnerBankAccount">
+        <el-form-item label="收款账户" prop="partnerBankAccount">
           <el-select v-model="formLabelAlign.partnerBankAccount" placeholder="请选择">
-            <el-option v-for="(item,i) in " :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="i"></el-option>
+            <el-option v-for="(item,i) in recepitList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="item.objectId"></el-option>
           </el-select>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="付款账户" prop="bankAccount1">
           <el-select v-model="formLabelAlign.bankAccount1" placeholder="请选择">
             <el-option v-for="(item,i) in BankAccountList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="i"></el-option>
@@ -645,9 +645,10 @@
 <script>
 export default {
   name: 'detailPay',
-  
+
   data() {
       return {
+        recepitList:[],
         nameList:{},
         searchFlag1:true,
         searchFlag2:true,
@@ -732,7 +733,7 @@ export default {
           rmStatusName:'',
           processId:'',
           paymentType:'',
-          partnerBankAccount:'048016192B5F11E789B4FB9A24D8DF5C',
+          partnerBankAccount:'',
           paymentTypeName:'',
           bankCurrency:'CNY',
           bankAmount:'',
@@ -952,11 +953,6 @@ export default {
       el['b'] = this.row[el['c']];
       if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
     })
-    // setTimeout(()=>{
-    //   console.log(this.filterCurrencyRateList('CNY','iii'),'yyyyyy');
-    // },1000)
-    // console.log(this.$refs.www,'www');
-    // console.log(document.querySelectorAll('arrow'),'arrow');
   },
   methods: {
     urgencyPay(){
@@ -1042,7 +1038,7 @@ export default {
       this.rmWriteBack(); 
       this.dialogFormVisible = true;
       this.bankCurrencyChange();
-      
+      this.recepitBankList();
     },
     onOpenSICS(row,id){
       if(id == 'rmId'){
@@ -1789,7 +1785,6 @@ export default {
           }
         })
         }
-      console.log(this.row.rmChargesCurrency,'process222');
       this.formLabelAlign.businessPartnerRef = this.row.processId;
       this.formLabelAlign.bankCurrency = this.row.rmCurrency;
       this.formLabelAlign.bankAmount = this.row.rmAmount;
@@ -1805,6 +1800,18 @@ export default {
       }
       
       
+    },
+    recepitBankList(){
+      // this.AllBankAccountList
+      if(this.formLabelAlign.brokerModel || this.formLabelAlign.brokerModel==0){
+        this.recepitList = this.AllBankAccountList.filter(el=>{ return el.bpCode == this.brokerList[this.formLabelAlign.brokerModel]['codecode']});
+        console.log(this.recepitList,'this.recepitList');
+        if(!this.recepitList || !this.recepitList.length){
+          this.$message.error('选择的收款人无匹配'); 
+          this.recepitList = [];
+          this.formLabelAlign.partnerBankAccount = null;
+        }
+      }
     },
     bankCurrencyChange(){   //  获取银行账户     bankCurrency 币制
       this.baseCompanyChange();

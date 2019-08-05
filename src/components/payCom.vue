@@ -42,7 +42,7 @@
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
-      <el-table-column prop="rmSettleCompanyCode" width="120" label="结付公司"></el-table-column>
+      <el-table-column prop="rmSettleCompanyName" width="120" label="结付公司"></el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
       <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>

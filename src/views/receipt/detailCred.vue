@@ -749,7 +749,7 @@
           <el-select
             v-model="formLabelAlign.baseCompany"
             placeholder="请选择"
-            @change="baseCompanyChange"
+            @change="bankCurrencyChange"
           >
             <el-option
               v-for="item in baseCompanyList"

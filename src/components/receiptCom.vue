@@ -90,7 +90,7 @@
     >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="processId" label="ProcessID" width="120"></el-table-column>
-      <el-table-column prop="rmSettleCompanyCode" width="110" label="结付公司"></el-table-column>
+      <el-table-column prop="rmSettleCompanyName" width="110" label="结付公司"></el-table-column>
       <el-table-column width="120" label="汇款人名称">
         <template slot-scope="scope">
           <el-tooltip
@@ -160,7 +160,7 @@
           >{{scope.row.processId}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="rmSettleCompanyCode" width="110" label="结付公司"></el-table-column>
+      <el-table-column prop="rmSettleCompanyName" width="110" label="结付公司"></el-table-column>
       <el-table-column width="120" label="汇款人名称">
         <template slot-scope="scope">
           <el-tooltip
