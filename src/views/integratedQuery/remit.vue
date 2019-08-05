@@ -115,10 +115,10 @@
           <el-tooltip
             class="item"
             effect="dark"
-            :content="scope.row.partnerName"
+            :content="scope.row.payerName"
             placement="top-start"
           >
-            <span class="abbreviate">{{scope.row.partnerName}}</span>
+            <span class="abbreviate">{{scope.row.payerName}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -298,7 +298,7 @@ export default {
         {
           a: "汇款人名称",
           b: "",
-          c: "rmSettleCompanyName"
+          c: "payerName"
         },
         {
           a: "币制",
