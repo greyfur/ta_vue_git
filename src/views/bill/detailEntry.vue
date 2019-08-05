@@ -1,4 +1,4 @@
-<template>
+<template> 
   <div class="detailEntry">
     <!-- <div class="goBack" v-show="false"> -->
     <router-link
@@ -21,6 +21,7 @@
         <!-- 录入 -->
         <div class="btn" v-if="$route.query.tag === 'billEntry'">
           <!-- <el-button size="small" :disabled="isHover" plain @click="onSics('录入')">账单回写</el-button> -->
+          <!-- <el-button type="primary" :disabled="isHover" @click="openBPSICS" plain>打开BPSICS</el-button> -->
           <el-button size="small" :disabled="isHover" @click="submit(4)" plain>置废</el-button>
           <el-button size="small" :disabled="isHover" @click="submit(1,'录入指派')" plain>任务指派</el-button>
           <el-button
@@ -787,6 +788,23 @@ export default {
     });
   },
   methods: {
+    openBPSICS() {
+      if (!this.chooseRow.rmSettleCompanyCode) {
+        this.$message({
+          type: "error",
+          message: "process中rmSettleCompanyCode无值，打不开"
+        });
+        return false;
+      }
+      this.$http
+        .post("api/sics/liveDesktop/openBpLedger", {
+          modifiedBy: this.$store.state.userName,
+          bpId: this.chooseRow.rmSettleCompanyCode
+        })
+        .then(res => {
+          console.log(res, "打开SICS");
+        });
+    },
     addRemark(row){
       this.title = '添加意见';
       this.dialogState = 8;
