@@ -193,7 +193,7 @@
               </el-table-column>
               <el-table-column prop="valueDate" label="起息日" width="100"></el-table-column>
               <el-table-column prop="dueDate" label="到期日" width="100"></el-table-column>
-              <el-table-column label="结付公司" width="260">
+              <el-table-column label="结付公司" width="140">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"

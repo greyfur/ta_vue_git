@@ -42,7 +42,13 @@
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
-      <el-table-column prop="rmSettleCompanyName" width="260" label="结付公司"></el-table-column>
+      <el-table-column width="140" label="结付公司">
+          <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.processName" placement="top-start">
+            <span class="abbreviate">{{scope.row.rmSettleCompanyName}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
       <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
