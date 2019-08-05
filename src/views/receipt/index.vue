@@ -70,9 +70,11 @@ import {computeSidebar} from '@/assets/js/util.js'
 <style>
 .receipt{
   margin-left: 256px;
+  height: 100%;
 }
 .left-content{
   margin-left: 20px;
+  height: 100%;
 }
 .el-menu-sidebar {
   position: fixed;

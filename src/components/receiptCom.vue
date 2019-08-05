@@ -1,4 +1,5 @@
 <template>
+<div class="receiptComs" ref="receiptComs">
   <div class="receiptCom">
     <div class="searchNew">
       <div class="titleSearch" @click="searchFlag = !searchFlag">
@@ -191,7 +192,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
-      <el-table-column prop="curOperator" width="110" label="操作员"></el-table-column>
+      <el-table-column prop="curOperator" width="120" label="操作员"></el-table-column>
       <el-table-column width="150" label="原收款公司名称">
         <template slot-scope="scope">
           <el-tooltip
@@ -529,6 +530,7 @@
       </div>
     </el-dialog>
   </div>
+  </div>
 </template>
 
 <script>
@@ -742,6 +744,13 @@ export default {
     }
   },
   mounted() {
+      console.log(this.$refs.receiptComs)
+      this.$refs.receiptComs.onscroll=function(){
+        console.log(this.scrollTop)
+        if(this.scrollTop>=60){
+          this.$refs.receiptComs.styleText=''
+        }
+      }
     this.mustData.actOperator = this.$store.state.userName;
     this.formLabelAlign.modifiedBy = this.$store.state.userName;
     setTimeout(() => {
@@ -1273,6 +1282,13 @@ export default {
 </script>
 
 <style scoped>
+.receiptComs{
+  height: 650px;
+  overflow-y: auto;
+  /* position: fixed;
+  left: 256px;
+  top: 0; */
+}
 .receiptCom {
   padding-right: 30px;
 }

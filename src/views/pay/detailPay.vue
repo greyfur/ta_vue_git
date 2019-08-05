@@ -98,9 +98,8 @@
           </div>
         </div>-->
 
-        <ul class="step">
+        <ul class="step" v-if="$route.query.tag === 'payVerification'">
           <li v-for="(item,index) in strArrCre" :key="item+index">
-            <!-- :class="1===index?'status pending':'status success'" -->
             <span class="status" ref="status">{{index+1}}</span>
             <span class="drc">{{item.wait}}</span>
           </li>
@@ -1006,19 +1005,19 @@
           <el-form-item>
             <div class="wrapInput" v-for="(item,i) in makeDocNum" :key="i">
               <span class="bizhi">{{makeDocListEctype.yuanType[i]}}</span>：&nbsp;
-              <input
+              <el-input
                 class="singleInput"
                 type="number"
                 v-model="makeDocListEctype.yuanNum[i]"
                 placeholder="请输入金额"
-              >
+              ></el-input>
               <span class="huilv">汇率：&nbsp;</span>
-              <input
+              <el-input
                 class="huilvInput"
                 type="number"
                 v-model="makeDocListEctype.yuanHuiLv[i]"
                 placeholder="请输入汇率"
-              >
+              ></el-input>
             </div>
           </el-form-item>
         </el-form-item>
@@ -1465,8 +1464,6 @@ export default {
         })
         .then(res => {
           let oldStrArrCreInd = this.row.approvalLevel;
-          console.log(oldStrArrCreInd);
-          console.log(drcArr);
           // let oldStrArrCreInd = this.strArrCreInd;
           // this.strArrCreInd++;
           if (this.row.approvalLevel > res.data) {
@@ -1478,7 +1475,6 @@ export default {
                 if (oldStrArrCreInd <= 0) {
                   clearInterval(timer);
                 }
-                console.log(oldStrArrCreInd, "5555555555555");
                 drcArr[oldStrArrCreInd].className = "drc success";
                 statusArr[oldStrArrCreInd].className = "status success";
                 statusArr[oldStrArrCreInd].innerHTML = "✔";
@@ -2656,6 +2652,8 @@ export default {
         this.dialogFormVisible2 = true;
       } else {
         if (tag == 2) {
+          
+          
           // 是操作页面,2为点击确定---------------------生成审批文档提交
           if (
             this.makeDocListEctype.cedentModel &&
@@ -2980,11 +2978,14 @@ li.detail-item {
   background-color: #f9f9f9;
   margin-top: 3px;
 }
-.wrapInput input {
+.wrapInput >.singleInput{
   border: none;
-  height: 100%;
+  height: 37px;
   outline: none;
   margin-right: 20px;
+}
+.wrapInput >.singleInput .el-input__inner{
+  height: 100%;
 }
 .smallHand {
   cursor: pointer;
