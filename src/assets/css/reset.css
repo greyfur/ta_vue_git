@@ -174,3 +174,16 @@ input::-webkit-inner-spin-button {
 }
 .stateRed{ background-color: #F5222D }
 .stateGreen{ background-color: #52C41A }
+/* .el-step__icon.is-text{
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  color: #005C8D;
+  border: 1px solid #005C8D;
+}
+.el-step__line{
+  display: none;
+}
+.el-step__title.is-success{
+  color: #000000;
+} */

@@ -2,7 +2,10 @@
   <div class="receiptCom">
     <div class="searchNew">
       <div class="titleSearch" @click="searchFlag = !searchFlag">
-        <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询
+        <i
+          style="margin-right:8px;"
+          :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"
+        ></i>查询
       </div>
       <el-collapse-transition>
       <div v-show="searchFlag">
@@ -125,7 +128,13 @@
       <el-table-column prop="rmOriSettleCompanyName" width="150" label="原收款公司名称"></el-table-column>
       <el-table-column fixed="right" label="操作" width="170">
         <template slot-scope="scope">
-          <el-dropdown>
+            <el-dropdown>
+                <span @click.stop="handleClick(12,scope.row)">附件查看</span>
+              </el-dropdown>
+              <el-dropdown>
+                <span @click.stop="handleClick(11,scope.row)">踪迹</span>
+              </el-dropdown>
+          <!-- <el-dropdown>
             <span class="el-dropdown-link">
               更多
               <i style="margin-left:8px;" class="el-icon-arrow-down"></i>
@@ -138,7 +147,7 @@
                 <span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
               </el-dropdown-item>
             </el-dropdown-menu>
-          </el-dropdown>
+          </el-dropdown> -->
         </template>
       </el-table-column>
     </el-table>
@@ -198,21 +207,38 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="80">
+      <el-table-column fixed="right" label="操作" :width="urlName !== 'financialCreat'?100:180" >
         <template slot-scope="scope">
           <el-dropdown>
+            <span
+              v-show="pendingFlag || urlName === 'financialCreat'"
+              @click.stop="handleClick(6,scope.row)"
+              style="margin-right:8px;cursor: pointer;"
+            >编辑</span>
+          </el-dropdown>
+          <el-dropdown>
+            <span
+              v-show="urlName === 'financialCreat'"
+              @click.stop="handleClick(10,scope.row)"
+              style="margin-right:8px;cursor: pointer;"
+            >分配</span>
+          </el-dropdown>
+          <el-dropdown>
+            <span
+              v-show="urlName === 'sortOperation'"
+              @click.stop="handleClick(3,scope.row)"
+              style="margin-right:8px;cursor: pointer;"
+            >分配</span>
+          </el-dropdown>
+          <el-dropdown v-if="urlName !== 'financialCreat'">
+            <span @click.stop="handleClick(11,scope.row)">踪迹</span>
+          </el-dropdown>
+          <el-dropdown v-else>
             <span class="el-dropdown-link">
               更多
               <i style="margin-left:8px;" class="el-icon-arrow-down"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>
-                <span
-                  v-show="pendingFlag || urlName === 'financialCreat'"
-                  @click.stop="handleClick(6,scope.row)"
-                  class="blueColor"
-                >编辑</span>
-              </el-dropdown-item>
               <el-dropdown-item>
                 <span
                   v-show="urlName === 'financialCreat'"
@@ -222,13 +248,6 @@
               </el-dropdown-item>
               <el-dropdown-item>
                 <span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
-              </el-dropdown-item>
-              <el-dropdown-item>
-                <span
-                  v-show="urlName === 'financialCreat'"
-                  @click.stop="handleClick(10,scope.row)"
-                  class="blueColor"
-                >流程提交</span>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -410,7 +429,13 @@
         </el-form-item>
         <el-form-item>
           <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-          <el-button size="small" type="primary" plain @click="confirm('formLabelAlign')" style="padding:0 16px;">确 定</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            plain
+            @click="confirm('formLabelAlign')"
+            style="padding:0 16px;"
+          >确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -694,7 +719,7 @@ export default {
       cedentList: [],
       picture: "",
       singlePId: "",
-      admFlag:false,
+      admFlag: false,
       rules: {
         baseCompany: [
           { required: true, message: "请选择Base Company", trigger: "blur" }

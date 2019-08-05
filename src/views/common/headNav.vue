@@ -1,7 +1,7 @@
 <template>
   <div class="headNav">
-    <div style="position: fixed;left:0;top:0;">
-      <div class="vertical" :class="{'widthNum':fold}">
+    <div class="verticalParent">
+      <div class="vertical" :class="{'widthNum':fold}" ref="vertical">
         <div class="logo">
           <img :class="{'marginImg':fold}" src="@/assets/img/ball.png" alt="">
           <span class="word" v-show="!fold">
@@ -154,6 +154,7 @@ import {computeName} from '@/assets/js/util.js'
       }
     },
     mounted(){
+      // this.$refs.vertical.style.height=window.innerHeight;
       if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
         this.fold = true;
       } else{ this.fold = false; }
@@ -249,6 +250,8 @@ import {computeName} from '@/assets/js/util.js'
   }
   .el-menu{
     border-right:none;
+    /* height: 508px;
+    overflow-y: auto; */
   }
   .logo .line{
     height: 30px;

@@ -119,7 +119,6 @@
       :total="mustData.total">      
     </el-pagination>
     <!-- 弹窗 -->
-
     <el-dialog title="文档预览" width="fit-content" :visible.sync="dialogFormVisible1" :close-on-click-modal="modal">
       <div class="browseDoc" v-show="title!='踪迹'" style="width:600px">
         <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
