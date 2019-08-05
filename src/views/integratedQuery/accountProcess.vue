@@ -52,7 +52,7 @@
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
-      <el-table-column label="结付公司" width="140">
+      <el-table-column label="结付公司" width="260">
         <template slot-scope="scope">
           <el-tooltip
             class="item"

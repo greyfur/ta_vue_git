@@ -60,13 +60,15 @@
             <el-button size="small" plain @click="submite(2,'任务指派','审批')">任务指派</el-button>
           </div>
         </div>
-        <div class="btn approvalDoneBtn" v-if="$route.query.tag === 'payVerification'">
-          <div class="approvalDone">
-            <span class="approvalWrap" v-for="item in strArr" :key="item">
-              <span class="word">{{item}}</span><span class="arrow">→</span>
-            </span>
-          </div>
-        </div>
+
+        <!-- step步骤条 -->
+        <ul class="step" v-if="$route.query.tag === 'payVerification'">
+          <li v-for="(item,index) in strArr" :key="item+index">
+            <span class="status" ref="status">{{index+1}}</span>
+            <span class="drc">{{item.wait}}</span>
+          </li>
+        </ul>
+
         <!-- 详情 -->
         <div class="searchNew">
           <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
@@ -601,10 +603,22 @@
           </el-form-item>
           <el-form-item>
             <div class="wrapInput" v-for="(item,i) in makeDocNum" :key='i'>
-              <span class="bizhi">{{makeDocListEctype.yuanType[i]}}</span>：&nbsp;
-              <input class="singleInput" type='number' v-model="makeDocListEctype.yuanNum[i]" placeholder="请输入金额"/>
-              <span class="huilv">汇率：&nbsp;</span>
-              <input class="huilvInput" type='number' v-model="makeDocListEctype.yuanHuiLv[i]" placeholder="请输入汇率"/>
+              <span class="bizhi">{{makeDocListEctype.yuanType[i]}}：</span>&nbsp;
+              <el-input
+                class="singleInput"
+                type="number"
+                v-model="makeDocListEctype.yuanNum[i]"
+                placeholder="请输入金额"
+                size="small"
+              ></el-input>
+              <span class="huilv">&nbsp;汇率：&nbsp;</span>
+              <el-input
+                class="huilvInput"
+                type="number"
+                v-model="makeDocListEctype.yuanHuiLv[i]"
+                placeholder="请输入汇率"
+                size="small"
+              ></el-input>
             </div>
           </el-form-item>
         </el-form-item>
@@ -906,13 +920,23 @@ export default {
     console.log(this.row.approvalLevel,'this.row.approvalLevel');
     this.mustData.actOperator = this.$store.state.userName;
     let strArr = [];
-    if(this.row.approvalLevel != null || this.row.approvalLevel != 'undefined'){
-      for(let i = 0; i<(this.row.approvalLevel+1); i++){
-        strArr.push(`${i+1}级审批完成`);
-      }
-    }
-    strArr[strArr.length-1] = `待${strArr[strArr.length-1].substr(strArr[strArr.length-3],4)}`
-    this.strArr = strArr;
+    this.$http
+      .post("api/pay/activitiForPay/getAllLevel", {
+        processId: this.row.processId
+      })
+      .then(res => {
+        if (res.data > 0) {
+          for (let i = 0; i < res.data; i++) {
+            strArr.push({
+              wait: `待${i + 1}级审批`,
+              done: `${i + 1}级审批完成`
+            });
+          }
+        } else {
+          return;
+        }
+        this.strArr = strArr;
+      });
 
     setTimeout(()=>{
       // 分出人+经济人
@@ -955,7 +979,43 @@ export default {
       if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
     })
   },
+  updated(){
+    this.nextstep()
+  },
   methods: {
+      nextstep() {
+      let drcArr = [...document.querySelectorAll(".drc")];
+      let statusArr = [...document.querySelectorAll(".status")];
+      this.$http
+        .post("api/pay/activitiForPay/getAllLevel", {
+          processId: this.row.processId
+        })
+        .then(res => {
+          let oldStrArrCreInd = this.row.approvalLevel;
+          if (this.row.approvalLevel > res.data) {
+            this.row.approvalLevel = res.data;
+          } else {
+            if (oldStrArrCreInd < this.row.approvalLevel + 1) {
+              let timer = setInterval(function() {
+                oldStrArrCreInd--;
+                if (oldStrArrCreInd <= 0) {
+                  clearInterval(timer);
+                }
+                drcArr[oldStrArrCreInd].className = "drc success";
+                statusArr[oldStrArrCreInd].className = "status success";
+                statusArr[oldStrArrCreInd].innerHTML = "✔";
+                drcArr[oldStrArrCreInd].innerHTML = `${oldStrArrCreInd +
+                  1}级审批完成`;
+              }, 0);
+            }
+            if (
+              !drcArr[oldStrArrCreInd].classList.contains("drc success")
+            ) {
+              drcArr[this.row.approvalLevel].className = "drc wait";
+              statusArr[this.row.approvalLevel].className = "status pending";
+            }
+          }
+        })},
     urgencyPay(){
       this.$confirm('是否紧急付款？', '提示', {
         confirmButtonText: '确定',
@@ -982,16 +1042,38 @@ export default {
     },
     openSGSICS(row){
       this.$http
-          .post("api/sics/liveDesktop/openWorksheet", {
-            modifiedBy: this.$store.state.userName,
-            worksheetId: row['sgNum']
-          })
-          .then(res => {
-            console.log(res, "打开SICS");
-            // if(res.status === 200 && res.data.rows){
-            //   this.SICSData = res.data.rows;
-            // }
-          });
+        .post("api/pay/activitiForPay/getAllLevel", {
+          processId: this.row.processId
+        })
+        .then(res => {
+          let oldStrArrCreInd = this.row.approvalLevel;
+          // let oldStrArrCreInd = this.strArrCreInd;
+          // this.strArrCreInd++;
+          if (this.row.approvalLevel > res.data) {
+            this.row.approvalLevel = res.data;
+          } else {
+            if (oldStrArrCreInd < this.row.approvalLevel + 1) {
+              let timer = setInterval(function() {
+                oldStrArrCreInd--;
+                if (oldStrArrCreInd <= 0) {
+                  clearInterval(timer);
+                }
+                drcArr[oldStrArrCreInd].className = "drc success";
+                statusArr[oldStrArrCreInd].className = "status success";
+                statusArr[oldStrArrCreInd].innerHTML = "✔";
+                drcArr[oldStrArrCreInd].innerHTML = `${oldStrArrCreInd +
+                  1}级审批完成`;
+              }, 0);
+            }
+            if (
+              drcArr[oldStrArrCreInd].classList.contains("drc success") ===
+              false
+            ) {
+              drcArr[this.row.approvalLevel].className = "drc wait";
+              statusArr[this.row.approvalLevel].className = "status pending";
+            }
+          }
+        });
     },
     copy(id){
       let Url2=document.getElementById(id).innerText;
@@ -1503,6 +1585,7 @@ export default {
               approvalLevel:this.row.approvalLevel,
               })
             .then(res =>{
+              console.log(res)
               if(res.status === 200 && res.data.errorCode == 1){
                 this.dialogFormVisible3 = false;
                 this.$router.push({name:this.$route.query.tag}); 
@@ -1965,11 +2048,23 @@ export default {
           })
        
         this.dialogFormVisible2 = true;
-      } 
-      else{
-        if(tag == 2){  // 是操作页面,2为点击确定---------------------生成审批文档提交
-          if(this.makeDocListEctype.cedentModel && this.makeDocListEctype.cedentModel.length){
-            this.makeDocList.rmCedentName = this.makeDocListEctype.cedentModel.join('/');
+      } else {
+        if (tag == 2) {
+          console.log(document.querySelector('.singleInput input').value>0)
+            // if(document.querySelector('.singleInput input').value.length>0){
+           
+            // }else{
+            //      alert(2)
+            // }
+          
+          // 是操作页面,2为点击确定---------------------生成审批文档提交
+          if (
+            this.makeDocListEctype.cedentModel &&
+            this.makeDocListEctype.cedentModel.length
+          ) {
+            this.makeDocList.rmCedentName = this.makeDocListEctype.cedentModel.join(
+              "/"
+            );
           }
           if(this.makeDocListEctype.shoukuanMode != null){
             this.makeDocList = Object.assign({},this.bscBankList[this.makeDocListEctype.shoukuanMode],this.makeDocList)
@@ -2262,12 +2357,26 @@ li.detail-item{
   background-color: #f9f9f9;
   margin-top: 3px;
 }
-.wrapInput input{
+.wrapInput span{
+  height: 37px;
+}
+.wrapInput .huilvInput,.wrapInput .singleInput{
+  flex: 1;
+  height: 37px;
+}
+.wrapInput .huilvInput input.el-input__inner,.wrapInput .singleInput  input.el-input__inner{
   border: none;
-  height: 100%;
+  height: 37px;
+}
+/* .wrapInput >.singleInput{
+  border: none;
+  height: 37px;
   outline: none;
   margin-right: 20px;
 }
+.wrapInput >.singleInput>.el-input__inner{
+  height: 37px !important;
+} */
 .smallHand {
   cursor: pointer;
   color:#409EFF;
@@ -2277,5 +2386,37 @@ li.detail-item{
   align-items: center;
   justify-content: space-between;
 }
-
+.step {
+  display: flex;
+}
+.step .drc {
+  margin-right: 16px;
+  color: rgba(0, 0, 0, 0.45);
+}
+.step .drc.success {
+  color: rgba(0, 0, 0, 0.65);
+}
+.step .drc.wait {
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: bold;
+}
+.step .status {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  text-align: center;
+  line-height: 18px;
+  border-radius: 50%;
+  color: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 12px;
+}
+.step .status.pending {
+  background: rgba(0, 92, 141, 1);
+  color: #fff;
+}
+.step .status.success {
+  border: 1px solid #005c8d;
+  color: #005c8d;
+}
 </style>

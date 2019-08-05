@@ -40,7 +40,7 @@
           <span :class="{'smallHand':urlName !== 'sortOperation'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>
       </el-table-column> 
-      <el-table-column label="流程名称">
+      <el-table-column label="流程名称" width="350">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.processName" placement="top-start">
             <span class="abbreviate">{{scope.row.processName}}</span>

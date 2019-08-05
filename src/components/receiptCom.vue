@@ -1,4 +1,5 @@
 <template>
+<div class="receiptComs" ref="receiptComs">
   <div class="receiptCom">
     <div class="searchNew">
       <div class="titleSearch" @click="searchFlag = !searchFlag">
@@ -92,7 +93,7 @@
       @row-click="goDetail">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="processId" label="ProcessID" width="120"></el-table-column>
-      <el-table-column prop="rmSettleCompanyName" width="110" label="结付公司"></el-table-column>
+      <el-table-column prop="rmSettleCompanyName" width="260" label="结付公司"></el-table-column>
       <el-table-column width="120" label="汇款人名称">
         <template slot-scope="scope">
           <el-tooltip
@@ -168,7 +169,7 @@
           >{{scope.row.processId}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="rmSettleCompanyName" width="110" label="结付公司"></el-table-column>
+      <el-table-column prop="rmSettleCompanyName" width="260" label="结付公司"></el-table-column>
       <el-table-column width="120" label="汇款人名称">
         <template slot-scope="scope">
           <el-tooltip
@@ -198,6 +199,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
+      <el-table-column prop="curOperator" width="120" label="操作员"></el-table-column>
       <el-table-column width="110" label="任务来源">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
@@ -543,6 +545,7 @@
       </div>
     </el-dialog>
   </div>
+  </div>
 </template>
 
 <script>
@@ -758,6 +761,13 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
+      console.log(this.$refs.receiptComs)
+      this.$refs.receiptComs.onscroll=function(){
+        console.log(this.scrollTop)
+        if(this.scrollTop>=60){
+          this.$refs.receiptComs.styleText=''
+        }
+      }
     this.mustData.actOperator = this.$store.state.userName;
     this.formLabelAlign.modifiedBy = this.$store.state.userName;
     setTimeout(() => {
@@ -1347,6 +1357,13 @@ export default {
 </script>
 
 <style scoped>
+.receiptComs{
+  height: 650px;
+  overflow-y: auto;
+  /* position: fixed;
+  left: 256px;
+  top: 0; */
+}
 .receiptCom {
   padding-right: 30px;
 }

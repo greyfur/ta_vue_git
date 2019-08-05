@@ -42,16 +42,18 @@
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
-      <el-table-column prop="rmSettleCompanyName" width="120" label="结付公司"></el-table-column>
+      <el-table-column prop="rmSettleCompanyName" width="260" label="结付公司"></el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
       <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
       <el-table-column prop="rmAmount" label="汇款金额" width="120"></el-table-column>
+      <el-table-column prop="curOperator" label="操作员" width="120"></el-table-column>
       <el-table-column label="任务来源" width="110">
         <template slot-scope="scope">
             <span>{{nameList[scope.row.curOperator]}}</span>
           </template>
       </el-table-column>
+
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->
       <!-- <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column> -->
