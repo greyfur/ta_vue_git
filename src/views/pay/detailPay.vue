@@ -645,6 +645,7 @@
 <script>
 export default {
   name: 'detailPay',
+  
   data() {
       return {
         nameList:{},
