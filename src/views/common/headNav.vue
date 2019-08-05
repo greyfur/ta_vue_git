@@ -115,7 +115,7 @@ import {computeName} from '@/assets/js/util.js'
 
       // 获取银行账户列表
       if(!sessionStorage.getItem('AllBankAccountList')){
-        this.$http.post('api/sics/basis/getBankAccountList',{'bpNames':['China Re Group++','China Re P&C']}).then(res =>{
+        this.$http.post('api/sics/basis/getReceiptBankAccountList',{}).then(res =>{
           console.log(res,'获取银行账户列表');
           if(res.status === 200){
             sessionStorage.setItem('AllBankAccountList',JSON.stringify(res.data));

@@ -12,8 +12,8 @@
             <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processId"></el-input>
           </el-col>
           <el-col :span="8">
-            <span class="slable">结付公司代码</span>
-            <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司代码">
+            <span class="slable">结付公司</span>
+            <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
               <el-option
                 v-for="(item,index) in cedentList"
                 :key="index"
@@ -87,7 +87,7 @@
     >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="processId" label="ProcessID" width="120"></el-table-column>
-      <el-table-column prop="rmSettleCompanyCode" width="110" label="结付公司代码"></el-table-column>
+      <el-table-column prop="rmSettleCompanyCode" width="110" label="结付公司"></el-table-column>
       <el-table-column width="120" label="汇款人名称">
         <template slot-scope="scope">
           <el-tooltip
@@ -117,7 +117,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
-      <el-table-column prop="curOperator" width="110" label="操作员"></el-table-column>
+      <el-table-column width="110" label="任务来源">
+        <template slot-scope="scope">
+          <span>{{nameList[scope.row.curOperator]}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="rmOriSettleCompanyName" width="150" label="原收款公司名称"></el-table-column>
       <el-table-column fixed="right" label="操作" width="170">
         <template slot-scope="scope">
@@ -147,7 +151,7 @@
           >{{scope.row.processId}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="rmSettleCompanyCode" width="110" label="结付公司代码"></el-table-column>
+      <el-table-column prop="rmSettleCompanyCode" width="110" label="结付公司"></el-table-column>
       <el-table-column width="120" label="汇款人名称">
         <template slot-scope="scope">
           <el-tooltip
@@ -177,7 +181,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
-      <el-table-column prop="curOperator" width="110" label="操作员"></el-table-column>
+      <el-table-column width="110" label="任务来源">
+        <template slot-scope="scope">
+          <span>{{nameList[scope.row.curOperator]}}</span>
+        </template>
+      </el-table-column>
       <el-table-column width="150" label="原收款公司名称">
         <template slot-scope="scope">
           <el-tooltip
@@ -244,8 +252,8 @@
         :rules="rules"
         ref="formLabelAlign"
       >
-        <el-form-item label="结付公司代码">
-          <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司代码">
+        <el-form-item label="结付公司">
+          <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
             <el-option
               v-for="(item,index) in cedentList"
               :key="index"
@@ -408,7 +416,7 @@
     </el-dialog>
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
       <el-form label-width="140px" v-show="title==='流程提交'">
-        <el-form-item label="选择下一任务处理人">
+        <el-form-item label="选择处理人">
           <el-select clearable v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
@@ -444,7 +452,11 @@
       <el-table :data="track" border="" style="width: 100%" v-show="title==='踪迹'">
         <el-table-column prop="processId" label="流程编号" width="140"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
-        <el-table-column prop="actOperator" label="任务来源"></el-table-column>
+        <el-table-column label="任务来源">
+          <template slot-scope="scope">
+            <span>{{nameList[scope.row.actOperator]}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="actTime" label="操作时间"></el-table-column>
         <el-table-column prop="reason" label="操作原因"></el-table-column>
         <el-table-column prop="remark" label="操作备注"></el-table-column>
@@ -466,8 +478,8 @@
         <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
         <el-table-column label="任务来源" width="140">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
-              <span class="abbreviate">{{scope.row.createdBy}}</span>
+            <el-tooltip class="item" effect="dark" :content="nameList[scope.row.createdBy]" placement="top">
+              <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -512,6 +524,7 @@ export default {
   },
   data() {
     return {
+      nameList:{},
       searchFlag: false,
       modal: false,
       tableData: [],
@@ -570,7 +583,7 @@ export default {
           c: "processId"
         },
         {
-          a: "结付公司代码",
+          a: "结付公司",
           b: "",
           c: "rmSettleCompanyCode"
         },
@@ -605,7 +618,7 @@ export default {
           c: "baseCompany"
         },
         {
-          a: "操作员",
+          a: "任务来源",
           b: "",
           c: "modifiedBy"
         },
@@ -710,6 +723,7 @@ export default {
     } else if (this.urlName === "collectiongEnd") {
       this.processStatusList = ["已完结", "REVERSED"];
     }
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
     this.mustData.actOperator = this.$store.state.userName;
@@ -731,20 +745,20 @@ export default {
       this.businessOriginList = JSON.parse(
         sessionStorage.getItem("businessOrigin")
       );
-      // 判断是否是管理员   66
+    }, 1000);
+    // 判断是否是管理员   66
       let admArr = JSON.parse(sessionStorage.getItem('roleIdList'));
       admArr.some(el=>{return el==66;}) ? (this.admFlag = true) : (this.admFlag = false);
       this.init();
-    }, 1000);
   },
   methods: {
     init(tag) {
       // 进首页查询
       let params = null;
-      if(!this.admFlag){ 
-        params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
-       } else{
+      if(this.admFlag || this.urlName === 'financialCreat' || this.urlName === 'taskClaim'){ 
         params = Object.assign({},this.mustData);
+       } else{
+        params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
        }
       delete params.actOperator;
       if (this.urlName === "taskClaim") {
@@ -851,7 +865,7 @@ export default {
           } else {
             this.formLabelAlign.rmReceiptDate = "";
           }
-          // 结付公司代码回显
+          // 结付公司回显
           if (this.chooseRow.rmSettleCompanyCode) {
             this.cedentList.forEach((el, i) => {
               if (el.codecode == this.chooseRow.rmSettleCompanyCode) {
@@ -1069,10 +1083,10 @@ export default {
             this.formLabelAlign.processStatus = this.processStatusCom;
           }
           let params = null;
-          if(this.admFlag){ 
-            params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
-          } else{
+          if(this.admFlag || this.urlName === 'financialCreat' || this.urlName === 'taskClaim'){ 
             params = Object.assign({},this.mustData);
+          } else{
+            params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
           }
           delete params.actOperator;
           this.$http.post("api/receipt/finaCreat/list", params).then(res => {

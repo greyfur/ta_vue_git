@@ -675,7 +675,7 @@
         <el-form-item label="输入悬停原因" v-show="title==='悬停'">
           <el-input type="textarea" :rows="2" placeholder="请输入悬停原因" v-model="pendingReason"></el-input>
         </el-form-item>
-        <el-form-item label="选择下一任务处理人" v-show="putIn=='n'">
+        <el-form-item label="选择处理人" v-show="putIn=='n'">
           <el-select v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
@@ -686,7 +686,7 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          :label="title === '任务指派'?'选择任务指派人':'选择下一任务处理人'"
+          :label="title === '任务指派'?'选择任务指派人':'选择处理人'"
           v-show="title === '任务指派' || putIn=='b'"
         >
           <el-select v-model="assignee" placeholder="请选择">
@@ -747,7 +747,6 @@
         </el-form-item>
         <el-form-item label="Base Company" prop="baseCompany">
           <el-select
-            disabled
             v-model="formLabelAlign.baseCompany"
             placeholder="请选择"
             @change="baseCompanyChange"
@@ -906,8 +905,8 @@
         <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
         <el-table-column label="任务来源" width="140">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
-              <span class="abbreviate">{{scope.row.createdBy}}</span>
+            <el-tooltip class="item" effect="dark" :content="nameList[scope.row.createdBy]" placement="top">
+              <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -967,6 +966,7 @@ export default {
   name: "detailCred",
   data() {
     return {
+      nameList:{},
       searchFlag1: true,
       searchFlag2: true,
       searchFlag3: true,
@@ -982,7 +982,7 @@ export default {
           c: "processId"
         },
         {
-          a: "结付公司代码",
+          a: "结付公司",
           b: "",
           c: "rmSettleCompanyCode"
         },
@@ -1017,7 +1017,7 @@ export default {
           c: "baseCompany"
         },
         {
-          a: "操作员",
+          a: "任务来源",
           b: "",
           c: "modifiedBy"
         },
@@ -1084,7 +1084,7 @@ export default {
         bookingPeriodName: "Month 05",
         bookingPeriodCode: "M05",
         bookingYear: "2019",
-        paymentTypeIndex: "",
+        paymentTypeIndex: "Wire",
         brokerModel: null
       },
       TaxList: [],
@@ -1096,7 +1096,7 @@ export default {
       ],
       paymentTypeList: [
         { n: "Wire", v: "WIRE" },
-        { n: "Void P-wire", v: "VP_WIRE" }
+        { n: "Void P-Wire", v: "VP_WIRE" }
       ],
       businessOriginList: [
         { a: "DOM", b: "RC_DOMESTIC" },
@@ -1240,6 +1240,7 @@ export default {
     }
     this.formLabelAlign.valueDate = new Date().getTime();
     this.formLabelAlign.dueDate = new Date().getTime();
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
     setTimeout(() => {
@@ -1250,7 +1251,8 @@ export default {
       //获取币制
       this.rmCurrencyList = JSON.parse(sessionStorage.getItem("CurrencyList"));
       // 集团产再
-      this.baseCompanyList = JSON.parse(sessionStorage.getItem("baseCompany"));
+      let objbc = JSON.parse(sessionStorage.getItem('baseCompany'));
+      this.baseCompanyList = objbc.filter(el=>{ return el.code != 'Both' });
       // 国际国内
       this.businessOriginList = JSON.parse(
         sessionStorage.getItem("businessOrigin")
@@ -1272,6 +1274,7 @@ export default {
     // 详情
     this.listData.forEach(el => {
       el["b"] = this.row[el["c"]];
+      if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
     });
   },
   methods: {
@@ -1455,7 +1458,7 @@ export default {
     rmWriteBack() {
       // 不能写方法循环遍历，只能手写一点点对字段，有坑
       this.formLabelAlign.processId = this.row.processId;
-      // 带过来的结付公司代码 === 汇款人
+      // 带过来的结付公司 === 汇款人
       if (this.row.rmSettleCompanyCode) {
         this.brokerList.forEach((el, i) => {
           if (el.codecode == this.row.rmSettleCompanyCode) {
@@ -1571,6 +1574,9 @@ export default {
         if (val2) {
           this.formLabelAlign.paymentType = val2.v;
           this.formLabelAlign.paymentTypeName = val2.n;
+        } else{
+          this.formLabelAlign.paymentType = 'WIRE';
+          this.formLabelAlign.paymentTypeName = 'Wire';
         }
         this.formLabelAlign.createdBy = this.$store.state.userName;
         this.$refs[formName].validate((valid) => {

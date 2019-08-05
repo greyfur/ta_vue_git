@@ -15,7 +15,7 @@ router.beforeEach((to, from, next) => {
   //  1.首先判断有没有ticket
   if(window.location.href.indexOf("ticket=") == -1) {
     window.location.href = `http://${cip.loginUrl}:2222/login?service=http://${cip.currentIp}:${cip.currentPort}/indexPage`;
-  } 
+  }  
   else {
     // 2.判断有没有jwttoken
     if(!cookie.get('jwttokenInfo')){
@@ -24,6 +24,8 @@ router.beforeEach((to, from, next) => {
         if(res.data.code == 0) {
           console.log(res.data);
           sessionStorage.setItem('userCName',res.data.userCName);
+          sessionStorage.setItem('nameList',JSON.stringify(res.data.usernameInfo));
+          // store.dispatch('AnameList',JSON.parse(res.data.usernameInfo));
           cookie.set('jwttokenInfo',res.data);
           store.dispatch('AuserName',res.data.userName);
           // 3.获取权限列表

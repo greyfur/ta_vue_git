@@ -102,10 +102,10 @@
                   <el-tooltip
                     class="item"
                     effect="dark"
-                    :content="scope.row.createdBy"
+                    :content="nameList[scope.row.createdBy]"
                     placement="top"
                   >
-                    <span class="abbreviate">{{scope.row.createdBy}}</span>
+                    <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
                   </el-tooltip>
                 </template>
               </el-table-column>
@@ -547,7 +547,7 @@
             v-model="textareaOpinion"
           ></el-input>
         </el-form-item>
-        <el-form-item label="选择下一任务处理人" v-show="title==='流程提交' && $route.query.tag !== 'billEntry'">
+        <el-form-item label="选择处理人" v-show="title==='流程提交' && $route.query.tag !== 'billEntry'">
           <el-select v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
@@ -568,7 +568,7 @@
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName || item.username == chooseRow.entryOperator"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="选择下一任务处理人" v-show="title==='流程提交' && $route.query.tag === 'billEntry'">
+        <el-form-item label="选择处理人" v-show="title==='流程提交' && $route.query.tag === 'billEntry'">
           <el-select v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
@@ -607,6 +607,7 @@ export default {
   name: "detailEntry",
   data() {
     return {
+      nameList:{},
       searchFlag3: true,
       searchFlag2: true,
       searchFlag1: true,
@@ -745,6 +746,7 @@ export default {
   },
   created() {
     sessionStorage.setItem("data", JSON.stringify({}));
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
     // 查询账单详情
@@ -781,6 +783,7 @@ export default {
       } else {
         el["b"] = this.chooseRow[el["c"]];
       }
+      // if(el['a']=='任务来源'){ el["b"] = this.nameList[this.chooseRow[el["c"]]]; }
     });
   },
   methods: {

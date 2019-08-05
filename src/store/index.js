@@ -9,11 +9,13 @@ const store = new Vuex.Store({
     deFineRout:[],
     reLoad:'',
     userName:'',
+    nameList:{},
   },
   mutations:{
     MdeFineRout:(state,data) => {state.deFineRout = data;},
     MreLoad:(state,data) => {state.reLoad = data;},
     MuserName:(state,data) => {state.userName = data;},
+    MnameList:(state,data) => {state.nameList = data;},
   },
   getters:{
     
@@ -27,6 +29,9 @@ const store = new Vuex.Store({
     },
     AuserName({commit},data){
       commit('MuserName',data);
+    },
+    AnameList({commit},data){
+      commit('MnameList',data);
     },
   }
 })
