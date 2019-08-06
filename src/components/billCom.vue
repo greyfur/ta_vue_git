@@ -2,10 +2,7 @@
   <div class="billCom">
     <div class="searchNew">
       <div class="titleSearch" @click="searchFlag = !searchFlag">
-        <i
-          style="margin-right:8px;"
-          :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"
-        ></i>查询
+        <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询
       </div>
       <el-collapse-transition>
         <div v-show="searchFlag">
@@ -220,7 +217,7 @@
           <el-input v-model.trim="billSearch.processId" placeholder="请输入流程编号"></el-input>
         </el-form-item>
         <!--   以上只有查询有 --------->
-        <el-form-item label="任务类型" prop="wsBusinessType">
+        <el-form-item label="任务类型" prop="wsBusinessType" v-show="title==='手工创建' || title==='编辑'">
           <el-select clearable v-model="billSearch.wsBusinessType" placeholder="请选择任务类型">
             <el-option
               v-for="item in YWoptions"
