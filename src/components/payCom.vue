@@ -53,7 +53,6 @@
       <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
       <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
       <el-table-column prop="rmAmount" label="汇款金额" width="120"></el-table-column>
-      <el-table-column prop="curOperator" label="操作员" width="120"></el-table-column>
       <el-table-column label="任务来源" width="110">
         <template slot-scope="scope">
             <span>{{nameList[scope.row.curOperator]}}</span>
