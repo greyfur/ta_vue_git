@@ -944,6 +944,7 @@ export default {
             .then(res => {
               if (res.status === 200) {
                 this.fileData = res.data.bscDocumentVOlist;
+                console.log(this.fileData,11111)
               }
             });
           this.dialogFormVisible = true;
