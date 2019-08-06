@@ -93,10 +93,10 @@
                 </p>            
               </div>
               <el-table stripe :data="fileData" style="width:100%;min-height:350px;max-height:500px;" class="document">
-                <el-table-column label="文件名" width="140">
+                <el-table-column label="文件名" width="200">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                      <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                      <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -108,7 +108,7 @@
                     </el-tooltip>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作" width="100" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'">
+                <el-table-column label="操作" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'">
                   <template slot-scope="scope">
                     <el-button v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
                   </template>
@@ -253,7 +253,7 @@
                 <el-table-column label="附件名称">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
-                      <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                      <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -978,9 +978,10 @@ export default {
       this.getBscBankInfo();
     }
     this.dataBaseSG();
-    this.mailSend(2);
+    this.mailSend(2,'',1);
     
-    this.docView(this.fileData[0]);
+    
+
     this.listData.forEach(el=>{
       el['b'] = this.row[el['c']];
       if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
@@ -1323,7 +1324,15 @@ let oldStrArrCreInd=0;
             pageSize:100, 
             }).then(res =>{
                 if(res.data.rows && res.data.rows.length){
-                this.fileData = res.data.rows;
+                // this.fileData = res.data.rows;
+                let arr5 = res.data.rows;
+                arr5.forEach(el=>{
+                  if(el.docName){
+                    let suffix = el.docName.split('.');
+                    el['suffix'] = suffix[suffix.length-1];
+                  }
+                })
+                this.fileData = arr5;
                 let arr = this.fileData.filter(el=>{
                   return el.docType == 'S0';
                 })
@@ -1783,8 +1792,8 @@ let oldStrArrCreInd=0;
           }
       })
     },
-    mailSend(tag,name){
-      if(tag == 2){  //附件查看   1为附件上传
+    mailSend(tag,name,init){
+      if(tag == 2){  //附件查看   1为附件上传   ----刚进页面和上传后tag=2     // this.docView(this.fileData[0]);
         this.$http.post('api/worksheet/sortOperation/listDocument'
           ,{actOperator:this.$store.state.userName,
           processId:this.row.processId,
@@ -1792,7 +1801,21 @@ let oldStrArrCreInd=0;
           pageSize:100, 
           }).then(res =>{
             if(res.status === 200){
-              this.fileData = res.data.rows;
+              // this.fileData = res.data.rows;
+              let arr4 = res.data.rows;
+                arr4.forEach(el=>{
+                  if(el.docName){ 
+                    let suffix = el.docName.split('.');
+                    el['suffix'] = suffix[suffix.length-1];
+                  }
+                })
+                this.fileData = arr4;
+                if(init){
+                  let num = this.fileData.findIndex(el => { return el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
+                  setTimeout(()=>{ this.docView(this.fileData[num]); },500)
+                }
+                
+                
             }
           })
       } else{
@@ -1975,6 +1998,8 @@ let oldStrArrCreInd=0;
       //   }
       // })
       if(row){
+        console.log(row,'docView............');
+        if(row.suffix && row.suffix=='eml'){ return false; }
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
         if(res.status == 200){
           console.log(res);
