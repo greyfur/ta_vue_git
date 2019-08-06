@@ -269,8 +269,6 @@ import {computeName} from '@/assets/js/util.js'
   }
   .el-menu{
     border-right:none;
-    /* height: 508px;
-    overflow-y: auto; */
   }
   .logo .line{
     height: 30px;

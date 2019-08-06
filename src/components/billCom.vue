@@ -60,7 +60,7 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
-    <el-table :header-row-class-name="StableClass" :data="tableData" stripe style="width: 100%">
+    <el-table :header-row-class-name="StableClass" height="480" :data="tableData" stripe style="width: 100%;">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span

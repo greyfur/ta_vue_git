@@ -86,6 +86,7 @@
       tooltip-effect="dark"
       stripe
       style="width: 100%"
+      height="480"
       @selection-change="handleSelectionChange"
       @row-click="goDetail">
       <el-table-column type="selection" width="55"></el-table-column>
@@ -1363,10 +1364,6 @@ export default {
 <style scoped>
 .receiptComs{
   height: 650px;
-  overflow-y: auto;
-  /* position: fixed;
-  left: 256px;
-  top: 0; */
 }
 .receiptCom {
   padding-right: 30px;
