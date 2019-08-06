@@ -938,6 +938,7 @@ export default {
             console.log(res,'api/worksheet/wSEntry/edit/');
               if (res.status === 200) {
                 this.fileData = res.data.bscDocumentVOlist;
+                console.log(this.fileData,11111)
               }
             });
           this.dialogFormVisible = true;

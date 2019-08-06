@@ -119,7 +119,9 @@
       <el-col :span="13">
         <div class="right">
           <div class="titleSearch detailSearch">
-            <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览</div>
+            <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览2222</div>
+            <el-button class="rotate" size="mini" @click="rotateMua">顺时针旋转</el-button>
+            <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button>
             <!-- <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification'">
               <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
             </p> -->
@@ -986,6 +988,14 @@ export default {
     }
   },
   methods: {
+    rotateMua(){
+      console.log('旋转', document.querySelector('.browseDoc'))
+      document.querySelector('.browseDoc').className='browseDoc mua'
+    },
+     rotateMuas(){
+      console.log('旋转', document.querySelector('.browseDoc'))
+      document.querySelector('.browseDoc').className='browseDoc muas'
+    },
       nextstep() {
       let drcArr = [...document.querySelectorAll(".drc")];
       let statusArr = [...document.querySelectorAll(".status")];
@@ -2053,14 +2063,8 @@ export default {
         this.dialogFormVisible2 = true;
       } else {
         if (tag == 2) {
-          console.log(document.querySelector('.singleInput input').value>0)
-            // if(document.querySelector('.singleInput input').value.length>0){
-           
-            // }else{
-            //      alert(2)
-            // }
-          
-          // 是操作页面,2为点击确定---------------------生成审批文档提交
+         if(this.makeDocListEctype.zheNum&&this.makeDocListEctype.yuanType.length>0){
+            // 是操作页面,2为点击确定---------------------生成审批文档提交
           if (
             this.makeDocListEctype.cedentModel &&
             this.makeDocListEctype.cedentModel.length
@@ -2111,6 +2115,9 @@ export default {
                 this.$message.error(res.data.msg);
               }
           })
+         }else{
+            this.$message.error('请输入原币和折币金额');
+         }
         } else{   // 是审批页面，
           let param = {
             processId:this.row.processId,
@@ -2220,6 +2227,30 @@ export default {
 </script>
 
 <style scoped>
+.mua{
+ animation:rotateMua linear 0s;
+  animation-fill-mode:forwards;
+}
+.muas{
+ animation:rotateMuas linear 0s;
+  animation-fill-mode:forwards;
+}
+@keyframes rotateMua{
+  0%{
+    transform: rotate(0deg)
+  }
+  100%{
+    transform: rotate(90deg)
+  }
+}
+@keyframes rotateMuas{
+  0%{
+    transform: rotate(90deg)
+  }
+  100%{
+    transform: rotate(0deg)
+  }
+}
 .detailPay{
   width: 100%;
   padding-left: 64px;

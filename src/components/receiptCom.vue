@@ -780,13 +780,6 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
-      console.log(this.$refs.receiptComs)
-      this.$refs.receiptComs.onscroll=function(){
-        console.log(this.scrollTop)
-        if(this.scrollTop>=60){
-          // this.$refs.receiptComs.styleText=''
-        }
-      }
     this.mustData.actOperator = this.$store.state.userName;
     this.formLabelAlign.modifiedBy = this.$store.state.userName;
     setTimeout(() => {
