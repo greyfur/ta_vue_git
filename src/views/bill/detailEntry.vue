@@ -152,6 +152,8 @@
               <el-button v-if="$route.query.tag === 'billCheck'" size="small" :disabled="isHover" @click="onSics('复核')">
                 <i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写
               </el-button>
+              <el-button class="rotate" size="mini" @click="rotateMua" style="">顺时针旋转</el-button>
+              <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button>
               <!-- <span @click="openNewPage">最大化</span> -->
             </p>
           </div>
@@ -799,6 +801,12 @@ export default {
     });
   },
   methods: {
+    rotateMua(){
+      document.querySelector('.browseDoc').className='browseDoc mua'
+    },
+     rotateMuas(){
+      document.querySelector('.browseDoc').className='browseDoc muas'
+    },
     openBPSICS() {
       if (!this.chooseRow.rmSettleCompanyCode) {
         this.$message({
@@ -1641,6 +1649,30 @@ export default {
 </script>
 
 <style scoped>
+.mua{
+ animation:rotateMua linear 0s;
+  animation-fill-mode:forwards;
+}
+.muas{
+ animation:rotateMuas linear 0s;
+  animation-fill-mode:forwards;
+}
+@keyframes rotateMua{
+  0%{
+    transform: rotate(0deg)
+  }
+  100%{
+    transform: rotate(90deg)
+  }
+}
+@keyframes rotateMuas{
+  0%{
+    transform: rotate(90deg)
+  }
+  100%{
+    transform: rotate(0deg)
+  }
+}
 .detailEntry {
   /* padding:0 30px; */
   width: 100%;

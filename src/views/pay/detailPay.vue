@@ -120,8 +120,8 @@
         <div class="right">
           <div class="titleSearch detailSearch">
             <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览</div>
-            <el-button class="rotate" size="mini" @click="rotateMua">顺时针旋转</el-button>
-            <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button>
+            <!-- <el-button class="rotate" size="mini" @click="rotateMua">顺时针旋转</el-button>
+            <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button> -->
             <!-- <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification'">
               <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
             </p> -->
@@ -1013,12 +1013,12 @@ let oldStrArrCreInd=0;
           statusArr[this.row.approvalLevel].className = "status pending";
         }
     },
-    rotateMua(){
-      document.querySelector('.browseDoc').className='browseDoc mua'
-    },
-     rotateMuas(){
-      document.querySelector('.browseDoc').className='browseDoc muas'
-    },
+    // rotateMua(){
+    //   document.querySelector('.browseDoc').className='browseDoc mua'
+    // },
+    //  rotateMuas(){
+    //   document.querySelector('.browseDoc').className='browseDoc muas'
+    // },
     urgencyPay(){
       this.$confirm('是否紧急付款？', '提示', {
         confirmButtonText: '确定',
@@ -2222,7 +2222,7 @@ let oldStrArrCreInd=0;
 </script>
 
 <style scoped>
-.mua{
+/* .mua{
  animation:rotateMua linear 0s;
   animation-fill-mode:forwards;
 }
@@ -2245,7 +2245,7 @@ let oldStrArrCreInd=0;
   100%{
     transform: rotate(0deg)
   }
-}
+} */
 .detailPay{
   width: 100%;
   padding-left: 64px;
