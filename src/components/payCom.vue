@@ -792,12 +792,14 @@ export default {
 
           break;
         case 12: //流程提交---emailNotify
-            this.$http.post('api/receipt/activitiForReceipt/commonActivitiForReceipt'
+            this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
             ,{processId:this.chooseRow.processId, 
             procInstId:this.chooseRow.processInstId, 
             assignee:this.assignee, 
-            type:'CLOSE',actOperator:this.$store.state.userName,
-            hasNoticedFlag:this.chooseRow.hasNoticedFlag})
+            type:'PAYING',
+            actOperator:this.$store.state.userName,
+            // hasNoticedFlag:this.chooseRow.hasNoticedFlag
+            })
             .then(res =>{
               if(res.status === 200 && res.data.errorCode == 1){
                 this.dialogFormVisible2 = false;
