@@ -21,7 +21,7 @@
           <el-button size="small" plain @click="tongbu" v-if="$route.query.tag === 'instancyPay'">同步状态</el-button>
           <!-- <el-button size="small" plain @click="mailSend(2,'附件查看')">附件查看</el-button> -->
           <el-button size="small" plain v-if="$route.query.tag === 'partialDone'">同步状态</el-button>
-          <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button>
+          <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程结束</el-button>
         </div>
         <!-- 操作 -->
         <div class="btn" v-if="$route.query.tag === 'payOperation'">
@@ -208,6 +208,7 @@
           <el-table-column label="操作" width="140">
             <template slot-scope="scope">
               <el-button @click="onOpenSICS(scope.row,'rmId')" v-if="$route.query.tag === 'payClose' || $route.query.tag === 'payment' || $route.query.tag === 'instancyPay' || $route.query.tag === 'partialDone'" type="text" size="small">Reverse</el-button>
+              <el-button @click="onOpenSICS(scope.row,'rmId')"  type="text" size="small">打开SICS</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -387,7 +388,6 @@
           </el-table-column> 
           <el-table-column  label="操作" width="120">
             <template slot-scope="scope">
-              <el-button v-show="!scope.row.rmId" @click="remitCreat(scope.row)" v-if="$route.query.tag === 'approvalDone' || $route.query.tag === 'payClose'" type="text" size="small">创建支票</el-button>
               <el-button type="text" @click.stop="openSGSICS(scope.row,'sgNum')" size="mini">打开SICS</el-button>
             </template>
           </el-table-column>
@@ -1869,6 +1869,7 @@ export default {
         } else{
           this.SgData = res.data.worksheetsgDOlist;
           this.RMData = res.data.remitDOlist;
+          // this.dataBaseSG();
         }
       })
     },
@@ -2095,6 +2096,7 @@ export default {
             processId:this.row.processId,
             actOperator:this.$store.state.userName,
             operatorLevel:0,
+            rmSettleUser:sessionStorage.getItem('userCName'),
           })
           this.$http.post('api/docOperation/addSignature',param).then(res =>{
             if(res.data.code == 0){
