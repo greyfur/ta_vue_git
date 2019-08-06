@@ -10,7 +10,7 @@
     </router-link>
     <!-- </div>  -->
     <el-row>
-      <el-col :span="11">
+      <el-col :span="8">
         <!-- 签回 -->
         <div class="btn" v-if="$route.query.tag === 'billSignBack'">
           <el-button size="small" @click="onReverse" plain>Reverse</el-button>
@@ -75,21 +75,20 @@
               </p>
             </div>
             <el-table
-              height="367"
+              height="400"
               v-show="searchFlag2"
               stripe
               :data="tableData"
               style="width: 100%;margin-top:10px;"
               class="document"
             >
-              <el-table-column label="文件名" width="140">
+              <el-table-column label="文件名" width="240">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
                     effect="dark"
                     :content="scope.row.docName"
-                    placement="top"
-                  >
+                    placement="top">
                     <span
                       class="smallHand abbreviate"
                       @click="docView(scope.row)"
@@ -97,8 +96,8 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
-              <el-table-column label="任务来源" width="140">
+              <!-- <el-table-column prop="createdAt" label="时间" width="160"></el-table-column> -->
+              <!-- <el-table-column label="任务来源" width="140">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
@@ -109,8 +108,8 @@
                     <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
                   </el-tooltip>
                 </template>
-              </el-table-column>
-              <el-table-column label="操作" width="130">
+              </el-table-column> -->
+              <el-table-column label="操作">
                 <template slot-scope="scope">
                   <el-button
                     :disabled="isHover"
@@ -138,7 +137,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="13">
+      <el-col :span="16">
         <div class="right">
           <!-- <p class="detail-word" style="marginTop:-10px;backgroundColor:#EEEEEE;">文档预览</p> -->
           <div class="titleSearch detailSearch">
@@ -177,8 +176,7 @@
         <div
           class="titleSearch detailSearch"
           style="margin-bottom:10px;"
-          @click="searchFlag3 = !searchFlag3"
-        >
+          @click="searchFlag3 = !searchFlag3">
           <div>
             <i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息
           </div>
@@ -1760,7 +1758,7 @@ ul.detail-ul {
 }
 li.detail-item {
   display: flex;
-  width: 50%;
+  width: 100%;
 }
 .detailSearch {
   display: flex;
