@@ -458,7 +458,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="70%">
       <el-form label-width="140px" v-show="title==='流程提交'">
         <el-form-item label="选择处理人">
           <el-select clearable v-model="assignee" placeholder="请选择">

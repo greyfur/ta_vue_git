@@ -149,7 +149,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="140"></el-table-column>
       <el-table-column label="任务来源" width="110">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
@@ -214,7 +214,7 @@
       :total="mustData.total"
     ></el-pagination>
     <!-- 弹窗 -->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" :width="title==='踪迹'?'70%':'50%'">
       <el-form
         label-position="right"
         label-width="140px"
