@@ -119,7 +119,7 @@
       <el-col :span="13">
         <div class="right">
           <div class="titleSearch detailSearch">
-            <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览2222</div>
+            <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览</div>
             <el-button class="rotate" size="mini" @click="rotateMua">顺时针旋转</el-button>
             <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button>
             <!-- <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification'">
@@ -934,8 +934,7 @@ export default {
         if (res.data > 0) {
           for (let i = 0; i < res.data; i++) {
             strArr.push({
-              wait: `待${i + 1}级审批`,
-              done: `${i + 1}级审批完成`
+              wait: `待${i + 1}级审批`
             });
           }
         } else {
@@ -986,50 +985,44 @@ export default {
     })
   },
   updated(){
-    this.nextstep()
+        this.nextStep();
   },
   methods: {
+    nextStep(){
+let oldStrArrCreInd=0;
+      let drcArr = [...document.querySelectorAll(".drc")];
+      let statusArr = [...document.querySelectorAll(".status")];
+      oldStrArrCreInd = this.row.approvalLevel;
+        this.$http
+      .post("api/pay/activitiForPay/getAllLevel", {
+        processId: this.row.processId
+      }).then(res=>{
+        for(var i=0;i<res.data;i++){
+            oldStrArrCreInd--;
+            if(drcArr[oldStrArrCreInd]==undefined){
+              return
+            }else{
+              drcArr[oldStrArrCreInd].className = "drc success";
+              statusArr[oldStrArrCreInd].className = "status success";
+              statusArr[oldStrArrCreInd].innerHTML = "✔";
+              drcArr[oldStrArrCreInd].innerHTML = `${oldStrArrCreInd +1}级审批完成`;
+            }
+            
+        }
+      })
+       if(drcArr[this.row.approvalLevel]==undefined){
+          return
+        }else{
+          drcArr[this.row.approvalLevel].className = "drc wait";
+          statusArr[this.row.approvalLevel].className = "status pending";
+        }
+    },
     rotateMua(){
-      console.log('旋转', document.querySelector('.browseDoc'))
       document.querySelector('.browseDoc').className='browseDoc mua'
     },
      rotateMuas(){
-      console.log('旋转', document.querySelector('.browseDoc'))
       document.querySelector('.browseDoc').className='browseDoc muas'
     },
-      nextstep() {
-      let drcArr = [...document.querySelectorAll(".drc")];
-      let statusArr = [...document.querySelectorAll(".status")];
-      this.$http
-        .post("api/pay/activitiForPay/getAllLevel", {
-          processId: this.row.processId
-        })
-        .then(res => {
-          let oldStrArrCreInd = this.row.approvalLevel;
-          if (this.row.approvalLevel > res.data) {
-            this.row.approvalLevel = res.data;
-          } else {
-            if (oldStrArrCreInd < this.row.approvalLevel + 1) {
-              let timer = setInterval(function() {
-                oldStrArrCreInd--;
-                if (oldStrArrCreInd <= 0) {
-                  clearInterval(timer);
-                }
-                drcArr[oldStrArrCreInd].className = "drc success";
-                statusArr[oldStrArrCreInd].className = "status success";
-                statusArr[oldStrArrCreInd].innerHTML = "✔";
-                drcArr[oldStrArrCreInd].innerHTML = `${oldStrArrCreInd +
-                  1}级审批完成`;
-              }, 0);
-            }
-            if (
-              !drcArr[oldStrArrCreInd].classList.contains("drc success")
-            ) {
-              drcArr[this.row.approvalLevel].className = "drc wait";
-              statusArr[this.row.approvalLevel].className = "status pending";
-            }
-          }
-        })},
     urgencyPay(){
       this.$confirm('是否紧急付款？', '提示', {
         confirmButtonText: '确定',

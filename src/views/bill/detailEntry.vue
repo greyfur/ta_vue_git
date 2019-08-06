@@ -774,10 +774,16 @@ export default {
     // 获取详情的值
     this.listData.forEach(el => {
       if (el["c"] == "cedent") {
+        if(this.chooseRow["cedent"]==undefined){
+          return
+        }
         el["b"] = `${this.chooseRow["wsCedentCode"]}-${
           this.chooseRow["wsCedentName"]
         }`;
       } else if (el["c"] == "broker") {
+        if(this.chooseRow["broker"]==undefined){
+          return
+        }
         el["b"] = `${this.chooseRow["wsBrokerCode"]}-${
           this.chooseRow["wsBrokerName"]
         }`;
