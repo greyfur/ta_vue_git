@@ -922,7 +922,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){ 
-    console.log(this.row.approvalLevel,'this.row.approvalLevel');
+    console.log(this.row,'this.row');
     this.mustData.actOperator = this.$store.state.userName;
     let strArr = [];
     if(this.$route.query.tag === 'payVerification'){
@@ -1336,7 +1336,7 @@ export default {
               } else{ this.$message.error('请先生成审批文档'); }
             })
           } else if(this.$route.query.tag === 'payClose'){
-            this.$http.post('api/sics/basis/getWFMessage',{processId:this.row.processId,actOperator:this.$store.state.userName}).then(res =>{
+            this.$http.post('api/sics/basis/getWFMessage',{processId:this.row.processId,actOperator:this.$store.state.userName,hasRecheckFlag:this.row.hasRecheckFlag}).then(res =>{
               if(res.data.code == 1 && res.data.msg){
                 this.$message.error(res.data.msg);
                 return false;
@@ -1347,7 +1347,7 @@ export default {
                   type: 'warning'
                   }).then(() => {
                     this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-                      ,{processId:this.row.processId, procInstId:this.row.processInstId, assignee:this.$store.state.userName, type:this.$route.query.name,actOperator:this.$store.state.userName})
+                      ,{processId:this.row.processId, procInstId:this.row.processInstId, assignee:this.$store.state.userName, type:'EMAIL',actOperator:this.$store.state.userName})
                       .then(res =>{
                         if(res.status === 200 && res.data.errorCode == 1){
                           this.dialogFormVisible3 = false;
@@ -1626,11 +1626,11 @@ export default {
           //   })
         break;
         case 7:  // 付款支票--流程提交--审批通过
-          let type = '';
+          let type2 = '';
           if(this.accountCloseFlag == '0'){
-            type = 'RECHECK';
+            type2 = 'RECHECK';
           } else if(this.accountCloseFlag == '1'){
-            type = 'PAYING';
+            type2 = 'EMAIL';
           }
           if(!this.assignee){
             this.$message.error('请选择任务处理人');
@@ -1642,7 +1642,8 @@ export default {
               assignee:this.assignee, 
               actOperator:this.$store.state.userName,
               accountCloseFlag:this.accountCloseFlag,
-              type:type,
+              type:type2,
+              hasRecheckFlag:this.row.hasRecheckFlag?this.row.hasRecheckFlag:'0',
               })
             .then(res =>{
               if(res.status === 200 && res.data.errorCode == 1){
@@ -1656,12 +1657,16 @@ export default {
         break;
         case 8:  // 流程提交   ------ 财务支付/紧急付款/partial完结
           // if(this.specialName2 === 'payment'){
-            // let type = '';
-            // if(this.row.accountCloseFlag == '0'){
-            //   type = 'CLOSE';
-            // } else if(this.row.accountCloseFlag == '1'){
-            //   type = 'CONDITIONALCOMPLETE';
-            // }
+            let type1 = null;
+            if(this.$route.query.tag === 'payClose'){
+              if(this.row.accountCloseFlag == '0'){   
+                type1 = 'COMPLETE';
+              } else if(this.row.accountCloseFlag == '1'){
+                type1 = 'CONDITIONALCOMPLETE';
+              }
+            } else if(this.$route.query.tag === 'partialDone'){
+              type1 = 'COMPLETE';
+            }
           // }
           if(!this.assignee){
             this.$message.error('请选择任务处理人');
@@ -1671,7 +1676,7 @@ export default {
             ,{processId:this.row.processId, 
             procInstId:this.row.processInstId, 
             assignee:this.assignee, 
-            type:this.$route.query.name,
+            type:type1,
             actOperator:this.$store.state.userName,
             accountCloseFlag:this.row.accountCloseFlag
             })
