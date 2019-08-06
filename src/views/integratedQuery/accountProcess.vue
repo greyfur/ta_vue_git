@@ -46,7 +46,7 @@
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div>
-    <el-table :data="tableData" stripe style="width: 100%">
+    <el-table :data="tableData" stripe style="width: 100%" height="480">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>

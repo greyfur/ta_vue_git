@@ -45,9 +45,11 @@ import {computeSidebar} from '@/assets/js/util.js'
 <style>
 .bill{
   margin-left: 256px;
+  height: 652px;
 }
 .left-content{
   margin-left: 20px;
+  height: 652px;
 }
 .el-menu-sidebar {
   position: fixed;
