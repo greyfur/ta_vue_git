@@ -89,7 +89,7 @@
       @selection-change="handleSelectionChange"
       @row-click="goDetail">
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="processId" label="ProcessID" width="120"></el-table-column>
+      <el-table-column prop="processId" label="ProcessID" width="130"></el-table-column>
       <el-table-column width="140" label="结付公司">
         <template slot-scope="scope">
           <el-tooltip
@@ -137,34 +137,28 @@
         </template>
       </el-table-column>
       <el-table-column prop="rmOriSettleCompanyName" width="150" label="原收款公司名称"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="160">
+      <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
-          <!-- <el-dropdown> -->
-            <span v-show="urlName === 'financialCreat'" @click.stop="handleClick(6,scope.row)" class="blueColor">编辑</span>
-          <!-- </el-dropdown> -->
-          <!-- <el-dropdown-item> -->
-            <span v-show="urlName === 'financialCreat'" @click.stop="handleClick(7,scope.row)" class="blueColor">删除</span>
-          <!-- </el-dropdown-item> -->
-          <!-- <el-dropdown> -->
-            <span v-show="urlName === 'taskClaim'" @click.stop="handleClick(12,scope.row)" class="blueColor">附件查看</span>
-          <!-- </el-dropdown> -->
-          <!-- <el-dropdown> -->
-            <span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
-          <!-- </el-dropdown> -->
-          <!-- <el-dropdown>
+          <el-dropdown>
             <span class="el-dropdown-link">
               更多
               <i style="margin-left:8px;" class="el-icon-arrow-down"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>
-                <span @click.stop="handleClick(12,scope.row)" class="blueColor">附件查看</span>
-              </el-dropdown-item>
-              <el-dropdown-item>
-                <span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
-              </el-dropdown-item>
+                <el-dropdown-item>
+                  <span v-show="urlName === 'financialCreat'" @click.stop="handleClick(6,scope.row)" class="blueColor">编辑</span>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <span v-show="urlName === 'financialCreat'" @click.stop="handleClick(7,scope.row)" class="blueColor">删除</span>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <span v-show="urlName === 'taskClaim'" @click.stop="handleClick(12,scope.row)" class="blueColor">附件查看</span>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
+                </el-dropdown-item>
             </el-dropdown-menu>
-          </el-dropdown> -->
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -238,13 +232,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="100" >
         <template slot-scope="scope">
-          <el-dropdown>
-            <span
-              v-show="pendingFlag || urlName === 'financialCreat'"
-              @click.stop="handleClick(6,scope.row)"
-              style="margin-right:8px;cursor: pointer;"
-            >编辑</span>
-          </el-dropdown>
+         
           <!-- <el-dropdown>
             <span
               v-show="urlName === 'financialCreat'"
@@ -259,15 +247,19 @@
               style="margin-right:8px;cursor: pointer;"
             >分配</span>
           </el-dropdown> -->
-          <el-dropdown v-if="urlName !== 'financialCreat'">
-            <span @click.stop="handleClick(11,scope.row)">踪迹</span>
-          </el-dropdown>
-          <el-dropdown v-else>
+          <el-dropdown>
             <span class="el-dropdown-link">
               更多
               <i style="margin-left:8px;" class="el-icon-arrow-down"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
+               <el-dropdown-item>
+                <span
+                  v-show="pendingFlag || urlName === 'financialCreat'"
+                  @click.stop="handleClick(6,scope.row)"
+                  class="blueColor"
+                >编辑</span>
+              </el-dropdown-item>
               <el-dropdown-item>
                 <span
                   v-show="urlName === 'financialCreat'"

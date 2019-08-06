@@ -61,7 +61,6 @@
       </el-button>
     </div>
     <el-table :header-row-class-name="StableClass" :data="tableData" stripe style="width: 100%">
-      <el-table-column prop="createdAt" label="创建时间" width="100"></el-table-column>
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span
@@ -70,7 +69,7 @@
           >{{scope.row.processId}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="流程名称" width="350">
+      <el-table-column label="流程名称" width="400">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -82,29 +81,6 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="账单类型" width="80">
-        <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" :content="scope.row.wsType" placement="top-start">
-            <span class="abbreviate">{{scope.row.wsType}}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column label="任务类型" width="80">
-        <template slot-scope="scope">{{YWoptionsObj[scope.row.wsBusinessType]}}</template>
-      </el-table-column>
-      <el-table-column label="账期">
-        <template slot-scope="scope">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="scope.row.wsPeriod"
-            placement="top-start"
-          >
-            <span class="abbreviate">{{scope.row.wsPeriod}}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column prop="wsReceiptDate" width="120" label="账单收到日期"></el-table-column>
       <el-table-column label="分出公司" width="120">
         <template slot-scope="scope">
           <el-tooltip
@@ -137,6 +113,29 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column label="账单类型" width="80">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.wsType" placement="top-start">
+            <span class="abbreviate">{{scope.row.wsType}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column label="任务类型" width="80">
+        <template slot-scope="scope">{{YWoptionsObj[scope.row.wsBusinessType]}}</template>
+      </el-table-column>
+      <el-table-column label="账期">
+        <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="scope.row.wsPeriod"
+            placement="top-start"
+          >
+            <span class="abbreviate">{{scope.row.wsPeriod}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column prop="wsReceiptDate" width="120" label="账单收到日期"></el-table-column>
       <el-table-column label="Reporting Unit" width="120">
         <template slot-scope="scope">
           <el-tooltip
@@ -167,31 +166,28 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="180">
+      <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
           <el-dropdown>
-            <span
-              v-show="urlName === 'sortOperation' || pendingFlag"
-              @click.stop="handleClick(2,scope.row)"
-              style="margin-right:8px;cursor: pointer;"
-            >编辑</span>
-          </el-dropdown>
-          <el-dropdown>
-            <span
-              v-show="urlName === 'sortOperation'"
-              @click.stop="handleClick(3,scope.row)"
-              style="margin-right:8px;cursor: pointer;"
-            >分配</span>
-          </el-dropdown>
-          <el-dropdown v-if="urlName !== 'sortOperation'">
-                <span @click.stop="handleClick(5,scope.row)" style="cursor: pointer;">踪迹</span>
-          </el-dropdown>
-          <el-dropdown v-else>
             <span class="el-dropdown-link">
               更多
               <i style="margin-left:8px;" class="el-icon-arrow-down"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
+               <el-dropdown-item>
+            <span
+              v-show="urlName === 'sortOperation' || pendingFlag"
+              @click.stop="handleClick(2,scope.row)"
+              class="blueColor"
+            >编辑</span>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <span
+              v-show="urlName === 'sortOperation'"
+              @click.stop="handleClick(3,scope.row)"
+              class="blueColor"
+            >分配</span>
+          </el-dropdown-item>
               <el-dropdown-item>
                 <span
                   v-show="urlName === 'sortOperation'"
@@ -206,6 +202,7 @@
           </el-dropdown>
         </template>
       </el-table-column>
+      <el-table-column prop="createdAt" label="创建时间" width="100"></el-table-column>
     </el-table>
     <el-pagination
       @size-change="handleSizeChange"
@@ -292,12 +289,19 @@
             ></el-option>
           </el-select>
         </el-form-item>
+         <el-form-item
+          label="流程名称"
+          v-show="title==='手工创建' || title==='编辑' || title==='查询'"
+          class="zqForm"
+        >
+          <el-input v-model.trim="zq3" placeholder="请输入流程名称"></el-input>
+        </el-form-item>
         <el-form-item
           label="账期"
           v-show="title==='手工创建' || title==='编辑' || title==='查询'"
           class="zqForm"
         >
-          <el-input v-model.trim="zq2" placeholder="年份" class="wsPeriod" maxlength="4"></el-input>
+          <el-input v-model.trim="zq2"  placeholder="年份" class="wsPeriod" maxlength="4"></el-input>
           <el-select clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
             <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
@@ -612,6 +616,7 @@ export default {
       ZJprocessId: "",
       zq1: "",
       zq2: "",
+      zq3:"",
       rules: {
         wsBusinessType: [
           { required: true, message: "请选择任务类型", trigger: "blur" }
@@ -633,6 +638,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
+   
     this.$http
       .post("api/activiti/getAssigneeName", { roleName: "账单录入" })
       .then(res => {
@@ -739,9 +745,13 @@ export default {
       });
     },
     confirm(formName) {
+       console.log(this.tableData,'wwwww')
       if (this.title === "手工创建" || this.title === "编辑") {
         if (this.zq2 && this.zq1) {
           this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;
+        }
+        if(this.zq3){
+           this.billSearch.processName=`${this.zq3}`
         }
       }
       if (this.cedentModel != null) {
@@ -860,6 +870,7 @@ export default {
       }
       this.zq2 = null;
       this.zq1 = null;
+      this.zq3=null;
       this.brokerModel = null;
       this.cedentModel = null;
     },
@@ -1148,7 +1159,7 @@ export default {
 .billCom .el-input {
   width: 196px;
 }
-.el-form-item:nth-child(7) .el-input:nth-child(1) {
+.el-form-item:nth-child(8) .el-input:nth-child(1) {
   width: 70px;
 }
 .browseDoc {
