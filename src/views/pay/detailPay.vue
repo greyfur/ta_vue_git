@@ -993,7 +993,7 @@ export default {
   },
   methods: {
     nextStep(){
-let oldStrArrCreInd=0;
+      let oldStrArrCreInd=0;
       let drcArr = [...document.querySelectorAll(".drc")];
       let statusArr = [...document.querySelectorAll(".status")];
       oldStrArrCreInd = this.row.approvalLevel;
@@ -1058,8 +1058,6 @@ let oldStrArrCreInd=0;
         })
         .then(res => {
           let oldStrArrCreInd = this.row.approvalLevel;
-          // let oldStrArrCreInd = this.strArrCreInd;
-          // this.strArrCreInd++;
           if (this.row.approvalLevel > res.data) {
             this.row.approvalLevel = res.data;
           } else {
@@ -2031,7 +2029,7 @@ let oldStrArrCreInd=0;
                 if(val2){ 
                   this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(5):null;
                   if(this.makeDocListEctype.yuanHuiLv[i] != null){
-                    allNum += this.makeDocListEctype.yuanNum[i]*Number(1/this.makeDocListEctype.yuanHuiLv[i]);
+                    allNum += this.makeDocListEctype.yuanNum[i]*Number(1*this.makeDocListEctype.yuanHuiLv[i]);
                   }
                 }
               }
@@ -2039,7 +2037,8 @@ let oldStrArrCreInd=0;
               let val3 = Number(this.filterCurrencyRateList(curType,this.makeDocListEctype.zheType))
               this.makeDocListEctype.yuanHuiLv[i] = Number(val3)>0?Number(val3).toFixed(5):null;
               if(this.makeDocListEctype.yuanHuiLv[i] != null){
-                allNum += Number(this.makeDocListEctype.yuanNum[i])*Number(1/this.makeDocListEctype.yuanHuiLv[i]);
+                // console.log(Number(this.makeDocListEctype.yuanNum[i])*Number(1*this.makeDocListEctype.yuanHuiLv[i]))
+                allNum += Number(this.makeDocListEctype.yuanNum[i])*Number(1*this.makeDocListEctype.yuanHuiLv[i]);
               }
             }
           }
@@ -2196,7 +2195,8 @@ let oldStrArrCreInd=0;
             if(n.indexOf(el) == -1){
               this.makeDocListEctype.yuanNum.splice(i,1);
               this.makeDocListEctype.yuanHuiLv.splice(i,1);
-              this.makeDocListEctype.zheNum = this.makeDocListEctype.zheNum-this.makeDocListEctype.yuanNum[i]
+              // console.log( this.makeDocListEctype.zheNum)
+              this.makeDocListEctype.zheNum = this.makeDocListEctype.zheNum
             }
           })
           this.makeDocNum-=1;
@@ -2207,7 +2207,6 @@ let oldStrArrCreInd=0;
     'makeDocListEctype.yuanNum':{
       handler:function(n,o){
         this.zheTypeChange();
-      
       }
     },
     // 监听汇率
@@ -2217,8 +2216,11 @@ let oldStrArrCreInd=0;
         if(this.makeDocListEctype.yuanNum.length){
           let all = 0;
           this.makeDocListEctype.yuanNum.forEach((el,i)=>{
+            // this.makeDocListEctype.yuanHuiLv[i]汇率
+            // el 是金额
             all += Number(this.makeDocListEctype.yuanHuiLv[i]) * Number(el);
           })
+          // console.log(all,'--')
           this.makeDocListEctype.zheNum = all>0?Number(all).toFixed(5):null;
         }
         
