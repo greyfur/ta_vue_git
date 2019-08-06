@@ -669,6 +669,7 @@ export default {
 
   data() {
       return {
+        partBankAccountList:[],
         recepitList:[],
         nameList:{},
         searchFlag1:true,
@@ -943,9 +944,11 @@ export default {
     }
     setTimeout(()=>{
       // 分出人+经济人
+      let bList = JSON.parse(sessionStorage.getItem('BrokerBankList'));
+      let cList = JSON.parse(sessionStorage.getItem('CedentBankList'));
+      this.brokerList = bList.concat(cList);
       let fcArr = JSON.parse(sessionStorage.getItem('CedentType'));
       let jArr = JSON.parse(sessionStorage.getItem('BrokerType'));
-      this.brokerList = jArr.concat(fcArr);
       this.cedentList = fcArr;
       this.brokerListS = jArr;
       //获取币制
@@ -959,6 +962,7 @@ export default {
       if(this.$route.query.tag === 'approvalDone'){ 
         // 获取银行账户列表
         this.AllBankAccountList = JSON.parse(sessionStorage.getItem('AllBankAccountList'));
+        
       }
     },1000)
 

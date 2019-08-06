@@ -123,6 +123,25 @@ import {computeName} from '@/assets/js/util.js'
         })
       }
 
+      // 获取BrokerType账户列表
+      if(!sessionStorage.getItem('BrokerBankList')){
+        this.$http.post('api/sics/basis/getCedentListByReceiptBank',{codeType:'BrokerType'}).then(res =>{
+          console.log(res,'获取银行账户列表');
+          if(res.status === 200){
+            sessionStorage.setItem('BrokerBankList',JSON.stringify(res.data));
+          }
+        })
+      }
+      // 获取CedentType账户列表
+      if(!sessionStorage.getItem('CedentBankList')){
+        this.$http.post('api/sics/basis/getCedentListByReceiptBank',{codeType:'CedentType'}).then(res =>{
+          console.log(res,'获取银行账户列表');
+          if(res.status === 200){
+            sessionStorage.setItem('CedentBankList',JSON.stringify(res.data));
+          }
+        })
+      }
+
       // 获取分出人信息
       if(!sessionStorage.getItem('CedentType')){
         this.$http.post('api/sics/basis/getCedentList',{codeType:'CedentType'}).then(res =>{
