@@ -38,11 +38,8 @@
       <el-button type="primary" plain @click="submite(1,'复核通过','收款录入')">复核通过</el-button>
     </div>
     <!-- 核销 -->
-    <div
-      class="btn"
-      v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'"
-    >
-      <el-button type="primary" :disabled="hxState" plain @click="submite(1,'流程提交','收款录入')">流程提交</el-button>
+    <div class="btn" v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'">
+      <el-button type="primary" :disabled="hxState" plain @click="submite(1,'流程提交','收款录入')">流程结束</el-button>
       <el-button type="primary" :disabled="hxState" @click="tbState" plain>同步状态</el-button>
       <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BPSICS</el-button>
       <el-button

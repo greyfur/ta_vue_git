@@ -3,10 +3,7 @@
   <div class="receiptCom">
     <div class="searchNew">
       <div class="titleSearch" @click="searchFlag = !searchFlag">
-        <i
-          style="margin-right:8px;"
-          :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"
-        ></i>查询
+        <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询
       </div>
       <el-collapse-transition>
       <div v-show="searchFlag">
@@ -332,8 +329,17 @@
             type="text"
             class="selfInput"
             v-model="formLabelAlign.rmAmount"
-            @input="watchInput('rmAmount')"
-          >
+            @input="watchInput('rmAmount')">
+        </el-form-item>
+        <el-form-item clearable label="币制" v-show="title==='创建' || title==='编辑'">
+          <el-select clearable v-model="formLabelAlign.rmCurrency" placeholder="请选择币制">
+            <el-option
+              v-for="item in rmCurrencyList"
+              :key="item.alpha"
+              :label="item.alpha"
+              :value="item.alpha"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item
           label="Business Origin"
@@ -362,16 +368,7 @@
         <!-- <el-form-item label="我司销账编号" v-show="title==='编辑' || title==='创建'">
           <el-input v-model="formLabelAlign.rmWrittenOffNum"></el-input>
         </el-form-item>-->
-        <el-form-item clearable label="币制" v-show="title==='创建' || title==='编辑'">
-          <el-select clearable v-model="formLabelAlign.rmCurrency" placeholder="请选择币制">
-            <el-option
-              v-for="item in rmCurrencyList"
-              :key="item.alpha"
-              :label="item.alpha"
-              :value="item.alpha"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+       
         <!-- <el-form-item label="结算人员" v-show="title==='编辑' || title==='创建'">
           <el-input v-model="formLabelAlign.rmSettleUser"></el-input>
         </el-form-item>-->
@@ -787,7 +784,7 @@ export default {
       this.$refs.receiptComs.onscroll=function(){
         console.log(this.scrollTop)
         if(this.scrollTop>=60){
-          this.$refs.receiptComs.styleText=''
+          // this.$refs.receiptComs.styleText=''
         }
       }
     this.mustData.actOperator = this.$store.state.userName;

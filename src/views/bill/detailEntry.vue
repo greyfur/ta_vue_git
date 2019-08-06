@@ -15,7 +15,7 @@
         <div class="btn" v-if="$route.query.tag === 'billSignBack'">
           <el-button size="small" @click="onReverse" plain>Reverse</el-button>
           <el-button size="small" @click="mailSend(1)" plain>邮件通知</el-button>
-          <el-button size="small" plain @click="submit(6,'签回提交')">流程提交</el-button>
+          <el-button size="small" plain @click="submit(6,'签回提交')">流程结束</el-button>
           <el-button size="small" plain @click="submit(7)">标记签回</el-button>
         </div>
         <!-- 录入 -->
@@ -145,15 +145,14 @@
             <div>
               <i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览
             </div>
-            <p v-if="$route.query.tag === 'billEntry'">
-              <el-button size="small" :disabled="isHover" @click="onSics('录入')">
+            <p>
+              <el-button v-if="$route.query.tag === 'billEntry'" size="small" :disabled="isHover" @click="onSics('录入')">
                 <i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写
               </el-button>
-            </p>
-            <p v-if="$route.query.tag === 'billCheck'">
-              <el-button size="small" :disabled="isHover" @click="onSics('复核')">
+              <el-button v-if="$route.query.tag === 'billCheck'" size="small" :disabled="isHover" @click="onSics('复核')">
                 <i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写
               </el-button>
+              <!-- <span @click="openNewPage">最大化</span> -->
             </p>
           </div>
           <div class="browseDoc">
@@ -548,7 +547,7 @@
             v-model="textareaOpinion"
           ></el-input>
         </el-form-item>
-        <el-form-item label="选择处理人" v-show="title==='流程提交' && $route.query.tag !== 'billEntry'">
+        <el-form-item label="选择处理人" v-show="title==='流程提交' && $route.query.tag !== 'billEntry' && checkRobortUser==1">
           <el-select v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
@@ -569,7 +568,7 @@
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName || item.username == chooseRow.entryOperator"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="选择处理人" v-show="title==='流程提交' && $route.query.tag === 'billEntry'">
+        <el-form-item label="选择处理人" v-show="title==='流程提交' && $route.query.tag === 'billEntry' && checkRobortUser!=1">
           <el-select v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
@@ -608,6 +607,7 @@ export default {
   name: "detailEntry",
   data() {
     return {
+      checkRobortUser:null,
       nameList:{},
       searchFlag3: true,
       searchFlag2: true,
@@ -750,11 +750,16 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
+    
     // 查询账单详情
     if (this.$route.query.tag !== "billSignBack") {
       this.uploadType = 1;
     }
     this.chooseRow = JSON.parse(this.$route.query.row);
+    this.$http.get(`api/worksheet/wSEntry/checkRobortUser`,{params:{processId:this.chooseRow.processId}}).then(res => {
+      this.checkRobortUser = res.data;
+      // 0 需要屏蔽自己，1不需要
+    })
     this.$http
       .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
       .then(res => {
@@ -1190,7 +1195,7 @@ export default {
             this.title = "流程提交";
           } else {
             //  签回流程提交----到关闭 不需要选择下一人，assign需要录入人
-            this.$confirm("是否流程提交？", "提示", {
+            this.$confirm("是否流程结束？", "提示", {
               confirmButtonText: "确定",
               cancelButtonText: "取消",
               type: "warning"

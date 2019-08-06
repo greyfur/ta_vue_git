@@ -362,12 +362,7 @@
             <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
             <el-table-column label="任务来源" width="140">
               <template slot-scope="scope">
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  :content="scope.row.nameList[scope.row.createdBy]"
-                  placement="top"
-                >
+                <el-tooltip class="item" effect="dark" :content="nameList[scope.row.createdBy]" placement="top">
                   <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
                 </el-tooltip>
               </template>
@@ -939,9 +934,8 @@ export default {
             this.zq2 = null;
             this.zq1 = null;
           }
-          this.$http
-            .get(`api/worksheet/wSEntry/edit/${row.processId}`)
-            .then(res => {
+          this.$http.get(`api/worksheet/wSEntry/edit/${row.processId}`,{}).then(res => {
+            console.log(res,'api/worksheet/wSEntry/edit/');
               if (res.status === 200) {
                 this.fileData = res.data.bscDocumentVOlist;
               }
@@ -1065,7 +1059,8 @@ export default {
               this.$http
                 .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
                 .then(res => {
-                  if (res.status === 200) {
+                  if (res.status == 200) {
+                    console.log(res,'res.data.bscDocumentVOlist');
                     this.fileData = res.data.bscDocumentVOlist;
                   }
                 });
