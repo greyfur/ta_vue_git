@@ -894,7 +894,6 @@ export default {
     console.log(this.row,'row');
     // 查询单条数据，根据processId
     let param = {
-      curOperator: this.$store.state.userName,
       actOperator: this.$store.state.userName,
       pageNumber: 1,
       pageSize: 20,
@@ -924,10 +923,8 @@ export default {
     console.log(this.row.approvalLevel,'this.row.approvalLevel');
     this.mustData.actOperator = this.$store.state.userName;
     let strArr = [];
-    this.$http
-      .post("api/pay/activitiForPay/getAllLevel", {
-        processId: this.row.processId
-      })
+    if(this.$route.query.tag === 'payVerification'){
+      this.$http.post("api/pay/activitiForPay/getAllLevel", {processId: this.row.processId})
       .then(res => {
         if (res.data > 0) {
           for (let i = 0; i < res.data; i++) {
@@ -941,7 +938,7 @@ export default {
         }
         this.strArr = strArr;
       });
-
+    }
     setTimeout(()=>{
       // 分出人+经济人
       let fcArr = JSON.parse(sessionStorage.getItem('CedentType'));
@@ -984,7 +981,9 @@ export default {
     })
   },
   updated(){
-    this.nextstep()
+    if(this.$route.query.tag === 'payVerification'){
+      this.nextstep();
+    }
   },
   methods: {
       nextstep() {
