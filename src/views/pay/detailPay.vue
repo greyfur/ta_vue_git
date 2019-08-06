@@ -669,6 +669,7 @@ export default {
 
   data() {
       return {
+        saveLevel:null,
         partBankAccountList:[],
         recepitList:[],
         nameList:{},
@@ -986,7 +987,9 @@ export default {
     })
   },
   updated(){
-        this.nextStep();
+    if(this.$route.query.tag === 'payVerification'){
+      this.nextStep();
+    }
   },
   methods: {
     nextStep(){
@@ -998,6 +1001,7 @@ let oldStrArrCreInd=0;
       .post("api/pay/activitiForPay/getAllLevel", {
         processId: this.row.processId
       }).then(res=>{
+        this.saveLevel = res.data;
         for(var i=0;i<res.data;i++){
             oldStrArrCreInd--;
             if(drcArr[oldStrArrCreInd]==undefined){

@@ -5,8 +5,8 @@
         <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询
       </div>
       <el-collapse-transition>
-        <div v-show="searchFlag">
-          <el-row :gutter="10" class="billRow" class-name="transition-box">
+        <div v-show="searchFlag" class-name="transition-box">
+          <el-row :gutter="10" class="billRow" >
             <el-col :span="7">
               <span class="slable">流程编号</span>
               <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
@@ -30,7 +30,16 @@
               </el-select>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row :gutter="10" class="billRow">
+            <el-col :span="12" v-show="urlName === 'billEntry'">
+              <span class="slable">流程状态</span>
+              <!-- <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input> -->
+              <el-select clearable v-model="billSearch.processStatus" placeholder="请选择流程状态">
+                <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+           <el-row :gutter="10">
             <el-col :span="24">
               <el-button type="primary" plain @click="handleClick(1)">
                 <i class="iconfont iconGroup42"></i>查询
