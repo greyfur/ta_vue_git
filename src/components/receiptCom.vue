@@ -69,7 +69,7 @@
         <i class="iconfont iconGroup91"></i>批量创建
       </el-button>
       <el-button type="primary" plain @click="handleClick(14)" v-show="urlName === 'financialCreat'">
-        <i class="iconfont iconGroup91"></i>批量分配
+        <i class="iconfont iconGroup91"></i>批量提交
       </el-button>
       <el-button type="primary" plain @click="handleClick(13)" v-show="urlName === 'taskClaim'">
         <i class="iconfont iconpaperclip"></i>任务认领
@@ -1103,7 +1103,7 @@ export default {
           });
           break;
 
-        case 14: // 批量分配
+        case 14: // 批量提交
           let url1 = null;
           let obj1 = null;
           if (
@@ -1132,7 +1132,7 @@ export default {
             return false;
           }
 
-          this.$confirm("是否批量分配？", "提示", {
+          this.$confirm("是否批量提交？", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
