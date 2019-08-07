@@ -117,7 +117,7 @@
         <!-- <el-form-item label="汇款人名称">
           <el-input v-model="formLabelAlign.rmSettleCompanyName"></el-input>
         </el-form-item>
-        <el-form-item label="汇款到账日期"> 
+        <el-form-item label="到账日期"> 
             <el-date-picker value-format="timestamp" v-model="formLabelAlign.rmReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="汇款金额" v-show="title==='编辑' || title==='创建'">

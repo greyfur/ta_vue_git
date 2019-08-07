@@ -23,8 +23,8 @@
         type="primary"
         :disabled="czState"
         plain
-        @click="submite(2,'任务指派','操作','收款录入')"
-      >任务指派</el-button>
+        @click="submite(2,'指派','操作','收款录入')"
+      >指派</el-button>
       <el-button type="primary" :disabled="czState" plain @click="submite(3,'置废')">置废</el-button>
       <el-button :type="czState?'info':'primary'" @click="gangUp('操作')" plain>{{!czState?'挂起':'悬停'}}</el-button>
       <el-button type="primary" :disabled="czState" plain @click="creatRM('a')">支票创建</el-button>
@@ -32,16 +32,18 @@
     </div>
     <!-- 复核 -->
     <div class="btn" v-if="$route.query.tag === 'credReview'">
-      <el-button type="primary" plain @click="submite(2,'任务指派','复核','收款复核')">任务指派</el-button>
+      <el-button type="primary" plain @click="submite(2,'指派','复核','收款复核')">指派</el-button>
       <el-button type="primary" plain @click="getSg">同步状态</el-button>
+      <el-button type="primary" plain @click="mailSend(2,'附件查看')">附件查看</el-button>
       <el-button type="primary" plain @click="submite(4,'复核驳回')">复核驳回</el-button>
       <el-button type="primary" plain @click="submite(1,'复核通过','收款录入')">复核通过</el-button>
     </div>
     <!-- 核销 -->
     <div class="btn" v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'">
-      <el-button type="primary" :disabled="hxState" plain @click="submite(1,'流程提交','收款录入')">流程结束</el-button>
+      <el-button type="primary" :disabled="hxState" plain @click="submite(1,'流程提交','收款录入')">流程提交</el-button>
       <el-button type="primary" :disabled="hxState" @click="tbState" plain>同步状态</el-button>
-      <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BPSICS</el-button>
+      <el-button type="primary" plain @click="mailSend(2,'附件查看')">附件查看</el-button>
+      <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BpLedger</el-button>
       <el-button
         :type="hxState?'info':'primary'"
         @click="gangUp('核销')"
@@ -663,7 +665,7 @@
               </template>
             </el-table-column>
           </el-table>
-        </el-collapse-transition>
+        </el-collapse-transition> 
       </el-col>
     </el-row>
     <!-- 弹窗区域 -->
@@ -697,8 +699,8 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          :label="title === '任务指派'?'选择任务指派人':'选择处理人'"
-          v-show="title === '任务指派' || putIn=='b'"
+          :label="title === '指派'?'选择指派人':'选择处理人'"
+          v-show="title === '指派' || putIn=='b'"
         >
           <el-select v-model="assignee" placeholder="请选择">
             <el-option
@@ -716,9 +718,9 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog title="任务指派" :visible.sync="dialogFormVisibleFHRWZF" :close-on-click-modal="modal">
+    <el-dialog title="指派" :visible.sync="dialogFormVisibleFHRWZF" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="160px">
-        <el-form-item label="选择任务指派人">
+        <el-form-item label="选择指派人">
           <el-select v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
@@ -741,10 +743,15 @@
         label-width="180px"
         :model="formLabelAlign"
         :rules="rules"
-        ref="formLabelAlign"
-      >
+        ref="formLabelAlign">
         <el-form-item label="Process ID">
           <el-input v-model.trim="formLabelAlign.processId" disabled style="width:194px"></el-input>
+        </el-form-item>
+        <el-form-item label="收/付款支票" prop="rmType"> 
+          <el-radio-group v-model="formLabelAlign.rmType">
+            <el-radio label="R">收款</el-radio>
+            <el-radio label="P">付款</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="支票状态" prop="rmStatusIndex">
           <el-select v-model="formLabelAlign.rmStatusIndex" placeholder="请选择">
@@ -753,15 +760,14 @@
         </el-form-item>
         <el-form-item label="支付方式" prop="paymentTypeIndex">
           <el-select v-model="formLabelAlign.paymentTypeIndex" placeholder="请选择">
-            <el-option v-for="(item,i) in paymentTypeList" :key="item.n" :label="item.n" :value="i"></el-option>
+            <el-option v-for="(item,i) in paymentTypeList" :key="item.n" :label="item.n" :value="i" :disabled="item.d==formLabelAlign.rmType"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="Base Company" prop="baseCompany">
           <el-select
             v-model="formLabelAlign.baseCompany"
             placeholder="请选择"
-            @change="bankCurrencyChange"
-          >
+            @change="bankCurrencyChange">
             <el-option
               v-for="item in baseCompanyList"
               :key="item.code"
@@ -780,7 +786,20 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="汇款人" prop="brokerModel">
+        <el-form-item label="收款人" prop="brokerModel" v-show="formLabelAlign.rmType=='P'">
+          <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择" @change="recepitBankList">
+            <el-option v-for="(item,index) in brokerListSk" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
+              <span style="float:left">{{ item.codecode }}</span>
+              <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="收款账户" prop="partnerBankAccount" v-show="formLabelAlign.rmType=='P'">
+          <el-select v-model="formLabelAlign.partnerBankAccount" placeholder="请选择">
+            <el-option v-for="(item,i) in recepitList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="item.objectId"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="汇款人" prop="brokerModel" v-show="formLabelAlign.rmType=='R'">
           <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择">
             <el-option
               v-for="(item,index) in brokerList"
@@ -982,6 +1001,7 @@ export default {
   data() {
     return {
       nameList: {},
+      recepitList:[],
       searchFlag1: true,
       searchFlag2: true,
       searchFlag3: true,
@@ -1073,6 +1093,8 @@ export default {
         }
       ],
       formLabelAlign: {
+        rmType:'R',
+        partnerBankAccount:null,
         rmStatus: "",
         rmStatusName: "",
         processId: "",
@@ -1108,15 +1130,17 @@ export default {
         { n: "In Progress", v: "PROG" },
         { n: "In Execution", v: "INEX" }
       ],
-      paymentTypeList: [
-        { n: "Wire", v: "WIRE" },
-        { n: "Void P-Wire", v: "VP_WIRE" }
+      paymentTypeList: [   // 此处的d必须写成反的，反向判断disabled数据
+        { n: "Wire", v: "WIRE" , d:''},
+        { n: "Void P-Wire", v: "VP_WIRE", d:'R'},
+        { n:'Void R-Wire', v:'VR_WIRE', d:'P'}
       ],
       businessOriginList: [
         { a: "DOM", b: "RC_DOMESTIC" },
         { a: "INT", b: "RC_INTL" }
       ],
       brokerList: [],
+      brokerListSk:[],
       rmCurrencyList: [],
       assignee: "",
       TJRoptions: [],
@@ -1186,9 +1210,12 @@ export default {
         bankCurrency: [
           { required: true, message: "请选择币制", trigger: "blur" }
         ],
-        // chargesCurrency: [
-        //   { required: true, message: '请选择手续费币制', trigger: 'blur' }
-        // ],
+        rmType: [
+            { required: true, message: '请选支票类型', trigger: 'change' }
+          ],
+        partnerBankAccount: [
+          { required: true, message: "请选择收款账户", trigger: "blur" }
+        ],
         valueDate: [
           {
             type: "date",
@@ -1258,17 +1285,21 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      // 分出人+经济人
+      // 分出人+经济人all
       let fcArr = JSON.parse(sessionStorage.getItem("CedentType"));
       let jArr = JSON.parse(sessionStorage.getItem("BrokerType"));
       this.brokerList = jArr.concat(fcArr);
+      // 分出人+经济人part
+      let bList = JSON.parse(sessionStorage.getItem('BrokerBankList'));
+      let cList = JSON.parse(sessionStorage.getItem('CedentBankList'));
+      this.brokerListSk = bList.concat(cList);
       //获取币制
       this.rmCurrencyList = JSON.parse(sessionStorage.getItem("CurrencyList"));
       // 集团产再
       let objbc = JSON.parse(sessionStorage.getItem("baseCompany"));
       this.baseCompanyList = objbc.filter(el => {
         return el.code != "Both";
-      });
+      }); 
       // 国际国内
       this.businessOriginList = JSON.parse(
         sessionStorage.getItem("businessOrigin")
@@ -1276,10 +1307,9 @@ export default {
       if (this.$route.query.tag === "credOperation") {
         // 操作
         // 获取银行账户列表
-        this.AllBankAccountList = JSON.parse(
-          sessionStorage.getItem("AllBankAccountList")
-        );
+        this.AllBankAccountList = JSON.parse(sessionStorage.getItem("AllBankAccountList"));
         this.rmWriteBack();
+        this.recepitBankList();
       }
     }, 1000);
     if (this.$route.query.tag === "credVerification") {
@@ -1323,6 +1353,18 @@ export default {
       } else {
         document.getElementById("iframeId").contentWindow.postMessage({}, "*");
         document.getElementById("iframeId").contentWindow.location.reload(true);
+      }
+    },
+    recepitBankList(){
+      // this.AllBankAccountList
+      if(this.formLabelAlign.brokerModel || this.formLabelAlign.brokerModel==0){
+        this.recepitList = this.AllBankAccountList.filter(el=>{ return el.bpCode == this.brokerListSk[this.formLabelAlign.brokerModel]['codecode']});
+        console.log(this.recepitList,'this.recepitList');
+        if(!this.recepitList || !this.recepitList.length){
+          this.$message.error('选择的收款人无匹配'); 
+          this.recepitList = [];
+          this.formLabelAlign.partnerBankAccount = null;
+        }
       }
     },
     copy(id) {
@@ -1502,13 +1544,13 @@ export default {
       // 不能写方法循环遍历，只能手写一点点对字段，有坑
       this.formLabelAlign.processId = this.row.processId;
       // 带过来的结付公司 === 汇款人
-      if (this.row.rmSettleCompanyCode) {
-        this.brokerList.forEach((el, i) => {
-          if (el.codecode == this.row.rmSettleCompanyCode) {
-            this.formLabelAlign.brokerModel = i;
-          }
-        });
-      }
+      // if (this.row.rmSettleCompanyCode) {
+      //   this.brokerList.forEach((el, i) => {
+      //     if (el.codecode == this.row.rmSettleCompanyCode) {
+      //       this.formLabelAlign.brokerModel = i;
+      //     }
+      //   });
+      // }
       console.log(this.row.rmChargesCurrency, "process222");
       this.formLabelAlign.businessPartnerRef = this.row.processId;
       this.formLabelAlign.bankCurrency = this.row.rmCurrency;
@@ -1624,14 +1666,7 @@ export default {
         this.formLabelAlign.createdBy = this.$store.state.userName;
         this.$refs[formName].validate(valid => {
           if (valid) {
-            this.$http
-              .post(
-                "api/receipt/credOperation/createRemit",
-                Object.assign(this.formLabelAlign, this.mustData, {
-                  rmType: "R"
-                })
-              )
-              .then(res => {
+            this.$http.post("api/receipt/credOperation/createRemit",Object.assign(this.formLabelAlign,this.mustData)).then(res => {
                 this.dialogFormVisible = false;
                 if (res.status === 200 && res.data.errorCode == 1) {
                   this.$message({ message: "创建成功", type: "success" });
@@ -1652,6 +1687,7 @@ export default {
         this.rmWriteBack();
         this.dialogFormVisible = true;
         this.bankCurrencyChange();
+        this.recepitBankList();
       } else if (tag == "b") {
         // 编辑支票
         this.rmFlag = "b";
@@ -1659,7 +1695,7 @@ export default {
       }
     },
     getName(name) {
-      // 任务指派人，下一级提交人
+      // 指派人，下一级提交人
       this.$http
         .post("api/activiti/getAssigneeName", { roleName: name })
         .then(res => {
@@ -1882,7 +1918,7 @@ export default {
             this.dialogFormVisible3 = true;
           }
           break;
-        case 2: // 任务指派
+        case 2: // 指派
           this.getName(gname);
           this.specialName = specialName;
           specialName == "复核"
@@ -1975,9 +2011,9 @@ export default {
               }
             });
           break;
-        case 2: // 任务指派
+        case 2: // 指派
           if (!this.assignee) {
-            this.$message.error("请选择任务指派人");
+            this.$message.error("请选择指派人");
             return false;
           }
           if (this.specialName === "操作") {
