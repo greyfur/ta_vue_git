@@ -199,7 +199,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
+          <el-table-column prop="wsCurrency" label="币制" width="80"></el-table-column>
           <el-table-column label="金额">
             <template slot-scope="scope">
               <el-tooltip
@@ -253,9 +253,9 @@
           <el-table-column prop="wsStatus" label="账单状态" width="100">
             <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
           </el-table-column>
-          <el-table-column prop="registBy" label="录入人" width="110"></el-table-column>
+          <el-table-column prop="registBy" label="录入人" width="130"></el-table-column>
           <el-table-column prop="registAt" label="录入时间" width="160"></el-table-column>
-          <el-table-column prop="closedBy" label="复核人" width="110"></el-table-column>
+          <el-table-column prop="closedBy" label="复核人" width="130"></el-table-column>
           <el-table-column prop="closedAt" label="复核时间" width="160"></el-table-column>
           <el-table-column label="备注">
             <template slot-scope="scope">

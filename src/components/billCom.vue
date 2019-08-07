@@ -61,7 +61,7 @@
       </el-button>
     </div>
     <el-table :header-row-class-name="StableClass" height="480" :data="tableData" stripe style="width: 100%;">
-      <el-table-column label="流程编号" width="145">
+      <el-table-column label="流程编号" width="155">
         <template slot-scope="scope">
           <span
             :class="{'smallHand':urlName !== 'sortOperation'}"
@@ -214,7 +214,7 @@
       :total="mustData.total"
     ></el-pagination>
     <!-- 弹窗 -->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" :width="title==='踪迹'?'70%':'50%'">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" :width="title==='踪迹'?'80%':'50%'">
       <el-form
         label-position="right"
         label-width="140px"
