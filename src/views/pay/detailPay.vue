@@ -31,7 +31,7 @@
           <!-- <el-button size="small" :disabled="czState" @click="mailSend(1,'上传附件')" plain>上传附件</el-button> -->
           <!-- <el-button size="small" :disabled="czState" @click="mailSend(2,'附件查看')" plain>附件查看</el-button> -->
           <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'挂起':'悬停'}}</el-button>
-          <el-button size="small" :disabled="czState" plain @click="submite(2,'任务指派','操作')">任务指派</el-button>
+          <el-button size="small" :disabled="czState" plain @click="submite(2,'指派','操作')">指派</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(1,'流程提交',0,'付款一级审批')">流程提交</el-button>
         </div> 
         <!-- 支票 -->
@@ -39,14 +39,14 @@
           <el-button size="small" @click="openSICS">打开SICS</el-button>
           <!-- <el-button size="small" plain @click="mailSend(1,'上传附件')">上传附件</el-button> -->
           <!-- <el-button size="small" plain @click="mailSend(2,'附件查看')">附件查看</el-button> -->
-          <el-button size="small" plain @click="submite(2,'任务指派','支票')">任务指派</el-button>
+          <el-button size="small" plain @click="submite(2,'指派','支票')">指派</el-button>
           <el-button size="small" plain @click="submite(7,'流程提交',0,'审批完成')">流程提交</el-button>
           <el-button size="small" plain @click="onRemitCreat">支票创建</el-button>
           <el-button size="small" plain @click="urgencyPay">紧急付款</el-button>
         </div> 
         <!-- 复核 -->
         <div class="btn" v-if="$route.query.tag === 'payReview'">
-          <el-button size="small" plain @click="submite(2,'任务指派','复核')">任务指派</el-button>
+          <el-button size="small" plain @click="submite(2,'指派','复核')">指派</el-button>
           <el-button size="small" plain @click="tongbu">同步状态</el-button>
           <el-button size="small" plain @click="submite(4,'复核驳回')">复核驳回</el-button>
           <el-button size="small" plain @click="submite(6,'复核通过')">复核通过</el-button>
@@ -57,7 +57,7 @@
             <el-button size="small" plain @click="submite(5,'审批通过')">审批通过</el-button>
             <el-button size="small" plain @click="submite(9,'审批驳回')">审批驳回</el-button>
             <!-- <el-button size="small" plain @click="mailSend(2,'附件查看')">附件查看</el-button> -->
-            <el-button size="small" plain @click="submite(2,'任务指派','审批')">任务指派</el-button>
+            <el-button size="small" plain @click="submite(2,'指派','审批')">指派</el-button>
           </div>
         </div>
 
@@ -348,7 +348,7 @@
           </el-table-column>
           <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
           <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-          <el-table-column prop="sgStatus" label="Sg状态"></el-table-column>
+          <el-table-column prop="sgStatus" label="SG状态"></el-table-column>
           <el-table-column prop="settlementIndicator" label="结算指标" width="100"></el-table-column>
           <el-table-column prop="sgCurrency" label="币值"></el-table-column>
           <el-table-column prop="settlementAmount" label="结算总额"></el-table-column>
@@ -580,7 +580,7 @@
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="title === '任务指派'?'选择任务指派人':'选择处理人'" v-show="title === '任务指派' || putIn=='b'">
+        <el-form-item :label="title === '指派'?'选择指派人':'选择处理人'" v-show="title === '指派' || putIn=='b'">
           <el-select v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName"></el-option>
           </el-select>
@@ -622,9 +622,9 @@
       </el-table>
     </el-dialog>
 
-    <el-dialog title="任务指派" :visible.sync="dialogFormVisibleFHRWZF" :close-on-click-modal="modal">
+    <el-dialog title="指派" :visible.sync="dialogFormVisibleFHRWZF" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="160px">
-        <el-form-item label="选择任务指派人">
+        <el-form-item label="选择指派人">
           <el-select v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName || item.username == row.entryOperator"></el-option>
           </el-select>
@@ -641,6 +641,12 @@
         <el-form-item label="Process ID">
           <el-input v-model.trim="formLabelAlign.processId" disabled style="width:194px"></el-input>
         </el-form-item>
+         <el-form-item label="收/付款支票"> 
+          <el-radio-group v-model="formLabelAlign.rmType">
+            <el-radio label="R">收款</el-radio>
+            <el-radio label="P">付款</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="支票状态" prop="rmStatusIndex">
           <el-select v-model="formLabelAlign.rmStatusIndex" placeholder="请选择">
             <el-option v-for="(item,i) in rmStatusList" :key="item.n" :label="item.n" :value="i"></el-option>
@@ -648,7 +654,7 @@
         </el-form-item>
         <el-form-item label="支付方式" prop="paymentTypeIndex">
           <el-select v-model="formLabelAlign.paymentTypeIndex" placeholder="请选择">
-            <el-option v-for="(item,i) in paymentTypeList" :key="item.n" :label="item.n" :value="i"></el-option>
+            <el-option v-for="(item,i) in paymentTypeList" :key="item.n" :label="item.n" :value="i" :disabled="item.d==formLabelAlign.rmType"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="Base Company" prop="baseCompany">
@@ -661,7 +667,19 @@
             <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="收款人" prop="brokerModel">
+        <el-form-item label="汇款人" prop="brokerModel" v-show="formLabelAlign.rmType=='R'">
+          <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择">
+            <el-option
+              v-for="(item,index) in brokerListHK"
+              :key="index"
+              :label="item.codecode+' - '+item.codeName"
+              :value="index">
+              <span style="float:left">{{ item.codecode }}</span>
+              <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="收款人" prop="brokerModel" v-show="formLabelAlign.rmType=='P'">
           <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择" @change="recepitBankList">
             <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
               <span style="float:left">{{ item.codecode }}</span>
@@ -669,7 +687,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="收款账户" prop="partnerBankAccount">
+        <el-form-item label="收款账户" prop="partnerBankAccount" v-show="formLabelAlign.rmType=='P'">
           <el-select v-model="formLabelAlign.partnerBankAccount" placeholder="请选择">
             <el-option v-for="(item,i) in recepitList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="item.objectId"></el-option>
           </el-select>
@@ -833,6 +851,7 @@ export default {
       return {
         saveLevel:null,
         partBankAccountList:[],
+        brokerListHK:[],
         recepitList:[],
         nameList:{},
         searchFlag1:true,
@@ -914,6 +933,7 @@ export default {
         options:[],
         value:0,
         formLabelAlign:{
+          rmType:'P',
           rmStatus:'',
           rmStatusName:'',
           processId:'',
@@ -967,7 +987,11 @@ export default {
         pendingReason:null,
         cedentList:[],
         rmStatusList:[{'n':'In Progress','v':'PROG'},{'n':'In Execution','v':'INEX'}],
-        paymentTypeList:[{'n':'Wire','v':'WIRE'},{'n':'Void R-Wire','v':'VR_WIRE'}],
+        paymentTypeList: [   // 此处的d必须写成反的，反向判断disabled数据
+          { n: "Wire", v: "WIRE" , d:''},
+          { n: "Void P-Wire", v: "VP_WIRE", d:'R'},
+          { n:'Void R-Wire', v:'VR_WIRE', d:'P'}
+        ],
         baseCompanyList:[],
         businessOriginList:[],
         brokerList:[],
@@ -1111,6 +1135,7 @@ export default {
       this.brokerList = bList.concat(cList);
       let fcArr = JSON.parse(sessionStorage.getItem('CedentType'));
       let jArr = JSON.parse(sessionStorage.getItem('BrokerType'));
+      this.brokerListHK = fcArr.concat(jArr);
       this.cedentList = fcArr;
       this.brokerListS = jArr;
       //获取币制
@@ -1531,7 +1556,7 @@ export default {
           }
           
         break;
-        case 2:  // 任务指派 
+        case 2:  // 指派 
           this.specialName = specialName;
           if(this.specialName === '操作') {
             this.getName('付款录入');
@@ -1689,9 +1714,9 @@ export default {
               }
             })
         break;
-        case 2:  // 任务指派    操作、支票、复核、审批
+        case 2:  // 指派    操作、支票、复核、审批
           if(!this.assignee){
-            this.$message.error('请选择任务指派人');
+            this.$message.error('请选择指派人');
             return false;
           }
           let params = {processId:this.row.processId, 
@@ -1969,7 +1994,7 @@ export default {
                 })
                 this.fileData = arr4;
                 if(init){
-                  let num = this.fileData.findIndex(el => { return el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
+                  let num = this.fileData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
                   setTimeout(()=>{ this.docView(this.fileData[num]); },500)
                 }
                 
@@ -2032,7 +2057,7 @@ export default {
        this.formLabelAlign.createdBy = this.$store.state.userName;
        this.$refs[formName].validate((valid) => {
         if(valid) {
-          this.$http.post('api/receipt/credOperation/createRemit',Object.assign(this.formLabelAlign,this.mustData,{rmType:'P'})).then(res =>{
+          this.$http.post('api/receipt/credOperation/createRemit',Object.assign(this.formLabelAlign,this.mustData)).then(res =>{
             this.dialogFormVisible = false;
             if(res.status === 200 && res.data.errorCode == 1){
               this.$message({message: '创建成功',type: 'success'});
@@ -2229,7 +2254,7 @@ export default {
               // console(allNum,'++hyd')
             }
           }
-        })
+        }) 
         this.makeDocListEctype.zheNum = allNum>0?Number(allNum).toFixed(2):null;
       }
     },
@@ -2296,6 +2321,22 @@ export default {
                   }).then(res =>{
                     if(res.status === 200 && res.data.rows && res.data.rows.length){
                       this.docView(res.data.rows[0]); 
+                      this.mailSend(2);
+                         this.$http.post('api/pay/teskClaim/list',
+                         {pageNumber:1,  
+                          pageSize:20,  
+                          processType:'付款',
+                          processId:this.row.processId
+                          }
+                          ).then(res =>{
+                            // res.data.rows[0]
+                            if(res.data.rows[0]){
+                            this.listData.forEach(el=>{
+                              el['b'] = res.data.rows[0][el['c']];
+                              if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
+                            })
+                            }
+                         })
                     }
                   })
                 this.dialogFormVisible2 = false; 

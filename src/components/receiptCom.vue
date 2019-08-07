@@ -33,7 +33,7 @@
         </el-row>
         <el-row :gutter="10" class="billRow">
           <el-col :span="8">
-            <span class="slable">汇款到账日期</span>
+            <span class="slable">到账日期</span>
             <el-date-picker
               value-format="timestamp"
               v-model="formLabelAlign.rmReceiptDate"
@@ -114,7 +114,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
-      <el-table-column prop="rmReceiptDate" width="120" label="汇款到账日期"></el-table-column>
+      <el-table-column prop="rmReceiptDate" width="120" label="到账日期"></el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
       <el-table-column label="Base Company" prop="baseCompany" width="130"></el-table-column>
       <el-table-column label="汇款金额">
@@ -191,7 +191,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
-      <el-table-column prop="rmReceiptDate" width="120" label="汇款到账日期"></el-table-column>
+      <el-table-column prop="rmReceiptDate" width="120" label="到账日期"></el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
       <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
       <el-table-column label="汇款金额">
@@ -303,7 +303,7 @@
         <el-form-item label="汇款人名称">
           <el-input v-model="formLabelAlign.rmSettleCompanyName"></el-input>
         </el-form-item>
-        <el-form-item label="汇款到账日期">
+        <el-form-item label="到账日期">
           <el-date-picker
             value-format="timestamp"
             v-model="formLabelAlign.rmReceiptDate"

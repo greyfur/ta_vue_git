@@ -23,7 +23,7 @@
           <!-- <el-button size="small" :disabled="isHover" plain @click="onSics('录入')">账单回写</el-button> -->
           <!-- <el-button type="primary" :disabled="isHover" @click="openBPSICS" plain>打开BPSICS</el-button> -->
           <el-button size="small" :disabled="isHover" @click="submit(4)" plain>置废</el-button>
-          <el-button size="small" :disabled="isHover" @click="submit(1,'录入指派')" plain>任务指派</el-button>
+          <el-button size="small" :disabled="isHover" @click="submit(1,'录入指派')" plain>指派</el-button>
           <el-button
             :type="isHover?'info':''"
             size="small"
@@ -36,7 +36,7 @@
         <!-- 复核 -->
         <div class="btn" v-if="$route.query.tag === 'billCheck'">
           <!-- <el-button size="small" plain @click="onSics('复核')">账单回写</el-button> -->
-          <el-button size="small" @click="submit(1,'复核指派')" plain>任务指派</el-button>
+          <el-button size="small" @click="submit(1,'复核指派')" plain>指派</el-button>
           <el-button size="small" @click="submit(2)" plain>复核驳回</el-button>
           <el-button size="small" @click="submit(3)" plain>复核通过</el-button>
         </div>
@@ -557,13 +557,13 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="指派任务处理人" v-show="title==='任务指派' && $route.query.tag !== 'billCheck'">
+        <el-form-item label="指派任务处理人" v-show="title==='指派' && $route.query.tag !== 'billCheck'">
           <el-select v-model="assignee"  placeholder="请选择"> 
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName"></el-option>
           </el-select>
         </el-form-item> 
          <!-- 复核指派 -->
-        <el-form-item label="指派任务处理人" v-show="title==='任务指派' && $route.query.tag === 'billCheck'">
+        <el-form-item label="指派任务处理人" v-show="title==='指派' && $route.query.tag === 'billCheck'">
           <el-select v-model="assignee"  placeholder="请选择"> 
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName || item.username == chooseRow.entryOperator"></el-option>
           </el-select>
@@ -775,7 +775,7 @@ export default {
             }
           })
           this.tableData = arr;
-          let num = this.tableData.findIndex(el => { return el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
+          let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
           setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
           this.SICSData = res.data.workSheetVOlist;
           res.data.processStatus === "已悬停"
@@ -1066,9 +1066,9 @@ export default {
       this.tagName = name;
       this.assignee = null;
       switch (tag) {
-        case 1: // 任务指派  ==== 两种
+        case 1: // 指派  ==== 两种
           this.dialogFormVisible5 = true;
-          this.title = "任务指派";
+          this.title = "指派";
           if (name === "录入指派") {
             this.getName("账单录入");
           } else {
@@ -1295,9 +1295,9 @@ export default {
     confirm() {
       // this.dialogFormVisible = false;
       switch (this.dialogState) {
-        case 1: // 任务指派  ==== 两种
+        case 1: // 指派  ==== 两种
           if (!this.assignee) {
-            this.$message.error("请选择任务指派人");
+            this.$message.error("请选择指派人");
             return false;
           }
           if (this.tagName === "录入指派") {

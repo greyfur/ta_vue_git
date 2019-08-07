@@ -114,8 +114,7 @@
                   class="item"
                   effect="dark"
                   :content="scope.row.section"
-                  placement="top-start"
-                >
+                  placement="top-start">
                   <span class="abbreviate">{{scope.row.section}}</span>
                 </el-tooltip>
               </template>
@@ -230,7 +229,7 @@
       </el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-      <el-table-column prop="sgStatus" label="Sg状态"></el-table-column>
+      <el-table-column prop="sgStatus" label="SG状态"></el-table-column>
       <el-table-column prop="settlementIndicator" label="结算指标" width="95"></el-table-column>
       <el-table-column prop="sgCurrency" label="币值"></el-table-column>
       <el-table-column label="结算总额">
@@ -329,7 +328,7 @@
         <!-- <el-form-item label="汇款人名称">
           <el-input v-model="formLabelAlign.rmSettleCompanyName"></el-input>
         </el-form-item>
-        <el-form-item label="汇款到账日期"> 
+        <el-form-item label="到账日期"> 
             <el-date-picker value-format="timestamp" v-model="formLabelAlign.rmReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="汇款金额" v-show="title==='编辑' || title==='创建'">
@@ -519,8 +518,7 @@
       title="文档预览"
       width="fit-content"
       :visible.sync="dialogFormVisibleA"
-      :close-on-click-modal="modal"
-    >
+      :close-on-click-modal="modal">
       <div class="browseDoc" v-show="title!='踪迹'">
         <iframe
           src="../../static/Preview/index.html"
