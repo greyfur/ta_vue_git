@@ -47,7 +47,7 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
-    <el-table :data="tableData" stripe style="width: 100%" height="480" border> 
+    <el-table :data="tableData" stripe style="width: 100%" height="480" border  :header-row-class-name="StableClass"> 
       <el-table-column label="支票号" width="100">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
@@ -234,6 +234,7 @@ export default {
       modal: false,
       tableData: [],
       ZDoptions: [],
+      StableClass:'tableClass',
       businessOriginList: [],
       baseCompanyList: [],
       rmCurrencyList: [],

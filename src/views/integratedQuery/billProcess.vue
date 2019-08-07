@@ -36,7 +36,6 @@
                 <span style="float:right;color: #8492a6; font-size: 13px">{{index}}</span>
               </el-option>
             </el-select>
-          <!-- <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input> -->
         </el-col>
         <el-col :span="8">
           <span class="slable">分出公司</span>
@@ -207,8 +206,7 @@ export default {
           {value: 'O',label: '转分账单'},
           {value: 'C',label: '理赔账单'},
         ],
-        tableClass:{'background-color':'#FAFAFA'},
-        StableClass:'background-color:#FAFAFA',
+        StableClass:'tableClass',
         baseCompanyList:[],
         YWoptionsObj:{
           'T':'合约账单',

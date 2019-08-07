@@ -86,6 +86,7 @@
       tooltip-effect="dark"
       stripe
       border
+      :header-row-class-name="StableClass"
       style="width: 100%"
       height="480"
       @selection-change="handleSelectionChange"
@@ -94,13 +95,9 @@
       <el-table-column prop="processId" label="ProcessID" width="130"></el-table-column>
       <el-table-column width="140" label="结付公司">
         <template slot-scope="scope">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="scope.row.rmSettleCompanyCode"
-            placement="top-start"
-          >
-            <span class="abbreviate">{{scope.row.rmSettleCompanyCode}}</span>
+          <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
+            <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
+            <span class="abbreviate" v-else></span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -164,7 +161,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-table v-show="urlName!='taskClaim' && urlName!='financialCreat'" :data="tableData" border stripe style="width: 100%">
+    <el-table :header-row-class-name="StableClass" v-show="urlName!='taskClaim' && urlName!='financialCreat'" :data="tableData" border stripe style="width: 100%">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span
@@ -175,13 +172,9 @@
       </el-table-column>
       <el-table-column prop="rmSettleCompanyName" width="140" label="结付公司"> 
         <template slot-scope="scope">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="scope.row.rmSettleCompanyName"
-            placement="top-start"
-          >
-            <span class="abbreviate">{{scope.row.rmSettleCompanyName}}</span>
+          <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
+            <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
+            <span class="abbreviate" v-else></span>
           </el-tooltip>
         </template>
         </el-table-column>
@@ -420,6 +413,7 @@
             style="width: 100%"
             class="document"
             v-show="title==='编辑'"
+            :header-row-class-name="StableClass"
           >
             <el-table-column label="文件名" width="140">
               <template slot-scope="scope">
@@ -495,7 +489,7 @@
           <img :src="picture" style="width:100%" @click="dialogFormVisibleA=true">
         </el-collapse-item>
       </el-collapse>
-      <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
+      <el-table :header-row-class-name="StableClass" :data="track" border style="width: 100%" v-show="title==='踪迹'">
         <el-table-column prop="processId" label="流程编号" width="140"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
         <el-table-column label="任务来源">
@@ -514,6 +508,7 @@
         style="width: 100%"
         class="document"
         v-show="title==='附件查看'"
+        :header-row-class-name="StableClass"
       >
         <el-table-column label="文件名" width="140">
           <template slot-scope="scope">
@@ -623,6 +618,7 @@ export default {
       fileList: [],
       file: [],
       fileData: [],
+      StableClass:'tableClass',
       listData: [
         {
           a: "流程编号",

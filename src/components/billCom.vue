@@ -478,8 +478,7 @@ export default {
         { value: "O", label: "转分账单" },
         { value: "C", label: "理赔账单" }
       ],
-      tableClass: { "background-color": "#FAFAFA" },
-      StableClass: "background-color:#FAFAFA",
+      StableClass: "tableClass",
       baseCompanyList: [],
       YWoptionsObj: {
         T: "合约账单",
@@ -1218,9 +1217,5 @@ export default {
 .searchNew .el-col-24 {
   margin-bottom: 12px;
   text-align: right;
-}
-.tableClass {
-  background: #e8e8e8;
-  background-color: #e8e8e8;
 }
 </style>

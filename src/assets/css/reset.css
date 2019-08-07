@@ -134,8 +134,7 @@ input::-webkit-inner-spin-button {
   margin-bottom: 12px;
   text-align: right;
 }
-.tableClass{
-  background: #E8E8E8;
+.tableClass th{
   background-color: #E8E8E8;
 }
 .el-button--text{ color: #005C8D;  }

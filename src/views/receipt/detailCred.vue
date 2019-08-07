@@ -101,7 +101,7 @@
         <el-collapse-transition>
           <div v-show="searchFlag2">
             <el-table stripe :data="RMData" style="width:100%" border>
-              <el-table-column label="支票号" width="110">
+              <el-table-column label="支票号" width="150">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
@@ -113,18 +113,7 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column label="流程编号">
-                <template slot-scope="scope">
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    :content="scope.row.processId"
-                    placement="top-start"
-                  >
-                    <span class="abbreviate">{{scope.row.processId}}</span>
-                  </el-tooltip>
-                </template>
-              </el-table-column>
+              <el-table-column prop="bankCurrency" label="币制" width="150"></el-table-column>
               <el-table-column label="支票金额">
                 <template slot-scope="scope">
                   <el-tooltip
@@ -133,6 +122,19 @@
                     :content="scope.row.bankAmount"
                     placement="top-start">
                     <span class="abbreviate">{{scope.row.bankAmount}}</span>
+                  </el-tooltip>
+                </template>
+              </el-table-column>
+              <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column>
+               <el-table-column label="手续费金额" width="100">
+                <template slot-scope="scope">
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    :content="scope.row.chargesAmount"
+                    placement="top-start"
+                  >
+                    <span class="abbreviate">{{scope.row.chargesAmount}}</span>
                   </el-tooltip>
                 </template>
               </el-table-column>
@@ -148,7 +150,7 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column label="核销状态">
+               <el-table-column label="核销状态">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
@@ -161,17 +163,15 @@
                 </template>
               </el-table-column>
               <el-table-column prop="paymentType" label="支付方式"></el-table-column>
-              <el-table-column prop="bankCurrency" label="币制" width="80"></el-table-column>
-              <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column>
-              <el-table-column label="手续费金额" width="100">
+              <el-table-column label="流程编号">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
                     effect="dark"
-                    :content="scope.row.chargesAmount"
+                    :content="scope.row.processId"
                     placement="top-start"
                   >
-                    <span class="abbreviate">{{scope.row.chargesAmount}}</span>
+                    <span class="abbreviate">{{scope.row.processId}}</span>
                   </el-tooltip>
                 </template>
               </el-table-column>
@@ -220,7 +220,7 @@
         </el-collapse-transition>
       </el-col>
     </el-row>
-    <el-row v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'">
+    <el-row v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate' || $route.query.tag === 'collectiongEnd'">
       <el-col :span="24">
         <div
           class="titleSearch detailSearch"
@@ -346,7 +346,7 @@
                   <el-table-column prop="wsType" label="账单类型"></el-table-column>
                   <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
                   <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-                  <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+                  <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
                   <el-table-column prop="dept" label="经营机构"></el-table-column>
                   <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
                   <el-table-column label="金额">
@@ -505,7 +505,7 @@
         </el-collapse-transition>
       </el-col>
     </el-row>
-    <el-row v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'">
+    <el-row v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate' || $route.query.tag === 'collectiongEnd'">
       <el-col :span="24">
         <div
           class="titleSearch detailSearch"
@@ -628,7 +628,7 @@
             <el-table-column prop="wsType" label="账单类型"></el-table-column>
             <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
             <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-            <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+            <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
             <el-table-column prop="dept" label="经营机构"></el-table-column>
             <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
             <el-table-column label="金额">
