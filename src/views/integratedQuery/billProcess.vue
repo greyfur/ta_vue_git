@@ -25,7 +25,18 @@
       <el-row :gutter="10" class="billRow">
         <el-col :span="8">
           <span class="slable">录入人查询</span>
-          <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input>
+          <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人查询">
+              <el-option
+                v-for="(item,index) in nameList"
+                :key="item"
+                :value="index"
+                :label="item"
+              >
+                <span style="float:left">{{item}}</span>
+                <span style="float:right;color: #8492a6; font-size: 13px">{{index}}</span>
+              </el-option>
+            </el-select>
+          <!-- <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input> -->
         </el-col>
         <el-col :span="8">
           <span class="slable">分出公司</span>

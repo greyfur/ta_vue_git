@@ -44,8 +44,9 @@
       </el-table-column>
       <el-table-column width="140" label="结付公司">
           <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" :content="scope.row.processName" placement="top-start">
-            <span class="abbreviate">{{scope.row.rmSettleCompanyName}}</span>
+          <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
+            <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
+            <span class="abbreviate" v-else></span>
           </el-tooltip>
         </template>
       </el-table-column>
