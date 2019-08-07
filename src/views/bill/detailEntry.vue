@@ -770,7 +770,7 @@ export default {
             }
           })
           this.tableData = arr;
-          let num = this.tableData.findIndex(el => { return el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
+          let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
           setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
           this.SICSData = res.data.workSheetVOlist;
           res.data.processStatus === "已悬停"

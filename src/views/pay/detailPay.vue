@@ -1809,7 +1809,7 @@ export default {
                 })
                 this.fileData = arr4;
                 if(init){
-                  let num = this.fileData.findIndex(el => { return el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
+                  let num = this.fileData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
                   setTimeout(()=>{ this.docView(this.fileData[num]); },500)
                 }
                 
