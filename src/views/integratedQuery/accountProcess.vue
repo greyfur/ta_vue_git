@@ -46,7 +46,7 @@
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div>
-    <el-table :data="tableData" stripe style="width: 100%" height="480" border>
+    <el-table :data="tableData" stripe style="width: 100%" height="480" border :header-row-class-name="StableClass">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column label="结付公司" width="140">
        <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" :content="scope.row.processName" placement="top-start">
+          <el-tooltip class="item" effect="dark" :content="scope.row.rmSettleCompanyName" placement="top-start">
             <span class="abbreviate">{{scope.row.rmSettleCompanyName}}</span>
           </el-tooltip>
         </template>>
@@ -143,7 +143,7 @@
           <img :src="picture" style="width:100%" @click="dialogFormVisibleA=true">
         </el-collapse-item>
       </el-collapse>
-      <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
+      <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'" :header-row-class-name="StableClass">
         <el-table-column prop="processId" label="流程编号" width="140"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
         <el-table-column label="任务来源">
@@ -155,7 +155,7 @@
         <el-table-column prop="reason" label="操作原因"></el-table-column>
         <el-table-column prop="remark" label="操作备注"></el-table-column>
       </el-table>
-      <el-table stripe border :data="fileData" style="width: 100%" class="document" v-show="title==='上传附件' || title==='附件查看'">
+      <el-table stripe border :header-row-class-name="StableClass" :data="fileData" style="width: 100%" class="document" v-show="title==='上传附件' || title==='附件查看'">
         <el-table-column label="文件名">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -398,6 +398,7 @@ export default {
         cedentList:[],
         picture:'',
         singlePId:'',
+        StableClass:'tableClass',
         rules:{
           baseCompany: [
             { required: true, message: '请选择Base Company', trigger: 'blur' }

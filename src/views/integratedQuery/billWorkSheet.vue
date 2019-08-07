@@ -82,7 +82,7 @@
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91"></i>手工创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div> 
-    <el-table :data="tableData" stripe style="width: 100%" height="480" border>
+    <el-table :data="tableData" stripe style="width: 100%" height="480" border :header-row-class-name="StableClass">
       <el-table-column label="账单号">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
@@ -264,7 +264,7 @@
             :file-list="fileList">
             <el-button size="small" type="primary">上传</el-button>
           </el-upload> 
-          <el-table stripe :data="fileData" style="width: 100%" class="document" border>
+          <el-table stripe :data="fileData" style="width: 100%" class="document" border :header-row-class-name="StableClass">
             <el-table-column label="文件名">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -296,7 +296,7 @@
           <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
         </el-collapse-item>
       </el-collapse> -->
-      <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
+      <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'" :header-row-class-name="StableClass">
         <el-table-column prop="wsId" label="流程编号" width="220"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
         <el-table-column label="任务来源">
@@ -349,14 +349,13 @@ export default {
         tableData:[],
         assignee:'',
         modal:false,
+        StableClass:'tableClass',
         YWoptions:[
           {value: 'T',label: '合约账单'},
           {value: 'F',label: '临分账单'},
           {value: 'O',label: '转分账单'},
           {value: 'C',label: '修正账单'},
         ],
-        tableClass:{'background-color':'#FAFAFA'},
-        StableClass:'background-color:#FAFAFA',
         baseCompanyList:[],
         YWoptionsObj:{
           'T':'合约账单',

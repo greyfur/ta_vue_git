@@ -246,6 +246,7 @@ export default {
       modal: false,
       tableData: [],
       ZDoptions: [],
+      StableClass:'tableClass',
       businessOriginList: [],
       baseCompanyList: [],
       rmCurrencyList: [],
