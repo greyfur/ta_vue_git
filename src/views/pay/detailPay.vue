@@ -545,7 +545,7 @@
                 <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
               </el-select>
             </el-form-item>
-          </el-col>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+          </el-col>         
           <el-col :span="10">
             <el-form-item>
               <input type="text" class="selfInput" v-model="formLabelAlign.chargesAmount" @input="watchInput('chargesAmount')">
@@ -2040,6 +2040,7 @@ export default {
                 // console.log(Number(this.makeDocListEctype.yuanNum[i])*Number(1*this.makeDocListEctype.yuanHuiLv[i]))
                 allNum += Number(this.makeDocListEctype.yuanNum[i])*Number(1*this.makeDocListEctype.yuanHuiLv[i]);
               }
+              // console(allNum,'++hyd')
             }
           }
         })
@@ -2195,7 +2196,7 @@ export default {
             if(n.indexOf(el) == -1){
               this.makeDocListEctype.yuanNum.splice(i,1);
               this.makeDocListEctype.yuanHuiLv.splice(i,1);
-              // console.log( this.makeDocListEctype.zheNum)
+              // console.log( this.makeDocListEctype.zheNum,'hyd')
               this.makeDocListEctype.zheNum = this.makeDocListEctype.zheNum
             }
           })
@@ -2220,7 +2221,7 @@ export default {
             // el 是金额
             all += Number(this.makeDocListEctype.yuanHuiLv[i]) * Number(el);
           })
-          // console.log(all,'--')
+          // console.log(all,'--hyd')
           this.makeDocListEctype.zheNum = all>0?Number(all).toFixed(5):null;
         }
         
