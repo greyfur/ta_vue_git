@@ -30,6 +30,12 @@
               </el-select>
             </el-col>
           </el-row>
+           <el-row :gutter="10" class="billRow" v-show="urlName === 'billCheck'">
+             <el-col :span="7">
+              <span class="slable">录入人查询</span>
+              <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input>
+            </el-col>
+           </el-row>
           <el-row :gutter="10" class="billRow">
             <el-col :span="12" v-show="urlName === 'billEntry'">
               <span class="slable">流程状态</span>
@@ -573,6 +579,7 @@ export default {
       billSearch: {
         processId: null,
         processStatus: null,
+        processName:null,
         wsType: null,
         wsPeriod: null,
         wsBusinessType: null,
@@ -583,7 +590,8 @@ export default {
         wsReceiptDate: null,
         businessOrigin: null,
         baseCompany: null,
-        reportUnit: null
+        reportUnit: null,
+        registBy:null
       },
       mustData: {
         actOperator: null,
@@ -635,7 +643,6 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
-   
     this.$http
       .post("api/activiti/getAssigneeName", { roleName: "账单录入" })
       .then(res => {
@@ -779,7 +786,7 @@ export default {
           });
 
           break;
-        case 1: // 查询
+        case 1: // 查询hyd
           let params = null;
           if (this.zq2 && this.zq1) {
             this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;

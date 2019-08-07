@@ -22,6 +22,35 @@
           </el-select>
         </el-col>
       </el-row>
+      <el-row :gutter="10" class="billRow">
+        <el-col :span="7">
+          <span class="slable">录入人查询</span>
+          <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input>
+        </el-col>
+        <el-col :span="8">
+          <span class="slable">分出公司</span>
+          <el-select clearable v-model="cedentModel" placeholder="请选择分出公司">
+            <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index"></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="8">
+          <span class="slable">经纪公司</span>
+          <el-select clearable v-model="brokerModel" placeholder="请选择经纪公司">
+            <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index"></el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" class="billRow">  
+        <el-col :span="7">
+          <span class="slable">录入时间段</span>
+           <el-date-picker
+              value-format="timestamp"
+              v-model="billSearch.registAt"
+              type="date"
+              placeholder="选择日期"
+            ></el-date-picker>
+         </el-col>
+      </el-row>
       <el-row><el-col :span="24">
         <el-button type="primary" plain @click="handleClick(1)"><i class="iconfont iconGroup42"></i>查询</el-button>
         <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
@@ -261,6 +290,8 @@ export default {
           businessOrigin:null,
           baseCompany:null,
           reportUnit:null,
+          registBy:null,
+          registAt:null
         },
         mustData:{
           actOperator:null,
