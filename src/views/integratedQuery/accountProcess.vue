@@ -83,22 +83,22 @@
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->
       <!-- <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column> -->
-      <!-- <el-table-column fixed="right" label="操作" width="80">
+      <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
             <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
+              <!-- <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item> -->
               <el-dropdown-item><el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
+              <!-- <el-dropdown-item><el-button v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(12,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(15,scope.row)" type="text" size="small">附件查看</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(13,scope.row)" type="text" size="small">发送邮件</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(20,scope.row)" type="text" size="small">Reverse</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(20,scope.row)" type="text" size="small">Reverse</el-button></el-dropdown-item> -->
             </el-dropdown-menu>
           </el-dropdown>
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
     <el-pagination
       @size-change="handleSizeChange"
@@ -109,88 +109,6 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="mustData.total">      
     </el-pagination>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
-      <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
-        <el-form-item label="结付公司">
-          <el-select clearable filterable v-model="cedentModel" placeholder="请选择">
-            <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
-              <span style="float:left">{{ item.codecode }}</span>
-              <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <!-- <el-form-item label="汇款人名称">
-          <el-input v-model="formLabelAlign.rmSettleCompanyName"></el-input>
-        </el-form-item>
-        <el-form-item label="到账日期"> 
-            <el-date-picker value-format="timestamp" v-model="formLabelAlign.rmReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="汇款金额" v-show="title==='编辑' || title==='创建'">
-          <input type="text" class="selfInput" v-model="formLabelAlign.rmAmount" @input="watchInput('rmAmount')">
-        </el-form-item>
-        <el-form-item label="币制" v-show="title==='创建' || title==='编辑'">     
-          <el-select clearable v-model="formLabelAlign.rmCurrency" placeholder="请选择">
-            <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
-          </el-select>
-        </el-form-item> -->
-        <el-form-item label="Business Origin" prop="businessOrigin" v-show="title==='创建' || title==='编辑'"> 
-          <el-select clearable v-model="formLabelAlign.businessOrigin" placeholder="请选择">
-            <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Base Company" v-show="title==='创建' || title==='编辑'" prop="baseCompany">
-          <el-select clearable v-model="formLabelAlign.baseCompany" placeholder="请选择">
-            <el-option v-for="item in baseCompanyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
-          </el-select>
-        </el-form-item>
-        <!-- <el-form-item label="我司销账编号" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.rmWrittenOffNum"></el-input>
-        </el-form-item>
-        <el-form-item label="结算人员" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.rmSettleUser"></el-input>
-        </el-form-item>
-        <el-form-item label="付款人名称" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.payerName"></el-input>
-        </el-form-item>
-        <el-form-item label="付款人账号" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.payerAccountNumber"></el-input>
-        </el-form-item>
-        <el-form-item label="付款人开户行名" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.payerBankName"></el-input>
-        </el-form-item>
-        <el-form-item label="付款人开户行号" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.payerBankNumber"></el-input>
-        </el-form-item>
-        <el-form-item label="原收款公司名称" v-show="title==='编辑' || title==='创建'">
-          <el-input v-model="formLabelAlign.rmOriSettleCompanyName"></el-input>
-        </el-form-item> 
-        <el-form-item label="原收款公司币制/原收款公司金额" class="curAmountForm" v-show="title==='编辑' || title==='创建'">
-          <el-select clearable v-model="formLabelAlign.rmOriCurrency" placeholder="请选择" class="curAmount">
-            <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
-          </el-select>
-          <input type="text" class="selfInput" v-model="formLabelAlign.rmOriAmount" @input="watchInput('rmOriAmount')">
-        </el-form-item>
-        <el-form-item label="手续费币制/手续费金额" class="curAmountForm" v-show="title==='编辑' || title==='创建'">
-          <el-select clearable v-model="formLabelAlign.rmChargesCurrency" placeholder="请选择" class="curAmount">
-            <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
-          </el-select>
-          <input type="text" class="selfInput" v-model="formLabelAlign.rmChargesAmount" @input="watchInput('rmChargesAmount')">
-        </el-form-item> -->
-        <el-form-item label="Process ID" v-show="title==='查询'">
-          <el-input v-model.trim="formLabelAlign.processId"></el-input>
-        </el-form-item>
-        <el-form-item label="流程状态" v-show="title === '查询'">
-          <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
-            <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="confirm('formLabelAlign')">确 定</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
       <el-form label-width="140px" v-show="title==='流程提交' || title==='reverse'">
         <el-form-item label="选择处理人'"  v-show="title==='流程提交'">
@@ -470,6 +388,11 @@ export default {
             c:'remark',
           },
         ],
+        ZJObj:{
+          total:50,
+          pageNumber:1,  // 页数
+          pageSize:10,  //页面一次要展示的条数
+        },
         chooseRow:{},
         cedentModel:null,
         cedentList:[],
@@ -668,6 +591,7 @@ export default {
           this.title = '踪迹';
           this.dialogFormVisible2 = true;
           this.track = this.chooseRow.bscProcessActionVOlist;
+          this.getZJData(row.processId);
           this.$http.post('api/activiti/getProcPicture',{procInstId:this.chooseRow.processInstId},{responseType:'blob'}).then(res =>{
             if(res.status === 200 ) {
               this.picture = window.URL.createObjectURL(res.data);
@@ -722,6 +646,16 @@ export default {
 
       }
 
+    },
+    getZJData(id){
+      this.$http.post('api/othersDO/bscProcessAction/list',Object.assign({},{processId:id},this.ZJObj)).then(res =>{
+        console.log(res,'踪迹列表');
+        if(res.status === 200 ) {
+          this.track = res.data.rows;
+          this.ZJObj.total=res.data.total;
+          this.dialogFormVisible = true;
+        }
+      })
     },
     confirm(formName){
       if(this.cedentModel != null){

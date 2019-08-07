@@ -353,7 +353,7 @@ export default {
           {value: 'T',label: '合约账单'},
           {value: 'F',label: '临分账单'},
           {value: 'O',label: '转分账单'},
-          {value: 'C',label: '理赔账单'},
+          {value: 'C',label: '修正账单'},
         ],
         tableClass:{'background-color':'#FAFAFA'},
         StableClass:'background-color:#FAFAFA',
@@ -362,7 +362,7 @@ export default {
           'T':'合约账单',
           'F':'临分账单',
           'O':'转分账单',
-          'C':'理赔账单',
+          'C':'修正账单',
         },
         zqList:[
           'Variable',

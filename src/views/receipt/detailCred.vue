@@ -103,7 +103,7 @@
         <el-collapse-transition>
           <div v-show="searchFlag2">
             <el-table stripe :data="RMData" style="width:100%" border>
-              <el-table-column label="支票号" width="110">
+              <el-table-column label="支票号" width="150">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
@@ -1213,9 +1213,9 @@ export default {
         rmType: [
             { required: true, message: '请选支票类型', trigger: 'change' }
           ],
-        partnerBankAccount: [
-          { required: true, message: "请选择收款账户", trigger: "blur" }
-        ],
+        // partnerBankAccount: [
+        //   { required: true, message: "请选择收款账户", trigger: "blur" }
+        // ],
         valueDate: [
           {
             type: "date",
@@ -1561,13 +1561,13 @@ export default {
         let arr = this.businessOriginList.filter(el => {
           return el.name == this.row.businessOrigin;
         });
-        this.formLabelAlign.businessOrigin = arr[0]["code"];
+        if(arr){ this.formLabelAlign.businessOrigin = arr[0]["code"]; }
       }
       if (this.row.baseCompany) {
         let arr = this.baseCompanyList.filter(el => {
           return el.name == this.row.baseCompany;
         });
-        this.formLabelAlign.baseCompany = arr[0]["code"];
+        if(arr){ this.formLabelAlign.baseCompany = arr[0]["code"]; }
       }
     },
     bankCurrencyChange() {

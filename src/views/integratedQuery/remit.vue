@@ -48,7 +48,7 @@
       </el-button>
     </div>
     <el-table :data="tableData" stripe style="width: 100%" height="480" border> 
-      <el-table-column label="支票号" width="100">
+      <el-table-column label="支票号" width="150">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
             <span class="abbreviate">{{scope.row.rmId}}</span>
@@ -76,6 +76,18 @@
             placement="top-start"
           >
             <span class="abbreviate">{{scope.row.rmStatusName}}-{{scope.row.rmStatus}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column label="支票金额" width="100">
+        <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="scope.row.bankAmount"
+            placement="top-start"
+          >
+            <span class="abbreviate">{{scope.row.bankAmount}}</span>
           </el-tooltip>
         </template>
       </el-table-column>

@@ -68,7 +68,7 @@
         </el-col>
       </el-row>
       <el-row :gutter="10" class="billRow">  
-        <el-col :span="7">
+        <el-col :span="8">
           <span class="slable">录入时间段</span>
            <el-date-picker
               value-format="timestamp"
@@ -77,6 +77,12 @@
               placeholder="选择日期"
             ></el-date-picker>
          </el-col>
+         <el-col :span="8">
+          <span class="slable">是否签回</span>
+          <el-select clearable v-model="billSearch.hasRecheckFlag" placeholder="请选择流程状态">
+            <el-option v-for="(v,k) of {'签回':'1','未签回':'0'}" :key="v" :label="k" :value="v"></el-option>
+          </el-select>
+        </el-col>
       </el-row>
       <el-row><el-col :span="24">
         <el-button type="primary" plain @click="handleClick(1)"><i class="iconfont iconGroup42"></i>查询</el-button>
@@ -175,6 +181,26 @@
       :total="mustData.total">      
     </el-pagination>
     <!-- 弹窗 -->
+    <el-dialog title="踪迹" width="fit-content" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
+      <el-collapse v-show="title=='踪迹'">
+        <el-collapse-item title="状态流转图">
+          <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
+        </el-collapse-item>
+      </el-collapse>
+      <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
+        <el-table-column prop="processId" label="流程编号" width="220"></el-table-column>
+        <el-table-column prop="actName" label="操作名称"></el-table-column>
+        <el-table-column label="任务来源" width="85">
+          <template slot-scope="scope">
+            <span>{{nameList[scope.row.actOperator]}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="actTime" label="操作时间"></el-table-column>
+        <el-table-column prop="reason" label="操作原因"></el-table-column>
+        <el-table-column prop="remark" label="操作备注"></el-table-column>
+      </el-table>
+    </el-dialog>
+
     <el-dialog title="文档预览" width="fit-content" :visible.sync="dialogFormVisible1" :close-on-click-modal="modal">
       <div class="browseDoc" v-show="title!='踪迹'" style="width:600px">
         <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
@@ -205,7 +231,7 @@ export default {
           {value: 'T',label: '合约账单'},
           {value: 'F',label: '临分账单'},
           {value: 'O',label: '转分账单'},
-          {value: 'C',label: '理赔账单'},
+          {value: 'C',label: '修正账单'},
         ],
         tableClass:{'background-color':'#FAFAFA'},
         StableClass:'background-color:#FAFAFA',
@@ -214,7 +240,7 @@ export default {
           'T':'合约账单',
           'F':'临分账单',
           'O':'转分账单',
-          'C':'理赔账单',
+          'C':'修正账单',
         },
         zqList:[
           'Variable',
@@ -304,6 +330,7 @@ export default {
         dialogFormVisible: false,
         dialogFormVisible1: false,
         billSearch: {
+          hasRecheckFlag:null,
           processId:null,
           processStatus:null,
           wsType:null,
@@ -642,7 +669,7 @@ export default {
               console.log(res,'流程图');
             }
           })
-          
+          this.dialogFormVisible = true; 
           break;
         case 6: // 上传附件
           

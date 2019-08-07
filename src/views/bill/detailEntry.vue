@@ -260,14 +260,24 @@
           <el-table-column prop="registAt" label="录入时间" width="160"></el-table-column>
           <el-table-column prop="closedBy" label="复核人" width="130"></el-table-column>
           <el-table-column prop="closedAt" label="复核时间" width="160"></el-table-column>
-          <el-table-column label="备注">
+          <el-table-column label="备注" v-if="$route.query.tag !== 'billCheck'">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
                 effect="dark"
                 :content="scope.row.remark"
-                placement="top-start"
-              >
+                placement="top-start">
+                <span class="abbreviate">{{scope.row.remark}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="修改意见" v-if="$route.query.tag == 'billCheck'">
+            <template slot-scope="scope">
+              <el-tooltip
+                class="item"
+                effect="dark"
+                :content="scope.row.remark"
+                placement="top-start">
                 <span class="abbreviate">{{scope.row.remark}}</span>
               </el-tooltip>
             </template>
@@ -702,7 +712,7 @@ export default {
         T: "合约账单",
         F: "临分账单",
         O: "转分账单",
-        C: "理赔账单"
+        C: "修正账单"
       },
       textareaOpinion: "",
       value: [],
@@ -1462,6 +1472,11 @@ export default {
               this.$message({ type: "success", message: res.data.msg });
               this.textareaOpinion = "";
               this.dialogFormVisible5 = false;
+              this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
+              if (res.status === 200) {
+                  this.SICSData = res.data.workSheetVOlist;
+                }
+              });
             } else if(res.data.code == '1'){ this.$message({ type: "error", message: res.data.msg }); }
           });
         break;

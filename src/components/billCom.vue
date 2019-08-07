@@ -30,16 +30,30 @@
               </el-select>
             </el-col>
           </el-row>
-           <el-row :gutter="10" class="billRow" v-show="urlName === 'billCheck'">
-             <el-col :span="7">
+           <el-row :gutter="10" class="billRow"> 
+            <el-col :span="8" v-show="urlName === 'billCheck'">
               <span class="slable">录入人查询</span>
-              <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input>
+              <!-- <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input> -->
+              <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人查询">
+              <el-option
+                v-for="(item,index) in nameList"
+                :key="item"
+                :value="index"
+                :label="item"
+              >
+                <span style="float:left">{{item}}</span>
+                <span style="float:right;color: #8492a6; font-size: 13px">{{index}}</span>
+              </el-option>
+            </el-select>
             </el-col>
-           </el-row>
-          <el-row :gutter="10" class="billRow">
-            <el-col :span="12" v-show="urlName === 'billEntry'">
+            <el-col :span="8" v-show="urlName === 'billSignBack'">
+              <span class="slable">是否签回</span>
+              <el-select clearable v-model="billSearch.hasRecheckFlag" placeholder="请选择流程状态">
+                <el-option v-for="(v,k) of {'签回':'1','未签回':'0'}" :key="v" :label="k" :value="v"></el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="8" v-show="urlName === 'billEntry'">
               <span class="slable">流程状态</span>
-              <!-- <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input> -->
               <el-select clearable v-model="billSearch.processStatus" placeholder="请选择流程状态">
                 <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
               </el-select>
@@ -398,6 +412,7 @@
           </el-select>
         </el-form-item>
       </el-form>
+
       <el-collapse v-show="title=='踪迹'">
         <el-collapse-item title="状态流转图">
           <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
@@ -476,7 +491,7 @@ export default {
         { value: "T", label: "合约账单" },
         { value: "F", label: "临分账单" },
         { value: "O", label: "转分账单" },
-        { value: "C", label: "理赔账单" }
+        { value: "C", label: "修正账单" }
       ],
       tableClass: { "background-color": "#FAFAFA" },
       StableClass: "background-color:#FAFAFA",
@@ -485,7 +500,7 @@ export default {
         T: "合约账单",
         F: "临分账单",
         O: "转分账单",
-        C: "理赔账单"
+        C: "修正账单"
       },
       zqList: [
         "Variable",
@@ -577,6 +592,7 @@ export default {
       dialogFormVisible1: false,
       admFlag: false,
       billSearch: {
+        hasRecheckFlag:null,
         processId: null,
         processStatus: null,
         processName:null,

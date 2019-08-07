@@ -104,6 +104,23 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column label="手续费" width="120">
+        <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="scope.row.rmChargesCurrency&&scope.row.rmChargesAmount?scope.row.rmChargesCurrency+'-'+scope.row.rmChargesAmount:''"
+            placement="top-start">
+            <span
+              class="abbreviate"
+              v-if="scope.row.rmChargesCurrency&&scope.row.rmChargesAmount"
+            >{{scope.row.rmChargesCurrency}}-{{scope.row.rmChargesAmount}}</span>
+            <span class="abbreviate" v-else></span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
+      <el-table-column prop="rmReceiptDate" width="120" label="到账日期"></el-table-column>
       <el-table-column width="120" label="汇款人名称">
          <template slot-scope="scope">
           <el-tooltip
@@ -116,8 +133,6 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
-      <el-table-column prop="rmReceiptDate" width="120" label="到账日期"></el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
       <el-table-column label="Base Company" prop="baseCompany" width="130"></el-table-column>
       <el-table-column label="汇款金额">
@@ -139,6 +154,17 @@
         </template>
       </el-table-column>
       <el-table-column prop="rmOriSettleCompanyName" width="150" label="原收款公司名称"></el-table-column>
+      <el-table-column width="120" label="备注">
+         <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="scope.row.remark"
+            placement="top-start">
+            <span class="abbreviate">{{scope.row.remark}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
           <el-dropdown>
@@ -164,7 +190,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-table v-show="urlName!='taskClaim' && urlName!='financialCreat'" :data="tableData" border stripe style="width: 100%">
+    <el-table height="480" v-show="urlName!='taskClaim' && urlName!='financialCreat'" :data="tableData" border stripe style="width: 100%">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span
@@ -199,6 +225,21 @@
       </el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
       <el-table-column prop="rmReceiptDate" width="120" label="到账日期"></el-table-column>
+      <el-table-column label="手续费" width="120">
+        <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="scope.row.rmChargesCurrency&&scope.row.rmChargesAmount?scope.row.rmChargesCurrency+'-'+scope.row.rmChargesAmount:''"
+            placement="top-start">
+            <span
+              class="abbreviate"
+              v-if="scope.row.rmChargesCurrency&&scope.row.rmChargesAmount"
+            >{{scope.row.rmChargesCurrency}}-{{scope.row.rmChargesAmount}}</span>
+            <span class="abbreviate" v-else></span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
       <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
       <el-table-column label="汇款金额">
@@ -232,9 +273,19 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column width="120" label="备注">
+         <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="scope.row.remark"
+            placement="top-start">
+            <span class="abbreviate">{{scope.row.remark}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="100" >
         <template slot-scope="scope">
-         
           <!-- <el-dropdown>
             <span
               v-show="urlName === 'financialCreat'"
