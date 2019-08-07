@@ -2052,7 +2052,7 @@ export default {
                 // 再把美元转为另一个小汇率
                 let val2 = this.filterCurrencyRateList('USD',this.makeDocListEctype.zheType);
                 if(val2){ 
-                  this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(5):null;
+                  this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(4):null;
                   if(this.makeDocListEctype.yuanHuiLv[i] != null){
                     allNum += this.makeDocListEctype.yuanNum[i]*Number(1*this.makeDocListEctype.yuanHuiLv[i]);
                   }
@@ -2060,7 +2060,7 @@ export default {
               }
             } else{  // 直接转换、、、
               let val3 = Number(this.filterCurrencyRateList(curType,this.makeDocListEctype.zheType))
-              this.makeDocListEctype.yuanHuiLv[i] = Number(val3)>0?Number(val3).toFixed(5):null;
+              this.makeDocListEctype.yuanHuiLv[i] = Number(val3)>0?Number(val3).toFixed(4):null;
               if(this.makeDocListEctype.yuanHuiLv[i] != null){
                 // console.log(Number(this.makeDocListEctype.yuanNum[i])*Number(1*this.makeDocListEctype.yuanHuiLv[i]))
                 allNum += Number(this.makeDocListEctype.yuanNum[i])*Number(1*this.makeDocListEctype.yuanHuiLv[i]);
@@ -2069,7 +2069,7 @@ export default {
             }
           }
         })
-        this.makeDocListEctype.zheNum = allNum>0?Number(allNum).toFixed(5):null;
+        this.makeDocListEctype.zheNum = allNum>0?Number(allNum).toFixed(2):null;
       }
     },
     makeDoc(tag,name){    // 生成审批文档
@@ -2247,7 +2247,7 @@ export default {
             all += Number(this.makeDocListEctype.yuanHuiLv[i]) * Number(el);
           })
           // console.log(all,'--hyd')
-          this.makeDocListEctype.zheNum = all>0?Number(all).toFixed(5):null;
+          this.makeDocListEctype.zheNum = all>0?Number(all).toFixed(2):null;
         }
         
       }
