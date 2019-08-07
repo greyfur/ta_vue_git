@@ -2052,16 +2052,17 @@ export default {
                 if(val2){ 
                   this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(4):null;
                   if(this.makeDocListEctype.yuanHuiLv[i] != null){
-                    allNum += this.makeDocListEctype.yuanNum[i]*Number(1*this.makeDocListEctype.yuanHuiLv[i]);
+                    allNum += this.makeDocListEctype.yuanNum[i]/Number(1*this.makeDocListEctype.yuanHuiLv[i]);
                   }
+                  // console.log(allNum)
                 }
               }
             } else{  // 直接转换、、、
               let val3 = Number(this.filterCurrencyRateList(curType,this.makeDocListEctype.zheType))
               this.makeDocListEctype.yuanHuiLv[i] = Number(val3)>0?Number(val3).toFixed(4):null;
               if(this.makeDocListEctype.yuanHuiLv[i] != null){
-                // console.log(Number(this.makeDocListEctype.yuanNum[i])*Number(1*this.makeDocListEctype.yuanHuiLv[i]))
-                allNum += Number(this.makeDocListEctype.yuanNum[i])*Number(1*this.makeDocListEctype.yuanHuiLv[i]);
+                console.log(Number(this.makeDocListEctype.yuanNum[i])/Number(1*this.makeDocListEctype.yuanHuiLv[i]))
+                allNum += Number(this.makeDocListEctype.yuanNum[i])/Number(1*this.makeDocListEctype.yuanHuiLv[i]);
               }
               // console(allNum,'++hyd')
             }
@@ -2242,7 +2243,7 @@ export default {
           this.makeDocListEctype.yuanNum.forEach((el,i)=>{
             // this.makeDocListEctype.yuanHuiLv[i]汇率
             // el 是金额
-            all += Number(this.makeDocListEctype.yuanHuiLv[i]) * Number(el);
+            all += Number(Number(el)/this.makeDocListEctype.yuanHuiLv[i]) ;
           })
           // console.log(all,'--hyd')
           this.makeDocListEctype.zheNum = all>0?Number(all).toFixed(2):null;

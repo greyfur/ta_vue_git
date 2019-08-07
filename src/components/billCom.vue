@@ -318,7 +318,7 @@
           </el-select>
         </el-form-item>
         <div v-show="title === '手工创建' || title==='编辑'">
-          <el-form-item label="分出公司111">
+          <el-form-item label="分出公司">
             <el-select clearable filterable v-model="cedentModel" placeholder="请选择分出公司">
               <el-option
                 v-for="(item,index) in cedentList"
