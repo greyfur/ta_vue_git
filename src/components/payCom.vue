@@ -36,7 +36,7 @@
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div>
-    <el-table :data="tableData" stripe style="width: 100%" height="480">
+    <el-table :data="tableData" stripe border style="width: 100%" height="480">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
@@ -44,8 +44,9 @@
       </el-table-column>
       <el-table-column width="140" label="结付公司">
           <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" :content="scope.row.processName" placement="top-start">
-            <span class="abbreviate">{{scope.row.rmSettleCompanyName}}</span>
+          <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
+            <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
+            <span class="abbreviate" v-else></span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -225,7 +226,7 @@
         <el-table-column prop="remark" label="操作备注"></el-table-column>
       </el-table>
      
-      <el-table stripe :data="fileData" style="width: 100%" class="document" v-show="title==='上传附件' || title==='附件查看'">
+      <el-table stripe :data="fileData" style="width: 100%" border class="document" v-show="title==='上传附件' || title==='附件查看'">
         <el-table-column label="文件名" width="140">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">

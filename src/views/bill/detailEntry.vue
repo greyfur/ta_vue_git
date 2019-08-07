@@ -78,6 +78,7 @@
               height="400"
               v-show="searchFlag2"
               stripe
+              border
               :data="tableData"
               style="width: 100%;margin-top:10px;"
               class="document"
@@ -108,7 +109,8 @@
               </el-table-column> -->
               <el-table-column label="操作">
                 <template slot-scope="scope">
-                  <el-button
+                  <!-- ocr hyd -->
+                  <!-- <el-button
                     :disabled="isHover"
                     v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess'"
                     @click.stop="handleClick(2,scope.row)"
@@ -121,7 +123,7 @@
                     @click.stop="handleClick(1,scope.row)"
                     type="text"
                     size="small"
-                  >删除</el-button>
+                  >删除</el-button> -->
                   <el-button
                     :disabled="isHover"
                     @click.stop="handleClick(3,scope.row)"
@@ -185,6 +187,7 @@
           v-show="searchFlag3"
           :data="SICSData"
           stripe
+          border
           width="100%"
         >
           <el-table-column label="账单号">
@@ -739,7 +742,9 @@ export default {
       },
       chooseDocList: null,
       subProcessFlag: false,
-      billCheckType: null
+      billCheckType: null,
+      rotateCount:0,
+      rotateCounts:4
     };
   },
   created() {
@@ -807,10 +812,28 @@ export default {
   },
   methods: {
     rotateMua(){
-      document.querySelector('.browseDoc').className='browseDoc mua'
+      this.rotateCount++;
+       if(this.rotateCount>=5){
+         this.rotateCount=1
+       }
+      switch(this.rotateCount){
+        case 1:document.querySelector('.browseDoc').className='browseDoc mua1';break;
+        case 2:document.querySelector('.browseDoc').className='browseDoc mua2';break;
+        case 3:document.querySelector('.browseDoc').className='browseDoc mua3';break;
+        case 4:document.querySelector('.browseDoc').className='browseDoc mua4';break;
+      }
     },
      rotateMuas(){
-      document.querySelector('.browseDoc').className='browseDoc muas'
+       this.rotateCounts--;
+       if(this.rotateCounts<=0){
+         this.rotateCounts=4
+       }
+      switch(this.rotateCounts){
+        case 4:document.querySelector('.browseDoc').className='browseDoc muas1';break;
+        case 3:document.querySelector('.browseDoc').className='browseDoc muas2';break;
+        case 2:document.querySelector('.browseDoc').className='browseDoc muas3';break;
+        case 1:document.querySelector('.browseDoc').className='browseDoc muas4';break;
+      }
     },
     openBPSICS() {
       if (!this.chooseRow.rmSettleCompanyCode) {
@@ -1668,15 +1691,39 @@ export default {
 </script>
 
 <style scoped>
-.mua{
- animation:rotateMua linear 0s;
+.mua1{
+ animation:rotateMua1 linear 0s;
   animation-fill-mode:forwards;
 }
-.muas{
- animation:rotateMuas linear 0s;
+.mua2{
+ animation:rotateMua2 linear 0s;
   animation-fill-mode:forwards;
 }
-@keyframes rotateMua{
+.mua3{
+ animation:rotateMua3 linear 0s;
+  animation-fill-mode:forwards;
+}
+.mua4{
+ animation:rotateMua4 linear 0s;
+  animation-fill-mode:forwards;
+}
+.muas1{
+ animation:rotateMuas1 linear 0s;
+  animation-fill-mode:forwards;
+}
+.muas2{
+ animation:rotateMuas2 linear 0s;
+  animation-fill-mode:forwards;
+}
+.muas3{
+ animation:rotateMuas3 linear 0s;
+  animation-fill-mode:forwards;
+}
+.muas4{
+ animation:rotateMuas4 linear 0s;
+  animation-fill-mode:forwards;
+}
+@keyframes rotateMua1{
   0%{
     transform: rotate(0deg)
   }
@@ -1684,12 +1731,60 @@ export default {
     transform: rotate(90deg)
   }
 }
-@keyframes rotateMuas{
+@keyframes rotateMua2{
   0%{
     transform: rotate(90deg)
   }
   100%{
+    transform: rotate(180deg)
+  }
+}
+@keyframes rotateMua3{
+  0%{
+    transform: rotate(180deg)
+  }
+  100%{
+    transform: rotate(270deg)
+  }
+}
+@keyframes rotateMua4{
+  0%{
+    transform: rotate(270deg)
+  }
+  100%{
+    transform: rotate(360deg)
+  }
+}
+@keyframes rotateMuas1{
+  0%{
+    transform: rotate(-90deg)
+  }
+  100%{
     transform: rotate(0deg)
+  }
+}
+@keyframes rotateMuas2{
+  0%{
+    transform: rotate(-180deg)
+  }
+  100%{
+    transform: rotate(-90deg)
+  }
+}
+@keyframes rotateMuas3{
+  0%{
+    transform: rotate(-270deg)
+  }
+  100%{
+    transform: rotate(-180deg)
+  }
+}
+@keyframes rotateMuas4{
+  0%{
+    transform: rotate(-360deg)
+  }
+  100%{
+    transform: rotate(-270deg)
   }
 }
 .detailEntry {

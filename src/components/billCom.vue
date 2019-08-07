@@ -30,6 +30,12 @@
               </el-select>
             </el-col>
           </el-row>
+           <el-row :gutter="10" class="billRow" v-show="urlName === 'billCheck'">
+             <el-col :span="7">
+              <span class="slable">录入人查询</span>
+              <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input>
+            </el-col>
+           </el-row>
           <el-row :gutter="10" class="billRow">
             <el-col :span="12" v-show="urlName === 'billEntry'">
               <span class="slable">流程状态</span>
@@ -60,7 +66,7 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
-    <el-table :header-row-class-name="StableClass" height="480" :data="tableData" stripe style="width: 100%;">
+    <el-table :header-row-class-name="StableClass" height="480" :data="tableData" stripe border style="width: 100%;">
       <el-table-column label="流程编号" width="155">
         <template slot-scope="scope">
           <span
@@ -358,7 +364,7 @@
           >
             <el-button type="primary" plain>上传</el-button>
           </el-upload>
-          <el-table stripe :data="fileData" style="width: 100%" class="document">
+          <el-table stripe :data="fileData" style="width: 100%" class="document" border>
             <el-table-column label="文件名" width="140">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -397,7 +403,7 @@
           <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
         </el-collapse-item>
       </el-collapse>
-      <el-table :data="track" border="" style="width: 100%" v-show="title==='踪迹'">
+      <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
         <el-table-column prop="processId" label="流程编号" width="220"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
         <el-table-column label="任务来源" width="85">
@@ -573,6 +579,7 @@ export default {
       billSearch: {
         processId: null,
         processStatus: null,
+        processName:null,
         wsType: null,
         wsPeriod: null,
         wsBusinessType: null,
@@ -583,7 +590,8 @@ export default {
         wsReceiptDate: null,
         businessOrigin: null,
         baseCompany: null,
-        reportUnit: null
+        reportUnit: null,
+        registBy:null
       },
       mustData: {
         actOperator: null,
@@ -635,7 +643,6 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
-   
     this.$http
       .post("api/activiti/getAssigneeName", { roleName: "账单录入" })
       .then(res => {
@@ -779,7 +786,7 @@ export default {
           });
 
           break;
-        case 1: // 查询
+        case 1: // 查询hyd
           let params = null;
           if (this.zq2 && this.zq1) {
             this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;
