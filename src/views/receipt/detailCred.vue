@@ -289,10 +289,7 @@
                         :content="scope.row.docName"
                         placement="top-start"
                       >
-                        <span
-                          class="smallHand abbreviate"
-                          @click="docView(scope.row)"
-                        >{{scope.row.docName}}</span>
+                        <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                       </el-tooltip>
                     </template>
                   </el-table-column>
@@ -574,10 +571,7 @@
                   :content="scope.row.docName"
                   placement="top-start"
                 >
-                  <span
-                    class="smallHand abbreviate"
-                    @click="docView(scope.row)"
-                  >{{scope.row.docName}}</span>
+                  <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -1304,6 +1298,7 @@ export default {
   methods: {
     docView(row) {
       if (row) {
+        if(row.suffix && row.suffix=='eml'){ return false; }
         this.dialogFormVisibleA = true;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
@@ -1406,7 +1401,15 @@ export default {
         .then(res => {
           console.log(res, "dataBaseSG");
           if (res.status === 200) {
-            this.SgData = res.data.worksheetsgDOlist;
+            // this.SgData = res.data.worksheetsgDOlist;
+            let arr5 = res.data.worksheetsgDOlist;
+                arr5.forEach(el=>{
+                  if(el.docName){
+                    let suffix = el.docName.split('.');
+                    el['suffix'] = suffix[suffix.length-1];
+                  }
+                })
+                this.SgData = arr5;
             this.RMData = res.data.remitDOlist;
             this.WSData = res.data.workSheetDOlsit;
           }
@@ -1448,7 +1451,15 @@ export default {
         .then(res => {
           console.log(res, "getSg");
           if (res.status === 200) {
-            this.SgData = res.data.worksheetsgDOlist;
+            // this.SgData = res.data.worksheetsgDOlist;
+            let arr5 = res.data.worksheetsgDOlist;
+              arr5.forEach(el=>{
+                if(el.docName){
+                  let suffix = el.docName.split('.');
+                  el['suffix'] = suffix[suffix.length-1];
+                }
+              })
+              this.SgData = arr5;
             this.RMData = res.data.remitDOlist;
             this.WSData = res.data.workSheetDOlsit;
           }
@@ -1470,7 +1481,15 @@ export default {
           .then(res => {
             console.log(res, "getSg");
             if (res.status === 200) {
-              this.SgData = res.data.worksheetsgDOlist;
+              // this.SgData = res.data.worksheetsgDOlist;
+              let arr5 = res.data.worksheetsgDOlist;
+                arr5.forEach(el=>{
+                  if(el.docName){
+                    let suffix = el.docName.split('.');
+                    el['suffix'] = suffix[suffix.length-1];
+                  }
+                })
+                this.SgData = arr5;
               this.RMData = res.data.remitDOlist;
               this.WSData = res.data.workSheetDOlsit;
             }

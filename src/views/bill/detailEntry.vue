@@ -89,10 +89,7 @@
                     effect="dark"
                     :content="scope.row.docName"
                     placement="top">
-                    <span
-                      class="smallHand abbreviate"
-                      @click="docView(scope.row)"
-                    >{{scope.row.docName}}</span>
+                    <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                   </el-tooltip>
                 </template>
               </el-table-column>
@@ -280,7 +277,7 @@
                 :content="scope.row.docName"
                 placement="top-start"
               >
-                <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -764,7 +761,17 @@ export default {
       .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
       .then(res => {
         if (res.status === 200) {
-          this.tableData = res.data.bscDocumentVOlist;
+          // this.tableData = res.data.bscDocumentVOlist;
+          let arr = res.data.bscDocumentVOlist;
+          arr.forEach(el=>{
+            if(el.docName){
+              let suffix = el.docName.split('.');
+              el['suffix'] = suffix[suffix.length-1];
+            }
+          })
+          this.tableData = arr;
+          let num = this.tableData.findIndex(el => { return el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
+          setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
           this.SICSData = res.data.workSheetVOlist;
           res.data.processStatus === "已悬停"
             ? (this.isHover = true)
@@ -1439,10 +1446,10 @@ export default {
     },
     docView(row) {
       if (row) {
+        if(row.suffix && row.suffix=='eml'){ return false; }
         this.docViewRow = row;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
-            console.log(res);
             document.getElementById("iframeId").contentWindow.postMessage(
               {
                 tokenId: res.data.tokenId,
@@ -1501,7 +1508,15 @@ export default {
                   .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
                   .then(res => {
                     if (res.status === 200) {
-                      this.tableData = res.data.bscDocumentVOlist;
+                      // this.tableData = res.data.bscDocumentVOlist;
+                      let arr = res.data.bscDocumentVOlist;
+                      arr.forEach(el=>{
+                        if(el.docName){
+                          let suffix = el.docName.split('.');
+                          el['suffix'] = suffix[suffix.length-1];
+                        }
+                      })
+                      this.tableData = arr;
                       this.docView();
                     }
                   });
@@ -1564,11 +1579,17 @@ export default {
           this.file = [];
           if (res.status === 200 && res.data.errorCode == 1) {
             this.dialogFormVisible2 = false;
-            this.$http
-              .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
-              .then(res => {
+            this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
                 if (res.status === 200) {
-                  this.tableData = res.data.bscDocumentVOlist;
+                  // this.tableData = res.data.bscDocumentVOlist;
+                  let arr = res.data.bscDocumentVOlist;
+                  arr.forEach(el=>{
+                    if(el.docName){
+                      let suffix = el.docName.split('.');
+                      el['suffix'] = suffix[suffix.length-1];
+                    }
+                  })
+                  this.tableData = arr;
                 }
               });
           } else if (res.data.errorCode == "0" && res.data.errorMessage) {

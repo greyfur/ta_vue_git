@@ -362,10 +362,7 @@
             <el-table-column label="文件名" width="140">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                  <span
-                    class="smallHand abbreviate"
-                    @click="docView(scope.row)"
-                  >{{scope.row.docName}}</span>
+                  <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                 </el-tooltip> 
               </template>
             </el-table-column>
@@ -671,10 +668,10 @@ export default {
   methods: {
     docView(row) {
       if (row) {
+        if(row.suffix && row.suffix=='eml'){ return false; }
         this.dialogFormVisible1 = true;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
-            console.log(res);
             document.getElementById("iframeId").contentWindow.postMessage(
               {
                 tokenId: res.data.tokenId,
@@ -687,9 +684,7 @@ export default {
               },
               "*"
             );
-            document
-              .getElementById("iframeId")
-              .contentWindow.location.reload(true);
+            document.getElementById("iframeId").contentWindow.location.reload(true);
           }
         });
       } else {
@@ -954,8 +949,15 @@ export default {
           this.$http.get(`api/worksheet/wSEntry/edit/${row.processId}`,{}).then(res => {
             console.log(res,'api/worksheet/wSEntry/edit/');
               if (res.status === 200) {
-                this.fileData = res.data.bscDocumentVOlist;
-                console.log(this.fileData,11111)
+                // this.fileData = res.data.bscDocumentVOlist;
+                let arr3 = res.data.bscDocumentVOlist;
+                arr3.forEach(el=>{
+                  if(el.docName){
+                    let suffix = el.docName.split('.');
+                    el['suffix'] = suffix[suffix.length-1];
+                  }
+                })
+                this.fileData = arr3;
               }
             });
           this.dialogFormVisible = true;
@@ -1044,7 +1046,15 @@ export default {
                 .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
                 .then(res => {
                   if (res.status === 200) {
-                    this.fileData = res.data.bscDocumentVOlist;
+                    // this.fileData = res.data.bscDocumentVOlist;
+                    let arr4 = res.data.bscDocumentVOlist;
+                    arr4.forEach(el=>{
+                      if(el.docName){
+                        let suffix = el.docName.split('.');
+                        el['suffix'] = suffix[suffix.length-1];
+                      }
+                    })
+                    this.fileData = arr4;
                   }
                 });
             }
@@ -1079,7 +1089,15 @@ export default {
                 .then(res => {
                   if (res.status == 200) {
                     console.log(res,'res.data.bscDocumentVOlist');
-                    this.fileData = res.data.bscDocumentVOlist;
+                    // this.fileData = res.data.bscDocumentVOlist;
+                    let arr2 = res.data.bscDocumentVOlist;
+                    arr2.forEach(el=>{
+                      if(el.docName){
+                        let suffix = el.docName.split('.');
+                        el['suffix'] = suffix[suffix.length-1];
+                      }
+                    })
+                    this.fileData = arr2;
                   }
                 });
             } else {

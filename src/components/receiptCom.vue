@@ -422,10 +422,7 @@
             <el-table-column label="文件名" width="140">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                  <span
-                    class="smallHand abbreviate"
-                    @click="docView(scope.row)"
-                  >{{scope.row.docName}}</span>
+                  <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -518,7 +515,7 @@
         <el-table-column label="文件名" width="140">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-              <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+              <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -831,6 +828,7 @@ export default {
     },
     docView(row) {
       if (row) {
+        if(row.suffix && row.suffix=='eml'){ return false; }
         this.dialogFormVisibleA = true;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
@@ -932,7 +930,15 @@ export default {
             })
             .then(res => {
               if (res.status === 200) {
-                this.fileData = res.data.rows;
+                // this.fileData = res.data.rows;
+                let arr3 = res.data.rows;
+                arr3.forEach(el=>{
+                  if(el.docName){
+                    let suffix = el.docName.split('.');
+                    el['suffix'] = suffix[suffix.length-1];
+                  }
+                })
+                this.fileData = arr3;
                 this.title = "编辑";
                 this.dialogFormVisible = true;
               }
@@ -1018,7 +1024,15 @@ export default {
             })
             .then(res => {
               if (res.status === 200) {
-                this.fileData = res.data.rows;
+                // this.fileData = res.data.rows;
+                let arr4 = res.data.rows;
+                arr4.forEach(el=>{
+                  if(el.docName){
+                    let suffix = el.docName.split('.');
+                    el['suffix'] = suffix[suffix.length-1];
+                  }
+                })
+                this.fileData = arr4;
                 this.init();
               }
             });
@@ -1161,6 +1175,7 @@ export default {
       if (this.cedentModel != null) {
         let obj = this.cedentList[this.cedentModel];
         this.formLabelAlign.rmSettleCompanyCode = obj.codecode;
+        this.formLabelAlign.rmSettleCompanyName = obj.codeName;
       }
       switch (this.tag) {
         case 1: //创建
@@ -1295,7 +1310,15 @@ export default {
                   })
                   .then(res => {
                     if (res.status === 200) {
-                      this.fileData = res.data.rows;
+                      // this.fileData = res.data.rows;
+                      let arr5 = res.data.rows;
+                      arr5.forEach(el=>{
+                        if(el.docName){
+                          let suffix = el.docName.split('.');
+                          el['suffix'] = suffix[suffix.length-1];
+                        }
+                      })
+                      this.fileData = arr5;
                     }
                   });
               } else if (res.data.errorMessage) {
