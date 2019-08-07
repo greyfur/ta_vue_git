@@ -176,8 +176,8 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="createdBy" label="录入人" width="80"></el-table-column>
-            <el-table-column prop="createdAt" label="录入时间" width="100"></el-table-column>
+            <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
+            <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
             <el-table-column label="备注">
               <template slot-scope="scope">
                 <el-tooltip
