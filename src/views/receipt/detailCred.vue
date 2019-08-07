@@ -100,7 +100,7 @@
         </div>
         <el-collapse-transition>
           <div v-show="searchFlag2">
-            <el-table stripe :data="RMData" style="width:100%">
+            <el-table stripe :data="RMData" style="width:100%" border>
               <el-table-column label="支票号" width="110">
                 <template slot-scope="scope">
                   <el-tooltip
@@ -238,10 +238,10 @@
           </p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag3" stripe :data="SgData" style="width: 100%">
+          <el-table v-show="searchFlag3" border stripe :data="SgData" style="width: 100%">
             <el-table-column type="expand">
               <template slot-scope="props">
-                <el-table stripe :data="props.row.worksheetDOList" style="width: 100%">
+                <el-table stripe :data="props.row.worksheetDOList" style="width: 100%" border>
                   <el-table-column label="账单号">
                     <template slot-scope="scope">
                       <el-tooltip
@@ -523,7 +523,7 @@
           </p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag4" stripe :data="WSData" style="width: 100%">
+          <el-table v-show="searchFlag4" border stripe :data="WSData" style="width: 100%">
             <el-table-column label="账单号">
               <template slot-scope="scope">
                 <el-tooltip

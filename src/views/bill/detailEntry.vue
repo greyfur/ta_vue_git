@@ -78,6 +78,7 @@
               height="400"
               v-show="searchFlag2"
               stripe
+              border
               :data="tableData"
               style="width: 100%;margin-top:10px;"
               class="document"
@@ -108,7 +109,8 @@
               </el-table-column> -->
               <el-table-column label="操作">
                 <template slot-scope="scope">
-                  <el-button
+                  <!-- ocr hyd -->
+                  <!-- <el-button
                     :disabled="isHover"
                     v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess'"
                     @click.stop="handleClick(2,scope.row)"
@@ -121,7 +123,7 @@
                     @click.stop="handleClick(1,scope.row)"
                     type="text"
                     size="small"
-                  >删除</el-button>
+                  >删除</el-button> -->
                   <el-button
                     :disabled="isHover"
                     @click.stop="handleClick(3,scope.row)"
@@ -185,6 +187,7 @@
           v-show="searchFlag3"
           :data="SICSData"
           stripe
+          border
           width="100%"
         >
           <el-table-column label="账单号">
@@ -814,10 +817,10 @@ export default {
          this.rotateCount=1
        }
       switch(this.rotateCount){
-        case 1:document.querySelector('.browseDoc').className='browseDoc mua1';return;
-        case 2:document.querySelector('.browseDoc').className='browseDoc mua2';return;
-        case 3:document.querySelector('.browseDoc').className='browseDoc mua3';return;
-        case 4:document.querySelector('.browseDoc').className='browseDoc mua4';return;
+        case 1:document.querySelector('.browseDoc').className='browseDoc mua1';break;
+        case 2:document.querySelector('.browseDoc').className='browseDoc mua2';break;
+        case 3:document.querySelector('.browseDoc').className='browseDoc mua3';break;
+        case 4:document.querySelector('.browseDoc').className='browseDoc mua4';break;
       }
     },
      rotateMuas(){
@@ -826,10 +829,10 @@ export default {
          this.rotateCounts=4
        }
       switch(this.rotateCounts){
-        case 4:document.querySelector('.browseDoc').className='browseDoc muas1';return;
-        case 3:document.querySelector('.browseDoc').className='browseDoc muas2';return;
-        case 2:document.querySelector('.browseDoc').className='browseDoc muas3';return;
-        case 1:document.querySelector('.browseDoc').className='browseDoc muas4';return;
+        case 4:document.querySelector('.browseDoc').className='browseDoc muas1';break;
+        case 3:document.querySelector('.browseDoc').className='browseDoc muas2';break;
+        case 2:document.querySelector('.browseDoc').className='browseDoc muas3';break;
+        case 1:document.querySelector('.browseDoc').className='browseDoc muas4';break;
       }
     },
     openBPSICS() {

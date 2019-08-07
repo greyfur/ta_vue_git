@@ -66,7 +66,7 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
-    <el-table :header-row-class-name="StableClass" height="480" :data="tableData" stripe style="width: 100%;">
+    <el-table :header-row-class-name="StableClass" height="480" :data="tableData" stripe border style="width: 100%;">
       <el-table-column label="流程编号" width="155">
         <template slot-scope="scope">
           <span
@@ -318,7 +318,7 @@
           </el-select>
         </el-form-item>
         <div v-show="title === '手工创建' || title==='编辑'">
-          <el-form-item label="分出公司">
+          <el-form-item label="分出公司111">
             <el-select clearable filterable v-model="cedentModel" placeholder="请选择分出公司">
               <el-option
                 v-for="(item,index) in cedentList"
@@ -364,7 +364,7 @@
           >
             <el-button type="primary" plain>上传</el-button>
           </el-upload>
-          <el-table stripe :data="fileData" style="width: 100%" class="document">
+          <el-table stripe :data="fileData" style="width: 100%" class="document" border>
             <el-table-column label="文件名" width="140">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -403,7 +403,7 @@
           <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
         </el-collapse-item>
       </el-collapse>
-      <el-table :data="track" border="" style="width: 100%" v-show="title==='踪迹'">
+      <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
         <el-table-column prop="processId" label="流程编号" width="220"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
         <el-table-column label="任务来源" width="85">

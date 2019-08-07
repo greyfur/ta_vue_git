@@ -6,7 +6,7 @@
       <div v-show="searchFlag">
         <el-row :gutter="10" class="billRow" class-name="transition-box">
         <el-col :span="8">
-          <span class="slable">流程编号</span>
+          <span class="slable">流程编号 &nbsp;&nbsp;</span>
           <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
         </el-col>
         <el-col :span="8">
@@ -23,21 +23,37 @@
         </el-col>
       </el-row>
       <el-row :gutter="10" class="billRow">
-        <el-col :span="7">
+        <el-col :span="8">
           <span class="slable">录入人查询</span>
           <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input>
         </el-col>
         <el-col :span="8">
           <span class="slable">分出公司</span>
-          <el-select clearable v-model="cedentModel" placeholder="请选择分出公司">
-            <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index"></el-option>
-          </el-select>
+           <el-select clearable filterable v-model="cedentModel" placeholder="请选择分出公司">
+              <el-option
+                v-for="(item,index) in cedentList"
+                :key="index"
+                :label="item.codecode+' - '+item.codeName"
+                :value="index"
+              >
+                <span style="float:left">{{ item.codecode }}</span>
+                <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+              </el-option>
+            </el-select>
         </el-col>
         <el-col :span="8">
           <span class="slable">经纪公司</span>
-          <el-select clearable v-model="brokerModel" placeholder="请选择经纪公司">
-            <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index"></el-option>
-          </el-select>
+           <el-select clearable filterable v-model="brokerModel" placeholder="请选择经纪公司">
+              <el-option
+                v-for="(item,index) in brokerList"
+                :key="index"
+                :label="item.codecode+' - '+item.codeName"
+                :value="index"
+              >
+                <span style="float:left">{{ item.codecode }}</span>
+                <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+              </el-option>
+            </el-select>
         </el-col>
       </el-row>
       <el-row :gutter="10" class="billRow">  
@@ -62,7 +78,7 @@
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91"></i>手工创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div> 
-    <el-table :header-row-class-name="StableClass" :data="tableData" stripe style="width: 100%"  height="480">
+    <el-table :header-row-class-name="StableClass" :data="tableData" stripe border style="width: 100%"  height="480">
       <el-table-column prop="createdAt" label="创建时间" width="100"></el-table-column>
       <el-table-column label="流程编号" width="140">
         <template slot-scope="scope">

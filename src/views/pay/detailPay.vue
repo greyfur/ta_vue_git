@@ -92,7 +92,7 @@
                   <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
                 </p>            
               </div>
-              <el-table stripe :data="fileData" style="width:100%;min-height:350px;max-height:500px;" class="document">
+              <el-table stripe :data="fileData" border style="width:100%;min-height:350px;max-height:500px;" class="document">
                 <el-table-column label="文件名" width="200">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -141,7 +141,7 @@
           <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getRMSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
          <el-collapse-transition>
-        <el-table v-show="searchFlag2" stripe :data="RMData" style="width:100%">
+        <el-table v-show="searchFlag2" stripe :data="RMData" style="width:100%" border>
           <el-table-column label="支票号" width="110">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
@@ -222,10 +222,10 @@
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单</div>
           <p v-if="$route.query.tag === 'payOperation' || $route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
-        <el-table v-show="searchFlag3" stripe :data="SgData" style="width: 100%">
+        <el-table v-show="searchFlag3" stripe :data="SgData" style="width: 100%" border>
           <el-table-column type="expand">
             <template slot-scope="props">
-              <el-table stripe :data="props.row.worksheetDOList" style="width: 100%">
+              <el-table stripe :data="props.row.worksheetDOList" style="width: 100%" border>
                 <el-table-column label="账单号">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
@@ -444,7 +444,7 @@
           </el-upload>
           </el-form-item>
       </el-form>
-      <el-table stripe :data="TaxList" style="width: 100%" class="document" v-show="title==='增值税信息获取'">
+      <el-table stripe :data="TaxList" border style="width: 100%" class="document" v-show="title==='增值税信息获取'">
         <el-table-column prop="invoiceId" label="增值税号"></el-table-column>
         <el-table-column prop="rmId" label="支票号"></el-table-column>
         <el-table-column prop="sgNum" label="SG号"></el-table-column>
@@ -979,10 +979,8 @@ export default {
     }
     this.dataBaseSG();
     this.mailSend(2,'',1);
-    
-    
-
     this.listData.forEach(el=>{
+      console.log(el['b'],this.row[el['c']])
       el['b'] = this.row[el['c']];
       if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
     })
