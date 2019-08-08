@@ -175,6 +175,11 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
+              <el-table-column label="支票类型" width="100">
+                <template slot-scope="scope">
+                  <span>{{scope.row.rmType=='R'?'收款':'付款'}}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
               <el-table-column label="银行账户">
                 <template slot-scope="scope">

@@ -204,6 +204,11 @@
               </el-tooltip>
             </template>
           </el-table-column>
+          <el-table-column label="支票类型" width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.rmType=='R'?'收款':'付款'}}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="valueDate" label="起息日" width="100"></el-table-column>
           <el-table-column prop="dueDate" label="到期日" width="100"></el-table-column>
           <el-table-column prop="partnerCode" label="汇款人代码" width="100"></el-table-column>
