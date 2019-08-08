@@ -5,10 +5,10 @@
       <el-radio :label="0">开账</el-radio>
       <el-radio :label="1">关账</el-radio>
     </el-radio-group>
-    <div>邮箱锁定设置</div>
+    <div>邮箱锁定状态设置</div>
     <el-radio-group v-model="radio2" @change="onChange2">
-      <el-radio :label="1">锁定</el-radio>
-      <el-radio :label="0">解锁</el-radio>
+      <el-radio :label="1">锁定状态</el-radio>
+      <el-radio :label="0">解锁状态</el-radio>
     </el-radio-group>
   </div>
 </template>

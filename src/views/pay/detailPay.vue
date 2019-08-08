@@ -223,6 +223,7 @@
           <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
           <el-table-column label="操作" width="140">
             <template slot-scope="scope">
+              <el-button type="text" v-if="$route.query.tag === 'approvalDone'" @click.stop="chongXiao(scope.row)" size="mini">冲销</el-button>
               <el-button @click="onOpenSICS(scope.row,'rmId')" v-if="$route.query.tag === 'payClose' || $route.query.tag === 'payment' || $route.query.tag === 'instancyPay' || $route.query.tag === 'partialDone'" type="text" size="small">Reverse</el-button>
               <el-button @click="onOpenSICS(scope.row,'rmId')"  type="text" size="small">打开SICS</el-button>
             </template>
@@ -1195,6 +1196,16 @@ export default {
     }
   },
   methods: {
+    chongXiao(row){
+      this.$http.post("api/receipt/credOperation/creatWfCheckRemit",{rmId:row.rmId,createdBy:this.$store.state.userName}).then(res => {
+          if (res.status == 200 && res.data.errorCode == 1) {
+            this.$message({ message:res.data.errorMessage , type: "success" });
+            this.dataBaseSG();
+          } else if(res.data.errorCode == 0){ 
+            this.$message({ type: "error",message: res.data.errorMessage});
+           }
+      })
+    },
     nextStep(){
       let oldStrArrCreInd=0;
       let drcArr = [...document.querySelectorAll(".drc")];
