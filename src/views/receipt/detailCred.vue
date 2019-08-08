@@ -205,15 +205,11 @@
               </el-table-column>
               <el-table-column prop="businessPartnerRef" label="BP Reference" width="140"></el-table-column>
               <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-              <el-table-column label="操作" width="140">
+              <el-table-column label="操作" width="140" fixed="right">
                 <template slot-scope="scope">
                   <el-button type="text" @click.stop="openSICS(scope.row,'rmId')" size="mini">打开SICS</el-button>
+                  <el-button type="text" v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'" @click.stop="openSICS(scope.row,'rmId','R')" size="mini">Reverse</el-button>
                   <el-button type="text" v-if="$route.query.tag === 'credOperation'" @click.stop="chongXiao(scope.row)" size="mini">冲销</el-button>
-                  <el-button type="text"
-                    v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'"
-                    @click.stop="openSICS(scope.row,'rmId','R')"
-                    size="mini"
-                  >Reverse</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -658,7 +654,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="120">
+            <el-table-column label="操作" width="120" fixed="right">
               <template slot-scope="scope">
                 <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
               </template>

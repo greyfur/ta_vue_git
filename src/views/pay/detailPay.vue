@@ -8,6 +8,7 @@
       <el-col :span="11" style="padding:0 16px;">
         <!-- 核销 --> 
         <div class="btn" v-if="$route.query.tag === 'payClose'">
+          <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BpLedger</el-button>
           <el-button size="small" :disabled="hxState" @click="makeReport" plain>生成核销报告</el-button>
           <el-button size="small" :disabled="hxState" @click="getTaxInfo" plain>增值税信息获取</el-button>
           <!-- <el-button size="small" :disabled="hxState" @click="mailSend(2,'附件查看')" plain>附件查看</el-button> -->
@@ -226,11 +227,11 @@
           </el-table-column>
           <el-table-column prop="businessPartnerRef" label="BP Reference信息" width="140"></el-table-column>
           <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-          <el-table-column label="操作" width="140">
+          <el-table-column label="操作" width="140" fixed="right">
             <template slot-scope="scope">
-              <el-button type="text" v-if="$route.query.tag === 'approvalDone'" @click.stop="chongXiao(scope.row)" size="mini">冲销</el-button>
               <el-button @click="onOpenSICS(scope.row,'rmId')" v-if="$route.query.tag === 'payClose' || $route.query.tag === 'payment' || $route.query.tag === 'instancyPay' || $route.query.tag === 'partialDone'" type="text" size="small">Reverse</el-button>
               <el-button @click="onOpenSICS(scope.row,'rmId')"  type="text" size="small">打开SICS</el-button>
+              <el-button type="text" v-if="$route.query.tag === 'approvalDone'" @click.stop="chongXiao(scope.row)" size="mini">冲销</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -569,7 +570,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="120">
+            <el-table-column label="操作" width="120" fixed="right">
               <template slot-scope="scope">
                 <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
               </template>
@@ -1210,6 +1211,23 @@ export default {
             this.$message({ type: "error",message: res.data.errorMessage});
            }
       })
+    },
+    openBPSICS() {
+      if (!this.row.rmSettleCompanyCode) {
+        this.$message({
+          type: "error",
+          message: "process中rmSettleCompanyCode无值，打不开"
+        });
+        return false;
+      }
+      this.$http
+        .post("api/sics/liveDesktop/openBpLedger", {
+          modifiedBy: this.mustData.actOperator,
+          bpId: this.row.rmSettleCompanyCode
+        })
+        .then(res => {
+          console.log(res, "打开SICS");
+        });
     },
     nextStep(){
       let oldStrArrCreInd=0;
