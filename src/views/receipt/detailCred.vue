@@ -93,8 +93,7 @@
             ></i>支票信息
           </div>
           <p>
-            <!-- <el-button size="mini" @click="getSg" v-if="$route.query.tag !== 'credVerification' && $route.query.tag !== 'credReview' && $route.query.tag !== 'collectiongEnd'"> -->
-            <el-button size="mini" @click="getSg">
+            <el-button size="mini" @click="getSg" v-if="$route.query.tag !== 'credVerification' && $route.query.tag !== 'credReview' && $route.query.tag !== 'collectiongEnd'">
               <i style="margin-right:8px;" class="iconfont iconGroup77"></i>支票回写
             </el-button>
           </p>
@@ -1430,6 +1429,8 @@ export default {
         .then(res => {
           console.log(res, "dataBaseSG");
           if (res.status === 200) {
+            this.RMData = res.data.remitDOlist;
+            this.WSData = res.data.workSheetDOlsit;
             // this.SgData = res.data.worksheetsgDOlist;
             let arr5 = res.data.worksheetsgDOlist;
                 arr5.forEach(el=>{
@@ -1439,8 +1440,7 @@ export default {
                   }
                 })
                 this.SgData = arr5;
-            this.RMData = res.data.remitDOlist;
-            this.WSData = res.data.workSheetDOlsit;
+            
           }
         });
     },
@@ -1480,6 +1480,8 @@ export default {
         .then(res => {
           console.log(res, "getSg");
           if (res.status === 200) {
+            this.RMData = res.data.remitDOlist;
+            this.WSData = res.data.workSheetDOlsit;
             // this.SgData = res.data.worksheetsgDOlist;
             let arr5 = res.data.worksheetsgDOlist;
               arr5.forEach(el=>{
@@ -1489,8 +1491,7 @@ export default {
                 }
               })
               this.SgData = arr5;
-            this.RMData = res.data.remitDOlist;
-            this.WSData = res.data.workSheetDOlsit;
+            
           }
         });
     },
@@ -1500,7 +1501,6 @@ export default {
         this.RMData.forEach(el => {
           rmIds += `${el.rmId},`;
         });
-        // this.$http.post('api/sics/basis/receiptSynchronize',{actOperator:this.mustData.actOperator,processId:this.row.processId}).then(res =>{
         this.$http
           .post("api/sics/basis/getPayRemitFromSics", {
             actOperator: this.mustData.actOperator,
@@ -1627,7 +1627,9 @@ export default {
     },
     creatRM(tag, formName) {
       if (this.formLabelAlign.brokerModel != null) {
-        let obj = this.brokerList[this.formLabelAlign.brokerModel];
+        let arrList = [];
+        this.formLabelAlign.rmType=='R'?arrList=this.brokerList:arrList=this.brokerListSk ;
+        let obj = arrList[this.formLabelAlign.brokerModel];
         this.formLabelAlign.partnerCode = obj.codecode;
         this.formLabelAlign.partnerName = obj.codeName;
       }

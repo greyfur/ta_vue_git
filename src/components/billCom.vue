@@ -727,6 +727,14 @@ export default {
       this.getZJData(this.ZJprocessId);
     },
     init(tag) {
+      if (tag == 0) {
+        if (this.urlName === "sortOperation") {
+          this.$http
+            .get("api/worksheet/wSEntry/refreshEmail")
+            .then(res => {});
+        }
+        this.$message({ type: "success", message: "刷新成功" });
+      }
       // 进首页查询
       let params = null;
       console.log(this.admFlag,'this.admFlag');
@@ -749,14 +757,6 @@ export default {
             ) {
               this.pendingFlag = true;
             }
-          }
-          if (tag == 0) {
-            if (this.urlName === "sortOperation") {
-              this.$http
-                .get("api/worksheet/wSEntry/refreshEmail")
-                .then(res => {});
-            }
-            this.$message({ type: "success", message: "刷新成功" });
           }
         }
       });

@@ -1,9 +1,9 @@
 <template>
   <div class="credOperation">
-    <receipt-com goDetailName='RECHECK' processStatusCom='待处理' urlName='credOperation'></receipt-com>
+    <receipt-com goDetailName='RECHECK' processStatusCom='待处理,已悬停' urlName='credOperation'></receipt-com>
   </div>
 </template>
-<script>
+<script> 
 import receiptCom from '@/components/receiptCom.vue'
 export default {
   components:{
