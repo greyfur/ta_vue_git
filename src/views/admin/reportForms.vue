@@ -58,7 +58,7 @@
         }else{
           // this.$http({
           //   url:`api/reportform`,
-          //   methods:'POST',
+          //   method:'POST',
           //   headers:{
           //     responseType: "blob"
           //   },
@@ -68,27 +68,27 @@
           // }).then(res=>{
           //   console.log(res)
           // })
-          // this.$http.post(`api/reportform`,{
-          //   reportType:this.reportType,
-          // }, { responseType: "blob" }).then(res=>{
-          //   if(res.status===200){
-          //     console.log(res.data)
-          //     this.path = this.getObjectURL(res.data);
-          //     if (res.data) {
-          //         var a = document.createElement("a");
-          //         if (typeof a.download === "undefined") {
-          //           window.location = this.path;
-          //         } else {
-          //           a.href = this.path;
-          //           a.download = row.docName;
-          //           document.body.appendChild(a);
-          //           a.click();
-          //           a.remove();
-          //         }
-          //       }
-          //   }
-          //   // console.log(res)
-          // })
+          this.$http.post(`api/reportform`,{
+            reportType:this.reportType,
+          }, { responseType: "blob" }).then(res=>{
+            if(res.status===200){
+              console.log(res.data)
+              this.path = this.getObjectURL(res.data);
+              if (res.data) {
+                  var a = document.createElement("a");
+                  if (typeof a.download === "undefined") {
+                    window.location = this.path;
+                  } else {
+                    a.href = this.path;
+                    a.download = row.docName;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                  }
+                }
+            }
+            // console.log(res)
+          })
         }
       },
       getObjectURL(file) {
