@@ -114,7 +114,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
-      <el-table-column label="汇款金额">
+      <el-table-column label="汇款金额"  width="100">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -229,7 +229,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
-      <el-table-column label="汇款金额">
+      <el-table-column label="汇款金额" width="100">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
