@@ -114,7 +114,7 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column prop="bankCurrency" label="币制" width="150"></el-table-column>
+              <el-table-column prop="bankCurrency" label="币制" width="60"></el-table-column>
               <el-table-column label="支票金额">
                 <template slot-scope="scope">
                   <el-tooltip
@@ -191,15 +191,11 @@
               </el-table-column>
               <el-table-column prop="valueDate" label="起息日" width="100"></el-table-column>
               <el-table-column prop="dueDate" label="到期日" width="100"></el-table-column>
-              <el-table-column label="结付公司" width="140">
-                <template slot-scope="scope">
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    :content="scope.row.partnerName"
-                    placement="top-start"
-                  >
-                    <span class="abbreviate">{{scope.row.partnerCode}}-{{scope.row.partnerName}}</span>
+              <el-table-column width="140" label="结付公司">
+                  <template slot-scope="scope">
+                  <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
+                    <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
+                    <span class="abbreviate" v-else></span>
                   </el-tooltip>
                 </template>
               </el-table-column>
