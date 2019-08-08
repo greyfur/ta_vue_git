@@ -229,7 +229,18 @@
         </template>
       </el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
-      <el-table-column prop="rmReceiptDate" width="120" label="到账日期"></el-table-column>
+      <el-table-column label="汇款金额">
+        <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="Number(scope.row.rmAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
+            placement="top-start"
+          >
+            <span class="abbreviate">{{Number(scope.row.rmAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column label="手续费" width="120">
         <template slot-scope="scope">
           <el-tooltip
@@ -245,27 +256,6 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
-      <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
-      <el-table-column label="汇款金额">
-        <template slot-scope="scope">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="Number(scope.row.rmAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
-            placement="top-start"
-          >
-            <span class="abbreviate">{{Number(scope.row.rmAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
-      <el-table-column prop="curOperator" width="120" label="操作员"></el-table-column>
-      <el-table-column width="110" label="任务来源">
-        <template slot-scope="scope">
-          <span>{{nameList[scope.row.curOperator]}}</span>
-        </template>
-      </el-table-column>
       <el-table-column width="150" label="原收款公司名称">
         <template slot-scope="scope">
           <el-tooltip
@@ -278,6 +268,16 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column prop="rmReceiptDate" width="120" label="到账日期"></el-table-column>
+      <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
+      <el-table-column width="110" label="任务来源">
+        <template slot-scope="scope">
+          <span>{{nameList[scope.row.curOperator]}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
+      <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
+      <!-- <el-table-column prop="curOperator" width="120" label="操作员"></el-table-column> -->
       <el-table-column width="120" label="备注">
          <template slot-scope="scope">
           <el-tooltip
