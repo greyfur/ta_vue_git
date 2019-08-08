@@ -69,10 +69,10 @@
           <el-tooltip
             class="item"
             effect="dark"
-            :content="scope.row.rmAmount"
+            :content="Number(scope.row.rmAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
             placement="top-start"
           >
-            <span class="abbreviate">{{scope.row.rmAmount}}</span>
+            <span class="abbreviate">{{Number(scope.row.rmAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
           </el-tooltip>
         </template>
       </el-table-column>

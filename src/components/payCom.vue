@@ -53,7 +53,18 @@
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
       <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
-      <el-table-column prop="rmAmount" label="汇款金额" width="120"></el-table-column>
+      <el-table-column label="汇款金额" width="120">
+         <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="Number(scope.row.rmAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
+            placement="top-start"
+          >
+            <span class="abbreviate">{{Number(scope.row.rmAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column label="任务来源" width="110">
         <template slot-scope="scope">
             <span>{{nameList[scope.row.curOperator]}}</span>

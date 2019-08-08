@@ -1013,7 +1013,8 @@ export default {
         {
           a: "结付公司",
           b: "",
-          c: "rmSettleCompanyCode"
+          c: "rmSettleCompanyCode",
+          d:'rmSettleCompanyName'
         },
         {
           a: "汇款人名称",
@@ -1309,6 +1310,7 @@ export default {
       if (el["a"] == "任务来源") {
         el["b"] = this.nameList[this.row[el["c"]]];
       }
+      if(el['a']=='结付公司'){ el["b"]=this.row[el['c']] + '-' + this.row[el['d']];}
     });
   },
   methods: {
@@ -2231,7 +2233,15 @@ export default {
   display: flex;
 }
 .btn {
-  margin-bottom: 20px;
+  width: 100%;
+  position: fixed;
+  left: 64px;
+  bottom: 0;
+  z-index: 999;
+  background:#FFFFFF ;
+  height: 89px;
+  line-height: 89px;
+  padding: 0 16px;
 }
 .btn .el-button {
   margin-bottom: 10px;

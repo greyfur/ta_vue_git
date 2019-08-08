@@ -67,7 +67,7 @@
         </el-col>
       </el-row>
       <el-row :gutter="10" class="billRow">  
-        <el-col :span="8">
+        <el-col :span="16">
           <span class="slable">录入时间段</span>
            <!-- <el-date-picker
               value-format="timestamp"
