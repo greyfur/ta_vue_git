@@ -134,6 +134,7 @@
       </el-col>
     </el-row>
 
+    <!-- 支票信息 -->
     <el-row v-if="$route.query.tag !== 'payOperation' && $route.query.tag !== 'payVerification'" style="padding:0 16px;">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag2 = !searchFlag2">
@@ -226,7 +227,7 @@
          </el-collapse-transition>
       </el-col>
     </el-row>
-
+    <!-- 结算清单 -->
     <el-row style="padding:0 16px;">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
@@ -403,6 +404,168 @@
             </template>
           </el-table-column>
         </el-table>
+      </el-col>
+    </el-row>
+    <!-- 账单信息 -->
+    <el-row v-if="$route.query.tag === 'payClose' || $route.query.tag === 'approvalDone' || $route.query.tag === 'partialDone'">
+      <el-col :span="24">
+        <div
+          class="titleSearch detailSearch"
+          style="margin-bottom:10px;"
+          @click="searchFlag4 = !searchFlag4"
+        >
+          <div>
+            <i
+              style="margin-right:8px;"
+              :class="searchFlag4===false?'el-icon-arrow-down':'el-icon-arrow-up'"
+            ></i>账单信息
+          </div>
+          <p>
+            <i class="iconfont iconGroup26"></i>
+          </p>
+        </div>
+        <el-collapse-transition>
+          <el-table v-show="searchFlag4" border stripe :data="WSData" style="width: 100%">
+            <el-table-column label="账单号">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.wsId"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.wsId}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="wsStatus" label="账单状态" width="100">
+              <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+            </el-table-column>
+            <el-table-column label="账单标题">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.wsTitle"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.wsTitle}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="业务编号">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.businessId"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.businessId}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="附件名称">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.docName"
+                  placement="top-start"
+                >
+                  <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="section">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.section"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.section}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="uwYear" label="业务年度"></el-table-column>
+            <el-table-column label="任务类型">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.businessType"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.businessType}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
+            <el-table-column label="分出公司" width="120">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.cedentCode+'-'+scope.row.cedentName"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="经纪公司" width="120">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.brokerCode+'-'+scope.row.brokerName"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.brokerCode}}-{{scope.row.brokerName}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="wsType" label="账单类型"></el-table-column>
+            <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
+            <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
+            <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
+            <el-table-column prop="dept" label="经营机构"></el-table-column>
+            <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
+            <el-table-column label="金额">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.wsAmount"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.wsAmount}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
+            <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
+            <el-table-column label="备注">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.remark"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.remark}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="120">
+              <template slot-scope="scope">
+                <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-collapse-transition> 
       </el-col>
     </el-row>
 
@@ -727,6 +890,7 @@ export default {
             a:'结付公司',
             b:'',
             c:'rmSettleCompanyCode',
+            d:'rmSettleCompanyName'
           },
           {
             a:'币制',
@@ -1016,9 +1180,10 @@ export default {
     this.dataBaseSG();
     this.mailSend(2,'',1);
     this.listData.forEach(el=>{
-      console.log(el['b'],this.row[el['c']])
+      // console.log(el['b'],this.row[el['c']],'hyd')
       el['b'] = this.row[el['c']];
       if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
+      if(el['a']=='结付公司'){ el["b"]=this.row[el['c']] + '-' + this.row[el['d']];}
     })
   },
   updated(){
@@ -2086,6 +2251,12 @@ export default {
                 // 再把美元转为另一个小汇率
                 let val2 = this.filterCurrencyRateList('USD',this.makeDocListEctype.zheType);
                 if(val2){ 
+                  //如果是一个类型 这两个都是两个小数点
+                  // if(curType==this.makeDocListEctype.zheType){
+                  //    this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(2):null;
+                  // }else{
+                  //    this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(4):null;
+                  // }
                   this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(4):null;
                   if(this.makeDocListEctype.yuanHuiLv[i] != null){
                     allNum += this.makeDocListEctype.yuanNum[i]/Number(1*this.makeDocListEctype.yuanHuiLv[i]);
@@ -2128,6 +2299,10 @@ export default {
         if (tag == 2) {
          if(this.makeDocListEctype.zheNum&&this.makeDocListEctype.yuanType.length>0){
             // 是操作页面,2为点击确定---------------------生成审批文档提交
+            if(this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[1]&&this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[2]&&this.makeDocListEctype.cedentModel[1]==this.makeDocListEctype.cedentModel[2]){
+              this.$message.error('三个分公司不能一样');
+              return;
+            }
           if (
             this.makeDocListEctype.cedentModel &&
             this.makeDocListEctype.cedentModel.length
@@ -2140,14 +2315,15 @@ export default {
             this.makeDocList = Object.assign({},this.bscBankList[this.makeDocListEctype.shoukuanMode],this.makeDocList)
           }
           if(this.makeDocListEctype.zheNum){
-            this.makeDocList.convertAmount = `${this.makeDocListEctype.zheType}${this.makeDocListEctype.zheNum}`;
+            this.makeDocList.convertAmount = `${this.makeDocListEctype.zheType} ${this.makeDocListEctype.zheNum}`;
             this.makeDocList.rmAmount = `${this.makeDocListEctype.zheNum}`;
             this.makeDocList.rmCurrency = `${this.makeDocListEctype.zheType}`;
           }
           if(this.makeDocListEctype.yuanType.length){
             let arr = [];
             this.makeDocListEctype.yuanType.forEach((el,i)=>{
-              let str = `${el}${this.makeDocListEctype.yuanNum[i]}`;
+              // console.log(Number(this.makeDocListEctype.yuanNum[i]).toFixed(2),'hyd')
+              let str = `${el} ${Number(this.makeDocListEctype.yuanNum[i]).toFixed(2)}`;
               arr.push(str);
             })
             this.makeDocList.primitiveAmount = arr.join(';');
@@ -2290,6 +2466,7 @@ export default {
     'makeDocListEctype.yuanHuiLv':{
       handler:function(n,o){
         console.log('huilullllllllll')
+        // console.log(this.makeDocListEctype.zheType,'hyd')
         if(this.makeDocListEctype.yuanNum.length){
           let all = 0;
           this.makeDocListEctype.yuanNum.forEach((el,i)=>{
@@ -2340,6 +2517,17 @@ export default {
 .credContent {
   width: 100%;
   display: flex;
+}
+.btn{
+  width: 100%;
+  position: fixed;
+  left: 64px;
+  bottom: 0;
+  z-index: 999;
+  background:#FFFFFF ;
+  height: 89px;
+  line-height: 89px;
+  padding: 0 16px;
 }
 .btn .el-button{
   margin-bottom: 10px;

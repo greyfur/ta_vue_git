@@ -5,7 +5,7 @@
        <el-collapse-transition>
       <div v-show="searchFlag">
         <el-row :gutter="10" class="billRow" class-name="transition-box">
-        <el-col :span="8">
+        <el-col :span="7">
           <span class="slable">流程编号 &nbsp;&nbsp;</span>
           <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
         </el-col>
@@ -15,7 +15,7 @@
             <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="9">
           <span class="slable">录入时间段</span>
            <el-date-picker
               value-format="timestamp"

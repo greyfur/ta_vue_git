@@ -1810,6 +1810,14 @@ export default {
   /* display: flex; */
 }
 .btn {
+  width: 100%;
+  position: fixed;
+  left: 64px;
+  bottom: 0;
+  z-index: 999;
+  background:#FFFFFF ;
+  height: 89px;
+  line-height: 89px;
   padding: 0 16px;
 }
 .btn .el-button {
