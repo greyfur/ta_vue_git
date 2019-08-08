@@ -1256,21 +1256,15 @@ export default {
     ) {
       this.$http.post("api/receipt/finaCreat/list", param).then(res => {
         if (res.status == 200) {
-          if (
-            this.$route.query.tag === "credOperation" &&
-            res.data.rows[0].processStatus == "已悬停"
-          ) {
-            this.czState = true;
+          if (this.$route.query.tag === "credOperation" && res.data.rows[0].processStatus == "已悬停") {
+            this.czState = true
           } else {
-            this.czState = false;
+            this.czState = false
           }
-          if (
-            this.$route.query.tag === "credVerification" &&
-            res.data.rows[0].processStatus == "已悬停"
-          ) {
-            this.hxState = true;
+          if (this.$route.query.tag === "credVerification" && res.data.rows[0].processStatus == "已悬停") {
+            this.hxState = true
           } else {
-            this.hxState = false;
+            this.hxState = false
           }
         }
       });
