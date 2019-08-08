@@ -137,7 +137,6 @@
       </el-col>
       <el-col :span="16">
         <div class="right">
-          <!-- <p class="detail-word" style="marginTop:-10px;backgroundColor:#EEEEEE;">文档预览</p> -->
           <div class="titleSearch detailSearch">
             <div>
               <i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览
@@ -155,11 +154,9 @@
               </el-button>
               <el-button class="rotate" size="mini" @click="rotateMua" style="">顺时针旋转</el-button>
               <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button>
-              <!-- <span @click="openNewPage">最大化</span> -->
             </p>
           </div>
           <div class="browseDoc">
-            <!-- <iframe :src="'/static/pdf/web/viewer.html?file='+path" style="width:100%;height:-webkit-fill-available;" frameborder="0"></iframe> -->
             <iframe
               src="../../../static/Preview/index.html"
               id="iframeId"
@@ -919,15 +916,59 @@ export default {
       } else {
         url = "/worksheet/wSCheck/reviewSicsReturn";
       }
-      this.$http
-        .post(`api${url}`, {
+      this.$http.post(`api${url}`, {
           actOperator: this.$store.state.userName,
           processId: this.chooseRow.processId,
           docId: this.docViewRow ? this.docViewRow.docId : ""
-        })
-        .then(res => {
+        }).then(res => {
           if (res.status === 200 && res.data) {
             this.SICSData = res.data;
+            this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
+              if (res.status === 200) {
+                this.chooseRow = res.data;
+                // 获取详情的值
+                this.listData.forEach(el => {
+                  if (el["c"] == "cedent") {
+                    if(this.chooseRow["cedent"]==undefined){
+                      return
+                    }
+                    el["b"] = `${this.chooseRow["wsCedentCode"]}-${
+                      this.chooseRow["wsCedentName"]
+                    }`;
+                  } else if (el["c"] == "broker") {
+                    if(this.chooseRow["broker"]==undefined){
+                      return
+                    }
+                    el["b"] = `${this.chooseRow["wsBrokerCode"]}-${
+                      this.chooseRow["wsBrokerName"]
+                    }`;
+                  } else if (
+                    el["c"] == "wsBusinessType" &&
+                    this.chooseRow["wsBusinessType"]
+                  ) {
+                    el["b"] = `${this.YWoptionsObj[this.chooseRow["wsBusinessType"]]}`;
+                  } else {
+                    el["b"] = this.chooseRow[el["c"]];
+                  }
+                    // if(el['a']=='任务来源'){ el["b"] = this.nameList[this.chooseRow[el["c"]]]; }
+                  });
+              
+                // this.SICSData = res.data.workSheetVOlist;
+                // res.data.processStatus === "已悬停"? (this.isHover = true):(this.isHover = false);
+                // let arr = res.data.bscDocumentVOlist;
+                // arr.forEach(el=>{
+                //   if(el.docName){
+                //     let suffix = el.docName.split('.');
+                //     el['suffix'] = suffix[suffix.length-1];
+                //   }
+                // })
+                // this.tableData = arr;
+                // let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
+                // setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
+              }
+            });
+
+
           }
         });
     },

@@ -203,8 +203,8 @@
               <el-table-column label="操作" width="140">
                 <template slot-scope="scope">
                   <el-button type="text" @click.stop="openSICS(scope.row,'rmId')" size="mini">打开SICS</el-button>
-                  <el-button
-                    type="text"
+                  <el-button type="text" v-if="$route.query.tag === 'credOperation'" @click.stop="chongXiao(scope.row)" size="mini">冲销</el-button>
+                  <el-button type="text"
                     v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'"
                     @click.stop="openSICS(scope.row,'rmId','R')"
                     size="mini"
@@ -1267,7 +1267,7 @@ export default {
     this.formLabelAlign.valueDate = new Date().getTime();
     this.formLabelAlign.dueDate = new Date().getTime();
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
-  },
+  }, 
   mounted() {
     setTimeout(() => {
       // 分出人+经济人all
@@ -1312,6 +1312,16 @@ export default {
     });
   },
   methods: {
+    chongXiao(row){
+      this.$http.post("api/receipt/credOperation/creatWfCheckRemit",{rmId:row.rmId,createdBy:this.$store.state.userName}).then(res => {
+          if (res.status == 200 && res.data.errorCode == 1) {
+            this.$message({ message:res.data.errorMessage , type: "success" });
+            this.queryRM();
+          } else if(res.data.errorCode == 0){ 
+            this.$message({ type: "error",message: res.data.errorMessage});
+           }
+      })
+    },
     docView(row) {
       if (row) {
         if(row.suffix && row.suffix=='eml'){ return false; }
