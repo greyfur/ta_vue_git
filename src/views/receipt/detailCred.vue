@@ -1126,8 +1126,8 @@ export default {
       ],
       paymentTypeList: [   // 此处的d必须写成反的，反向判断disabled数据
         { n: "Wire", v: "WIRE" , d:''},
-        { n: "Void P-Wire", v: "VP_WIRE", d:'R'},
-        { n:'Void R-Wire', v:'VR_WIRE', d:'P'}
+        { n: "Void P-Wire", v: "VP_WIRE", d:'P'},
+        { n:'Void R-Wire', v:'VR_WIRE', d:'R'}
       ],
       businessOriginList: [
         { a: "DOM", b: "RC_DOMESTIC" },

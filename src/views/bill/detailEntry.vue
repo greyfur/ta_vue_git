@@ -3,8 +3,7 @@
     <!-- <div class="goBack" v-show="false"> -->
     <router-link
       :to="{name:$route.query.tag}"
-      style="color:#333;position:absolute;top:20px;left:70px;z-index:100;"
-    >
+      style="color:#333;position:absolute;top:20px;left:70px;z-index:100;">
       <span class="arrows" style="font-weight: 700;">＜</span>
       <span class="word">返回上一级</span>
     </router-link>

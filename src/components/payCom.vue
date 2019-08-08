@@ -766,6 +766,7 @@ export default {
           }
         }
           delete params['actOperator'];
+          delete params.modifiedBy;
           this.$http.post('api/pay/teskClaim/list',params).then(res =>{
             if(res.status === 200){
               if(!res.data.rows.length){

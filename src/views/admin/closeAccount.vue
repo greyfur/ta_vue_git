@@ -27,16 +27,16 @@
           this.radio = +res.data.accountCloseFlag;
          }
       }) 
-      this.$http.get(`api/modify/emailLockQuery`).then(res =>{
+      this.$http.get(`api/administrator/conifg/emailLockQuery`).then(res =>{
         if(res.status === 200) {
-          this.radio2 = +res.data.accountCloseFlag;
+          this.radio2 = +res.data.emailLockFlag;
          }
       }) 
     },
     methods:{
       // 邮箱
       onChange2(){
-        this.$http.post(`api/modify/unlockEmail`,{value:this.radio2,modifiedBy:this.$store.state.userName}).then(res =>{
+        this.$http.post(`api/administrator/conifg/unlockEmail`,{value:this.radio2,modifiedBy:this.$store.state.userName}).then(res =>{
         if(res.status === 200 && res.data.code ==0) {
           this.$message({
           message: '操作成功',
@@ -45,6 +45,11 @@
         } else if(res.data.code ==1 && res.data.msg){       
           this.$message.error(res.data.msg);
          }
+         this.$http.get(`api/administrator/conifg/emailLockQuery`).then(res =>{
+          if(res.status === 200) {
+            this.radio2 = +res.data.emailLockFlag;
+          }
+      }) 
       }) 
       },
       // 开关账

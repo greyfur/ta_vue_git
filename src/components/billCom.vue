@@ -731,9 +731,10 @@ export default {
         if (this.urlName === "sortOperation") {
           this.$http
             .get("api/worksheet/wSEntry/refreshEmail")
-            .then(res => {});
-        }
-        this.$message({ type: "success", message: "刷新成功" });
+            .then(res => {
+              this.$message({ type: "success", message: res.data.msg });
+            });
+        } else{ this.$message({ type: "success", message: "刷新成功" }); }
       }
       // 进首页查询
       let params = null;

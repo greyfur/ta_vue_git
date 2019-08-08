@@ -1283,6 +1283,7 @@ export default {
             }
           }
           delete params.actOperator;
+          delete params.modifiedBy;
           this.$http.post("api/receipt/finaCreat/list", params).then(res => {
             if (res.status === 200) {
               if (!res.data.rows.length) {

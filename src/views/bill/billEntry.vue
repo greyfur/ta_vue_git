@@ -1,6 +1,6 @@
 <template>
   <div class="billEntry">
-    <bill-com processStatusCom='待处理' urlName='billEntry'></bill-com>
+    <bill-com processStatusCom='待处理,已悬停' urlName='billEntry'></bill-com>
   </div>
 </template>
 <script>

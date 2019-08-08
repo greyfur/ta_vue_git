@@ -839,10 +839,10 @@ export default {
         pendingReason:null,
         cedentList:[],
         rmStatusList:[{'n':'In Progress','v':'PROG'},{'n':'In Execution','v':'INEX'}],
-        paymentTypeList: [   // 此处的d必须写成反的，反向判断disabled数据
+        paymentTypeList: [ 
           { n: "Wire", v: "WIRE" , d:''},
-          { n: "Void P-Wire", v: "VP_WIRE", d:'R'},
-          { n:'Void R-Wire', v:'VR_WIRE', d:'P'}
+          { n: "Void P-Wire", v: "VP_WIRE", d:'P'},
+          { n:'Void R-Wire', v:'VR_WIRE', d:'R'}
         ],
         baseCompanyList:[],
         businessOriginList:[],
