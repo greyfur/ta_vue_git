@@ -20,9 +20,11 @@
            <el-date-picker
               value-format="timestamp"
               v-model="billSearch.registAt"
-              type="date"
-              placeholder="选择日期"
-            ></el-date-picker>
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
          </el-col>
       </el-row>
       <el-row :gutter="10" class="billRow">
@@ -78,7 +80,7 @@
       </div>
        </el-collapse-transition>
     </div>
-    <div class="btn">
+    <div class="btn" style="margin-bottom:10px;">
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91"></i>手工创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div> 
