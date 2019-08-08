@@ -69,12 +69,20 @@
       <el-row :gutter="10" class="billRow">  
         <el-col :span="8">
           <span class="slable">录入时间段</span>
-           <el-date-picker
+           <!-- <el-date-picker
               value-format="timestamp"
               v-model="billSearch.registAt"
               type="date"
               placeholder="选择日期"
-            ></el-date-picker>
+            ></el-date-picker> -->
+            <el-date-picker
+              value-format="timestamp"
+              v-model="billSearch.registAt"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
          </el-col>
          <el-col :span="8">
           <span class="slable">是否签回</span>
@@ -392,6 +400,10 @@ export default {
       })
     }
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
+  },
+  updated(){
+    console.log(this.billSearch.registAt,'5555')
+
   },
   mounted(){
     this.$http.post('api/activiti/getAssigneeName',{roleName:'账单录入'}).then(res =>{
