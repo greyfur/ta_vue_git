@@ -1705,6 +1705,10 @@ export default {
               }
             } else if(this.$route.query.tag === 'partialDone'){
               type1 = 'COMPLETE';
+            } else if(this.$route.query.tag === 'payment'){
+              if(this.row.accountCloseFlag == '1'){
+                type1 = 'CONDITIONALCOMPLETE';
+              } else { type1 = 'COMPLETE'; }
             }
           // }
           if(!this.assignee){
