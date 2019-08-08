@@ -1839,6 +1839,7 @@ export default {
   width: 100%;
   padding-left: 64px;
   height: -webkit-fill-available;
+  padding-bottom: 90px;
   /* display: flex; */
 }
 .btn {
