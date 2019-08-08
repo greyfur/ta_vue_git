@@ -1063,7 +1063,7 @@ export default {
               assignee:this.$store.state.userName, 
               actOperator:this.$store.state.userName,
               accountCloseFlag:'1',
-              type:'PAYING',
+              type:'EMAIL',
               })
             .then(res =>{
               if(res.status === 200 && res.data.errorCode == 1){

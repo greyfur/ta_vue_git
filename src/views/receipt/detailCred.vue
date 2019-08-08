@@ -86,17 +86,16 @@
         <div
           class="titleSearch detailSearch"
           style="margin-bottom:10px;"
-          @click="searchFlag2 = !searchFlag2"
-        >
+          @click="searchFlag2 = !searchFlag2">
           <div>
-            <i
+            <i 
               style="margin-right:8px;"
               :class="searchFlag2===false?'el-icon-arrow-down':'el-icon-arrow-up'"
             ></i>支票信息
           </div>
           <p>
             <el-button size="mini" @click="getSg">
-              <i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写
+              <i style="margin-right:8px;" class="iconfont iconGroup77"></i>支票回写
             </el-button>
           </p>
         </div>
@@ -1254,10 +1253,7 @@ export default {
       processId: this.row.processId,
       processType: "收款"
     };
-    if (
-      this.$route.query.tag === "credOperation" ||
-      this.$route.query.tag === "credVerification"
-    ) {
+    if (this.$route.query.tag === "credOperation" || this.$route.query.tag === "credVerification") {
       this.$http.post("api/receipt/finaCreat/list", param).then(res => {
         if (res.status == 200) {
           if (this.$route.query.tag === "credOperation" && res.data.rows[0].processStatus == "已悬停") {
@@ -1310,6 +1306,7 @@ export default {
       this.dataBaseSG();
     } else {
       this.queryRM();
+      console.log('是因为页面刷新！！！！！！！！！！！！！！！！！！！！！')
     }
     // 详情
     this.listData.forEach(el => {
@@ -1523,7 +1520,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                  }
+                  }  
                 })
                 this.SgData = arr5;
               this.RMData = res.data.remitDOlist;
