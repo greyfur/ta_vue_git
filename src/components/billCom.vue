@@ -216,7 +216,7 @@
                 >删除</span>
               </el-dropdown-item>
               <el-dropdown-item>
-                <span @click.stop="handleClick(5,scope.row)" class="blueColor">踪迹</span>
+                <span  v-show="urlName !== 'sortOperation'" @click.stop="handleClick(5,scope.row)" class="blueColor">踪迹</span>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>

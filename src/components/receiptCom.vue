@@ -191,7 +191,7 @@
                   <span v-show="urlName === 'taskClaim'" @click.stop="handleClick(12,scope.row)" class="blueColor">附件查看</span>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
+                  <span v-show="urlName !== 'financialCreat'" @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
                 </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -325,7 +325,7 @@
                 >删除</span>
               </el-dropdown-item>
               <el-dropdown-item>
-                <span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
+                <span v-show="urlName !== 'financialCreat'" @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>

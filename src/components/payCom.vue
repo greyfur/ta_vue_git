@@ -85,7 +85,7 @@
             <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item><span v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" class="blueColor">编辑</span></el-dropdown-item>
-              <el-dropdown-item><span @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="urlName !== 'payOperation'" @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(12,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(15,scope.row)" class="blueColor">附件查看</span></el-dropdown-item>
