@@ -21,7 +21,7 @@
           <el-button size="small" plain @click="tongbu" v-if="$route.query.tag === 'instancyPay'">同步状态</el-button>
           <!-- <el-button size="small" plain @click="mailSend(2,'附件查看')">附件查看</el-button> -->
           <el-button size="small" plain v-if="$route.query.tag === 'partialDone'">同步状态</el-button>
-          <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程结束</el-button>
+          <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button>
         </div>
         <!-- 操作 -->
         <div class="btn" v-if="$route.query.tag === 'payOperation'">
