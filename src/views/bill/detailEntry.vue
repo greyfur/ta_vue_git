@@ -3,8 +3,7 @@
     <!-- <div class="goBack" v-show="false"> -->
     <router-link
       :to="{name:$route.query.tag}"
-      style="color:#333;position:absolute;top:20px;left:70px;z-index:100;"
-    >
+      style="color:#333;position:absolute;top:20px;left:70px;z-index:100;">
       <span class="arrows" style="font-weight: 700;">＜</span>
       <span class="word">返回上一级</span>
     </router-link>
@@ -144,6 +143,10 @@
               <i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览
             </div>
             <p>
+              <el-button size="small" :disabled="isHover">
+                <i style="margin-right:8px;" class="iconfont iconGroup26"></i>
+                <a href="../../../static/Preview/index.html" target="_blank">全屏</a>
+              </el-button>
               <el-button v-if="$route.query.tag === 'billEntry'" size="small" :disabled="isHover" @click="onSics('录入')">
                 <i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写
               </el-button>
@@ -157,7 +160,6 @@
           </div>
           <div class="browseDoc">
             <!-- <iframe :src="'/static/pdf/web/viewer.html?file='+path" style="width:100%;height:-webkit-fill-available;" frameborder="0"></iframe> -->
-
             <iframe
               src="../../../static/Preview/index.html"
               id="iframeId"
@@ -260,18 +262,7 @@
           <el-table-column prop="registAt" label="录入时间" width="160"></el-table-column>
           <el-table-column prop="closedBy" label="复核人" width="130"></el-table-column>
           <el-table-column prop="closedAt" label="复核时间" width="160"></el-table-column>
-          <el-table-column label="备注" v-if="$route.query.tag !== 'billCheck'">
-            <template slot-scope="scope">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                :content="scope.row.remark"
-                placement="top-start">
-                <span class="abbreviate">{{scope.row.remark}}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="修改意见" v-if="$route.query.tag == 'billCheck'">
+          <el-table-column label="修改意见">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -762,7 +753,6 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
-    
     // 查询账单详情
     if (this.$route.query.tag !== "billSignBack") {
       this.uploadType = 1;
@@ -776,6 +766,8 @@ export default {
       .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
       .then(res => {
         if (res.status === 200) {
+          this.SICSData = res.data.workSheetVOlist;
+          res.data.processStatus === "已悬停"? (this.isHover = true):(this.isHover = false);
           // this.tableData = res.data.bscDocumentVOlist;
           let arr = res.data.bscDocumentVOlist;
           arr.forEach(el=>{
@@ -787,10 +779,6 @@ export default {
           this.tableData = arr;
           let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
           setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
-          this.SICSData = res.data.workSheetVOlist;
-          res.data.processStatus === "已悬停"
-            ? (this.isHover = true)
-            : (this.isHover = false);
         }
       });
     // 获取详情的值
@@ -821,6 +809,9 @@ export default {
     });
   },
   methods: {
+    // openPage(){
+    //   window.open(pageNew,'_blank');  
+    // },
     rotateMua(){
       this.rotateCount++;
        if(this.rotateCount>=5){

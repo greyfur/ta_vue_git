@@ -815,7 +815,7 @@ export default {
       pendingFlag: false,
       taskClaimFlag: false,
       multipleSelection: []
-    };
+    }
   },
   created() {
     if (this.urlName == "taskClaim") {
@@ -1267,18 +1267,24 @@ export default {
         case 2: //批量创建
           break;
         case 3: //刷新
-          break;
+          break; 
         case 4: //查询
-          if (!this.formLabelAlign.processStatus) {
-            this.formLabelAlign.processStatus = this.processStatusCom;
-          }
           let params = null;
-          if(this.admFlag || this.urlName === 'financialCreat' || this.urlName === 'taskClaim'){ 
-            params = Object.assign({},this.mustData);
+          if(!this.formLabelAlign.processStatus){
+            if(this.admFlag || this.urlName === 'financialCreat' || this.urlName === 'taskClaim'){ 
+                params = Object.assign({},this.mustData,this.formLabelAlign,{processStatus:this.processStatusList.join(',')});
+              } else{
+                params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName,processStatus:this.processStatusList.join(',')});
+              }
           } else{
-            params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
+            if(this.admFlag || this.urlName === 'financialCreat' || this.urlName === 'taskClaim'){ 
+              params = Object.assign({},this.mustData,this.formLabelAlign);
+            } else{
+              params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
+            }
           }
           delete params.actOperator;
+          delete params.modifiedBy;
           this.$http.post("api/receipt/finaCreat/list", params).then(res => {
             if (res.status === 200) {
               if (!res.data.rows.length) {

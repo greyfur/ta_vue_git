@@ -120,6 +120,10 @@
         <div class="right">
           <div class="titleSearch detailSearch">
             <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览</div>
+              <el-button size="small">
+                <i style="margin-right:8px;" class="iconfont iconGroup26"></i>
+                <a href="../../../static/Preview/index.html" target="_blank">全屏</a>
+              </el-button>
             <!-- <el-button class="rotate" size="mini" @click="rotateMua">顺时针旋转</el-button>
             <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button> -->
             <!-- <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification'">
@@ -858,7 +862,6 @@
 <script>
 export default {
   name: 'detailPay',
-
   data() {
       return {
         saveLevel:null,
@@ -1000,10 +1003,10 @@ export default {
         pendingReason:null,
         cedentList:[],
         rmStatusList:[{'n':'In Progress','v':'PROG'},{'n':'In Execution','v':'INEX'}],
-        paymentTypeList: [   // 此处的d必须写成反的，反向判断disabled数据
+        paymentTypeList: [ 
           { n: "Wire", v: "WIRE" , d:''},
-          { n: "Void P-Wire", v: "VP_WIRE", d:'R'},
-          { n:'Void R-Wire', v:'VR_WIRE', d:'P'}
+          { n: "Void P-Wire", v: "VP_WIRE", d:'P'},
+          { n:'Void R-Wire', v:'VR_WIRE', d:'R'}
         ],
         baseCompanyList:[],
         businessOriginList:[],
@@ -1239,7 +1242,7 @@ export default {
               assignee:this.$store.state.userName, 
               actOperator:this.$store.state.userName,
               accountCloseFlag:'1',
-              type:'PAYING',
+              type:'EMAIL',
               })
             .then(res =>{
               if(res.status === 200 && res.data.errorCode == 1){
@@ -1870,6 +1873,10 @@ export default {
               }
             } else if(this.$route.query.tag === 'partialDone'){
               type1 = 'COMPLETE';
+            } else if(this.$route.query.tag === 'payment'){
+              if(this.row.accountCloseFlag == '1'){
+                type1 = 'CONDITIONALCOMPLETE';
+              } else { type1 = 'COMPLETE'; }
             }
           // }
           if(!this.assignee){
@@ -2045,7 +2052,9 @@ export default {
     },
     creatRM(formName){
       if(this.formLabelAlign.brokerModel != null){
-        let obj = this.brokerList[this.formLabelAlign.brokerModel];
+        let arrList = [];
+        this.formLabelAlign.rmType=='R'?arrList=this.brokerListHK:arrList=this.brokerList;
+        let obj = arrList[this.formLabelAlign.brokerModel];
         this.formLabelAlign.partnerCode = obj.codecode;
         this.formLabelAlign.partnerName = obj.codeName;
       }
@@ -2188,14 +2197,7 @@ export default {
       })
     },
     docView(row) {
-      // this.$http.post('api/anyShare/fileOperation/previewDocument',Object.assign({},row,{processId:this.row.processId}),{responseType:'blob'}).then(res =>{
-      //   if(res.status === 200){
-      //     console.log(res);
-      //     this.path = this.getObjectURL(res.data);
-      //   }
-      // })
       if(row){
-        console.log(row,'docView............');
         if(row.suffix && row.suffix=='eml'){ return false; }
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
         if(res.status == 200){

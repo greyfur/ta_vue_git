@@ -1,6 +1,6 @@
 <template>
   <div class="payClose">
-    <pay-com goDetailName='PAYING' processStatusCom='待核销' urlName='payClose'></pay-com>
+    <pay-com goDetailName='PAYING' processStatusCom='待核销,已悬停' urlName='payClose'></pay-com>
   </div>
 </template>
 <script>

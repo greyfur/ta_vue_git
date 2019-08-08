@@ -2,8 +2,7 @@
   <div class="detailCred">
     <router-link
       :to="{name:$route.query.tag}"
-      style="color:#333;position:absolute;top:20px;left:70px;z-index:100;"
-    >
+      style="color:#333;position:absolute;top:20px;left:70px;z-index:100;">
       <span class="arrows">＜</span>
       <span class="word">返回上一级</span>
     </router-link>
@@ -86,17 +85,16 @@
         <div
           class="titleSearch detailSearch"
           style="margin-bottom:10px;"
-          @click="searchFlag2 = !searchFlag2"
-        >
+          @click="searchFlag2 = !searchFlag2">
           <div>
-            <i
+            <i 
               style="margin-right:8px;"
               :class="searchFlag2===false?'el-icon-arrow-down':'el-icon-arrow-up'"
             ></i>支票信息
           </div>
           <p>
-            <el-button size="mini" @click="getSg">
-              <i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写
+            <el-button size="mini" @click="getSg" v-if="$route.query.tag !== 'credVerification' && $route.query.tag !== 'credReview' && $route.query.tag !== 'collectiongEnd'">
+              <i style="margin-right:8px;" class="iconfont iconGroup77"></i>支票回写
             </el-button>
           </p>
         </div>
@@ -1129,8 +1127,8 @@ export default {
       ],
       paymentTypeList: [   // 此处的d必须写成反的，反向判断disabled数据
         { n: "Wire", v: "WIRE" , d:''},
-        { n: "Void P-Wire", v: "VP_WIRE", d:'R'},
-        { n:'Void R-Wire', v:'VR_WIRE', d:'P'}
+        { n: "Void P-Wire", v: "VP_WIRE", d:'P'},
+        { n:'Void R-Wire', v:'VR_WIRE', d:'R'}
       ],
       businessOriginList: [
         { a: "DOM", b: "RC_DOMESTIC" },
@@ -1251,10 +1249,7 @@ export default {
       processId: this.row.processId,
       processType: "收款"
     };
-    if (
-      this.$route.query.tag === "credOperation" ||
-      this.$route.query.tag === "credVerification"
-    ) {
+    if (this.$route.query.tag === "credOperation" || this.$route.query.tag === "credVerification") {
       this.$http.post("api/receipt/finaCreat/list", param).then(res => {
         if (res.status == 200) {
           if (this.$route.query.tag === "credOperation" && res.data.rows[0].processStatus == "已悬停") {
@@ -1307,6 +1302,7 @@ export default {
       this.dataBaseSG();
     } else {
       this.queryRM();
+      console.log('是因为页面刷新！！！！！！！！！！！！！！！！！！！！！')
     }
     // 详情
     this.listData.forEach(el => {
@@ -1435,6 +1431,8 @@ export default {
         .then(res => {
           console.log(res, "dataBaseSG");
           if (res.status === 200) {
+            this.RMData = res.data.remitDOlist;
+            this.WSData = res.data.workSheetDOlsit;
             // this.SgData = res.data.worksheetsgDOlist;
             let arr5 = res.data.worksheetsgDOlist;
                 arr5.forEach(el=>{
@@ -1444,8 +1442,7 @@ export default {
                   }
                 })
                 this.SgData = arr5;
-            this.RMData = res.data.remitDOlist;
-            this.WSData = res.data.workSheetDOlsit;
+            
           }
         });
     },
@@ -1485,6 +1482,8 @@ export default {
         .then(res => {
           console.log(res, "getSg");
           if (res.status === 200) {
+            this.RMData = res.data.remitDOlist;
+            this.WSData = res.data.workSheetDOlsit;
             // this.SgData = res.data.worksheetsgDOlist;
             let arr5 = res.data.worksheetsgDOlist;
               arr5.forEach(el=>{
@@ -1494,8 +1493,7 @@ export default {
                 }
               })
               this.SgData = arr5;
-            this.RMData = res.data.remitDOlist;
-            this.WSData = res.data.workSheetDOlsit;
+            
           }
         });
     },
@@ -1505,7 +1503,6 @@ export default {
         this.RMData.forEach(el => {
           rmIds += `${el.rmId},`;
         });
-        // this.$http.post('api/sics/basis/receiptSynchronize',{actOperator:this.mustData.actOperator,processId:this.row.processId}).then(res =>{
         this.$http
           .post("api/sics/basis/getPayRemitFromSics", {
             actOperator: this.mustData.actOperator,
@@ -1513,19 +1510,20 @@ export default {
             rmIds: rmIds
           })
           .then(res => {
-            console.log(res, "getSg");
             if (res.status === 200) {
               // this.SgData = res.data.worksheetsgDOlist;
+              this.RMData = res.data.remitDOlist;
+              this.WSData = res.data.workSheetDOlsit;
               let arr5 = res.data.worksheetsgDOlist;
+              if(arr5){
                 arr5.forEach(el=>{
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                  }
+                  }  
                 })
                 this.SgData = arr5;
-              this.RMData = res.data.remitDOlist;
-              this.WSData = res.data.workSheetDOlsit;
+              }
             }
           });
       } else {
@@ -1631,7 +1629,9 @@ export default {
     },
     creatRM(tag, formName) {
       if (this.formLabelAlign.brokerModel != null) {
-        let obj = this.brokerList[this.formLabelAlign.brokerModel];
+        let arrList = [];
+        this.formLabelAlign.rmType=='R'?arrList=this.brokerList:arrList=this.brokerListSk ;
+        let obj = arrList[this.formLabelAlign.brokerModel];
         this.formLabelAlign.partnerCode = obj.codecode;
         this.formLabelAlign.partnerName = obj.codeName;
       }

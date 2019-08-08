@@ -762,15 +762,22 @@ export default {
  
           break;
         case 4: //查询
-        if(!this.formLabelAlign.processStatus){ this.formLabelAlign.processStatus = this.processStatusCom; }
-          // let params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
-          let params = null;
+        let params = null;          
+        if(!this.formLabelAlign.processStatus){
           if(!this.admFlag){ 
-            params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
+            params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName,processStatus:this.processStatusList.join(',')});
           } else{
-            params = Object.assign({},this.mustData);
+            params = Object.assign({},this.mustData,this.formLabelAlign,{processStatus:this.processStatusList.join(',')});
           }
+        } else{
+          if(!this.admFlag){ 
+            params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
+          } else{
+            params = Object.assign({},this.mustData,this.formLabelAlign);
+          }
+        }
           delete params['actOperator'];
+          delete params.modifiedBy;
           this.$http.post('api/pay/teskClaim/list',params).then(res =>{
             if(res.status === 200){
               if(!res.data.rows.length){
