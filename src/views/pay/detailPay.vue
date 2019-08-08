@@ -149,10 +149,23 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="流程编号">
+          <el-table-column prop="bankCurrency" label="币制" width="60"></el-table-column>
+            <el-table-column label="支票金额">
+                <template slot-scope="scope">
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    :content="scope.row.bankAmount"
+                    placement="top-start">
+                    <span class="abbreviate">{{scope.row.bankAmount}}</span>
+                  </el-tooltip>
+                </template>
+              </el-table-column>
+          <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column>
+          <el-table-column label="手续费金额" width="100">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :content="scope.row.processId" placement="top-start">
-                <span class="abbreviate">{{scope.row.processId}}</span>
+              <el-tooltip class="item" effect="dark" :content="scope.row.chargesAmount" placement="top-start">
+                <span class="abbreviate">{{scope.row.chargesAmount}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -171,12 +184,10 @@
             </template>
           </el-table-column>
           <el-table-column prop="paymentType" label="支付方式"></el-table-column>
-          <el-table-column prop="bankCurrency" label="实收/支币制" width="100"></el-table-column>
-          <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column>
-          <el-table-column label="手续费金额" width="100">
+          <el-table-column label="流程编号">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :content="scope.row.chargesAmount" placement="top-start">
-                <span class="abbreviate">{{scope.row.chargesAmount}}</span>
+              <el-tooltip class="item" effect="dark" :content="scope.row.processId" placement="top-start">
+                <span class="abbreviate">{{scope.row.processId}}</span>
               </el-tooltip>
             </template>
           </el-table-column>

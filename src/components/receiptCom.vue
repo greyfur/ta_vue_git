@@ -101,6 +101,31 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column width="120" label="汇款人名称">
+         <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="scope.row.payerName"
+            placement="top-start"
+          >
+            <span class="abbreviate">{{scope.row.payerName}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
+      <el-table-column label="汇款金额">
+        <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="scope.row.rmAmount"
+            placement="top-start"
+          >
+            <span class="abbreviate">{{scope.row.rmAmount}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column label="手续费" width="120">
         <template slot-scope="scope">
           <el-tooltip
@@ -116,41 +141,19 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
-      <el-table-column prop="rmReceiptDate" width="120" label="到账日期"></el-table-column>
-      <el-table-column width="120" label="汇款人名称">
+      <el-table-column width="150" label="原收款公司名称">
          <template slot-scope="scope">
           <el-tooltip
             class="item"
             effect="dark"
-            :content="scope.row.payerName"
+            :content="scope.row.rmOriSettleCompanyName"
             placement="top-start"
           >
-            <span class="abbreviate">{{scope.row.payerName}}</span>
+            <span class="abbreviate">{{scope.row.rmOriSettleCompanyName}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
-      <el-table-column label="Base Company" prop="baseCompany" width="130"></el-table-column>
-      <el-table-column label="汇款金额">
-        <template slot-scope="scope">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="scope.row.rmAmount"
-            placement="top-start"
-          >
-            <span class="abbreviate">{{scope.row.rmAmount}}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
-      <el-table-column width="110" label="任务来源">
-        <template slot-scope="scope">
-          <span>{{nameList[scope.row.curOperator]}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="rmOriSettleCompanyName" width="150" label="原收款公司名称"></el-table-column>
       <el-table-column width="120" label="备注">
          <template slot-scope="scope">
           <el-tooltip
@@ -160,6 +163,14 @@
             placement="top-start">
             <span class="abbreviate">{{scope.row.remark}}</span>
           </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column prop="rmReceiptDate" width="120" label="到账日期"></el-table-column>
+      <el-table-column label="Base Company" prop="baseCompany" width="130"></el-table-column>
+      <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
+      <el-table-column width="110" label="任务来源">
+        <template slot-scope="scope">
+          <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
