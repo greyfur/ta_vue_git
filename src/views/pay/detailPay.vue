@@ -2542,6 +2542,7 @@ export default {
   height: 89px;
   line-height: 89px;
   padding: 0 16px;
+  box-shadow:0px 0px 1px 0px rgba(155,155,155,1);
 }
 .btn .el-button{
   margin-bottom: 10px;
