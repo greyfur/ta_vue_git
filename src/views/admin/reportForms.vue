@@ -46,11 +46,6 @@
         reportType:null
       };
     },
-    updated(){
-      // /reportform
-      console.log(new Date(this.oYearMonth).toLocaleString())
-      console.log(this.reportType)
-    },
     methods:{
       sure(){
         if(this.reportType===null||this.oYearMonth===null){

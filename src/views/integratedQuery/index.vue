@@ -44,12 +44,12 @@ import {computeSidebar} from '@/assets/js/util.js'
 <style>
 .integratedQuery{
   margin-left: 256px;
-  width: 100%;
+  /* width: 100%; */
   height: 100%;
 }
 .left-content{
   margin-left: 20px;
-  width: 100%;
+  /* width: 100%; */
   height: 100%;
 }
 .el-menu-sidebar {
