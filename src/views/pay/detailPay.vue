@@ -72,7 +72,7 @@
         </ul>
 
         <!-- 详情 -->
-        <div class="searchNew">
+        <div :class="searchFlag===true?'searchNew':''" >
           <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
             <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>详情</div>
             <p class="info" style="color:#666;">流程编号: 
@@ -87,7 +87,7 @@
             </li>
           </ul>
         </div>
-        <div class="searchNew" style="border-bottom:none;margin-top:16px;">
+        <div :class="searchFlag===true?'searchNew':''"  style="border-bottom:none;margin-top:16px;">
             <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
               <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
                 <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification'">

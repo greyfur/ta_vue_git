@@ -47,7 +47,7 @@
     },
     methods:{
       sure(){
-        console.log(this.ReportFormArr[this.reportType].name)
+        console.log(this.reportType)
         if(this.reportType===null||this.oYearMonth===null){
           this.$message.error('请选择年月和报表类型')
         }else{
@@ -68,9 +68,7 @@
             wsUwYear:this.oYearMonth
           }, { responseType: "blob" }).then(res=>{
             if(res.status===200){
-              console.log(res)
               this.path = this.getObjectURL(res.data);
-              console.log(this.path)
               if (res.data) {
                   var a = document.createElement("a");
                   if (typeof a.download === "undefined") {

@@ -37,7 +37,7 @@
           <el-button size="small" @click="submit(3)" plain>复核通过</el-button>
         </div>
         <div class="left">
-          <div class="searchNew">
+          <div :class="searchFlag===true?'searchNew':''" >
             <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
               <div>
                 <i style="margin-right:8px;" class="el-icon-arrow-down"></i>详情
@@ -59,7 +59,7 @@
               </li>
             </ul>
           </div>
-          <div class="searchNew" style="border-bottom:none;margin-top:16px;">
+          <div :class="searchFlag===true?'searchNew':''"  style="margin-top:16px;">
             <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
               <div>
                 <i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表
@@ -165,6 +165,7 @@
     </el-row>
     <el-row>
       <el-col :span="24" style="padding:0 16px;padding-bottom:100px">
+
         <div
           class="titleSearch detailSearch"
           style="margin-bottom:10px;"

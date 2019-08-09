@@ -1,6 +1,6 @@
 <template>
   <div class="billCom">
-    <div class="searchNew">
+    <div :class="searchFlag===true?'searchNew':''" >
       <div class="titleSearch" @click="searchFlag = !searchFlag">
         <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询
       </div>
@@ -1165,7 +1165,7 @@ export default {
   padding-right: 30px;
 }
 .btn {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 .el-pagination {
   text-align: right;

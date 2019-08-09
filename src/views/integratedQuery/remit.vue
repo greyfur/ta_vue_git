@@ -1,6 +1,6 @@
 <template>
   <div class="remit">
-    <div class="searchNew">
+    <div :class="searchFlag===true?'searchNew':''" >
       <div class="titleSearch" @click="searchFlag = !searchFlag">
         <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询
       </div>
@@ -106,7 +106,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
       <el-table-column label="银行账户">
         <template slot-scope="scope">
           <el-tooltip

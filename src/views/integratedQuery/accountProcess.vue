@@ -1,6 +1,6 @@
 <template>
   <div class="accountProcess">
-    <div class="searchNew">
+    <div :class="searchFlag===true?'searchNew':''" >
       <div class="titleSearch" @click="searchFlag = !searchFlag"><i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询</div>
        <el-collapse-transition>
       <div v-show="searchFlag">

@@ -57,7 +57,7 @@
     -->
 
     <!-- 详情 -->
-    <div class="searchNew">
+    <div :class="searchFlag===true?'searchNew':''" >
       <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
         <div>
           <i
@@ -159,7 +159,7 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column prop="paymentType" label="支付方式"></el-table-column>
+              <el-table-column prop="paymentTypeName" label="支付方式"></el-table-column>
               <el-table-column label="流程编号">
                 <template slot-scope="scope">
                   <el-tooltip

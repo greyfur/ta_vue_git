@@ -1,6 +1,6 @@
 <template>
   <div class="settlementGroup">
-    <div class="searchNew">
+    <div :class="searchFlag===true?'searchNew':''" >
       <div class="titleSearch" @click="searchFlag = !searchFlag">
         <i
           style="margin-right:8px;"

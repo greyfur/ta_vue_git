@@ -1,6 +1,6 @@
 <template>
   <div class="billWorkSheet">
-    <div class="searchNew">
+    <div :class="searchFlag===true?'searchNew':''" >
       <div class="titleSearch" @click="searchFlag = !searchFlag"><i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询</div>
        <el-collapse-transition>
       <div v-show="searchFlag">
@@ -170,16 +170,16 @@
           </el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button>
-          <!-- <el-dropdown>
+          <!-- <el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button> -->
+          <el-dropdown>
             <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><el-button v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
+              <!-- <el-dropdown-item><el-button v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'sortOperation'" @click.stop="handleClick(3,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button type="text" v-show="urlName === 'sortOperation'" size="small" @click.stop="handleClick(4,scope.row)">删除</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button type="text" v-show="urlName === 'sortOperation'" size="small" @click.stop="handleClick(4,scope.row)">删除</el-button></el-dropdown-item> -->
               <el-dropdown-item><el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button></el-dropdown-item>
             </el-dropdown-menu>
-          </el-dropdown> -->
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
