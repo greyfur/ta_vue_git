@@ -160,6 +160,16 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column v-if="urlName=='billSignBack'" label="是否需签回" width="100">
+        <template slot-scope="scope">
+          <span>{{scope.row.wsSignbackFlag=="1"?'是':'否'}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="urlName=='billSignBack'" label="是否已签回" width="100">
+        <template slot-scope="scope">
+          <span>{{scope.row.wsHasSignback=="1"?'是':'否'}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="wsReceiptDate" width="120" label="账单收到日期"></el-table-column>
       <el-table-column label="Reporting Unit" width="120">
         <template slot-scope="scope">
@@ -815,16 +825,28 @@ export default {
             this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;
           }
           if (!this.billSearch.processStatus) {
-            this.billSearch.processStatus = this.processStatusCom;
+            if (this.urlName == "sortOperation" || this.admFlag) {
+              params = Object.assign({}, this.mustData,this.billSearch,{processStatus:this.processStatusCom});
+            }else {
+              params = Object.assign({}, this.mustData,this.billSearch, {curOperator: this.$store.state.userName,processStatus:this.processStatusCom});
+            }
+          } else{
+            if (this.urlName == "sortOperation" || this.admFlag) {
+              params = Object.assign({}, this.mustData,this.billSearch,);
+            }else {
+              params = Object.assign({}, this.mustData,this.billSearch, {curOperator: this.$store.state.userName});
+            }
           }
-          if (this.urlName == "sortOperation" || this.admFlag) {
-            params = Object.assign({}, this.mustData, this.billSearch);
-          } 
-          else {
-            params = Object.assign({}, this.mustData, this.billSearch, {
-              curOperator: this.$store.state.userName
-            });
-          }
+         
+            
+          // if (this.urlName == "sortOperation" || this.admFlag) {
+          //   params = Object.assign({}, this.mustData, this.billSearch);
+          // }  
+          // else {
+          //   params = Object.assign({}, this.mustData, this.billSearch, {
+          //     curOperator: this.$store.state.userName
+          //   });
+          // }
           delete params["actOperator"];
           this.$http.post("api/worksheet/wSEntry/list", params).then(res => {
             if (res.status === 200) {

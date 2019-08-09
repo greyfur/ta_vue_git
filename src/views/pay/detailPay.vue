@@ -410,9 +410,10 @@
               </el-tooltip>
             </template>
           </el-table-column> 
-          <el-table-column  label="操作" width="120">
+          <el-table-column  label="操作" width="160">
             <template slot-scope="scope">
               <el-button type="text" @click.stop="openSGSICS(scope.row,'sgNum')" size="mini">打开SICS</el-button>
+              <el-button v-if="$route.query.tag === 'approvalDone'" type="text" @click.stop="remitCreat(scope.row)" size="mini">创建支票</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -973,7 +974,7 @@ export default {
           bankCurrency:'',
           bankAccountName:'',
           bankAccount1:null,
-          rmStatusIndex:'',
+          rmStatusIndex:0,
           bookingPeriodName:'',
           bookingPeriodCode:'',
           bookingYear:'',
@@ -2124,9 +2125,11 @@ export default {
     },
     remitCreat(row){
       this.$http.post('api/sics/basis/creatPayRemitBySgNum',{sgNum:row.sgNum,actOperator:this.$store.state.userName,processId:this.row.processId}).then(res =>{
-        if(res.status === 200 && res.data.code){
-          this.$message.error(res.data.msg);
-        } else{
+        console.log(res,'creatPayRemitBySgNum');
+        if(res.status === 200){
+          // this.$message.error();
+          // this.dataBaseSG();
+        // } else{
           this.SgData = res.data.worksheetsgDOlist;
           this.RMData = res.data.remitDOlist;
           // this.dataBaseSG();

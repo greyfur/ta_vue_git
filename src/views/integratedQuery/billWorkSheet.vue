@@ -161,6 +161,7 @@
           </el-table-column>
           <el-table-column prop="registBy" label="录入人" width="90"></el-table-column>
           <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
+          <el-table-column prop="rejectType" label="驳回原因类型" width="160"></el-table-column>
           <el-table-column label="备注">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.remark" placement="top-start">

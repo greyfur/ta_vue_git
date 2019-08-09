@@ -12,7 +12,6 @@
       <el-col :span="8">
         <!-- 签回 -->
         <div class="btn" v-if="$route.query.tag === 'billSignBack'">
-          <el-button size="small" @click="onReverse" plain>Reverse</el-button>
           <el-button size="small" @click="mailSend(1)" plain>邮件通知</el-button>
           <el-button size="small" plain @click="submit(6,'签回提交')">流程结束</el-button>
           <el-button size="small" plain @click="submit(7)">标记签回</el-button>
@@ -33,7 +32,7 @@
         <!-- 复核 -->
         <div class="btn" v-if="$route.query.tag === 'billCheck'">
           <el-button size="small" @click="submit(1,'复核指派')" plain>指派</el-button>
-          <el-button size="small" @click="submit(2)" plain>复核驳回</el-button>
+          <el-button size="small" @click="submit(8)" plain>复核驳回</el-button>
           <el-button size="small" @click="submit(3)" plain>复核通过</el-button>
         </div>
         <div class="left">
@@ -234,7 +233,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="uwYear" label="业务年度"></el-table-column>
-          <el-table-column prop="wsPeriod" label="账单期" width="100"></el-table-column>
+          <el-table-column prop="wsPeriod" label="账单期" width="120"></el-table-column>
           <el-table-column label="账单标题">
             <template slot-scope="scope">
               <el-tooltip
@@ -254,6 +253,7 @@
           <el-table-column prop="registAt" label="录入时间" width="160"></el-table-column>
           <el-table-column prop="closedBy" label="复核人" width="130"></el-table-column>
           <el-table-column prop="closedAt" label="复核时间" width="160"></el-table-column>
+          <el-table-column prop="rejectType" label="驳回原因类型" width="160"></el-table-column>
           <el-table-column label="修改意见">
             <template slot-scope="scope">
               <el-tooltip
@@ -321,8 +321,9 @@
           <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
               <el-button :disabled="isHover" @click.stop="openSics(scope.row)" type="text" size="small" >打开SICS</el-button>
-              <el-button :disabled="isHover" @click.stop="addRemark(scope.row)" type="text" size="small">添加意见</el-button>
-              <el-button :disabled="isHover" v-show="scope.row.wsStatus=='C'" @click.stop="addRemark(scope.row)" type="text" size="small">reverse</el-button>
+              <!-- <el-button :disabled="isHover" @click.stop="addRemark(scope.row)" type="text" size="small">添加意见</el-button> -->
+              <el-button :disabled="isHover" @click.stop="submit(2)" type="text" size="small">添加意见</el-button>
+              <el-button :disabled="isHover" v-show="scope.row.wsStatus=='Closed'" @click.stop="reverse(scope.row)" type="text" size="small">reverse</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -514,7 +515,7 @@
     </el-dialog>
     <el-dialog :title="title" :visible.sync="dialogFormVisible5" :close-on-click-modal="modal">
       <el-form label-position="right" label-width="140px">
-        <el-form-item label="选择驳回原因" v-show="title==='复核驳回'">
+        <el-form-item label="选择原因" v-show="title==='添加意见'">
           <el-select v-model="opinion" placeholder="请选择">
             <el-option v-for="item in BHoptions" :key="item" :label="item" :value="item"></el-option>
           </el-select>
@@ -522,9 +523,8 @@
         <el-form-item label="输入悬停原因" v-show="title==='悬停'">
           <el-input type="textarea" :rows="2" placeholder="请输入原因" v-model.trim="pendingReason"></el-input>
         </el-form-item>
-        <el-form-item label="原因填写" v-show="title==='复核驳回'">
+        <el-form-item label="原因填写" v-show="title==='添加意见'">
           <el-input
-            :disabled="opinion!='其它'"
             type="textarea"
             :rows="2"
             placeholder="请输入原因"
@@ -567,14 +567,14 @@
           <el-radio v-model="radio" label="1">是</el-radio>
           <el-radio v-model="radio" label="0">否</el-radio>
         </el-form-item>
-        <el-form-item label="添加意见" v-show="title==='添加意见'">
+        <!-- <el-form-item label="添加意见" v-show="title==='添加意见'">
           <el-input
             type="textarea"
             :rows="2"
             placeholder="请输入原因"
             v-model="textareaOpinion"
           ></el-input>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogFormVisible5 = false">取 消</el-button>
@@ -819,6 +819,12 @@ export default {
         case 1:document.querySelector('.browseDoc').className='browseDoc muas4';break;
       }
     },
+    reverse(row){
+      this.$http.post("api/sics/liveDesktop/openBusiness",{businessId:row.businessId,modifiedBy:this.$store.state.userName})
+        .then(res => {
+          console.log(res, "打开SICS");
+        });
+    },
     openBPSICS() {
       if (!this.chooseRow.rmSettleCompanyCode) {
         this.$message({
@@ -873,27 +879,6 @@ export default {
           worksheetId: row.wsId
         })
         .then(res => {});
-    },
-    onReverse() {
-      this.$confirm("是否Reverse?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        this.$http
-          .post("api/worksheet/wSEntry/reverseWSProcess", {
-            actOperator: this.$store.state.userName,
-            processId: this.chooseRow.processId
-          })
-          .then(res => {
-            console.log(res, "onReverse");
-            if (res.status === 200 && res.data.code == 0) {
-              this.$message({ type: "success", message: "成功" });
-            } else if (res.data.msg) {
-              this.$message.error(res.data.msg);
-            }
-          });
-      });
     },
     onSics(tag) {
       let url = "";
@@ -1103,10 +1088,10 @@ export default {
             this.getName("账单复核");
           }
           break;
-        case 2: // 复核驳回  ----- 不需要选择人,但是有弹窗 assign：录入人
+        case 2: // 添加意见  ----- 不需要选择人,但是有弹窗 assign：录入人
           this.opinion = "";
           this.textareaOpinion = "";
-          this.title = "复核驳回";
+          this.title = "添加意见";
           this.dialogFormVisible5 = true;
           // 不用下拉框
           break;
@@ -1296,11 +1281,7 @@ export default {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
-          }).then(() => {
-            //   此处assign 也需要录入人
-            this.$http
-              .post(
-                "api/worksheet/wSEntry/update",
+          }).then(() => {this.$http.post("api/worksheet/wSEntry/update",
                 {
                   processId: this.chooseRow.processId,
                   hasRecheckFlag:'1',
@@ -1316,6 +1297,32 @@ export default {
                   this.$router.push({ name: this.$route.query.tag });
                 }
               });
+          });
+          break;
+          case 8: // 复核驳回
+          this.$confirm("是否复核驳回？", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(() => {
+            this.$http.post("api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",{
+              processId: this.chooseRow.processId,
+              procInstId: this.chooseRow.processInstId,
+              assignee: this.chooseRow.entryOperator,
+              actOperator: this.chooseRow.curOperator,
+              type: "REJECT"
+            }).then(res=>{
+              if (res.status === 200 && res.data.errorCode == 1) {
+                this.$router.push({ name: this.$route.query.tag });
+              } else if (res.data.errorCode == 0) {
+                this.$message({
+                  type: "error",
+                  message: res.data.errorMessage
+                });
+              }
+            })
+                  
+              
           });
           break;
       }
@@ -1375,37 +1382,31 @@ export default {
           }
 
           break;
-        case 2: // 复核驳回
+        case 2: // 添加意见
           if (!this.opinion) {
-            this.$message.error("请选择驳回原因");
+            this.$message.error("请选择原因");
             return;
           }
           if (this.opinion == "其它" && !this.opinion) {
-            this.$message.error("请填写驳回原因");
+            this.$message.error("请填写原因");
             return;
           }
-          this.$http
-            .post(
-              "api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
-              {
+          this.$http.post("api/worksheet/wSCheck/update",{
                 processId: this.chooseRow.processId,
                 procInstId: this.chooseRow.processInstId,
                 assignee: this.chooseRow.entryOperator,
-                opinion:
-                  this.opinion == "其它" ? this.textareaOpinion : this.opinion,
+                remark:this.textareaOpinion,
+                rejectType:this.opinion,
                 actOperator: this.chooseRow.curOperator,
                 type: "REJECT"
               }
             )
             .then(res => {
-              if (res.status === 200 && res.data.errorCode == 1) {
+              if (res.status === 200 && res.data.code == 0) {
                 this.dialogFormVisible = false;
                 this.$router.push({ name: this.$route.query.tag });
-              } else if (res.data.errorCode == 0) {
-                this.$message({
-                  type: "error",
-                  message: res.data.errorMessage
-                });
+              } else if (res.data.code == 1) {
+                this.$message({type: "error",message: res.data.msg});
               }
             });
           break;

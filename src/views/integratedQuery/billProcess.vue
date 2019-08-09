@@ -67,14 +67,20 @@
         </el-col>
       </el-row>
       <el-row :gutter="10" class="billRow">  
-        <el-col :span="16">
+        <el-col :span="7">
+          <span class="slable">是否需签回</span>
+          <el-select clearable v-model="billSearch.wsSignbackFlag" placeholder="请选择">
+            <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="7">
+          <span class="slable">是否已签回</span>
+          <el-select clearable v-model="billSearch.wsHasSignback" placeholder="请选择">
+            <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="10">
           <span class="slable">录入时间段</span>
-           <!-- <el-date-picker
-              value-format="timestamp"
-              v-model="billSearch.registAt"
-              type="date"
-              placeholder="选择日期"
-            ></el-date-picker> -->
             <el-date-picker
               value-format="timestamp"
               v-model="billSearch.registAt"
@@ -84,12 +90,6 @@
               end-placeholder="结束日期">
             </el-date-picker>
          </el-col>
-         <el-col :span="8">
-          <span class="slable">是否签回</span>
-          <el-select clearable v-model="billSearch.hasRecheckFlag" placeholder="请选择流程状态">
-            <el-option v-for="(v,k) of {'签回':'1','未签回':'0'}" :key="v" :label="k" :value="v"></el-option>
-          </el-select>
-        </el-col>
       </el-row>
       <el-row><el-col :span="24">
         <el-button type="primary" plain @click="handleClick(1)"><i class="iconfont iconGroup42"></i>查询</el-button>
@@ -133,6 +133,16 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column v-if="urlName=='billSignBack'" label="是否需签回" width="100">
+        <template slot-scope="scope">
+          <span>{{scope.row.wsSignbackFlag=="1"?'是':'否'}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="urlName=='billSignBack'" label="是否已签回" width="100">
+        <template slot-scope="scope">
+          <span>{{scope.row.wsHasSignback=="1"?'是':'否'}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="wsReceiptDate" width="120" label="账单收到日期"></el-table-column>
       <el-table-column label="分出公司" width="120">
         <template slot-scope="scope">
@@ -163,8 +173,9 @@
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="80">
+      <el-table-column fixed="right" label="操作" width="120">
         <template slot-scope="scope">
+          <el-button type="text" v-if="scope.row.processStatus=='已关闭'" size="small" @click.stop="reverse(scope.row)">reverse</el-button>
           <el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button>
           <!-- <el-dropdown>
             <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
@@ -207,7 +218,6 @@
         <el-table-column prop="remark" label="操作备注"></el-table-column>
       </el-table>
     </el-dialog>
-
     <el-dialog title="文档预览" width="fit-content" :visible.sync="dialogFormVisible1" :close-on-click-modal="modal">
       <div class="browseDoc" v-show="title!='踪迹'" style="width:600px">
         <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
@@ -336,7 +346,9 @@ export default {
         dialogFormVisible: false,
         dialogFormVisible1: false,
         billSearch: {
-          hasRecheckFlag:null,
+          wsSignbackFlag:null,
+          wsHasSignback:null,
+          // hasRecheckFlag:null,
           processId:null,
           processStatus:null,
           wsType:null,
@@ -426,6 +438,13 @@ export default {
     },1000)
   },
   methods: {
+    reverse(row){
+      this.$http.post('api/worksheet/wSEntry/reverseWSProcess',{processId:row.processId,actOperator:this.$store.state.userName}).then(res =>{
+        if(res.status == 200){
+          this.$message(res.data.msg);
+        }
+      })
+    },
     docView(row) {
       if(row){
         this.dialogFormVisible1 = true;

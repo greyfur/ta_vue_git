@@ -1338,10 +1338,7 @@ export default {
       this.init();
     },
     upload(file) {
-      let url =
-        this.title == "批量创建"
-          ? "/receipt/finaCreat/uploadCreate"
-          : "/anyShare/fileOperation/uploadFilesForPage";
+      let url = this.title == "批量创建"?"/receipt/finaCreat/uploadCreate": "/anyShare/fileOperation/uploadFilesForPage";
       let people = this.title == "批量创建" ? "modifiedBy" : "actOperator";
       let resFile = new FormData();
       resFile.append("file", this.file[0]);
@@ -1349,19 +1346,16 @@ export default {
       if (this.title != "批量创建") {
         resFile.append("processId", this.chooseRow.processId);
       }
-      this.$http
-        .post(`api${url}`, resFile, {
-          headers: { "Content-Type": "application/json;charset=UTF-8" }
-        })
+      this.$http.post(`api${url}`, resFile, {headers: { "Content-Type": "application/json;charset=UTF-8" }})
         .then(res => {
           if (res.status === 200) {
             if (this.title == "批量创建") {
               if (res.data.code == 0) {
                 this.dialogFormVisible2 = false;
-                this.$message({ message: "上传成功", type: "success" });
+                this.$confirm(res.data.msg,'提示', {confirmButtonText: '确定',type: 'warning'})
                 this.init();
               } else if (res.data.msg) {
-                this.$message.error(res.data.msg);
+                this.$confirm(res.data.msg,'提示', {confirmButtonText: '确定',type: 'warning'})
               }
               this.file = [];
               this.fileList = [];

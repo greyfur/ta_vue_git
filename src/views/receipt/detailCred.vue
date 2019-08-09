@@ -1109,7 +1109,7 @@ export default {
         bankCurrency: "",
         bankAccountName: "",
         bankAccount1: null,
-        rmStatusIndex: "",
+        rmStatusIndex: 0,
         bookingPeriodName: "Month 05",
         bookingPeriodCode: "M05",
         bookingYear: "2019",
@@ -1845,18 +1845,20 @@ export default {
               this.$message.error("请填写Business Origin");
               return false;
             }
-            if (this.RMData == null || !this.RMData.length) {
-              this.$message.error("无支票信息，请获取支票信息");
-              return false;
-            }
-          }
-          if (this.$route.query.tag === "credReview") {
-            this.$http
-              .post("api/sics/basis/getReceiptReviewMessage", {
+            this.$http.post("api/sics/basis/checkAmount",{processId:this.row.processId}).then(res => {
+              if (res.status === 200 && res.data.code == 1) {
+                this.getName(specialName);
+                this.dialogFormVisible3 = true;
+              } else{
+                this.$message.error(res.data.msg);
+                return false;
+              }
+            })
+          } else if (this.$route.query.tag === "credReview") {
+            this.$http.post("api/sics/basis/getReceiptReviewMessage", {
                 modifiedBy: this.$store.state.userName,
                 processId: this.row.processId
-              })
-              .then(res => {
+              }).then(res => {
                 if (res.status === 200 && res.data.code == 0) {
                   // 7.15 复核通过改为不选人
                   this.$confirm("确认复核通过？", "提示", {
@@ -1886,54 +1888,51 @@ export default {
                           });
                         }
                       });
-                  });
-                } else if (res.data.code == 1 && res.data.msg) {
-                  this.$message.error(res.data.msg);
-                }
+                        });
+                      } else if (res.data.code == 1 && res.data.msg) {
+                        this.$message.error(res.data.msg);
+                      }
               });
-          } else if (
-            this.$route.query.tag === "credVerification" ||
-            this.$route.query.tag === "viewInvalidate"
-          ) {
-            this.$confirm("是否核销通过？", "提示", {
-              confirmButtonText: "确定",
-              cancelButtonText: "取消",
-              type: "warning"
-            }).then(() => {
-              this.$http
-                .post(
-                  "api/receipt/activitiForReceipt/commonActivitiForReceipt",
-                  {
-                    processId: this.row.processId,
-                    procInstId: this.row.processInstId,
-                    assignee: this.$store.state.userName,
-                    type: this.$route.query.name,
-                    actOperator: this.$store.state.userName
-                  }
-                )
-                .then(res => {
-                  if (res.status === 200 && res.data.errorCode == 1) {
-                    if (res.data.errorMessage) {
+            } else if (this.$route.query.tag === "credVerification" || this.$route.query.tag === "viewInvalidate") {
+              this.$confirm("是否核销通过？", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning"
+              }).then(() => {
+                this.$http
+                  .post(
+                    "api/receipt/activitiForReceipt/commonActivitiForReceipt",
+                    {
+                      processId: this.row.processId,
+                      procInstId: this.row.processInstId,
+                      assignee: this.$store.state.userName,
+                      type: this.$route.query.name,
+                      actOperator: this.$store.state.userName
+                    }
+                  )
+                  .then(res => {
+                    if (res.status === 200 && res.data.errorCode == 1) {
+                      if (res.data.errorMessage) {
+                        this.$message({
+                          type: "warning",
+                          message: res.data.errorMessage
+                        });
+                      }
+                      setTimeout(() => {
+                        this.$router.push({ name: this.$route.query.tag });
+                      }, 1000);
+                    } else if (res.data.errorCode == 0) {
                       this.$message({
-                        type: "warning",
+                        type: "error",
                         message: res.data.errorMessage
                       });
                     }
-                    setTimeout(() => {
-                      this.$router.push({ name: this.$route.query.tag });
-                    }, 1000);
-                  } else if (res.data.errorCode == 0) {
-                    this.$message({
-                      type: "error",
-                      message: res.data.errorMessage
-                    });
-                  }
-                });
-            });
-          } else {
-            this.getName(specialName);
-            this.dialogFormVisible3 = true;
-          }
+                  });
+              });
+            } else {
+              this.getName(specialName);
+              this.dialogFormVisible3 = true;
+            }
           break;
         case 2: // 指派
           this.getName(gname);
