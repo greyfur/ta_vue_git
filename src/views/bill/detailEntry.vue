@@ -19,8 +19,6 @@
         </div>
         <!-- 录入 -->
         <div class="btn" v-if="$route.query.tag === 'billEntry'">
-          <!-- <el-button size="small" :disabled="isHover" plain @click="onSics('录入')">账单回写</el-button> -->
-          <!-- <el-button type="primary" :disabled="isHover" @click="openBPSICS" plain>打开BPSICS</el-button> -->
           <el-button size="small" :disabled="isHover" @click="submit(4)" plain>置废</el-button>
           <el-button size="small" :disabled="isHover" @click="submit(1,'录入指派')" plain>指派</el-button>
           <el-button
@@ -34,7 +32,6 @@
         </div>
         <!-- 复核 -->
         <div class="btn" v-if="$route.query.tag === 'billCheck'">
-          <!-- <el-button size="small" plain @click="onSics('复核')">账单回写</el-button> -->
           <el-button size="small" @click="submit(1,'复核指派')" plain>指派</el-button>
           <el-button size="small" @click="submit(2)" plain>复核驳回</el-button>
           <el-button size="small" @click="submit(3)" plain>复核通过</el-button>
@@ -146,10 +143,7 @@
                 <i style="margin-right:8px;" class="iconfont iconGroup26"></i>
                 <a href="../../../static/Preview/index.html" target="_blank">全屏</a>
               </el-button>
-              <el-button v-if="$route.query.tag === 'billEntry'" size="small" :disabled="isHover" @click="onSics('录入')">
-                <i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写
-              </el-button>
-              <el-button v-if="$route.query.tag === 'billCheck'" size="small" :disabled="isHover" @click="onSics('复核')">
+              <el-button size="small" :disabled="isHover" @click="onSics()">
                 <i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写
               </el-button>
               <el-button class="rotate" size="mini" @click="rotateMua" style="">顺时针旋转</el-button>
@@ -170,10 +164,11 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="24" style="padding:0 16px;">
+      <el-col :span="24" style="padding:0 16px;padding-bottom:100px">
         <div
           class="titleSearch detailSearch"
           style="margin-bottom:10px;"
+          
           @click="searchFlag3 = !searchFlag3">
           <div>
             <i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息
@@ -253,7 +248,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="wsStatus" label="账单状态" width="100">
-            <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+            <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
           </el-table-column>
           <el-table-column prop="registBy" label="录入人" width="130"></el-table-column>
           <el-table-column prop="registAt" label="录入时间" width="160"></el-table-column>
@@ -325,18 +320,9 @@
           <!-- <el-table-column prop="dept" label="经营机构"></el-table-column> -->
           <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
-              <el-button
-                :disabled="isHover"
-                @click.stop="openSics(scope.row)"
-                type="text"
-                size="small"
-              >打开SICS</el-button>
-              <el-button
-                :disabled="isHover"
-                @click.stop="addRemark(scope.row)"
-                type="text"
-                size="small"
-              >添加意见</el-button>
+              <el-button :disabled="isHover" @click.stop="openSics(scope.row)" type="text" size="small" >打开SICS</el-button>
+              <el-button :disabled="isHover" @click.stop="addRemark(scope.row)" type="text" size="small">添加意见</el-button>
+              <el-button :disabled="isHover" v-show="scope.row.wsStatus=='C'" @click.stop="addRemark(scope.row)" type="text" size="small">reverse</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -911,9 +897,9 @@ export default {
     },
     onSics(tag) {
       let url = "";
-      if (tag == "录入") {
+      if (this.$route.query.tag === 'billEntry' || this.$route.query.tag === 'billSignBack') {  // 录入、签回===SICS库
         url = "/worksheet/wSCheck/enterSicsReturn";
-      } else {
+      } else {  // 复核===当前库
         url = "/worksheet/wSCheck/reviewSicsReturn";
       }
       this.$http.post(`api${url}`, {

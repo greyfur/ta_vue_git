@@ -18,6 +18,7 @@
         </div>
         <!-- 财务支付/紧急付款/partial完结 -->
         <div class="btn" v-if="$route.query.tag === 'payment' || $route.query.tag === 'partialDone' || $route.query.tag === 'instancyPay'">
+          <el-button type="primary" v-if="$route.query.tag === 'partialDone'" @click="openBPSICS" plain>打开BpLedger</el-button>
           <!-- <el-button size="small" plain>附件上传</el-button> -->
           <el-button size="small" plain @click="tongbu" v-if="$route.query.tag === 'instancyPay'">同步状态</el-button>
           <!-- <el-button size="small" plain @click="mailSend(2,'附件查看')">附件查看</el-button> -->
@@ -257,7 +258,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="wsStatus" label="账单状态" width="100">
-                  <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+                  <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
                 </el-table-column>
                 <el-table-column label="账单标题">
                   <template slot-scope="scope">
@@ -441,7 +442,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="wsStatus" label="账单状态" width="100">
-              <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+              <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
             </el-table-column>
             <el-table-column label="账单标题">
               <template slot-scope="scope">
@@ -2171,6 +2172,7 @@ export default {
           } else {
               this.$message.error("选择的币制和收款账户不匹配");
             this.recepitList = [];
+            this.formLabelAlign.partnerBankAccount = null;
           }
         }
       }

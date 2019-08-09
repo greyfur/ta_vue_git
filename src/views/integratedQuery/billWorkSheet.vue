@@ -93,7 +93,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="wsStatus" label="账单状态" width="100">
-            <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+            <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
           </el-table-column>
           <el-table-column label="账单标题">
             <template slot-scope="scope">

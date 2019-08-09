@@ -12,7 +12,7 @@
       <el-button type="primary" plain @click="makeReport">生成核销报告</el-button>
       <el-button type="primary" plain @click="mailSend(2,'附件查看')">附件查看</el-button>
       <el-button type="primary" plain @click="getTaxInfo">增值税信息获取</el-button>
-      <el-button type="primary" plain @click="openReverse">Reversed</el-button>
+      <!-- <el-button type="primary" plain @click="openReverse">Reversed</el-button> -->
     </div>
     <!-- 操作 -->
     <div class="btn" v-if="$route.query.tag === 'credOperation'">
@@ -249,7 +249,7 @@
                     </template>
                   </el-table-column>
                   <el-table-column prop="wsStatus" label="账单状态" width="100">
-                    <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+                    <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
                   </el-table-column>
                   <el-table-column label="账单标题">
                     <template slot-scope="scope">
@@ -531,7 +531,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="wsStatus" label="账单状态" width="100">
-              <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+              <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
             </el-table-column>
             <el-table-column label="账单标题">
               <template slot-scope="scope">
@@ -1366,6 +1366,7 @@ export default {
               this.$message.error("选择的币制和收款账户不匹配");
             // }, 100);
             this.recepitList = [];
+            this.formLabelAlign.partnerBankAccount = null;
           }
         }
       }

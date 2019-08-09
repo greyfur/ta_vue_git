@@ -67,7 +67,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="wsStatus" label="账单状态" width="100">
-              <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+              <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
             </el-table-column>
             <el-table-column label="账单标题">
               <template slot-scope="scope">
@@ -411,7 +411,7 @@
       </el-form>
     </el-dialog>
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
-      <el-form label-width="140px" v-show="title==='流程提交' || title==='reverse'">
+      <el-form label-width="140px" v-show="title==='流程提交'">
         <el-form-item label="选择处理人'" v-show="title==='流程提交'">
           <el-select v-model="assignee" placeholder="请选择">
             <el-option
@@ -423,7 +423,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="选择管理员">
-          <el-select v-model="assignee" placeholder="请选择" v-show="title==='reverse'">
+          <el-select v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptionsA"
               :key="item.userId"
@@ -988,31 +988,7 @@ export default {
           this.title = "附件查看";
           this.dialogFormVisible2 = true;
           break;
-        case 20: //reverse
-          this.$http
-            .post("api/activiti/getAssigneeName", { roleName: "管理员" })
-            .then(res => {
-              if (res.status === 200) {
-                this.TJRoptionsA = res.data;
-              }
-            });
-          this.title = "reverse";
-          this.dialogFormVisible2 = true;
-          // this.$confirm('是否Reverse?', '提示', {
-          //   confirmButtonText: '确定',
-          //   cancelButtonText: '取消',
-          //   type: 'warning'
-          // }).then(() => {
-          //   this.$http.post('api/pay/teskClaim/reversePayProcess',{processId:this.chooseRow.processId,actOperator:this.$store.state.userName},{responseType:'blob'}).then(res =>{
-          //     console.log(res,'onReverse')
-          //     if(res.status === 200 && res.data.code==0){
-          //       this.$message({type: 'success', message: '成功'});
-          //     } else if(res.data.msg){
-          //       this.$message.error(res.data.msg);
-          //     }
-          //   })
-          // })
-          break;
+        
       }
     },
     confirm(formName) {
@@ -1140,30 +1116,7 @@ export default {
               }
             });
           break;
-        case 20: //---
-          this.$http
-            .post(
-              "api/pay/teskClaim/reversePayProcess",
-              {
-                processId: this.chooseRow.processId,
-                assignee: this.assignee,
-                actOperator: this.$store.state.userName
-              },
-              { responseType: "blob" }
-            )
-            .then(res => {
-              console.log(res, "onReverse");
-              if (res.status === 200 && res.data.code == 0) {
-                this.$message({ type: "success", message: "成功" });
-              } else if (res.data.msg) {
-                this.$message.error(res.data.msg);
-              }
-            });
-          break;
       }
-      // setTimeout(()=>{
-      // this.$refs[formName].resetFields();
-      // },1000)
     },
     beforeAvatarUpload(file) {
       this.file.push(file);
