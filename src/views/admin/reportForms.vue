@@ -46,11 +46,6 @@
         reportType:null
       };
     },
-    updated(){
-      // /reportform
-      console.log(new Date(this.oYearMonth).toLocaleString())
-      console.log(this.reportType)
-    },
     methods:{
       sure(){
         if(this.reportType===null||this.oYearMonth===null){
@@ -70,17 +65,19 @@
           // })
           this.$http.post(`api/reportform`,{
             reportType:this.reportType,
+            wsUwYear:this.oYearMonth
           }, { responseType: "blob" }).then(res=>{
             if(res.status===200){
-              console.log(res.data)
+              console.log(res)
               this.path = this.getObjectURL(res.data);
+              console.log(this.path)
               if (res.data) {
                   var a = document.createElement("a");
                   if (typeof a.download === "undefined") {
                     window.location = this.path;
                   } else {
                     a.href = this.path;
-                    a.download = row.docName;
+                    a.download = new Date().getTime();
                     document.body.appendChild(a);
                     a.click();
                     a.remove();
