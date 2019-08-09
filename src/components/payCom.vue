@@ -93,7 +93,7 @@
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
-            <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
+            <span class="el-dropdown-link">更多 <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.2)" class="iconfont iconGroup66" ></i></span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item><span v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" class="blueColor">编辑</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName !== 'payOperation'" @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span></el-dropdown-item>

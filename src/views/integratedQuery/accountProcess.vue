@@ -45,6 +45,7 @@
     <div class="btn">
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
+       <el-button type="info" plain size="small" @click="dialogReport=!dialogReport">导出报表</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%" height="480" border :header-row-class-name="StableClass">
       <el-table-column label="流程编号" width="145">
@@ -87,7 +88,7 @@
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
-            <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
+            <span class="el-dropdown-link">更多 <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.2)" class="iconfont iconGroup66" ></i></span>
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item> -->
               <el-dropdown-item><el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button></el-dropdown-item>
@@ -207,6 +208,43 @@
         <img :src="picture" style="width:100%;height:1005;">
       </div>
     </el-dialog>
+
+    <el-dialog title="导出报表" width="50%" :visible.sync="dialogReport" :close-on-click-modal="modal">
+        <el-form   class="demo-form-inline" v-model="reportArr">
+          <el-form-item label="报表名称">
+            <el-select
+              clearable
+              filterable
+              v-model="reportArr.reportName"
+              placeholder="请选择报表名称"
+            >
+              <el-option
+                v-for="item in ReportFormArr"
+                :key="item"
+                :label="item"
+                :value="item"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="流程编号">
+            <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
+          </el-form-item>
+          <el-form-item label="账单类型">
+            <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
+              <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="流程状态">
+            <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
+              <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','REVERSED','已悬停']" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+             <el-button size="small" @click="dialogReport = false">取 消</el-button>
+             <el-button size="small" type="primary" plain @click="reportClick" style="padding:0 16px;">确 定</el-button>
+          </el-form-item>
+        </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -223,9 +261,13 @@ export default {
         nameList:{},
         searchFlag:false,
         modal:false,
+        dialogReport:false,
+        reportArr:{
+          reportName:null,
+        },
+        ReportFormArr:['结算流程','结算流程1','结算流程2','结算流程3'],
         tableData:[],
-        ZDoptions:[
-        ],
+        ZDoptions:[],
         businessOriginList:[],
         baseCompanyList:[],
         rmCurrencyList:[],
@@ -506,6 +548,51 @@ export default {
           this.formLabelAlign[k] = null;
         }
         this.cedentModel = null;
+    },
+  reportClick(){
+      this.dialogReport=false;
+      if(this.reportArr.reportName===null){
+        this.$message.error('报表名称为必填项')
+        return
+      }
+      this.$http.post(`api/integeratedQuery/download`,{
+            reportName:this.reportArr.reportName,
+            wsType:this.billSearch.wsType,
+            processId:this.billSearch.processId,
+            processStatus:this.billSearch.processStatus,
+            actOperator:this.mustData.actOperator
+          }, { responseType: "blob" }).then(res=>{
+            if(res.status===200){
+              this.path = this.getObjectURL(res.data);
+              if (res.data) {
+                  var a = document.createElement("a");
+                  if (typeof a.download === "undefined") {
+                    window.location = this.path;
+                  } else {
+                    a.href = this.path;
+                    //  a.download = new Date().getTime();
+                    a.download = this.reportArr.reportName;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                  }
+                }
+            }
+          })
+    },
+    getObjectURL(file) {
+      let url = null;
+      if (window.createObjectURL != undefined) {
+        // basic
+        url = window.createObjectURL(file);
+      } else if (window.webkitURL != undefined) {
+        // webkit or chrome
+        url = window.webkitURL.createObjectURL(file);
+      } else if (window.URL != undefined) {
+        // mozilla(firefox)
+        url = window.URL.createObjectURL(file);
+      }
+      return url;
     },
     handleClick(tag,row){
       this.chooseRow = Object.assign({},row);

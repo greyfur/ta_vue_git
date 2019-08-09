@@ -47,7 +47,7 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" height="480" border> 
+    <el-table :data="tableData" :header-row-class-name="StableClass" style="width: 100%" height="480" border> 
       <el-table-column label="支票号" width="150">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
@@ -91,7 +91,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="paymentType" label="支付方式"></el-table-column>
+      <el-table-column prop="paymentTypeName" label="支付方式"></el-table-column>
       <el-table-column prop="bankCurrency" label="实收/支币制" width="100"></el-table-column>
       <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column>
       <el-table-column label="手续费金额" width="100">

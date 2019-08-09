@@ -178,7 +178,7 @@
           <el-dropdown>
             <span class="el-dropdown-link">
               更多
-              <i style="margin-left:8px;" class="el-icon-arrow-down"></i>
+             <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.2)" class="iconfont iconGroup66" ></i>
             </span>
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>

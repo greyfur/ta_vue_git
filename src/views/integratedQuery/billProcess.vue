@@ -137,15 +137,21 @@
       <el-table-column prop="wsReceiptDate" width="120" label="账单收到日期"></el-table-column>
       <el-table-column label="分出公司" width="120">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" :content="scope.row.wsCedentCode+'-'+scope.row.wsCedentName" placement="top-start">
+          <el-tooltip class="item" effect="dark" v-if="scope.row.wsCedentCode&&scope.row.wsCedentName" :content="scope.row.wsCedentCode+'-'+scope.row.wsCedentName" placement="top-start">
             <span class="abbreviate">{{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}</span>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" v-else placement="top-start">
+            <span class="abbreviate"></span>
           </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="经纪公司" width="120">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" :content="scope.row.wsBrokerCode+'-'+scope.row.wsBrokerName" placement="top-start">
+          <el-tooltip class="item" effect="dark" v-if="scope.row.wsBrokerCode&&scope.row.wsBrokerName" :content="scope.row.wsBrokerCode+'-'+scope.row.wsBrokerName" placement="top-start">
             <span class="abbreviate">{{scope.row.wsBrokerCode}}-{{scope.row.wsBrokerName}}</span>
+          </el-tooltip>
+          <el-tooltip class="item" v-else effect="dark" placement="top-start">
+            <span class="abbreviate"></span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -168,7 +174,7 @@
         <template slot-scope="scope">
           <!-- <el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button> -->
           <el-dropdown>
-            <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
+            <span class="el-dropdown-link">更多 <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.2)" class="iconfont iconGroup66" ></i></span>
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item><el-button v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'sortOperation'" @click.stop="handleClick(3,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
@@ -220,7 +226,7 @@
 
     <!-- el-dialog导出报表 -->
      <el-dialog title="导出报表" width="50%" :visible.sync="dialogReport" :close-on-click-modal="modal">
-        <el-form :inline="true"  class="demo-form-inline" v-model="reportArr">
+        <el-form   class="demo-form-inline" v-model="reportArr">
           <el-form-item label="报表名称">
             <el-select
               clearable
@@ -234,6 +240,19 @@
                 :label="item"
                 :value="item"
               ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="流程编号">
+            <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
+          </el-form-item>
+          <el-form-item label="账单类型">
+            <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
+              <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="流程状态">
+            <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
+              <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','REVERSED','已悬停']" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -518,10 +537,17 @@ export default {
     },
     reportClick(){
       this.dialogReport=false;
+      if(this.reportArr.reportName===null){
+        this.$message.error('报表名称为必填项')
+        return
+      }
       this.$http.post(`api/integeratedQuery/download`,{
             reportName:this.reportArr.reportName,
+            wsType:this.billSearch.wsType,
+            processId:this.billSearch.processId,
+            processStatus:this.billSearch.processStatus,
+            actOperator:this.mustData.actOperator
           }, { responseType: "blob" }).then(res=>{
-            console.log(res)
             if(res.status===200){
               this.path = this.getObjectURL(res.data);
               if (res.data) {
@@ -540,20 +566,20 @@ export default {
             }
           })
     },
-      getObjectURL(file) {
-        let url = null;
-        if (window.createObjectURL != undefined) {
-          // basic
-          url = window.createObjectURL(file);
-        } else if (window.webkitURL != undefined) {
-          // webkit or chrome
-          url = window.webkitURL.createObjectURL(file);
-        } else if (window.URL != undefined) {
-          // mozilla(firefox)
-          url = window.URL.createObjectURL(file);
-        }
-        return url;
-      },
+    getObjectURL(file) {
+      let url = null;
+      if (window.createObjectURL != undefined) {
+        // basic
+        url = window.createObjectURL(file);
+      } else if (window.webkitURL != undefined) {
+        // webkit or chrome
+        url = window.webkitURL.createObjectURL(file);
+      } else if (window.URL != undefined) {
+        // mozilla(firefox)
+        url = window.URL.createObjectURL(file);
+      }
+      return url;
+    },
     confirm(formName){
       if(this.title==='手工创建' || this.title==='编辑'){
         if(this.zq2 && this.zq1){
