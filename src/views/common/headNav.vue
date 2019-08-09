@@ -42,7 +42,7 @@
         <i class="el-icon-user-solid"></i><span style="color:rgba(0,0,0,0.65);">{{UName}}</span>
       </span>
       <span class="logOutWord" @click="logOut">
-        <i class="el-icon-switch-button"></i>注销
+        <i class="el-icon-switch-button"></i>退出
       </span>
     </div>
   </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="remit">
-    <div class="searchNew">
+    <div :class="searchFlag===true?'searchNew':''" >
       <div class="titleSearch" @click="searchFlag = !searchFlag">
         <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询
       </div>
@@ -47,7 +47,7 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
-    <el-table :data="tableData" stripe style="width: 100%" height="480" border> 
+    <el-table :data="tableData" :header-row-class-name="StableClass" style="width: 100%" height="480" border> 
       <el-table-column label="支票号" width="150">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
@@ -84,14 +84,14 @@
           <el-tooltip
             class="item"
             effect="dark"
-            :content="scope.row.bankAmount"
+            :content="Number(scope.row.bankAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
             placement="top-start"
           >
-            <span class="abbreviate">{{scope.row.bankAmount}}</span>
+            <span class="abbreviate">{{Number(scope.row.bankAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="paymentType" label="支付方式"></el-table-column>
+      <el-table-column prop="paymentTypeName" label="支付方式"></el-table-column>
       <el-table-column prop="bankCurrency" label="实收/支币制" width="100"></el-table-column>
       <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column>
       <el-table-column label="手续费金额" width="100">
@@ -99,14 +99,14 @@
           <el-tooltip
             class="item"
             effect="dark"
-            :content="scope.row.chargesAmount"
+            :content="Number(scope.row.chargesAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
             placement="top-start"
           >
-            <span class="abbreviate">{{scope.row.chargesAmount}}</span>
+            <span class="abbreviate">{{Number(scope.row.chargesAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
       <el-table-column label="银行账户">
         <template slot-scope="scope">
           <el-tooltip

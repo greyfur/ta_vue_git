@@ -1,6 +1,6 @@
 <template>
   <div class="billWorkSheet">
-    <div class="searchNew">
+    <div :class="searchFlag===true?'searchNew':''" >
       <div class="titleSearch" @click="searchFlag = !searchFlag"><i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询</div>
        <el-collapse-transition>
       <div v-show="searchFlag">
@@ -84,7 +84,7 @@
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91"></i>手工创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div> 
-    <el-table :data="tableData" stripe style="width: 100%" height="480" border :header-row-class-name="StableClass">
+    <el-table :data="tableData" style="width: 100%" height="480" border :header-row-class-name="StableClass">
       <el-table-column label="账单号">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
@@ -154,8 +154,8 @@
           <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
           <el-table-column label="金额">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :content="scope.row.wsAmount" placement="top-start">
-                <span class="abbreviate">{{scope.row.wsAmount}}</span>
+              <el-tooltip class="item" effect="dark" :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')" placement="top-start">
+                <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -171,16 +171,16 @@
           </el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button>
-          <!-- <el-dropdown>
-            <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
+          <!-- <el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button> -->
+          <el-dropdown>
+            <span class="el-dropdown-link">更多 <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.2)" class="iconfont iconGroup66" ></i></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><el-button v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
+              <!-- <el-dropdown-item><el-button v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'sortOperation'" @click.stop="handleClick(3,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button type="text" v-show="urlName === 'sortOperation'" size="small" @click.stop="handleClick(4,scope.row)">删除</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button type="text" v-show="urlName === 'sortOperation'" size="small" @click.stop="handleClick(4,scope.row)">删除</el-button></el-dropdown-item> -->
               <el-dropdown-item><el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button></el-dropdown-item>
             </el-dropdown-menu>
-          </el-dropdown> -->
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -267,7 +267,7 @@
             :file-list="fileList">
             <el-button size="small" type="primary">上传</el-button>
           </el-upload> 
-          <el-table stripe :data="fileData" style="width: 100%" class="document" border :header-row-class-name="StableClass">
+          <el-table :data="fileData" style="width: 100%" class="document" border :header-row-class-name="StableClass">
             <el-table-column label="文件名">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">

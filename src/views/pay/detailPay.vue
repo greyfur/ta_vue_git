@@ -72,7 +72,7 @@
         </ul>
 
         <!-- 详情 -->
-        <div class="searchNew">
+        <div :class="searchFlag===true?'searchNew':''" >
           <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
             <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>详情</div>
             <p class="info" style="color:#666;">流程编号: 
@@ -87,14 +87,14 @@
             </li>
           </ul>
         </div>
-        <div class="searchNew" style="border-bottom:none;margin-top:16px;">
+        <div :class="searchFlag===true?'searchNew':''"  style="border-bottom:none;margin-top:16px;">
             <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
               <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
                 <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification'">
                   <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
                 </p>            
               </div>
-              <el-table stripe :data="fileData" border style="width:100%;min-height:350px;max-height:500px;" class="document">
+              <el-table :data="fileData" border style="width:100%;min-height:350px;max-height:500px;" class="document">
                 <el-table-column label="文件名" width="200">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -148,7 +148,7 @@
           <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getRMSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
          <el-collapse-transition>
-        <el-table v-show="searchFlag2" stripe :data="RMData" style="width:100%" border>
+        <el-table v-show="searchFlag2" :data="RMData" style="width:100%" border>
           <el-table-column label="支票号" width="110">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
@@ -162,17 +162,17 @@
                   <el-tooltip
                     class="item"
                     effect="dark"
-                    :content="scope.row.bankAmount"
+                    :content="Number(scope.row.bankAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
                     placement="top-start">
-                    <span class="abbreviate">{{scope.row.bankAmount}}</span>
+                    <span class="abbreviate">{{Number(scope.row.bankAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
                   </el-tooltip>
                 </template>
               </el-table-column>
           <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column>
           <el-table-column label="手续费金额" width="100">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :content="scope.row.chargesAmount" placement="top-start">
-                <span class="abbreviate">{{scope.row.chargesAmount}}</span>
+              <el-tooltip class="item" effect="dark" :content="Number(scope.row.chargesAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')" placement="top-start">
+                <span class="abbreviate">{{Number(scope.row.chargesAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -190,7 +190,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="paymentType" label="支付方式"></el-table-column>
+          <el-table-column prop="paymentTypeName" label="支付方式"></el-table-column>
           <el-table-column label="流程编号">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.processId" placement="top-start">
@@ -246,10 +246,10 @@
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单</div>
           <p v-if="$route.query.tag === 'payOperation' || $route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
-        <el-table v-show="searchFlag3" stripe :data="SgData" style="width: 100%" border>
+        <el-table v-show="searchFlag3" :data="SgData" style="width: 100%" border>
           <el-table-column type="expand">
             <template slot-scope="props">
-              <el-table stripe :data="props.row.worksheetDOList" style="width: 100%" border>
+              <el-table :data="props.row.worksheetDOList" style="width: 100%" border>
                 <el-table-column label="账单号">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
@@ -319,8 +319,8 @@
                 <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
                 <el-table-column label="金额">
                   <template slot-scope="scope">
-                    <el-tooltip class="item" effect="dark" :content="scope.row.wsAmount" placement="top-start">
-                      <span class="abbreviate">{{scope.row.wsAmount}}</span>
+                    <el-tooltip class="item" effect="dark" :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')" placement="top-start">
+                      <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -375,8 +375,30 @@
           <el-table-column prop="sgStatus" label="SG状态"></el-table-column>
           <el-table-column prop="settlementIndicator" label="结算指标" width="100"></el-table-column>
           <el-table-column prop="sgCurrency" label="币值"></el-table-column>
-          <el-table-column prop="settlementAmount" label="结算总额"></el-table-column>
-          <el-table-column prop="unsettlementAmount" label="未结算金额" width="100"></el-table-column>
+          <el-table-column label="结算总额">
+            <template slot-scope="scope">
+              <el-tooltip
+                class="item"
+                effect="dark"
+                :content="Number(scope.row.settlementAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
+                placement="top-start"
+              >
+                <span class="abbreviate">{{Number(scope.row.settlementAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="未结算金额" width="100">
+            <template slot-scope="scope">
+              <el-tooltip
+                class="item"
+                effect="dark"
+                :content="Number(scope.row.unsettlementAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
+                placement="top-start"
+              >
+                <span class="abbreviate">{{Number(scope.row.unsettlementAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column label="应收款日期" width="100">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.dueDate" placement="top-start">
@@ -429,7 +451,7 @@
           <p><i class="iconfont iconGroup26"></i></p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag4" border stripe :data="WSData" style="width: 100%">
+          <el-table v-show="searchFlag4" border :data="WSData" style="width: 100%">
             <el-table-column label="账单号">
               <template slot-scope="scope">
                 <el-tooltip
@@ -542,10 +564,10 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  :content="scope.row.wsAmount"
+                  :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
                   placement="top-start"
                 >
-                  <span class="abbreviate">{{scope.row.wsAmount}}</span>
+                  <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -622,14 +644,25 @@
           </el-upload>
           </el-form-item>
       </el-form>
-      <el-table stripe :data="TaxList" border style="width: 100%" class="document" v-show="title==='增值税信息获取'">
+      <el-table :data="TaxList" border style="width: 100%" class="document" v-show="title==='增值税信息获取'">
         <el-table-column prop="invoiceId" label="增值税号"></el-table-column>
         <el-table-column prop="rmId" label="支票号"></el-table-column>
         <el-table-column prop="sgNum" label="SG号"></el-table-column>
         <el-table-column prop="invoicePurchaser" label="购买方"></el-table-column>
         <el-table-column prop="invoiceSeller" label="销售方"></el-table-column>
         <el-table-column prop="invoiceChecker" label="核实人"></el-table-column>
-        <el-table-column prop="invoiceAmount" label="开票金额"></el-table-column>
+        <el-table-column label="开票金额">
+          <template slot-scope="scope">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="Number(scope.row.invoiceAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
+              placement="top-start"
+            >
+              <span class="abbreviate">{{Number(scope.row.invoiceAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column prop="invoiceDrawer" label="开票人"></el-table-column>
         <el-table-column prop="invoiceDate" label="开票日期"></el-table-column>
         <el-table-column prop="createdBy" label="创建人"></el-table-column>

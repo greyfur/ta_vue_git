@@ -1,6 +1,6 @@
 <template>
   <div class="billCom">
-    <div class="searchNew">
+    <div :class="searchFlag===true?'searchNew':''" >
       <div class="titleSearch" @click="searchFlag = !searchFlag">
         <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询
       </div>
@@ -85,7 +85,7 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
-    <el-table :header-row-class-name="StableClass" height="480" :data="tableData" stripe border style="width: 100%;">
+    <el-table :header-row-class-name="StableClass" height="480" :data="tableData" border style="width: 100%;">
       <el-table-column label="流程编号" width="155">
         <template slot-scope="scope">
           <span
@@ -206,7 +206,8 @@
           <el-dropdown>
             <span class="el-dropdown-link">
               更多
-              <i style="margin-left:8px;" class="el-icon-arrow-down"></i>
+              <!-- <i style="margin-left:8px;" class="el-icon-arrow-down"></i> -->
+              <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.2)" class="iconfont iconGroup66" ></i>
             </span>
             <el-dropdown-menu slot="dropdown">
                <el-dropdown-item>
@@ -393,7 +394,7 @@
           >
             <el-button type="primary" plain>上传</el-button>
           </el-upload>
-          <el-table stripe :data="fileData" style="width: 100%" class="document" border>
+          <el-table :data="fileData" style="width: 100%" class="document" border>
             <el-table-column label="文件名" width="140">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -1187,7 +1188,7 @@ export default {
   padding-right: 30px;
 }
 .btn {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 .el-pagination {
   text-align: right;

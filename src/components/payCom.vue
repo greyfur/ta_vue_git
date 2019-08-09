@@ -1,6 +1,6 @@
 <template>
   <div class="payCom">
-    <div class="searchNew">
+    <div :class="searchFlag===true?'searchNew':''" >
       <div class="titleSearch" @click="searchFlag = !searchFlag"><i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询</div>
       <el-collapse-transition>
       <div v-show="searchFlag">
@@ -36,7 +36,7 @@
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div>
-    <el-table :data="tableData" stripe border style="width: 100%" height="480" :header-row-class-name="StableClass">
+    <el-table :data="tableData" border style="width: 100%" height="480" :header-row-class-name="StableClass">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
@@ -93,7 +93,7 @@
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
-            <span class="el-dropdown-link">更多<i style="margin-left:8px;" class="el-icon-arrow-down"></i></span>
+            <span class="el-dropdown-link">更多 <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.2)" class="iconfont iconGroup66" ></i></span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item><span v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" class="blueColor">编辑</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName !== 'payOperation'" @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span></el-dropdown-item>
@@ -237,7 +237,7 @@
         <el-table-column prop="remark" label="操作备注"></el-table-column>
       </el-table>
      
-      <el-table stripe :data="fileData" style="width: 100%" border class="document" v-show="title==='上传附件' || title==='附件查看'" :header-row-class-name="StableClass">
+      <el-table :data="fileData" style="width: 100%" border class="document" v-show="title==='上传附件' || title==='附件查看'" :header-row-class-name="StableClass">
         <el-table-column label="文件名" width="140">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
