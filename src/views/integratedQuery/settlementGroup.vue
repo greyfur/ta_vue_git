@@ -50,10 +50,10 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
-    <el-table :data="tableData" stripe style="width: 100%" height="480" border :header-row-class-name="StableClass">
+    <el-table :data="tableData" style="width: 100%" height="480" border :header-row-class-name="StableClass">
       <el-table-column type="expand">
         <template slot-scope="props">
-          <el-table stripe :data="props.row.worksheetDOList" style="width: 100%" border :header-row-class-name="StableClass">
+          <el-table :data="props.row.worksheetDOList" style="width: 100%" border :header-row-class-name="StableClass">
             <el-table-column label="账单号">
               <template slot-scope="scope">
                 <el-tooltip
@@ -168,10 +168,10 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  :content="scope.row.wsAmount"
+                  :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
                   placement="top-start"
                 >
-                  <span class="abbreviate">{{scope.row.wsAmount}}</span>
+                  <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -237,14 +237,25 @@
           <el-tooltip
             class="item"
             effect="dark"
-            :content="scope.row.settlementAmount"
+            :content="Number(scope.row.settlementAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
             placement="top-start"
           >
-            <span class="abbreviate">{{scope.row.settlementAmount}}</span>
+            <span class="abbreviate">{{Number(scope.row.settlementAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="unsettlementAmount" label="未结算金额" width="100"></el-table-column>
+      <el-table-column label="未结算金额" width="100">
+        <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="Number(scope.row.unsettlementAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
+            placement="top-start"
+          >
+            <span class="abbreviate">{{Number(scope.row.unsettlementAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column label="应收款日期" width="100">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.dueDate" placement="top-start">
@@ -468,7 +479,6 @@
         <el-table-column prop="remark" label="操作备注"></el-table-column>
       </el-table>
       <el-table
-        stripe
         :data="fileData"
         style="width: 100%"
         class="document"

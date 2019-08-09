@@ -84,7 +84,6 @@
       :data="tableData"
       ref="multipleTable"
       tooltip-effect="dark"
-      stripe
       border
       :header-row-class-name="StableClass"
       style="width: 100%"
@@ -199,7 +198,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-table height="480" v-show="urlName!='taskClaim' && urlName!='financialCreat'" :data="tableData" border stripe style="width: 100%">
+    <el-table height="480" v-show="urlName!='taskClaim' && urlName!='financialCreat'" :header-row-class-name="StableClass" :data="tableData" border  style="width: 100%">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span
@@ -470,7 +469,7 @@
             <el-button plain type="primary">上传</el-button>
           </el-upload>
           <el-table
-            stripe
+    
             border
             :data="fileData"
             style="width: 100%"
@@ -565,7 +564,7 @@
         <el-table-column prop="remark" label="操作备注"></el-table-column>
       </el-table>
       <el-table
-        stripe
+
         border
         :data="fileData"
         style="width: 100%"

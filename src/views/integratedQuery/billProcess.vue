@@ -101,8 +101,9 @@
     <div class="btn">
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91"></i>手工创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
+      <el-button type="info" plain size="small" @click="handleClick(7)">导出报表</el-button>
     </div> 
-    <el-table :header-row-class-name="StableClass" :data="tableData" stripe border style="width: 100%"  height="480">
+    <el-table :header-row-class-name="StableClass" :data="tableData" border style="width: 100%"  height="480">
       <el-table-column prop="createdAt" label="创建时间" width="100"></el-table-column>
       <el-table-column label="流程编号" width="140">
         <template slot-scope="scope">
@@ -683,6 +684,32 @@ export default {
           break;
         case 6: // 上传附件
           
+         break;
+        case 7://导出报表
+        this.$http.post(`api/integeratedQuery/download`,{
+            reportName:"账单报表",
+            actOperator:"孙宇",
+            actName:'222'
+          }, { responseType: "blob" }).then(res=>{
+            console.log(res)
+            if(res.status===200){
+              // this.path = this.getObjectURL(res.data);
+              console.log(this.path)
+              // if (res.data) {
+              //     var a = document.createElement("a");
+              //     if (typeof a.download === "undefined") {
+              //       window.location = this.path;
+              //     } else {
+              //       a.href = this.path;
+              //       a.download = new Date().getTime();
+              //       document.body.appendChild(a);
+              //       a.click();
+              //       a.remove();
+              //     }
+              //   }
+            }
+          })
+              console.log('导出报表')
          break;
       } 
     },

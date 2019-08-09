@@ -46,7 +46,7 @@
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div>
-    <el-table :data="tableData" stripe style="width: 100%" height="480" border :header-row-class-name="StableClass">
+    <el-table :data="tableData" style="width: 100%" height="480" border :header-row-class-name="StableClass">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
@@ -156,7 +156,7 @@
         <el-table-column prop="reason" label="操作原因"></el-table-column>
         <el-table-column prop="remark" label="操作备注"></el-table-column>
       </el-table>
-      <el-table stripe border :header-row-class-name="StableClass" :data="fileData" style="width: 100%" class="document" v-show="title==='上传附件' || title==='附件查看'">
+      <el-table border :header-row-class-name="StableClass" :data="fileData" style="width: 100%" class="document" v-show="title==='上传附件' || title==='附件查看'">
         <el-table-column label="文件名">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">

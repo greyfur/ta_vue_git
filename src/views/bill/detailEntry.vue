@@ -185,7 +185,6 @@
         <el-table
           v-show="searchFlag3"
           :data="SICSData"
-          stripe
           border
           width="100%"
         >
@@ -207,10 +206,10 @@
               <el-tooltip
                 class="item"
                 effect="dark"
-                :content="scope.row.wsAmount"
+                :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
                 placement="top-start"
               >
-                <span class="abbreviate">{{scope.row.wsAmount}}</span>
+                <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1852,6 +1851,7 @@ export default {
   height: 89px;
   line-height: 89px;
   padding: 0 16px;
+  box-shadow:0px 0px 1px 0px rgba(155,155,155,1);
 }
 .btn .el-button {
   margin-bottom: 10px;

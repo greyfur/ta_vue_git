@@ -47,7 +47,7 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
-    <el-table :data="tableData" stripe style="width: 100%" height="480" border> 
+    <el-table :data="tableData" style="width: 100%" height="480" border> 
       <el-table-column label="支票号" width="150">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
@@ -84,10 +84,10 @@
           <el-tooltip
             class="item"
             effect="dark"
-            :content="scope.row.bankAmount"
+            :content="Number(scope.row.bankAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
             placement="top-start"
           >
-            <span class="abbreviate">{{scope.row.bankAmount}}</span>
+            <span class="abbreviate">{{Number(scope.row.bankAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -99,10 +99,10 @@
           <el-tooltip
             class="item"
             effect="dark"
-            :content="scope.row.chargesAmount"
+            :content="Number(scope.row.chargesAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
             placement="top-start"
           >
-            <span class="abbreviate">{{scope.row.chargesAmount}}</span>
+            <span class="abbreviate">{{Number(scope.row.chargesAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
           </el-tooltip>
         </template>
       </el-table-column>

@@ -14,8 +14,7 @@
               <span>{{ item.name }}</span>
             </el-option>
           </el-select>
-          <div class="do">操作： <p class="btn" @click="sure">确定</p></div>
-         
+          <div class="do">操作： <p class="btn" @click="sure()">下载报表</p></div>
       </div>
   </div>
 </template>
@@ -48,6 +47,7 @@
     },
     methods:{
       sure(){
+        console.log(this.ReportFormArr[this.reportType].name)
         if(this.reportType===null||this.oYearMonth===null){
           this.$message.error('请选择年月和报表类型')
         }else{
@@ -77,14 +77,14 @@
                     window.location = this.path;
                   } else {
                     a.href = this.path;
-                    a.download = new Date().getTime();
+                    //  a.download = new Date().getTime();
+                    a.download = this.ReportFormArr[this.reportType].name;
                     document.body.appendChild(a);
                     a.click();
                     a.remove();
                   }
                 }
             }
-            // console.log(res)
           })
         }
       },

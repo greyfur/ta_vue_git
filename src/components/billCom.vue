@@ -80,7 +80,7 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
-    <el-table :header-row-class-name="StableClass" height="480" :data="tableData" stripe border style="width: 100%;">
+    <el-table :header-row-class-name="StableClass" height="480" :data="tableData" border style="width: 100%;">
       <el-table-column label="流程编号" width="155">
         <template slot-scope="scope">
           <span
@@ -378,7 +378,7 @@
           >
             <el-button type="primary" plain>上传</el-button>
           </el-upload>
-          <el-table stripe :data="fileData" style="width: 100%" class="document" border>
+          <el-table :data="fileData" style="width: 100%" class="document" border>
             <el-table-column label="文件名" width="140">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
