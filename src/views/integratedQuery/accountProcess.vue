@@ -111,14 +111,14 @@
       :total="mustData.total">      
     </el-pagination>
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
-      <el-form label-width="140px" v-show="title==='流程提交' || title==='reverse'">
+      <el-form label-width="140px" v-show="title==='流程提交'">
         <el-form-item label="选择处理人'"  v-show="title==='流程提交'">
           <el-select v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="选择管理员">
-          <el-select v-model="assignee"  placeholder="请选择" v-show="title==='reverse'">
+          <el-select v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptionsA" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
@@ -630,20 +630,6 @@ export default {
             }) 
           this.title = 'reverse';
           this.dialogFormVisible2 = true;
-          // this.$confirm('是否Reverse?', '提示', {
-          //   confirmButtonText: '确定',
-          //   cancelButtonText: '取消',
-          //   type: 'warning'
-          // }).then(() => {
-          //   this.$http.post('api/pay/teskClaim/reversePayProcess',{processId:this.chooseRow.processId,actOperator:this.$store.state.userName},{responseType:'blob'}).then(res =>{
-          //     console.log(res,'onReverse')
-          //     if(res.status === 200 && res.data.code==0){
-          //       this.$message({type: 'success', message: '成功'});
-          //     } else if(res.data.msg){
-          //       this.$message.error(res.data.msg);
-          //     }
-          //   })
-          // })
         break;
 
       }

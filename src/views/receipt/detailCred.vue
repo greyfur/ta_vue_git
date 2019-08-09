@@ -12,7 +12,7 @@
       <el-button type="primary" plain @click="makeReport">生成核销报告</el-button>
       <el-button type="primary" plain @click="mailSend(2,'附件查看')">附件查看</el-button>
       <el-button type="primary" plain @click="getTaxInfo">增值税信息获取</el-button>
-      <el-button type="primary" plain @click="openReverse">Reversed</el-button>
+      <!-- <el-button type="primary" plain @click="openReverse">Reversed</el-button> -->
     </div>
     <!-- 操作 -->
     <div class="btn" v-if="$route.query.tag === 'credOperation'">
@@ -87,10 +87,7 @@
           style="margin-bottom:10px;"
           @click="searchFlag2 = !searchFlag2">
           <div>
-            <i 
-              style="margin-right:8px;"
-              :class="searchFlag2===false?'el-icon-arrow-down':'el-icon-arrow-up'"
-            ></i>支票信息
+            <i style="margin-right:8px;" :class="searchFlag2===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>支票信息
           </div>
           <p>
             <el-button size="mini" @click="getSg" v-if="$route.query.tag !== 'credVerification' && $route.query.tag !== 'credReview' && $route.query.tag !== 'collectiongEnd'">
@@ -175,6 +172,11 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
+              <el-table-column label="支票类型" width="100">
+                <template slot-scope="scope">
+                  <span>{{scope.row.rmType=='R'?'收款':'付款'}}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
               <el-table-column label="银行账户">
                 <template slot-scope="scope">
@@ -200,15 +202,11 @@
               </el-table-column>
               <el-table-column prop="businessPartnerRef" label="BP Reference" width="140"></el-table-column>
               <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-              <el-table-column label="操作" width="140">
+              <el-table-column label="操作" width="140" fixed="right">
                 <template slot-scope="scope">
                   <el-button type="text" @click.stop="openSICS(scope.row,'rmId')" size="mini">打开SICS</el-button>
+                  <el-button type="text" v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'" @click.stop="openSICS(scope.row,'rmId','R')" size="mini">Reverse</el-button>
                   <el-button type="text" v-if="$route.query.tag === 'credOperation'" @click.stop="chongXiao(scope.row)" size="mini">冲销</el-button>
-                  <el-button type="text"
-                    v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'"
-                    @click.stop="openSICS(scope.row,'rmId','R')"
-                    size="mini"
-                  >Reverse</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -251,7 +249,7 @@
                     </template>
                   </el-table-column>
                   <el-table-column prop="wsStatus" label="账单状态" width="100">
-                    <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+                    <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
                   </el-table-column>
                   <el-table-column label="账单标题">
                     <template slot-scope="scope">
@@ -555,7 +553,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="wsStatus" label="账单状态" width="100">
-              <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+              <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
             </el-table-column>
             <el-table-column label="账单标题">
               <template slot-scope="scope">
@@ -675,7 +673,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="120">
+            <el-table-column label="操作" width="120" fixed="right">
               <template slot-scope="scope">
                 <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
               </template>
@@ -764,7 +762,7 @@
           <el-input v-model.trim="formLabelAlign.processId" disabled style="width:194px"></el-input>
         </el-form-item>
         <el-form-item label="收/付款支票" prop="rmType"> 
-          <el-radio-group v-model="formLabelAlign.rmType">
+          <el-radio-group v-model="formLabelAlign.rmType" @change="bizhichange(1)">
             <el-radio label="R">收款</el-radio>
             <el-radio label="P">付款</el-radio>
           </el-radio-group>
@@ -861,7 +859,7 @@
                 v-model="formLabelAlign.bankCurrency"
                 placeholder="请选择"
                 class="curAmount"
-                @change="bankCurrencyChange"
+                @change="bizhichange(0)"
               >
                 <el-option
                   v-for="item in rmCurrencyList"
@@ -1384,18 +1382,35 @@ export default {
         document.getElementById("iframeId").contentWindow.location.reload(true);
       }
     },
-    recepitBankList(){
+    recepitBankList(){ 
       // this.AllBankAccountList
       if(this.formLabelAlign.brokerModel || this.formLabelAlign.brokerModel==0){
         this.recepitList = this.AllBankAccountList.filter(el=>{ return el.bpCode == this.brokerListSk[this.formLabelAlign.brokerModel]['codecode']});
-        console.log(this.recepitList,'this.recepitList');
-        if(!this.recepitList || !this.recepitList.length){
-          this.$message.error('选择的收款人无匹配'); 
-          this.recepitList = [];
-          this.formLabelAlign.partnerBankAccount = null;
+        if (this.recepitList.length) {
+          let arr1 = this.recepitList.filter(el => {
+            return el.currency === this.formLabelAlign.bankCurrency;
+          });
+          if (arr1.length) {
+            this.recepitList = arr1;
+          } else {
+            // setTimeout(() => {
+              this.$message.error("选择的币制和收款账户不匹配");
+            // }, 100);
+            this.recepitList = [];
+            this.formLabelAlign.partnerBankAccount = null;
+          }
         }
       }
     },
+    bizhichange(tag){
+      if(tag==0 && this.formLabelAlign.rmType=='R'){   // 收款币制change,只校验银行账户
+        this.bankCurrencyChange();
+      } else{
+        this.recepitBankList();
+        this.bankCurrencyChange();
+      }
+      
+    },    
     copy(id) {
       let Url2 = document.getElementById(id).innerText;
       let oInput = document.createElement("input");
@@ -1712,10 +1727,10 @@ export default {
         });
       } else if (tag == "a") {
         // 创建支票
-        if (!this.row.baseCompany) {
-          this.$message.error("Base Company无数据，请返回编辑");
-          return false;
-        }
+        // if (!this.row.baseCompany) {
+        //   this.$message.error("Base Company无数据，请返回编辑");
+        //   return false;
+        // }
         this.rmFlag = "a";
         this.rmWriteBack();
         this.dialogFormVisible = true;

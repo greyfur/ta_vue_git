@@ -39,17 +39,22 @@
                 v-for="(item,index) in nameList"
                 :key="item"
                 :value="index"
-                :label="item"
-              >
+                :label="item">
                 <span style="float:left">{{item}}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{index}}</span>
               </el-option>
             </el-select>
             </el-col>
+            <el-col :span="7" v-show="urlName === 'billSignBack'">
+              <span class="slable">是否需签回</span>
+              <el-select clearable v-model="billSearch.wsSignbackFlag" placeholder="请选择">
+                <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
+              </el-select>
+            </el-col>
             <el-col :span="8" v-show="urlName === 'billSignBack'">
-              <span class="slable">是否签回</span>
-              <el-select clearable v-model="billSearch.hasRecheckFlag" placeholder="请选择流程状态">
-                <el-option v-for="(v,k) of {'签回':'1','未签回':'0'}" :key="v" :label="k" :value="v"></el-option>
+              <span class="slable">是否已签回</span>
+              <el-select clearable v-model="billSearch.wsHasSignback" placeholder="请选择">
+                <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
               </el-select>
             </el-col>
             <el-col :span="8" v-show="urlName === 'billEntry'">
@@ -591,6 +596,8 @@ export default {
       dialogFormVisible1: false,
       admFlag: false,
       billSearch: {
+        wsSignbackFlag:null,
+        wsHasSignback:null,
         hasRecheckFlag:null,
         processId: null,
         processStatus: null,

@@ -8,6 +8,7 @@
       <el-col :span="11" style="padding:0 16px;">
         <!-- 核销 --> 
         <div class="btn" v-if="$route.query.tag === 'payClose'">
+          <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BpLedger</el-button>
           <el-button size="small" :disabled="hxState" @click="makeReport" plain>生成核销报告</el-button>
           <el-button size="small" :disabled="hxState" @click="getTaxInfo" plain>增值税信息获取</el-button>
           <!-- <el-button size="small" :disabled="hxState" @click="mailSend(2,'附件查看')" plain>附件查看</el-button> -->
@@ -17,6 +18,7 @@
         </div>
         <!-- 财务支付/紧急付款/partial完结 -->
         <div class="btn" v-if="$route.query.tag === 'payment' || $route.query.tag === 'partialDone' || $route.query.tag === 'instancyPay'">
+          <el-button type="primary" v-if="$route.query.tag === 'partialDone'" @click="openBPSICS" plain>打开BpLedger</el-button>
           <!-- <el-button size="small" plain>附件上传</el-button> -->
           <el-button size="small" plain @click="tongbu" v-if="$route.query.tag === 'instancyPay'">同步状态</el-button>
           <!-- <el-button size="small" plain @click="mailSend(2,'附件查看')">附件查看</el-button> -->
@@ -204,6 +206,11 @@
               </el-tooltip>
             </template>
           </el-table-column>
+          <el-table-column label="支票类型" width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.rmType=='R'?'收款':'付款'}}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="valueDate" label="起息日" width="100"></el-table-column>
           <el-table-column prop="dueDate" label="到期日" width="100"></el-table-column>
           <el-table-column prop="partnerCode" label="汇款人代码" width="100"></el-table-column>
@@ -221,11 +228,11 @@
           </el-table-column>
           <el-table-column prop="businessPartnerRef" label="BP Reference信息" width="140"></el-table-column>
           <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-          <el-table-column label="操作" width="140">
+          <el-table-column label="操作" width="140" fixed="right">
             <template slot-scope="scope">
-              <el-button type="text" v-if="$route.query.tag === 'approvalDone'" @click.stop="chongXiao(scope.row)" size="mini">冲销</el-button>
               <el-button @click="onOpenSICS(scope.row,'rmId')" v-if="$route.query.tag === 'payClose' || $route.query.tag === 'payment' || $route.query.tag === 'instancyPay' || $route.query.tag === 'partialDone'" type="text" size="small">Reverse</el-button>
               <el-button @click="onOpenSICS(scope.row,'rmId')"  type="text" size="small">打开SICS</el-button>
+              <el-button type="text" v-if="$route.query.tag === 'approvalDone'" @click.stop="chongXiao(scope.row)" size="mini">冲销</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -251,7 +258,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="wsStatus" label="账单状态" width="100">
-                  <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+                  <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
                 </el-table-column>
                 <el-table-column label="账单标题">
                   <template slot-scope="scope">
@@ -434,22 +441,13 @@
       </el-col>
     </el-row>
     <!-- 账单信息 -->
-    <el-row v-if="$route.query.tag === 'payClose' || $route.query.tag === 'approvalDone' || $route.query.tag === 'partialDone'">
+    <el-row v-if="$route.query.tag === 'payClose' || $route.query.tag === 'partialDone'">
       <el-col :span="24">
-        <div
-          class="titleSearch detailSearch"
-          style="margin-bottom:10px;"
-          @click="searchFlag4 = !searchFlag4"
-        >
+        <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag4 = !searchFlag4">
           <div>
-            <i
-              style="margin-right:8px;"
-              :class="searchFlag4===false?'el-icon-arrow-down':'el-icon-arrow-up'"
-            ></i>账单信息
+            <i style="margin-right:8px;" :class="searchFlag4===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>账单信息
           </div>
-          <p>
-            <i class="iconfont iconGroup26"></i>
-          </p>
+          <p><i class="iconfont iconGroup26"></i></p>
         </div>
         <el-collapse-transition>
           <el-table v-show="searchFlag4" border :data="WSData" style="width: 100%">
@@ -466,7 +464,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="wsStatus" label="账单状态" width="100">
-              <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+              <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
             </el-table-column>
             <el-table-column label="账单标题">
               <template slot-scope="scope">
@@ -586,7 +584,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="120">
+            <el-table-column label="操作" width="120" fixed="right">
               <template slot-scope="scope">
                 <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
               </template>
@@ -692,7 +690,7 @@
           <el-input v-model.trim="formLabelAlign.processId" disabled style="width:194px"></el-input>
         </el-form-item>
          <el-form-item label="收/付款支票"> 
-          <el-radio-group v-model="formLabelAlign.rmType">
+          <el-radio-group v-model="formLabelAlign.rmType" @change="bizhichange(1)">
             <el-radio label="R">收款</el-radio>
             <el-radio label="P">付款</el-radio>
           </el-radio-group>
@@ -730,7 +728,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="收款人" prop="brokerModel" v-show="formLabelAlign.rmType=='P'">
-          <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择" @change="recepitBankList">
+          <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择" @change="bizhichange(0)">
             <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
               <span style="float:left">{{ item.codecode }}</span>
               <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
@@ -756,7 +754,7 @@
         <el-form-item label="币制/金额" required>
           <el-col :span="10">
             <el-form-item prop="bankCurrency">
-              <el-select v-model="formLabelAlign.bankCurrency" placeholder="请选择" class="curAmount" @change="bankCurrencyChange">
+              <el-select v-model="formLabelAlign.bankCurrency" placeholder="请选择" class="curAmount" @change="bizhichange(0)">
                 <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
               </el-select>
             </el-form-item>
@@ -898,6 +896,7 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        WSData: [],
         saveLevel:null,
         partBankAccountList:[],
         brokerListHK:[],
@@ -1239,6 +1238,23 @@ export default {
            }
       })
     },
+    openBPSICS() {
+      if (!this.row.rmSettleCompanyCode) {
+        this.$message({
+          type: "error",
+          message: "process中rmSettleCompanyCode无值，打不开"
+        });
+        return false;
+      }
+      this.$http
+        .post("api/sics/liveDesktop/openBpLedger", {
+          modifiedBy: this.mustData.actOperator,
+          bpId: this.row.rmSettleCompanyCode
+        })
+        .then(res => {
+          console.log(res, "打开SICS");
+        });
+    },
     nextStep(){
       let oldStrArrCreInd=0;
       let drcArr = [...document.querySelectorAll(".drc")];
@@ -1370,10 +1386,10 @@ export default {
       if(this.opinion!='其它'){ this.rebut = null; }
     },
     onRemitCreat(){
-      if(!this.row.baseCompany){
-        this.$message.error('Base Company无数据，请返回编辑');
-        return false;
-      }
+      // if(!this.row.baseCompany){
+      //   this.$message.error('Base Company无数据，请返回编辑');
+      //   return false;
+      // }
       this.rmWriteBack(); 
       this.dialogFormVisible = true;
       this.bankCurrencyChange();
@@ -1409,6 +1425,7 @@ export default {
         if(res.status === 200){
           this.SgData = res.data.worksheetsgDOlist;
           this.RMData = res.data.remitDOlist;
+          this.WSData = res.data.workSheetDOlsit;
         }
       })
     },
@@ -1423,6 +1440,7 @@ export default {
           if(res.status === 200){
             // this.SgData = res.data.worksheetsgDOlist;
             this.RMData = res.data.remitDOlist;
+            this.WSData = res.data.workSheetDOlsit
           }
         })
       } else{ this.$message.error('无账单，无法更新信息'); }
@@ -2175,18 +2193,36 @@ export default {
       
       
     },
-    recepitBankList(){
-      // this.AllBankAccountList
-      if(this.formLabelAlign.brokerModel || this.formLabelAlign.brokerModel==0){
+     recepitBankList(){ 
+       if(this.formLabelAlign.brokerModel || this.formLabelAlign.brokerModel==0){
         this.recepitList = this.AllBankAccountList.filter(el=>{ return el.bpCode == this.brokerList[this.formLabelAlign.brokerModel]['codecode']});
-        console.log(this.recepitList,'this.recepitList');
-        if(!this.recepitList || !this.recepitList.length){
-          this.$message.error('选择的收款人无匹配'); 
-          this.recepitList = [];
-          this.formLabelAlign.partnerBankAccount = null;
+        if (this.recepitList.length) {
+          let arr1 = this.recepitList.filter(el => {
+            return el.currency === this.formLabelAlign.bankCurrency;
+          });
+          if (arr1.length) {
+            this.recepitList = arr1;
+          } else {
+              this.$message.error("选择的币制和收款账户不匹配");
+            this.recepitList = [];
+            this.formLabelAlign.partnerBankAccount = null;
+          }
         }
       }
+      // if(this.formLabelAlign.brokerModel || this.formLabelAlign.brokerModel==0){
+      //   this.recepitList = this.AllBankAccountList.filter(el=>{ return el.bpCode == this.brokerListSk[this.formLabelAlign.brokerModel]['codecode']});
+        
+      // }
     },
+    bizhichange(tag){
+      if(tag==0 && this.formLabelAlign.rmType=='R'){   // 收款币制change,只校验银行账户
+        this.bankCurrencyChange();
+      } else{
+        this.recepitBankList();
+        this.bankCurrencyChange();
+      }
+      
+    },    
     bankCurrencyChange(){   //  获取银行账户     bankCurrency 币制
       this.baseCompanyChange();
       this.formLabelAlign.bankAccount1 = null;

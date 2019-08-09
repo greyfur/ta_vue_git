@@ -28,7 +28,7 @@
          </el-col>
       </el-row>
       <el-row :gutter="10" class="billRow">
-         <el-col :span="8">
+         <el-col :span="7">
           <span class="slable">录入人查询</span>
           <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人查询">
               <el-option
@@ -56,7 +56,7 @@
               </el-option>
             </el-select>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="9">
           <span class="slable">经纪公司 &nbsp;&nbsp;</span>
            <el-select clearable filterable v-model="brokerModel" placeholder="请选择经纪公司">
               <el-option
@@ -93,7 +93,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="wsStatus" label="账单状态" width="100">
-            <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template>
+            <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
           </el-table-column>
           <el-table-column label="账单标题">
             <template slot-scope="scope">

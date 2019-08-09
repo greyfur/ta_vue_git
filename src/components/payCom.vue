@@ -191,14 +191,14 @@
     </el-dialog>
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="80%">
-      <el-form label-width="140px" v-show="title==='流程提交' || title==='reverse'">
+      <el-form label-width="140px" v-show="title==='流程提交'">
         <el-form-item label="选择处理人"  v-show="title==='流程提交'">
           <el-select v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="选择管理员">
-          <el-select v-model="assignee"  placeholder="请选择" v-show="title==='reverse'">
+          <el-select v-model="assignee"  placeholder="请选择">
             <el-option v-for="(item,i) in TJRoptionsA" :key="i" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
@@ -724,15 +724,7 @@ export default {
             this.title = '附件查看';
             this.dialogFormVisible2 = true;
         break;
-        case 20: //reverse
-          this.$http.post('api/activiti/getAssigneeName',{roleName:'管理员'}).then(res =>{
-              if(res.status === 200){
-                this.TJRoptionsA = res.data;
-              }
-            }) 
-          this.title='reverse';
-          this.dialogFormVisible2 = true;
-        break;
+       
 
       }
 
@@ -849,20 +841,7 @@ export default {
               }
             })
           break;
-          case 20:  //---
-            this.$http.post('api/pay/teskClaim/reversePayProcess',{processId:this.chooseRow.processId,assignee:this.assignee,actOperator:this.$store.state.userName}).then(res =>{
-              console.log(res,'onReverse')
-              if(res.status === 200 && res.data.code==0){
-                this.$message({type: 'success', message: '成功'});
-              } else if(res.data.code=='1'){
-                this.$message.error(res.data.msg);
-              }
-            })
-          break;
       }
-      // setTimeout(()=>{
-        // this.$refs[formName].resetFields();
-      // },1000)
     },
     beforeAvatarUpload(file){
       this.file.push(file);
