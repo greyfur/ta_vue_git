@@ -173,12 +173,11 @@
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="100">
+      <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
             <span class="el-dropdown-link">
-              更多
-             <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.2)" class="iconfont iconGroup66" ></i>
+             <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i>
             </span>
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>
@@ -306,7 +305,6 @@
           </el-dropdown> -->
           <el-dropdown>
             <span class="el-dropdown-link">
-              更多
               <i style="margin-left:8px;" class="el-icon-arrow-down"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
@@ -893,7 +891,6 @@ export default {
         this.dialogFormVisibleA = true;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
-            console.log(res);
             document.getElementById("iframeId").contentWindow.postMessage(
               {
                 tokenId: res.data.tokenId,
@@ -949,7 +946,6 @@ export default {
           // this.dialogFormVisible = true;
           break;
         case 6: //编辑
-          console.log(this.chooseRow, "row");
           this.formLabelAlign = this.chooseRow;
           if (this.chooseRow.businessOrigin) {
             let arr = this.businessOriginList.filter(el => {
@@ -1241,7 +1237,6 @@ export default {
       switch (this.tag) {
         case 1: //创建
           this.$refs[formName].validate(valid => {
-            console.log(valid, "valid");
             if (valid) {
               this.$http
                 .post(

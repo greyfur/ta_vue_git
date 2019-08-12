@@ -84,6 +84,18 @@
       <el-button type="primary" plain @click="init(0)">
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
+
+      <!-- <el-upload
+        class="sort-upload"
+        action=""
+        multiple
+        :before-upload="beforeAvatarUpload"
+        :auto-upload="true"
+        :http-request="upload"
+        :file-list="fileList">
+        <el-button type="primary" plain>上传</el-button>
+      </el-upload> -->
+
     </div>
     <el-table :header-row-class-name="StableClass" height="480" :data="tableData" border style="width: 100%;">
       <el-table-column label="流程编号" width="155">
@@ -201,22 +213,21 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="100">
+      <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
             <span class="el-dropdown-link">
-              更多
               <!-- <i style="margin-left:8px;" class="el-icon-arrow-down"></i> -->
-              <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.2)" class="iconfont iconGroup66" ></i>
+              <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i>
             </span>
             <el-dropdown-menu slot="dropdown">
                <el-dropdown-item>
-            <span
-              v-show="urlName === 'sortOperation' || pendingFlag"
-              @click.stop="handleClick(2,scope.row)"
-              class="blueColor"
-            >编辑</span>
-          </el-dropdown-item>
+              <span
+                v-show="urlName === 'sortOperation' || pendingFlag"
+                @click.stop="handleClick(2,scope.row)"
+                class="blueColor"
+              >编辑</span>
+            </el-dropdown-item>
           <el-dropdown-item>
             <span
               v-show="urlName === 'sortOperation'"
@@ -756,7 +767,6 @@ export default {
       }
       // 进首页查询
       let params = null;
-      console.log(this.admFlag,'this.admFlag');
       if (this.urlName == "sortOperation" || this.admFlag) {
         params = Object.assign({}, this.mustData);
       } else {
@@ -781,7 +791,6 @@ export default {
       });
     },
     confirm(formName) {
-       console.log(this.tableData,'wwwww')
       if (this.title === "手工创建" || this.title === "编辑") {
         if (this.zq2 && this.zq1) {
           this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;
@@ -803,7 +812,6 @@ export default {
       switch (this.dialogState) {
         case 0: // 创建
           this.$refs[formName].validate(valid => {
-            console.log(valid, "valid");
             if (valid) {
               this.$http
                 .post(
@@ -926,7 +934,6 @@ export default {
       this.dialogState = tag;
       this.chooseRow = row;
       this.assignee = null;
-      console.log(this.tableData, "tableData");
       switch (tag) {
         case 0:
           this.reset();
@@ -947,6 +954,7 @@ export default {
           break;
         case 2:
           // 账单类型
+          this.fileData = [];
           if (row.wsType) {
             this.ZDoptions.forEach((el, i) => {
               if (el.name == row.wsType) {
@@ -1000,7 +1008,6 @@ export default {
             this.zq1 = null;
           }
           this.$http.get(`api/worksheet/wSEntry/edit/${row.processId}`,{}).then(res => {
-            console.log(res,'api/worksheet/wSEntry/edit/');
               if (res.status === 200) {
                 // this.fileData = res.data.bscDocumentVOlist;
                 let arr3 = res.data.bscDocumentVOlist;
@@ -1052,7 +1059,6 @@ export default {
             .then(res => {
               if (res.status === 200) {
                 this.picture = window.URL.createObjectURL(res.data);
-                console.log(res, "流程图");
               }
             });
 
@@ -1072,7 +1078,6 @@ export default {
           )
         )
         .then(res => {
-          console.log(res, "踪迹列表");
           if (res.status === 200) {
             this.track = res.data.rows;
             this.ZJObj.total = res.data.total;
@@ -1130,7 +1135,8 @@ export default {
         resFile.append("actOperator", this.$store.state.userName);
         resFile.append("processId", this.chooseRow.processId);
         this.$http
-          .post("api/anyShare/fileOperation/uploadFilesForPage", resFile, {
+            .post("api/anyShare/fileOperation/uploadFilesForPage", resFile, {  // 旧的
+            // .post("api/uploadFilesForPageBatch/uploadFilesForPageBatch", resFile, {  // 新的
             headers: { "Content-Type": "application/json;charset=UTF-8" }
           })
           .then(res => {
@@ -1141,7 +1147,6 @@ export default {
                 .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
                 .then(res => {
                   if (res.status == 200) {
-                    console.log(res,'res.data.bscDocumentVOlist');
                     // this.fileData = res.data.bscDocumentVOlist;
                     let arr2 = res.data.bscDocumentVOlist;
                     arr2.forEach(el=>{

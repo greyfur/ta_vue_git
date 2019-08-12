@@ -795,14 +795,12 @@ export default {
   },
   methods: {
     openSICS(row) {
-      console;
       this.$http
         .post("api/sics/liveDesktop/openWorksheet", {
           modifiedBy: this.$store.state.userName,
           worksheetId: row["sgNum"]
         })
         .then(res => {
-          console.log(res, "打开SICS");
           // if(res.status === 200 && res.data.rows){
           //   this.SICSData = res.data.rows;
           // }
@@ -819,7 +817,6 @@ export default {
           })
         )
         .then(res => {
-          console.log(res, ",,,");
           if (res.status === 200) {
             this.tableData = res.data.rows;
             this.mustData.total = res.data.total;
@@ -834,7 +831,6 @@ export default {
         this.dialogFormVisibleA = true;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
-            console.log(res);
             document.getElementById("iframeId").contentWindow.postMessage(
               {
                 tokenId: res.data.tokenId,
@@ -885,7 +881,6 @@ export default {
           this.confirm();
           break;
         case 6: //编辑
-          console.log(this.chooseRow, "row");
           this.formLabelAlign = this.chooseRow;
           if (this.chooseRow.businessOrigin) {
             let arr = this.businessOriginList.filter(el => {
@@ -1009,7 +1004,6 @@ export default {
       switch (this.tag) {
         case 1: //创建
           this.$refs[formName].validate(valid => {
-            console.log(valid, "valid");
             if (valid) {
               this.$http
                 .post(
@@ -1040,7 +1034,6 @@ export default {
           });
           delete params["actOperator"];
           this.$http.post("api/integeratedQuery/sglist", params).then(res => {
-            console.log(res, ",,,");
             if (res.status === 200) {
               this.tableData = res.data.rows;
               this.mustData.total = res.data.total;
@@ -1052,9 +1045,7 @@ export default {
           break;
         case 6: //编辑
           this.$refs[formName].validate(valid => {
-            console.log(valid, "valid");
             if (valid) {
-              console.log(this.formLabelAlign, "this.formLabelAlign");
               this.$http
                 .post(
                   "api/pay/teskClaim/update",

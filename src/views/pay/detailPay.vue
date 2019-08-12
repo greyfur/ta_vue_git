@@ -72,7 +72,7 @@
         </ul>
 
         <!-- 详情 -->
-        <div :class="searchFlag===true?'searchNew':''" >
+        <div :class="searchFlag1===true?'searchNew':''" >
           <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
             <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>详情</div>
             <p class="info" style="color:#666;">流程编号: 
@@ -87,12 +87,12 @@
             </li>
           </ul>
         </div>
-        <div :class="searchFlag===true?'searchNew':''"  style="border-bottom:none;margin-top:16px;">
+        <div :class="searchFlag2===true?'searchNew':''"  style="border-bottom:none;margin-top:16px;">
             <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
               <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
                 <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification'">
                   <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
-                </p>            
+                </p>         z   
               </div>
               <el-table :data="fileData" border style="width:100%;min-height:350px;max-height:500px;" class="document">
                 <el-table-column label="文件名" width="200">
@@ -1131,7 +1131,6 @@ export default {
   created(){
     sessionStorage.setItem('data',JSON.stringify({}));
     this.row = JSON.parse(this.$route.query.row);
-    console.log(this.row,'row');
     // 查询单条数据，根据processId
     let param = {
       actOperator: this.$store.state.userName,
@@ -1159,6 +1158,7 @@ export default {
     this.formLabelAlign.dueDate = new Date().getTime();
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
+  beforeMount(){this.copy('proNum',1)},
   mounted(){ 
     console.log(this.row,'this.row');
     this.mustData.actOperator = this.$store.state.userName;
@@ -1217,7 +1217,6 @@ export default {
     this.dataBaseSG();
     this.mailSend(2,'',1);
     this.listData.forEach(el=>{
-      // console.log(el['b'],this.row[el['c']],'hyd')
       el['b'] = this.row[el['c']];
       if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
       if(el['a']=='结付公司'){ el["b"]=this.row[el['c']] + '-' + this.row[el['d']];}
@@ -1348,16 +1347,17 @@ export default {
           }
         });
     },
-    copy(id){
-      let Url2=document.getElementById(id).innerText;
+    copy(id,tag){
+      let Url2 = null;
+      if(!tag){Url2=document.getElementById(id).innerText;}
       let oInput = document.createElement('input');
-      oInput.value = Url2;
+      tag?oInput.value = ' ':oInput.value = Url2;
       document.body.appendChild(oInput);
       oInput.select(); // 选择对象
       document.execCommand("Copy"); // 执行浏览器复制命令
       oInput.className = 'oInput';
       oInput.remove();
-      this.$message({message: '复制成功',type: 'success'});
+      if(!tag){this.$message({message: '复制成功',type: 'success'});}
     },
     tongbu(){
       this.getRMSg();
@@ -1422,7 +1422,6 @@ export default {
     },
     dataBaseSG(){
       this.$http.post('api/sics/basis/getSGAndRemitList',{processId:this.row.processId}).then(res =>{
-        console.log(res,'dataBaseSG');
         if(res.status === 200){
           this.SgData = res.data.worksheetsgDOlist;
           this.RMData = res.data.remitDOlist;
@@ -1437,7 +1436,6 @@ export default {
           rmIds += `${el.rmId},`
         })
         this.$http.post('api/sics/basis/getPayRemitFromSics',{actOperator:this.mustData.actOperator,rmIds:rmIds,processId:this.row.processId}).then(res =>{
-          // console.log(res,'getSg');
           if(res.status === 200){
             // this.SgData = res.data.worksheetsgDOlist;
             this.RMData = res.data.remitDOlist;
@@ -1449,7 +1447,6 @@ export default {
     },
     getSGSg(){
       this.$http.post('api/sics/basis/getWSAndSGfromSics',{actOperator:this.mustData.actOperator,processId:this.row.processId}).then(res =>{
-        // console.log(res,'getSg');
         if(res.status === 200){ 
           this.SgData = res.data.worksheetsgDOlist;
           // this.RMData = res.data.remitDOlist;
@@ -1483,7 +1480,6 @@ export default {
           //     type:'PENDING',
           //     actOperator:this.$store.state.userName})
           //     .then(res =>{
-          //       console.log(res,'悬停');
           //     if(res.status === 200 && res.data.errorCode == 1){
           //       this.czState = !this.czState;
           //     } else if(res.data.errorMessage){
@@ -1504,7 +1500,6 @@ export default {
               type:'RECOVERY',
               actOperator:this.$store.state.userName})
               .then(res =>{
-                console.log(res,'恢复');
               if(res.status === 200 && res.data.errorCode == 1){
                 this.czState = !this.czState;
               } else if(res.data.errorMessage){
@@ -1533,7 +1528,6 @@ export default {
           //     hasRecheckFlag:'1',
           //     actOperator:this.$store.state.userName})
           //     .then(res =>{
-          //       console.log(res,'悬停');
           //     if(res.status === 200 && res.data.errorCode == 1){
           //       this.hxState = !this.hxState;
           //     } else if(res.data.errorMessage){
@@ -1554,7 +1548,6 @@ export default {
                hasRecheckFlag:'1',
                type:'RECOVERY',hasRecheckFlag:'1',actOperator:this.$store.state.userName})
               .then(res =>{
-                console.log(res,'恢复');
               if(res.status === 200 && res.data.errorCode == 1){
                 this.hxState = !this.hxState;
               } else if(res.data.errorMessage){
@@ -1567,7 +1560,6 @@ export default {
     },
     acountquery(){   // 开关账查询
       this.$http.get('api/administrator/conifg/acountquery',{}).then(res =>{
-        console.log(res,'开关账');
           if(res.status === 200){
             this.accountCloseFlag = res.data.accountCloseFlag;
           }
@@ -1868,7 +1860,6 @@ export default {
               approvalLevel:this.row.approvalLevel,
               })
             .then(res =>{
-              console.log(res)
               if(res.status === 200 && res.data.errorCode == 1){
                 this.dialogFormVisible3 = false;
                 this.$router.push({name:this.$route.query.tag}); 
@@ -2006,7 +1997,6 @@ export default {
               type:'PENDING',
               actOperator:this.$store.state.userName})
               .then(res =>{
-                console.log(res,'悬停');
               if(res.status === 200 && res.data.errorCode == 1){
                 this.czState = !this.czState;
                 this.dialogFormVisible3 = false;
@@ -2024,7 +2014,6 @@ export default {
               hasRecheckFlag:'1',
               actOperator:this.$store.state.userName})
               .then(res =>{
-                console.log(res,'悬停');
               if(res.status === 200 && res.data.errorCode == 1){
                 this.hxState = !this.hxState;
                 this.dialogFormVisible3 = false;
@@ -2158,7 +2147,6 @@ export default {
     },
     remitCreat(row){
       this.$http.post('api/sics/basis/creatPayRemitBySgNum',{sgNum:row.sgNum,actOperator:this.$store.state.userName,processId:this.row.processId}).then(res =>{
-        console.log(res,'creatPayRemitBySgNum');
         if(res.status === 200){
           // this.$message.error();
           // this.dataBaseSG();
@@ -2264,7 +2252,6 @@ export default {
     getTaxInfo(){  // 增值税信息获取
       this.title = '增值税信息获取';
       this.$http.post('api/vat/message/save',{processId:this.row.processId}).then(res =>{
-        console.log(res,'getTaxInfo');
         if(res.status === 200){
           this.TaxList = res.data
           this.dialogFormVisible4 = true;
@@ -2273,7 +2260,6 @@ export default {
     },
     makeReport(){
       this.$http.post('api/sics/basis/getPairingExelByProcessId',{processId:this.row.processId}).then(res =>{
-        console.log(res,'makeReport');
         if(res.status === 200 && res.data){
           this.$message({message:'生成核销报告成功',type: 'success'});
         }
@@ -2284,7 +2270,6 @@ export default {
         if(row.suffix && row.suffix=='eml'){ return false; }
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
         if(res.status == 200){
-          console.log(res);
           document.getElementById('iframeId').contentWindow.postMessage({
             tokenId:res.data.tokenId,
             userId:res.data.userId,
@@ -2346,17 +2331,14 @@ export default {
                   if(this.makeDocListEctype.yuanHuiLv[i] != null){
                     allNum += this.makeDocListEctype.yuanNum[i]/Number(1*this.makeDocListEctype.yuanHuiLv[i]);
                   }
-                  // console.log(allNum)
                 }
               }
             } else{  // 直接转换、、、
               let val3 = Number(this.filterCurrencyRateList(curType,this.makeDocListEctype.zheType))
               this.makeDocListEctype.yuanHuiLv[i] = Number(val3)>0?Number(val3).toFixed(4):null;
               if(this.makeDocListEctype.yuanHuiLv[i] != null){
-                console.log(Number(this.makeDocListEctype.yuanNum[i])/Number(1*this.makeDocListEctype.yuanHuiLv[i]))
                 allNum += Number(this.makeDocListEctype.yuanNum[i])/Number(1*this.makeDocListEctype.yuanHuiLv[i]);
               }
-              // console(allNum,'++hyd')
             }
           }
         }) 
@@ -2365,6 +2347,14 @@ export default {
     },
     makeDoc(tag,name){    // 生成审批文档
       if(tag == 'a'){  // 是操作页面，弹窗，S0,
+          if(this.row.rmCurrency){ 
+            this.makeDocListEctype.yuanType.push(this.row.rmCurrency);
+            this.makeDocListEctype.zheType = this.row.rmCurrency;
+          }
+          if(this.row.rmAmount){ 
+            this.makeDocListEctype.yuanNum.push(this.row.rmAmount);
+            this.makeDocNum = 1;
+          }
           this.makeDocListEctype.cedentModel = [];
           this.$http.post('api/pay/teskClaim/list',{
             curOperator:this.$store.state.userName,
@@ -2407,14 +2397,12 @@ export default {
           if(this.makeDocListEctype.yuanType.length){
             let arr = [];
             this.makeDocListEctype.yuanType.forEach((el,i)=>{
-              // console.log(Number(this.makeDocListEctype.yuanNum[i]).toFixed(2),'hyd')
               let str = `${el} ${Number(this.makeDocListEctype.yuanNum[i]).toFixed(2)}`;
               arr.push(str);
             })
             this.makeDocList.primitiveAmount = arr.join(';');
           }
 
-          console.log(this.makeDocList,'this.makeDocList');
           let param = Object.assign({},this.makeDocList,{
             processId:this.row.processId,
             actOperator:this.$store.state.userName,
@@ -2483,7 +2471,6 @@ export default {
           
     },
     makeDocEcho(){
-      console.log('00000');
        this.$http.post('api/worksheet/sortOperation/listDocument'
         ,{actOperator:this.$store.state.userName,
         processId:this.row.processId,
@@ -2504,7 +2491,7 @@ export default {
   },
    watch:{
     title:function(n,o){
-      console.log(n,'nnnnnn'); // b可以选自己，n不可以，0开账，1关账，关账支票可选自己
+      // b可以选自己，n不可以，0开账，1关账，关账支票可选自己
       // title === '流程提交' || title==='审批通过' title === '复核通过'
       if(n === '流程提交' && this.$route.query.tag === 'payOperation'){
         this.putIn = 'b';
@@ -2533,7 +2520,6 @@ export default {
             if(n.indexOf(el) == -1){
               this.makeDocListEctype.yuanNum.splice(i,1);
               this.makeDocListEctype.yuanHuiLv.splice(i,1);
-              // console.log( this.makeDocListEctype.zheNum,'hyd')
               this.makeDocListEctype.zheNum = this.makeDocListEctype.zheNum
             }
           })
@@ -2550,8 +2536,6 @@ export default {
     // 监听汇率
     'makeDocListEctype.yuanHuiLv':{
       handler:function(n,o){
-        console.log('huilullllllllll')
-        // console.log(this.makeDocListEctype.zheType,'hyd')
         if(this.makeDocListEctype.yuanNum.length){
           let all = 0;
           this.makeDocListEctype.yuanNum.forEach((el,i)=>{
@@ -2559,7 +2543,6 @@ export default {
             // el 是金额
             all += Number(Number(el)/this.makeDocListEctype.yuanHuiLv[i]) ;
           })
-          // console.log(all,'--hyd')
           this.makeDocListEctype.zheNum = all>0?Number(all).toFixed(2):null;
         }
         

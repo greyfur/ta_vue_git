@@ -36,7 +36,7 @@
           <el-button size="small" @click="submit(3)" plain>复核通过</el-button>
         </div>
         <div class="left">
-          <div :class="searchFlag===true?'searchNew':''" >
+          <div :class="searchFlag1===true?'searchNew':''" >
             <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
               <div>
                 <i style="margin-right:8px;" class="el-icon-arrow-down"></i>详情
@@ -58,7 +58,7 @@
               </li>
             </ul>
           </div>
-          <div :class="searchFlag===true?'searchNew':''"  style="margin-top:16px;">
+          <div :class="searchFlag2===true?'searchNew':''"  style="margin-top:16px;">
             <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
               <div>
                 <i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表
@@ -735,6 +735,7 @@ export default {
     sessionStorage.setItem("data", JSON.stringify({}));
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
+  beforeMount(){ this.copy('proNum',1) },
   mounted() {
     // 查询账单详情
     if (this.$route.query.tag !== "billSignBack") {
@@ -822,7 +823,6 @@ export default {
     reverse(row){
       this.$http.post("api/sics/liveDesktop/openBusiness",{businessId:row.businessId,modifiedBy:this.$store.state.userName})
         .then(res => {
-          console.log(res, "打开SICS");
         });
     },
     openBPSICS() {
@@ -849,16 +849,17 @@ export default {
       this.dialogFormVisible5 = true;
       this.remarkRow = row;
     },
-    copy(id) {
-      let Url2 = document.getElementById(id).innerText;
-      let oInput = document.createElement("input");
-      oInput.value = Url2;
+    copy(id,tag){
+      let Url2 = null;
+      if(!tag){Url2=document.getElementById(id).innerText;}
+      let oInput = document.createElement('input');
+      tag?oInput.value = ' ':oInput.value = Url2;
       document.body.appendChild(oInput);
       oInput.select(); // 选择对象
       document.execCommand("Copy"); // 执行浏览器复制命令
-      oInput.className = "oInput";
+      oInput.className = 'oInput';
       oInput.remove();
-      this.$message({ message: "复制成功", type: "success" });
+      if(!tag){this.$message({message: '复制成功',type: 'success'});}
     },
     handleSelectionChange(val) {},
     getName(name) {
@@ -993,7 +994,6 @@ export default {
                   }
                 })
                 .then(res => {
-                  console.log(res, "ocr");
                   if (res.status === 200 && res.data) {
                     this.$message({ type: "success", message: "提交成功" });
                     this.dialogFormVisible2 = false;
@@ -1036,7 +1036,6 @@ export default {
               { responseType: "blob" }
             )
             .then(res => {
-              console.log(res);
               if (res.status === 200) {
                 let resFiles = new FormData();
                 resFiles.append("file", res.data);
@@ -1113,7 +1112,6 @@ export default {
                       this.$route.query.SIGNBACK == 1
                         ? `${this.chooseRow.entryOperator}`
                         : this.$store.state.userName;
-                    console.log(this.chooseRow.entryOperator, "entryOperator");
                     this.$confirm("是否复核通过？", "提示", {
                       confirmButtonText: "确定",
                       cancelButtonText: "取消",
@@ -1592,7 +1590,6 @@ export default {
           )
           .then(res => {
             if (res.status === 200) {
-              console.log(res);
               // this.path = res.data;
               this.path = this.getObjectURL(res.data);
               if (res.data) {

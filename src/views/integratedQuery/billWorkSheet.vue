@@ -173,7 +173,7 @@
         <template slot-scope="scope">
           <!-- <el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button> -->
           <el-dropdown>
-            <span class="el-dropdown-link">更多 <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.2)" class="iconfont iconGroup66" ></i></span>
+            <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item><el-button v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'sortOperation'" @click.stop="handleClick(3,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
@@ -544,7 +544,6 @@ export default {
         this.dialogFormVisible1 = true;
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
         if(res.status == 200){
-          console.log(res);
           document.getElementById('iframeId').contentWindow.postMessage({
             tokenId:res.data.tokenId,
             userId:res.data.userId,
@@ -571,14 +570,12 @@ export default {
       this.init();
     },
     ZJhandleCurrentChange(val) {
-      console.log('00000000');
       this.ZJObj.pageNumber = val;
       this.getZJData(this.getZJDataRow);
     },
     init(tag) {
       // 进首页查询
       this.$http.post('api/integeratedQuery/Worksheetlist',Object.assign({},this.mustData,{actName:this.$store.state.userName,actOperator:this.$store.state.userName})).then(res =>{
-       console.log(res,',,,');
        if(res.status === 200 ) {
           this.tableData = res.data.rows;
           this.mustData.total = res.data.total;
@@ -607,7 +604,6 @@ export default {
       switch(this.dialogState){
         case 0:    // 创建
           this.$refs[formName].validate((valid) => {
-            console.log(valid,'valid');
             if(valid) {
               this.$http.post('api/worksheet/wSEntry/save',Object.assign({},this.mustData,this.billSearch)).then(res =>{
               if(res.status === 200 && res.data.msg === '操作成功'){
@@ -682,7 +678,6 @@ export default {
       this.dialogState = tag;
       this.chooseRow = row;
       this.assignee = null;
-      console.log(this.tableData,'tableData');
       switch(tag){
         case 0: 
           this.reset();
@@ -770,7 +765,6 @@ export default {
           // this.$http.post('api/activiti/getProcPicture',{procInstId:row.processInstId},{responseType:'blob'}).then(res =>{
           //   if(res.status === 200 ) {
           //     this.picture = window.URL.createObjectURL(res.data);
-          //     console.log(res,'流程图');
           //   }
           // })
           
@@ -782,7 +776,6 @@ export default {
     },
     getZJData(row){
       this.$http.post('api/othersDO/worksheetaction/list',Object.assign({},{wsId:row.wsId},this.ZJObj)).then(res =>{
-        console.log(res,'踪迹列表');
         if(res.status === 200 ) {
           this.track = res.data.rows;
           this.ZJObj.total=res.data.total;
