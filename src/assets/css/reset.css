@@ -184,3 +184,13 @@ input::-webkit-inner-spin-button {
 }
 .stateRed{ background-color: #F5222D }
 .stateGreen{ background-color: #52C41A }
+.el-dialog{border-radius: 4px;}
+.el-dialog__header{border-bottom: 1px solid rgba(0,0,0,0.09);}
+.el-dialog__body{border-bottom: 1px solid rgba(0,0,0,0.09);}
+.SwitchingMode{
+  display: flex;
+  flex-wrap: wrap;
+}
+.SwitchingMode .el-form-item{
+  width: 48%;
+}

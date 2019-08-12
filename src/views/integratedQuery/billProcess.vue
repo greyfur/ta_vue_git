@@ -552,6 +552,7 @@ export default {
         return
       }
       this.$http.post(`api/integeratedQuery/download`,{
+            processType:this.mustData.processType,
             reportName:this.reportArr.reportName,
             wsType:this.billSearch.wsType,
             processId:this.billSearch.processId,

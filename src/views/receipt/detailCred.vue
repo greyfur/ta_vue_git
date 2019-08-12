@@ -159,7 +159,7 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column prop="paymentTypeName" label="支付方式"></el-table-column>
+              <el-table-column prop="paymentTypeName" label="支付方式" width="110"></el-table-column>
               <el-table-column label="流程编号">
                 <template slot-scope="scope">
                   <el-tooltip

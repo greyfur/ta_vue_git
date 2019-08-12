@@ -117,7 +117,7 @@
       :total="mustData.total">      
     </el-pagination>
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
-      <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
+      <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign" class="SwitchingMode">
         <el-form-item label="结付公司">
           <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
             <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
@@ -190,7 +190,7 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="80%">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="80%" class="SwitchingMode">
       <el-form label-width="140px" v-show="title==='流程提交'">
         <el-form-item label="选择处理人"  v-show="title==='流程提交'">
           <el-select v-model="assignee"  placeholder="请选择">
@@ -261,7 +261,7 @@
       </el-table>
     </el-dialog>
 
-    <el-dialog :title="title" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal" class="SwitchingMode">
       <el-form :label-position="labelPosition" label-width="140px" :model="email">
         <el-form-item label="收件人姓名">
           <el-input v-model="email.contactName"></el-input>
