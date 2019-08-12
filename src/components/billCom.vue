@@ -97,7 +97,7 @@
       </el-upload> -->
 
     </div>
-    <el-table :header-row-class-name="StableClass" height="480" :data="tableData" border style="width: 100%;">
+    <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;">
       <el-table-column label="流程编号" width="155">
         <template slot-scope="scope">
           <span
@@ -267,6 +267,7 @@
         :model="billSearch"
         :rules="rules"
         ref="billSearch"
+        class="SwitchingMode"
       >
         <el-form-item label="流程编号" v-show="title==='查询'">
           <el-input v-model.trim="billSearch.processId" placeholder="请输入流程编号"></el-input>
@@ -356,8 +357,7 @@
             <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <div v-show="title === '手工创建' || title==='编辑'">
-          <el-form-item label="分出公司">
+          <el-form-item label="分出公司" v-show="title === '手工创建' || title==='编辑'">
             <el-select clearable filterable v-model="cedentModel" placeholder="请选择分出公司">
               <el-option
                 v-for="(item,index) in cedentList"
@@ -370,7 +370,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="经纪公司">
+          <el-form-item label="经纪公司" v-show="title === '手工创建' || title==='编辑'">
             <el-select clearable filterable v-model="brokerModel" placeholder="请选择经纪公司">
               <el-option
                 v-for="(item,index) in brokerList"
@@ -383,7 +383,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="账单收到日期">
+          <el-form-item label="账单收到日期" v-show="title === '手工创建' || title==='编辑'">
             <el-date-picker
               value-format="timestamp"
               v-model="billSearch.wsReceiptDate"
@@ -391,7 +391,6 @@
               placeholder="选择日期"
             ></el-date-picker>
           </el-form-item>
-        </div>
         <el-form-item label="附件上传" v-show="title==='编辑'">
           <el-upload
             class="sort-upload"
@@ -513,6 +512,7 @@ export default {
       tableData: [],
       assignee: "",
       modal: false,
+      changeClientHight:446,
       YWoptions: [
         { value: "T", label: "合约账单" },
         { value: "F", label: "临分账单" },
@@ -673,6 +673,9 @@ export default {
     };
   },
   created() {
+    console.log('屏幕分辨率',window.screen.width,window.screen.height)
+    console.log('网页可见区',document.body.clientWidth,document.body.clientHeight)
+    console.log('网页可见区+外边框',document.body.offsetWidth,document.body.offsetHeight)
     this.mustData.processStatus = this.processStatusCom;
     this.mustData.actOperator = this.$store.state.userName;
     if (this.urlName === "sortOperation" || this.urlName === "billEntry") {
@@ -685,6 +688,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
+    this.changeWindow();
     this.$http
       .post("api/activiti/getAssigneeName", { roleName: "账单录入" })
       .then(res => {
@@ -715,6 +719,12 @@ export default {
       this.init();
   },
   methods: {
+    changeWindow(){
+      let that=this;
+      document.body.onresize=function(e){
+          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+      }
+    },
     docView(row) {
       if (row) {
         if(row.suffix && row.suffix=='eml'){ return false; }

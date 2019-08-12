@@ -339,13 +339,14 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="mustData.total"
     ></el-pagination>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" class="SwitchingMode">
       <el-form
         :label-position="labelPosition"
         label-width="140px"
         :model="formLabelAlign"
         :rules="rules"
         ref="formLabelAlign"
+        class="SwitchingMode"
       >
         <el-form-item label="结付公司">
           <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
@@ -467,7 +468,6 @@
             <el-button plain type="primary">上传</el-button>
           </el-upload>
           <el-table
-    
             border
             :data="fileData"
             style="width: 100%"
@@ -502,7 +502,7 @@
             </el-table-column>
           </el-table>
         </el-form-item>
-        <el-form-item>
+        <!-- <el-form-item>
           <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
           <el-button
             size="small"
@@ -511,8 +511,21 @@
             @click="confirm('formLabelAlign')"
             style="padding:0 16px;"
           >确 定</el-button>
-        </el-form-item>
+        </el-form-item> hyd -->
       </el-form>
+       <div
+        slot="footer"
+        class="dialog-footer"
+      >
+         <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            plain
+            @click="confirm('formLabelAlign')"
+            style="padding:0 16px;"
+          >确 定</el-button>
+      </div>
     </el-dialog>
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="80%">
       <el-form label-width="140px" v-show="title==='流程提交'">
@@ -531,6 +544,13 @@
           <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
         </el-form-item>
       </el-form>
+      <!-- <div
+        slot="footer"
+        class="dialog-footer"
+      >
+         <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
+          <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
+      </div> hyd-->
       <!-- 上传附件/批量创建 -->
       <el-upload
         v-show="title==='批量创建'"

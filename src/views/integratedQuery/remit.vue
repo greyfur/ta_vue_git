@@ -91,7 +91,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="paymentTypeName" label="支付方式"></el-table-column>
+      <el-table-column prop="paymentTypeName" label="支付方式" width="110"></el-table-column>
       <el-table-column prop="bankCurrency" label="实收/支币制" width="100"></el-table-column>
       <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column>
       <el-table-column label="手续费金额" width="100">

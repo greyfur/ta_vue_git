@@ -227,15 +227,10 @@
             </el-select>
           </el-form-item>
           <el-form-item label="流程编号">
-            <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
-          </el-form-item>
-          <el-form-item label="账单类型">
-            <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
-              <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
-            </el-select>
+            <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processId"></el-input>
           </el-form-item>
           <el-form-item label="流程状态">
-            <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
+            <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
               <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','REVERSED','已悬停']" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
@@ -295,6 +290,7 @@ export default {
           payerAccountNumber:null,
           payerName:null,
           processStatus:null,
+          wsType:null
         },
         pendingFlag:false,
         TJRoptions:[],
@@ -556,9 +552,9 @@ export default {
       }
       this.$http.post(`api/integeratedQuery/download`,{
             reportName:this.reportArr.reportName,
-            wsType:this.billSearch.wsType,
-            processId:this.billSearch.processId,
-            processStatus:this.billSearch.processStatus,
+            wsType:this.formLabelAlign.wsType,
+            processId:this.formLabelAlign.processId,
+            processStatus:this.formLabelAlign.processStatus,
             actOperator:this.mustData.actOperator
           }, { responseType: "blob" }).then(res=>{
             if(res.status===200){

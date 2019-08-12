@@ -60,7 +60,7 @@
     <div :class="searchFlag1===true?'searchNew':''" >
       <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
         <div>
-          <i style="margin-right:8px;" :class="searchFlag1===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>详情
+          <i style="margin-right:8px;" :class="searchFlag1===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>详情11
         </div>
         <p class="info" style="color:#666;">流程编号:
           <el-tooltip class="item" effect="dark" content="点击复制" placement="top">
@@ -72,7 +72,8 @@
         <ul class="detail-ul" v-show="searchFlag1">
           <li v-for="(item,i) in listData" :key="i" class="detail-item">
             <span class="detail-name">{{item.a}} :</span>
-            <span class="detail-content">{{item.b}}</span>
+            <span class="detail-content" v-if="typeof item.b=='number'">{{ Number(item.b).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
+             <span class="detail-content" v-else>{{item.b}}</span>
           </li>
         </ul>
       </el-collapse-transition>
@@ -156,7 +157,7 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column prop="paymentTypeName" label="支付方式"></el-table-column>
+              <el-table-column prop="paymentTypeName" label="支付方式" width="110"></el-table-column>
               <el-table-column label="流程编号">
                 <template slot-scope="scope">
                   <el-tooltip
