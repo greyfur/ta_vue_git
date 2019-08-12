@@ -72,12 +72,10 @@ import {computeName} from '@/assets/js/util.js'
       };
     },
     created() {  // 获取公共数据
-      // console.log(this.$route.name,'name');
       this.UName = sessionStorage.getItem('userCName')
       // 获取币制
       if(!sessionStorage.getItem('CurrencyList')){
         this.$http.post('api/sics/basis/getCurrencyList').then(res =>{
-          console.log(res,'获取币制');
           if(res.status === 200){
             sessionStorage.setItem('CurrencyList',JSON.stringify(res.data));
           }
@@ -87,7 +85,6 @@ import {computeName} from '@/assets/js/util.js'
       // 获取集团产再
       if(!sessionStorage.getItem('baseCompany')){
         this.$http.get('api/sics/basis/getBaseCompanyList').then(res =>{
-          console.log(res,'获取集团产再');
           if(res.status === 200){
             sessionStorage.setItem('baseCompany',JSON.stringify(res.data));
           }
@@ -96,7 +93,6 @@ import {computeName} from '@/assets/js/util.js'
       // 获取国际国内
       if(!sessionStorage.getItem('businessOrigin')){
         this.$http.get('api/sics/basis/getBusinessOriginList').then(res =>{
-          console.log(res,'获取国际国内');
           if(res.status === 200){
             sessionStorage.setItem('businessOrigin',JSON.stringify(res.data));
           }
@@ -105,7 +101,6 @@ import {computeName} from '@/assets/js/util.js'
       // 获取账单类型
       if(!sessionStorage.getItem('wsType')){
         this.$http.get('api/sics/basis/getWorkShetTypeList').then(res =>{
-          console.log(res,'获取账单类型');
           if(res.status === 200){
             sessionStorage.setItem('wsType',JSON.stringify(res.data));
           }
@@ -116,7 +111,6 @@ import {computeName} from '@/assets/js/util.js'
       // 获取银行账户列表
       if(!sessionStorage.getItem('AllBankAccountList')){
         this.$http.post('api/sics/basis/getReceiptBankAccountList',{}).then(res =>{
-          console.log(res,'获取银行账户列表');
           if(res.status === 200){
             sessionStorage.setItem('AllBankAccountList',JSON.stringify(res.data));
           }
@@ -126,7 +120,6 @@ import {computeName} from '@/assets/js/util.js'
       // 获取BrokerType账户列表
       if(!sessionStorage.getItem('BrokerBankList')){
         this.$http.post('api/sics/basis/getCedentListByReceiptBank',{codeType:'BrokerType'}).then(res =>{
-          console.log(res,'获取银行账户列表');
           if(res.status === 200){
             sessionStorage.setItem('BrokerBankList',JSON.stringify(res.data));
           }
@@ -135,7 +128,6 @@ import {computeName} from '@/assets/js/util.js'
       // 获取CedentType账户列表
       if(!sessionStorage.getItem('CedentBankList')){
         this.$http.post('api/sics/basis/getCedentListByReceiptBank',{codeType:'CedentType'}).then(res =>{
-          console.log(res,'获取银行账户列表');
           if(res.status === 200){
             sessionStorage.setItem('CedentBankList',JSON.stringify(res.data));
           }
@@ -145,7 +137,6 @@ import {computeName} from '@/assets/js/util.js'
       // 获取分出人信息
       if(!sessionStorage.getItem('CedentType')){
         this.$http.post('api/sics/basis/getCedentList',{codeType:'CedentType'}).then(res =>{
-          console.log(res,'获取分出人信息');
           if(res.status === 200){
             sessionStorage.setItem('CedentType',JSON.stringify(res.data));
           }
@@ -155,7 +146,6 @@ import {computeName} from '@/assets/js/util.js'
       // 获取经纪人信息
       if(!sessionStorage.getItem('BrokerType')){
         this.$http.post('api/sics/basis/getCedentList',{codeType:'BrokerType'}).then(res =>{
-          console.log(res,'获取经纪人信息');
           if(res.status === 200){
             sessionStorage.setItem('BrokerType',JSON.stringify(res.data));
           }
@@ -173,7 +163,6 @@ import {computeName} from '@/assets/js/util.js'
       }
     },
     mounted(){
-      // this.$refs.vertical.style.height=window.innerHeight;
       if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
         this.fold = true;
       } else{ this.fold = false; }
@@ -193,9 +182,7 @@ import {computeName} from '@/assets/js/util.js'
 
       },
       change(){
-        console.log('www');
         this.fold=!this.fold;
-        
       },
       logOut() {
         sessionStorage.removeItem('resMenuList');
@@ -211,10 +198,8 @@ import {computeName} from '@/assets/js/util.js'
         if(to.name === 'detailEntry' || to.name === 'detailCred' || to.name === 'detailPay'){
           this.fold = true;
         } else{ this.fold = false; }
-        console.log(to.name,'watch.this.name');
       },
       '$store.state.deFineRout':function(n,o){
-        console.log(n,'watchStore');
       }
     }
   }

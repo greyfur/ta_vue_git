@@ -57,13 +57,10 @@
     -->
 
     <!-- 详情 -->
-    <div :class="searchFlag===true?'searchNew':''" >
+    <div :class="searchFlag1===true?'searchNew':''" >
       <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
         <div>
-          <i
-            style="margin-right:8px;"
-            :class="searchFlag1===false?'el-icon-arrow-down':'el-icon-arrow-up'"
-          ></i>详情
+          <i style="margin-right:8px;" :class="searchFlag1===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>详情
         </div>
         <p class="info" style="color:#666;">流程编号:
           <el-tooltip class="item" effect="dark" content="点击复制" placement="top">
@@ -1298,6 +1295,7 @@ export default {
     this.formLabelAlign.dueDate = new Date().getTime();
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   }, 
+  beforeMount(){ this.copy('proNum',1) },
   mounted() {
     setTimeout(() => {
       // 分出人+经济人all
@@ -1331,7 +1329,6 @@ export default {
       this.dataBaseSG();
     } else {
       this.queryRM();
-      console.log('是因为页面刷新！！！！！！！！！！！！！！！！！！！！！')
     }
     // 详情
     this.listData.forEach(el => {
@@ -1359,7 +1356,6 @@ export default {
         this.dialogFormVisibleA = true;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
-            console.log(res);
             document.getElementById("iframeId").contentWindow.postMessage(
               {
                 tokenId: res.data.tokenId,
@@ -1411,16 +1407,17 @@ export default {
       }
       
     },    
-    copy(id) {
-      let Url2 = document.getElementById(id).innerText;
-      let oInput = document.createElement("input");
-      oInput.value = Url2;
+    copy(id,tag){
+      let Url2 = null;
+      if(!tag){Url2=document.getElementById(id).innerText;}
+      let oInput = document.createElement('input');
+      tag?oInput.value = ' ':oInput.value = Url2;
       document.body.appendChild(oInput);
       oInput.select(); // 选择对象
       document.execCommand("Copy"); // 执行浏览器复制命令
-      oInput.className = "oInput";
+      oInput.className = 'oInput';
       oInput.remove();
-      this.$message({ message: "复制成功", type: "success" });
+      if(!tag){this.$message({message: '复制成功',type: 'success'});}
     },
     changeOpinion() {
       if (this.opinion != "其它") {
@@ -1485,7 +1482,6 @@ export default {
           processId: this.row.processId
         })
         .then(res => {
-          console.log(res, "dataBaseSG");
           if (res.status === 200) {
             this.RMData = res.data.remitDOlist;
             this.WSData = res.data.workSheetDOlsit;
@@ -1508,7 +1504,6 @@ export default {
           processId: this.row.processId
         })
         .then(res => {
-          console.log(res, "makeReport");
           if (res.status === 200 && res.data) {
             this.$message({ message: "生成核销报告成功", type: "success" });
           }
@@ -1520,7 +1515,6 @@ export default {
       this.$http
         .post("api/vat/message/save", { processId: this.row.processId })
         .then(res => {
-          console.log(res, "getTaxInfo");
           if (res.status === 200 && res.data) {
             this.TaxList = res.data;
             this.dialogFormVisible2 = true;
@@ -1536,7 +1530,6 @@ export default {
           processId: this.row.processId
         })
         .then(res => {
-          console.log(res, "getSg");
           if (res.status === 200) {
             this.RMData = res.data.remitDOlist;
             this.WSData = res.data.workSheetDOlsit;
@@ -1597,7 +1590,6 @@ export default {
       //     }
       //   });
       // }
-      console.log(this.row.rmChargesCurrency, "process222");
       this.formLabelAlign.businessPartnerRef = this.row.processId;
       this.formLabelAlign.bankCurrency = this.row.rmCurrency;
       this.formLabelAlign.bankAmount = this.row.rmAmount;
@@ -1666,7 +1658,6 @@ export default {
           pageSize: this.pageSize
         })
         .then(res => {
-          console.log(res, "queryRM");
           if (res.status === 200) {
             this.RMData = res.data.rows;
             // this.formLabelAlign = res.data.rows;
@@ -1772,7 +1763,6 @@ export default {
           //     type:'PENDING',
           //     actOperator:this.$store.state.userName})
           //     .then(res =>{
-          //       console.log(res,'悬停');
           //     if(res.status === 200 && res.data.errorCode == 1){
           //       this.czState = !this.czState;
           //     } else if(res.data.errorCode == 0){
@@ -1796,7 +1786,6 @@ export default {
                 actOperator: this.$store.state.userName
               })
               .then(res => {
-                console.log(res, "恢复");
                 if (res.status === 200 && res.data.errorCode == 1) {
                   this.czState = !this.czState;
                 } else if (res.data.errorCode == 0) {
@@ -1826,7 +1815,6 @@ export default {
           //     assignee:this.$store.state.userName,
           //     type:'PENDING',hasRecheckFlag:'1',actOperator:this.$store.state.userName})
           //     .then(res =>{
-          //       console.log(res,'悬停');
           //     if(res.status === 200 && res.data.errorCode == 1){
           //       this.hxState = !this.hxState;
           //     } else if(res.data.errorCode == 0){
@@ -1851,7 +1839,6 @@ export default {
                 actOperator: this.$store.state.userName
               })
               .then(res => {
-                console.log(res, "恢复");
                 if (res.status === 200 && res.data.errorCode == 1) {
                   this.hxState = !this.hxState;
                 } else if (res.data.errorCode == 0) {
@@ -2155,7 +2142,6 @@ export default {
                 actOperator: this.$store.state.userName
               })
               .then(res => {
-                console.log(res, "悬停");
                 if (res.status === 200 && res.data.errorCode == 1) {
                   this.czState = !this.czState;
                   this.dialogFormVisible3 = false;
@@ -2175,7 +2161,6 @@ export default {
                 actOperator: this.$store.state.userName
               })
               .then(res => {
-                console.log(res, "悬停");
                 if (res.status === 200 && res.data.errorCode == 1) {
                   this.hxState = !this.hxState;
                   this.dialogFormVisible3 = false;
@@ -2253,7 +2238,6 @@ export default {
   },
   watch: {
     title: function(n, o) {
-      console.log(n, "nnnnnn");
       if (n === "流程提交" && this.$route.query.tag === "credOperation") {
         this.putIn = "b";
       } else if (n === "流程提交") {

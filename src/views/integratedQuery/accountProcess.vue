@@ -88,7 +88,7 @@
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
-            <span class="el-dropdown-link">更多 <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.2)" class="iconfont iconGroup66" ></i></span>
+            <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item> -->
               <el-dropdown-item><el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button></el-dropdown-item>
@@ -525,7 +525,6 @@ export default {
         this.dialogFormVisibleA = true;
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
         if(res.status == 200){
-          console.log(res);
           document.getElementById('iframeId').contentWindow.postMessage({
             tokenId:res.data.tokenId,
             userId:res.data.userId,
@@ -617,7 +616,6 @@ export default {
           this.confirm();
           break;
         case 6: //编辑
-          console.log(this.chooseRow,'row');
           this.formLabelAlign = this.chooseRow;
           if(this.chooseRow.businessOrigin){
             let arr = this.businessOriginList.filter(el=>{ return el.name == this.chooseRow.businessOrigin })
@@ -724,7 +722,6 @@ export default {
     },
     getZJData(id){
       this.$http.post('api/othersDO/bscProcessAction/list',Object.assign({},{processId:id},this.ZJObj)).then(res =>{
-        console.log(res,'踪迹列表');
         if(res.status === 200 ) {
           this.track = res.data.rows;
           this.ZJObj.total=res.data.total;
@@ -740,7 +737,6 @@ export default {
       switch(this.tag){
         case 1: //创建
           this.$refs[formName].validate((valid) => {
-            console.log(valid,'valid');
             if(valid) {
               this.$http.post('api/pay/teskClaim/save',Object.assign({},{actOperator:this.$store.state.userName},this.mustData,this.formLabelAlign)).then(res =>{
               if(res.status === 200 && res.data.msg === '操作成功'){
@@ -774,9 +770,7 @@ export default {
           break;
         case 6: //编辑
            this.$refs[formName].validate((valid) => {
-            console.log(valid,'valid');
             if(valid) {
-              console.log(this.formLabelAlign,'this.formLabelAlign');
               this.$http.post('api/pay/teskClaim/update',Object.assign({},this.mustData,this.formLabelAlign,{actOperator:this.$store.state.userName})).then(res =>{
                 if(res.status === 200 && res.data.msg === '操作成功'){
                   this.dialogFormVisible = false;
@@ -831,7 +825,6 @@ export default {
           break;
           case 20:  //---
             this.$http.post('api/pay/teskClaim/reversePayProcess',{processId:this.chooseRow.processId,assignee:this.assignee,actOperator:this.$store.state.userName},{responseType:'blob'}).then(res =>{
-              console.log(res,'onReverse')
               if(res.status === 200 && res.data.code==0){
                 this.$message({type: 'success', message: '成功'});
               } else if(res.data.msg){

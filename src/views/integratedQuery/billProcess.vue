@@ -487,7 +487,6 @@ export default {
         this.dialogFormVisible1 = true;
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
         if(res.status == 200){
-          console.log(res);
           document.getElementById('iframeId').contentWindow.postMessage({
             tokenId:res.data.tokenId,
             userId:res.data.userId,
@@ -610,7 +609,6 @@ export default {
       switch(this.dialogState){
         case 0:    // 创建
           this.$refs[formName].validate((valid) => {
-            console.log(valid,'valid');
             if(valid) {
               this.$http.post('api/worksheet/wSEntry/save',Object.assign({},this.mustData,this.billSearch)).then(res =>{
               if(res.status === 200 && res.data.msg === '操作成功'){
@@ -691,7 +689,6 @@ export default {
       this.dialogState = tag;
       this.chooseRow = row;
       this.assignee = null;
-      console.log(this.tableData,'tableData');
       switch(tag){
         case 0: 
           this.reset();
@@ -778,7 +775,6 @@ export default {
           this.$http.post('api/activiti/getProcPicture',{procInstId:row.processInstId},{responseType:'blob'}).then(res =>{
             if(res.status === 200 ) {
               this.picture = window.URL.createObjectURL(res.data);
-              console.log(res,'流程图');
             }
           })
           this.dialogFormVisible = true; 
@@ -790,7 +786,6 @@ export default {
     },
     getZJData(id){
       this.$http.post('api/othersDO/bscProcessAction/list',Object.assign({},{processId:id},this.ZJObj)).then(res =>{
-        console.log(res,'踪迹列表');
         if(res.status === 200 ) {
           this.track = res.data.rows;
           this.ZJObj.total=res.data.total;
