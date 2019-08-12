@@ -193,12 +193,12 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="80%">
       <el-form label-width="140px" v-show="title==='流程提交'">
         <el-form-item label="选择处理人"  v-show="title==='流程提交'">
-          <el-select v-model="assignee"  placeholder="请选择">
+          <el-select filterable v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="选择管理员">
-          <el-select v-model="assignee"  placeholder="请选择">
+          <el-select filterable v-model="assignee"  placeholder="请选择">
             <el-option v-for="(item,i) in TJRoptionsA" :key="i" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>

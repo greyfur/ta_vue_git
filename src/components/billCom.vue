@@ -25,7 +25,7 @@
             <el-col :span="10">
               <span class="slable">账期</span>
               <el-input v-model.trim="zq2" placeholder="请输入年份" class="wsPeriod"></el-input>
-              <el-select clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
+              <el-select filterable clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
                 <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-col>
@@ -112,8 +112,7 @@
             class="item"
             effect="dark"
             :content="scope.row.processName"
-            placement="top-start"
-          >
+            placement="top-start">
             <span class="abbreviate">{{scope.row.processName}}</span>
           </el-tooltip>
         </template>
@@ -339,9 +338,8 @@
          <el-form-item
           label="流程名称"
           v-show="title==='手工创建' || title==='编辑' || title==='查询'"
-          class="zqForm"
-        >
-          <el-input v-model.trim="zq3" placeholder="请输入流程名称"></el-input>
+          class="zqForm">
+          <el-input v-model.trim="billSearch.processName" placeholder="请输入流程名称"></el-input>
         </el-form-item>
         <el-form-item
           label="账期"
@@ -398,6 +396,7 @@
           <el-upload
             class="sort-upload"
             action=""
+            multiple
             :before-upload="beforeAvatarUpload"
             :auto-upload="true"
             :http-request="upload"
@@ -665,7 +664,6 @@ export default {
       ZJprocessId: "",
       zq1: "",
       zq2: "",
-      zq3:"",
       rules: {
         wsBusinessType: [
           { required: true, message: "请选择任务类型", trigger: "blur" }
@@ -795,9 +793,6 @@ export default {
         if (this.zq2 && this.zq1) {
           this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;
         }
-        if(this.zq3){
-           this.billSearch.processName=`${this.zq3}`
-        }
       }
       if (this.cedentModel != null) {
         let obj = this.cedentList[this.cedentModel];
@@ -926,7 +921,6 @@ export default {
       }
       this.zq2 = null;
       this.zq1 = null;
-      this.zq3=null;
       this.brokerModel = null;
       this.cedentModel = null;
     },
@@ -998,6 +992,38 @@ export default {
           } else {
             this.brokerModel = null;
           }
+          // Business Origin
+         if(row.businessOrigin){
+            this.businessOriginList.forEach((el, i) => {
+              if (el.name == row.businessOrigin) {
+                this.billSearch.businessOrigin = el.code;
+              }
+            });
+          } else{ this.billSearch.businessOrigin = null; }
+
+          // Base Company
+         if(row.baseCompany){
+            this.baseCompanyList.forEach((el, i) => {
+              if (el.name == row.baseCompany) {
+                this.billSearch.baseCompany = el.code;
+              }
+            });
+          } else{ this.billSearch.baseCompany = null; }
+
+          // Reporting Unit
+         if(row.reportUnit){
+            this.ReportUnitList.forEach((el, i) => {
+              if (el.name == row.reportUnit) {
+                this.billSearch.reportUnit = el.code;
+              }
+            });
+          } else{ this.billSearch.reportUnit = null; }
+
+        // 流程名称
+         if(row.processName){
+            this.billSearch.processName = row.processName;
+          }
+        
           // 账期
           if (row.wsPeriod) {
             let arr = row.wsPeriod.split("-");
@@ -1134,11 +1160,7 @@ export default {
         });
         resFile.append("actOperator", this.$store.state.userName);
         resFile.append("processId", this.chooseRow.processId);
-        this.$http
-            .post("api/anyShare/fileOperation/uploadFilesForPage", resFile, {  // 旧的
-            // .post("api/uploadFilesForPageBatch/uploadFilesForPageBatch", resFile, {  // 新的
-            headers: { "Content-Type": "application/json;charset=UTF-8" }
-          })
+        this.$http.post("api/anyShare/fileOperation/uploadFilesForPageBatch", resFile, {  headers: { "Content-Type": "application/json;charset=UTF-8" }})
           .then(res => {
             if (res.status === 200 && res.data.errorCode == 1) {
               this.fileList = [];

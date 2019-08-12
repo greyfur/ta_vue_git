@@ -271,8 +271,7 @@
                 class="item"
                 effect="dark"
                 :content="scope.row.docName"
-                placement="top-start"
-              >
+                placement="top-start">
                 <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
               </el-tooltip>
             </template>
@@ -318,12 +317,11 @@
           <!-- <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column> -->
           <!-- <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column> -->
           <!-- <el-table-column prop="dept" label="经营机构"></el-table-column> -->
-          <el-table-column fixed="right" label="操作" width="140">
+          <el-table-column fixed="right" label="操作" width="180">
             <template slot-scope="scope">
               <el-button :disabled="isHover" @click.stop="openSics(scope.row)" type="text" size="small" >打开SICS</el-button>
-              <!-- <el-button :disabled="isHover" @click.stop="addRemark(scope.row)" type="text" size="small">添加意见</el-button> -->
-              <el-button :disabled="isHover" @click.stop="submit(2)" type="text" size="small">添加意见</el-button>
-              <el-button :disabled="isHover" v-show="scope.row.wsStatus=='Closed'" @click.stop="reverse(scope.row)" type="text" size="small">reverse</el-button>
+              <el-button :disabled="isHover" v-show="$route.query.tag == 'billCheck'" @click.stop="submit(2,'添加意见',scope.row.wsId)" type="text" size="small">添加意见</el-button>
+              <el-button :disabled="isHover" v-show="scope.row.wsStatus=='Closed' && $route.query.tag !== 'billCheck'" @click.stop="reverse(scope.row)" type="text" size="small">reverse</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -591,6 +589,7 @@ export default {
   name: "detailEntry",
   data() {
     return {
+      wsId:null,
       checkRobortUser:null,
       nameList:{},
       searchFlag3: true,
@@ -746,56 +745,54 @@ export default {
       this.checkRobortUser = res.data;
       // 0 需要屏蔽自己，1不需要
     })
-    this.$http
-      .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
-      .then(res => {
-        if (res.status === 200) {
-          this.SICSData = res.data.workSheetVOlist;
-          res.data.processStatus === "已悬停"? (this.isHover = true):(this.isHover = false);
-          // this.tableData = res.data.bscDocumentVOlist;
-          let arr = res.data.bscDocumentVOlist;
-          arr.forEach(el=>{
-            if(el.docName){
-              let suffix = el.docName.split('.');
-              el['suffix'] = suffix[suffix.length-1];
-            }
-          })
-          this.tableData = arr;
-          let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
-          setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
-        }
-      });
-    // 获取详情的值
-    this.listData.forEach(el => {
-      if (el["c"] == "cedent") {
-        if(this.chooseRow["cedent"]==undefined){
-          return
-        }
-        el["b"] = `${this.chooseRow["wsCedentCode"]}-${
-          this.chooseRow["wsCedentName"]
-        }`;
-      } else if (el["c"] == "broker") {
-        if(this.chooseRow["broker"]==undefined){
-          return
-        }
-        el["b"] = `${this.chooseRow["wsBrokerCode"]}-${
-          this.chooseRow["wsBrokerName"]
-        }`;
-      } else if (
-        el["c"] == "wsBusinessType" &&
-        this.chooseRow["wsBusinessType"]
-      ) {
-        el["b"] = `${this.YWoptionsObj[this.chooseRow["wsBusinessType"]]}`;
-      } else {
-        el["b"] = this.chooseRow[el["c"]];
-      }
-      // if(el['a']=='任务来源'){ el["b"] = this.nameList[this.chooseRow[el["c"]]]; }
-    });
+    this.getBillInfo();
   },
   methods: {
     // openPage(){
     //   window.open(pageNew,'_blank');  
     // },
+    getBillInfo(){
+      this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
+        if (res.status === 200) {
+          this.chooseRow = res.data;
+          res.data.processStatus === "已悬停"? (this.isHover = true):(this.isHover = false);
+          this.SICSData = res.data.workSheetVOlist;
+          // 获取详情的值
+          console.log(this.chooseRow,'this.chooseRow');
+          this.listData.forEach(el => {
+            if (el["c"] == "cedent") {
+              if(this.chooseRow["wsCedentCode"]==undefined){return}
+              el["b"] = `${this.chooseRow["wsCedentCode"]}-${
+                this.chooseRow["wsCedentName"]
+              }`;
+            } else if (el["c"] == "broker") {
+              if(this.chooseRow["wsBrokerCode"]==undefined){return}
+              el["b"] = `${this.chooseRow["wsBrokerCode"]}-${
+                this.chooseRow["wsBrokerName"]
+              }`;
+            } else if (
+              el["c"] == "wsBusinessType" &&
+              this.chooseRow["wsBusinessType"]
+            ) {
+              el["b"] = `${this.YWoptionsObj[this.chooseRow["wsBusinessType"]]}`;
+            } else {
+              el["b"] = this.chooseRow[el["c"]];
+            }
+              // if(el['a']=='任务来源'){ el["b"] = this.nameList[this.chooseRow[el["c"]]]; }
+            });
+            let arr = res.data.bscDocumentVOlist;
+            arr.forEach(el=>{
+              if(el.docName){
+                let suffix = el.docName.split('.');
+                el['suffix'] = suffix[suffix.length-1];
+              }
+            })
+          this.tableData = arr;
+          let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
+          setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
+        }
+      });
+    },
     rotateMua(){
       this.rotateCount++;
        if(this.rotateCount>=5){
@@ -895,52 +892,6 @@ export default {
         }).then(res => {
           if (res.status === 200 && res.data) {
             this.SICSData = res.data;
-            this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
-              if (res.status === 200) {
-                this.chooseRow = res.data;
-                // 获取详情的值
-                this.listData.forEach(el => {
-                  if (el["c"] == "cedent") {
-                    if(this.chooseRow["cedent"]==undefined){
-                      return
-                    }
-                    el["b"] = `${this.chooseRow["wsCedentCode"]}-${
-                      this.chooseRow["wsCedentName"]
-                    }`;
-                  } else if (el["c"] == "broker") {
-                    if(this.chooseRow["broker"]==undefined){
-                      return
-                    }
-                    el["b"] = `${this.chooseRow["wsBrokerCode"]}-${
-                      this.chooseRow["wsBrokerName"]
-                    }`;
-                  } else if (
-                    el["c"] == "wsBusinessType" &&
-                    this.chooseRow["wsBusinessType"]
-                  ) {
-                    el["b"] = `${this.YWoptionsObj[this.chooseRow["wsBusinessType"]]}`;
-                  } else {
-                    el["b"] = this.chooseRow[el["c"]];
-                  }
-                    // if(el['a']=='任务来源'){ el["b"] = this.nameList[this.chooseRow[el["c"]]]; }
-                  });
-              
-                // this.SICSData = res.data.workSheetVOlist;
-                // res.data.processStatus === "已悬停"? (this.isHover = true):(this.isHover = false);
-                // let arr = res.data.bscDocumentVOlist;
-                // arr.forEach(el=>{
-                //   if(el.docName){
-                //     let suffix = el.docName.split('.');
-                //     el['suffix'] = suffix[suffix.length-1];
-                //   }
-                // })
-                // this.tableData = arr;
-                // let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
-                // setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
-              }
-            });
-
-
           }
         });
     },
@@ -1073,7 +1024,7 @@ export default {
         }
       }
     },
-    submit(tag, name) {
+    submit(tag, name,wsId) {
       this.dialogState = tag;
       this.tagName = name;
       this.assignee = null;
@@ -1089,6 +1040,7 @@ export default {
           break;
         case 2: // 添加意见  ----- 不需要选择人,但是有弹窗 assign：录入人
           this.opinion = "";
+          this.wsId = wsId;
           this.textareaOpinion = "";
           this.title = "添加意见";
           this.dialogFormVisible5 = true;
@@ -1390,19 +1342,21 @@ export default {
             return;
           }
           this.$http.post("api/worksheet/wSCheck/update",{
-                processId: this.chooseRow.processId,
-                procInstId: this.chooseRow.processInstId,
-                assignee: this.chooseRow.entryOperator,
+                wsId:this.wsId,
+                // processId: this.chooseRow.processId,
+                // procInstId: this.chooseRow.processInstId,
+                // assignee: this.chooseRow.entryOperator,
                 remark:this.textareaOpinion,
                 rejectType:this.opinion,
-                actOperator: this.chooseRow.curOperator,
-                type: "REJECT"
+                // actOperator: this.chooseRow.curOperator,
+                // type: "REJECT"
               }
             )
             .then(res => {
               if (res.status === 200 && res.data.code == 0) {
                 this.dialogFormVisible = false;
-                this.$router.push({ name: this.$route.query.tag });
+                this.getBillInfo();
+                // this.$router.push({ name: this.$route.query.tag });
               } else if (res.data.code == 1) {
                 this.$message({type: "error",message: res.data.msg});
               }
@@ -1489,11 +1443,11 @@ export default {
               this.$message({ type: "success", message: res.data.msg });
               this.textareaOpinion = "";
               this.dialogFormVisible5 = false;
-              this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
-              if (res.status === 200) {
-                  this.SICSData = res.data.workSheetVOlist;
-                }
-              });
+              // this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
+              // if (res.status === 200) {
+              //     this.SICSData = res.data.workSheetVOlist;
+              //   }
+              // });
             } else if(res.data.code == '1'){ this.$message({ type: "error", message: res.data.msg }); }
           });
         break;

@@ -379,7 +379,7 @@
             @input="watchInput('rmAmount')">
         </el-form-item>
         <el-form-item clearable label="币制" v-show="title==='创建' || title==='编辑'">
-          <el-select clearable v-model="formLabelAlign.rmCurrency" placeholder="请选择币制">
+          <el-select clearable filterable v-model="formLabelAlign.rmCurrency" placeholder="请选择币制">
             <el-option
               v-for="item in rmCurrencyList"
               :key="item.alpha"
@@ -517,7 +517,7 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="80%">
       <el-form label-width="140px" v-show="title==='流程提交'">
         <el-form-item label="选择处理人">
-          <el-select clearable v-model="assignee" placeholder="请选择">
+          <el-select filterable clearable v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
               :key="item.value"
