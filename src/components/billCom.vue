@@ -404,7 +404,24 @@
           >
             <el-button type="primary" plain>上传</el-button>
           </el-upload>
-          <el-table :data="fileData" style="width: 100%" class="document" border>
+        </el-form-item>
+        <el-form-item label="选择处理人" v-show="title==='流程提交'">
+          <el-select clearable v-model="assignee" placeholder="请选择">
+            <el-option
+              v-for="item in TJRoptions"
+              :key="item.userId"
+              :label="item.name"
+              :value="item.username"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <el-collapse v-show="title=='踪迹'">
+        <el-collapse-item title="状态流转图">
+          <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
+        </el-collapse-item>
+      </el-collapse>
+      <el-table :data="fileData" style="width: 100%" class="document" border>
             <el-table-column label="文件名" width="140">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -426,24 +443,6 @@
               </template>
             </el-table-column>
           </el-table>
-        </el-form-item>
-        <el-form-item label="选择处理人" v-show="title==='流程提交'">
-          <el-select clearable v-model="assignee" placeholder="请选择">
-            <el-option
-              v-for="item in TJRoptions"
-              :key="item.userId"
-              :label="item.name"
-              :value="item.username"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-
-      <el-collapse v-show="title=='踪迹'">
-        <el-collapse-item title="状态流转图">
-          <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
-        </el-collapse-item>
-      </el-collapse>
       <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
         <el-table-column prop="processId" label="流程编号" width="220"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>

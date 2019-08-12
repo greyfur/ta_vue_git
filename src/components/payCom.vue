@@ -36,7 +36,7 @@
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div>
-    <el-table :data="tableData" border style="width: 100%" height="480" :header-row-class-name="StableClass">
+    <el-table :data="tableData" border style="width: 100%" :height="changeClientHight" :header-row-class-name="StableClass">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
@@ -183,11 +183,18 @@
           </el-select>
           <input type="text" class="selfInput" v-model="formLabelAlign.rmChargesAmount" @input="watchInput('rmChargesAmount')">
         </el-form-item> -->
-        <el-form-item>
+        <!-- <el-form-item>
           <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
           <el-button size="small" type="primary" plain @click="confirm('formLabelAlign')" style="padding:0 16px;">确 定</el-button>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+         <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
+          <el-button size="small" type="primary" plain @click="confirm('formLabelAlign')" style="padding:0 16px;">确 定</el-button>
+      </div>
     </el-dialog>
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="80%" class="SwitchingMode">
@@ -307,6 +314,7 @@ export default {
         admFlag:false,
         searchFlag:false,
         modal:false,
+        changeClientHight:446,
         tableData:[],
         ZDoptions:[
         ],
@@ -508,6 +516,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){
+    this. changeWindow();
     // if(this.urlName === 'payment') {
     //   this.mustData.accountCloseFlag = '0';
     // } else if(this.urlName === 'instancyPay'){
@@ -540,6 +549,12 @@ export default {
     
   },
   methods: {
+     changeWindow(){
+      let that=this;
+      document.body.onresize=function(e){
+          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+      }
+    },
     init(tag){
       // 进首页查询
       let params = null;

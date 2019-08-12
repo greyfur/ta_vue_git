@@ -87,7 +87,7 @@
       border
       :header-row-class-name="StableClass"
       style="width: 100%"
-      height="480"
+      :height="changeClientHight"
       @selection-change="handleSelectionChange"
       @row-click="goDetail">
       <el-table-column type="selection" width="55"></el-table-column>
@@ -197,7 +197,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-table height="480" v-show="urlName!='taskClaim' && urlName!='financialCreat'" :header-row-class-name="StableClass" :data="tableData" border  style="width: 100%">
+    <el-table :height="changeClientHight" v-show="urlName!='taskClaim' && urlName!='financialCreat'" :header-row-class-name="StableClass" :data="tableData" border  style="width: 100%">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span
@@ -305,7 +305,7 @@
           </el-dropdown> -->
           <el-dropdown>
             <span class="el-dropdown-link">
-              <i style="margin-left:8px;" class="el-icon-arrow-down"></i>
+               <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i>
             </span>
             <el-dropdown-menu slot="dropdown">
                <el-dropdown-item>
@@ -467,7 +467,19 @@
           >
             <el-button plain type="primary">上传</el-button>
           </el-upload>
-          <el-table
+        </el-form-item>
+        <!-- <el-form-item>
+          <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            plain
+            @click="confirm('formLabelAlign')"
+            style="padding:0 16px;"
+          >确 定</el-button>
+        </el-form-item> hyd -->
+      </el-form>
+      <el-table
             border
             :data="fileData"
             style="width: 100%"
@@ -501,18 +513,6 @@
               </template>
             </el-table-column>
           </el-table>
-        </el-form-item>
-        <!-- <el-form-item>
-          <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-          <el-button
-            size="small"
-            type="primary"
-            plain
-            @click="confirm('formLabelAlign')"
-            style="padding:0 16px;"
-          >确 定</el-button>
-        </el-form-item> hyd -->
-      </el-form>
        <div
         slot="footer"
         class="dialog-footer"
@@ -539,18 +539,18 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item>
+        <!-- <el-form-item>
           <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
           <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
-        </el-form-item>
+        </el-form-item> hyd-->
       </el-form>
-      <!-- <div
+      <div
         slot="footer"
         class="dialog-footer"
       >
          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
           <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
-      </div> hyd-->
+      </div>
       <!-- 上传附件/批量创建 -->
       <el-upload
         v-show="title==='批量创建'"
@@ -651,6 +651,7 @@ export default {
       modal: false,
       tableData: [],
       ZDoptions: [],
+      changeClientHight:446,
       baseCompanyList: [],
       businessOriginList: [],
       rmCurrencyList: [],
@@ -849,6 +850,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
+    this.changeWindow();
     this.mustData.actOperator = this.$store.state.userName;
     this.formLabelAlign.modifiedBy = this.$store.state.userName;
     setTimeout(() => {
@@ -875,6 +877,12 @@ export default {
       this.init();
   },
   methods: {
+     changeWindow(){
+      let that=this;
+      document.body.onresize=function(e){
+          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+      }
+    },
     init(tag) {
       // 进首页查询
       let params = null;
