@@ -1,5 +1,5 @@
 <template>
-  <div class="billWorkSheet">
+  <div class="billWorkSheet" style="padding-right:30px;">
     <div :class="searchFlag===true?'searchNew':''" >
       <div class="titleSearch" @click="searchFlag = !searchFlag"><i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询</div>
        <el-collapse-transition>
@@ -84,7 +84,7 @@
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91"></i>手工创建</el-button>
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div> 
-    <el-table :data="tableData" style="width: 100%" height="480" border :header-row-class-name="StableClass">
+    <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">
       <el-table-column label="账单号">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
@@ -203,7 +203,9 @@
       :page-sizes="[20, 50, 80, 100]"
       :page-size="mustData.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="mustData.total">      
+      :total="mustData.total"
+      style="text-align: right;margin-top: 20px;"
+      >      
     </el-pagination>
     <!-- 弹窗 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
@@ -365,6 +367,7 @@ export default {
         assignee:'',
         modal:false,
         StableClass:'tableClass',
+        changeClientHight:446,
         YWoptions:[
           {value: 'T',label: '合约账单'},
           {value: 'F',label: '临分账单'},
@@ -531,6 +534,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){
+    this.changeWindow();
     this.$http.post('api/activiti/getAssigneeName',{roleName:'账单录入'}).then(res =>{
       if(res.status === 200){
         this.TJRoptions = res.data;
@@ -551,6 +555,12 @@ export default {
     },1000)
   },
   methods: {
+    changeWindow(){
+      let that=this;
+      document.body.onresize=function(e){
+          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+      }
+    },
     docView(row) {
       if(row){
         this.dialogFormVisible1 = true;

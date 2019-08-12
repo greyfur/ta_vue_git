@@ -47,7 +47,7 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
-    <el-table :data="tableData" :header-row-class-name="StableClass" style="width: 100%;margin-right:20px;" height="480" border> 
+    <el-table :data="tableData" :header-row-class-name="StableClass" style="width: 100%;margin-right:20px;" :height="changeClientHight" border> 
       <el-table-column label="支票号" width="150">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
@@ -246,6 +246,7 @@ export default {
       modal: false,
       tableData: [],
       ZDoptions: [],
+      changeClientHight:446,
       StableClass:'tableClass',
       businessOriginList: [],
       baseCompanyList: [],
@@ -438,6 +439,7 @@ export default {
     }
   },
   mounted() {
+    this.changeWindow();
     if (this.urlName === "payment") {
       this.mustData.accountCloseFlag = "0";
     } else if (this.urlName === "instancyPay") {
@@ -472,6 +474,12 @@ export default {
     this.init();
   },
   methods: {
+    changeWindow(){
+      let that=this;
+      document.body.onresize=function(e){
+          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+      }
+    },
     init(tag) {
       // 进首页查询
       this.$http

@@ -47,7 +47,7 @@
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
        <el-button type="info" plain size="small" @click="dialogReport=!dialogReport">导出报表</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" height="480" border :header-row-class-name="StableClass">
+    <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
@@ -257,6 +257,7 @@ export default {
         searchFlag:false,
         modal:false,
         dialogReport:false,
+        changeClientHight:446,
         reportArr:{
           reportName:null,
         },
@@ -467,6 +468,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){
+    this.changeWindow();
     if(this.urlName === 'payment') {
       this.mustData.accountCloseFlag = '0';
     } else if(this.urlName === 'instancyPay'){
@@ -497,6 +499,12 @@ export default {
     this.init();
   },
   methods: {
+    changeWindow(){
+      let that=this;
+      document.body.onresize=function(e){
+          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+      }
+    },
     init(tag){
       // 进首页查询
       let params = Object.assign({},this.mustData)
@@ -565,8 +573,11 @@ export default {
                     window.location = this.path;
                   } else {
                     a.href = this.path;
+                    let formatString = escape(res.headers['content-disposition'].split(';')[1].split('=')[1]);
+                    console.log(formatString)
+                    a.download =  decodeURI(formatString);
                     //  a.download = new Date().getTime();
-                    a.download = this.reportArr.reportName;
+                    // a.download = this.reportArr.reportName;
                     document.body.appendChild(a);
                     a.click();
                     a.remove();

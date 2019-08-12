@@ -50,7 +50,7 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" height="480" border :header-row-class-name="StableClass">
+    <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-table :data="props.row.worksheetDOList" style="width: 100%" border :header-row-class-name="StableClass">
@@ -560,6 +560,7 @@ export default {
       nameList: {},
       searchFlag: false,
       modal: false,
+      changeClientHight:446,
       StableClass:'tableClass',
       tableData: [],
       ZDoptions: [],
@@ -760,6 +761,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
+    this.changeWindow();
     if (this.urlName === "payment") {
       this.mustData.accountCloseFlag = "0";
     } else if (this.urlName === "instancyPay") {
@@ -794,6 +796,12 @@ export default {
     this.init();
   },
   methods: {
+    changeWindow(){
+      let that=this;
+      document.body.onresize=function(e){
+          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+      }
+    },
     openSICS(row) {
       this.$http
         .post("api/sics/liveDesktop/openWorksheet", {
