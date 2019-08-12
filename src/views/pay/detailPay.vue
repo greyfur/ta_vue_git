@@ -244,7 +244,7 @@
     <el-row style="padding:0 16px;">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
-          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单111</div>
+          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单</div>
           <p v-if="$route.query.tag === 'payOperation' || $route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
         <el-table v-show="searchFlag3" :data="SgData" style="width: 100%" border>

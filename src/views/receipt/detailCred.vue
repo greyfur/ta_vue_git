@@ -59,9 +59,7 @@
     <!-- 详情 -->
     <div :class="searchFlag1===true?'searchNew':''" >
       <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
-        <div>
-          <i style="margin-right:8px;" :class="searchFlag1===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>详情11
-        </div>
+        <div><i style="margin-right:8px;" :class="searchFlag1===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>详情</div>
         <p class="info" style="color:#666;">流程编号:
           <el-tooltip class="item" effect="dark" content="点击复制" placement="top">
             <span style="color:#000;" id="proNum" @click.stop="copy('proNum')">{{row.processId}}</span>

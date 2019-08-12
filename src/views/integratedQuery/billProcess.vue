@@ -18,7 +18,7 @@
         <el-col :span="8">
           <span class="slable">流程状态</span>
           <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
-            <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','REVERSED','已悬停']" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','已悬停']" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-col>
       </el-row>
@@ -253,7 +253,7 @@
           </el-form-item>
           <el-form-item label="流程状态">
             <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
-              <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','REVERSED','已悬停']" :key="item" :label="item" :value="item"></el-option>
+              <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','已悬停']" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>

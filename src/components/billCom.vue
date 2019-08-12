@@ -1141,14 +1141,17 @@ export default {
                 .then(res => {
                   if (res.status === 200) {
                     // this.fileData = res.data.bscDocumentVOlist;
-                    let arr4 = res.data.bscDocumentVOlist;
-                    arr4.forEach(el=>{
-                      if(el.docName){
-                        let suffix = el.docName.split('.');
-                        el['suffix'] = suffix[suffix.length-1];
-                      }
-                    })
-                    this.fileData = arr4;
+                    if(res.data.bscDocumentVOlist){
+                      let arr4 = res.data.bscDocumentVOlist;
+                      arr4.forEach(el=>{
+                        if(el.docName){
+                          let suffix = el.docName.split('.');
+                          el['suffix'] = suffix[suffix.length-1];
+                        }
+                      })
+                      this.fileData = arr4;
+                    } else{ this.fileData =[]; }
+                    
                   }
                 });
             }
