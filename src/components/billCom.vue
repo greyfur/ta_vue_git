@@ -97,7 +97,7 @@
       </el-upload> -->
 
     </div>
-    <el-table :header-row-class-name="StableClass" height=" " :data="tableData" border style="width: 100%;">
+    <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;">
       <el-table-column label="流程编号" width="155">
         <template slot-scope="scope">
           <span
@@ -513,6 +513,7 @@ export default {
       tableData: [],
       assignee: "",
       modal: false,
+      changeClientHight:446,
       YWoptions: [
         { value: "T", label: "合约账单" },
         { value: "F", label: "临分账单" },
@@ -675,8 +676,8 @@ export default {
   },
   created() {
     console.log('屏幕分辨率',window.screen.width,window.screen.height)
-    console.log('网页可见区',document.body.clientWidth)
-    console.log('网页可见区+外边框',document.body.offsetWidth)
+    console.log('网页可见区',document.body.clientWidth,document.body.clientHeight)
+    console.log('网页可见区+外边框',document.body.offsetWidth,document.body.offsetHeight)
     this.mustData.processStatus = this.processStatusCom;
     this.mustData.actOperator = this.$store.state.userName;
     if (this.urlName === "sortOperation" || this.urlName === "billEntry") {
@@ -721,8 +722,9 @@ export default {
   },
   methods: {
     changeWindow(){
+      let that=this;
       document.body.onresize=function(e){
-        console.log(e,'窗口变化')
+          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
       }
     },
     docView(row) {

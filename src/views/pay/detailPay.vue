@@ -83,7 +83,8 @@
           </div>
           <ul class="detail-ul" v-show="searchFlag1">
             <li v-for="(item,i) in listData" :key="i" class="detail-item">
-              <span class="detail-name">{{item.a}} : </span><span class="detail-content">{{item.b}}</span>
+              <span class="detail-name">{{item.a}} : </span><span class="detail-content" v-if="typeof item.b=='number'">{{ Number(item.b).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
+             <span class="detail-content" v-else>{{item.b}}</span>
             </li>
           </ul>
         </div>
@@ -243,7 +244,7 @@
     <el-row style="padding:0 16px;">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
-          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单</div>
+          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单111</div>
           <p v-if="$route.query.tag === 'payOperation' || $route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
         <el-table v-show="searchFlag3" :data="SgData" style="width: 100%" border>
@@ -333,7 +334,7 @@
                     </el-tooltip>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作" width="120">
+                <el-table-column label="操作" width="120" fixed="right">
                   <template slot-scope="scope">
                     <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
                   </template>
@@ -432,7 +433,7 @@
               </el-tooltip>
             </template>
           </el-table-column> 
-          <el-table-column  label="操作" width="160">
+          <el-table-column  label="操作" width="160" fixed="right">
             <template slot-scope="scope">
               <el-button type="text" @click.stop="openSGSICS(scope.row,'sgNum')" size="mini">打开SICS</el-button>
               <el-button v-if="$route.query.tag === 'approvalDone'" type="text" @click.stop="remitCreat(scope.row)" size="mini">创建支票</el-button>

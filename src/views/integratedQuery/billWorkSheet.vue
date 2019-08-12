@@ -15,7 +15,7 @@
             <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-col>
-        <el-col :span="9">
+        <el-col :span="9" class="nowrap">
           <span class="slable">录入时间段</span>
            <el-date-picker
               value-format="timestamp"
@@ -146,12 +146,18 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="wsType" label="账单类型"></el-table-column>
-          <el-table-column prop="wsPeriod" label="账单期" width="95"></el-table-column>
+          <el-table-column label="账单类型" width="130">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.wsType" placement="top-start">
+                <span class="abbreviate">{{scope.row.wsType}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column prop="wsPeriod" label="账单期" width="120"></el-table-column>
           <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
           <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
           <el-table-column prop="dept" label="经营机构"></el-table-column>
-          <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
+          <el-table-column prop="wsCurrency" label="币制" width="60"></el-table-column>
           <el-table-column label="金额">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')" placement="top-start">
@@ -159,8 +165,14 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="registBy" label="录入人" width="90"></el-table-column>
-          <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
+          <el-table-column prop="registBy" label="录入人" width="110"></el-table-column>
+          <el-table-column label="录入时间" width="120">
+             <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.registAt" placement="top-start">
+                <span class="abbreviate">{{scope.row.registAt}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column prop="rejectType" label="驳回原因类型" width="160"></el-table-column>
           <el-table-column label="备注">
             <template slot-scope="scope">
@@ -853,5 +865,8 @@ export default {
   }
 }
 </script>
-
 <style scoped>
+.nowrap{
+  flex-wrap: nowrap;
+}
+</style>
