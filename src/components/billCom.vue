@@ -197,9 +197,15 @@
       </el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="140"></el-table-column>
-      <el-table-column label="任务来源" width="110">
+      <el-table-column :label="urlName==='sortOperation'?'任务来源':'录入人员'" width="110">
         <template slot-scope="scope">
-          <span>{{nameList[scope.row.curOperator]}}</span>
+          <span  v-if="urlName==='sortOperation'">{{nameList[scope.row.curOperator]}}</span>
+          <span v-else>{{scope.row.registBy}}</span>
+        </template>
+      </el-table-column>
+       <el-table-column v-if="urlName==='billCheck'||urlName==='billSignBack'||urlName==='billEntry'" label="复核人员'" width="110">
+        <template slot-scope="scope">
+          <span>{{scope.row.closedBy}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
@@ -215,7 +221,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
-          <el-dropdown>
+          <el-dropdown placement="top-start">
             <span class="el-dropdown-link">
               <!-- <i style="margin-left:8px;" class="el-icon-arrow-down"></i> -->
               <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i>
@@ -430,10 +436,10 @@
               </template>
             </el-table-column>
             <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
-            <el-table-column label="任务来源" width="140">
+            <el-table-column label="录入人员" width="140">
               <template slot-scope="scope">
-                <el-tooltip class="item" effect="dark" :content="nameList[scope.row.createdBy]" placement="top">
-                  <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
+                <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
+                  <span class="abbreviate">{{scope.row.createdBy}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -786,6 +792,7 @@ export default {
       delete params["actOperator"];
       this.$http.post("api/worksheet/wSEntry/list", params).then(res => {
         if (res.status === 200) {
+          console.log(res.data.rows,'www')
           this.tableData = res.data.rows;
           this.mustData.total = res.data.total;
           if (res.data && res.data.rows && res.data.rows.length) {

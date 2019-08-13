@@ -158,7 +158,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="bankCurrency" label="币制" width="60"></el-table-column>
-            <el-table-column label="支票金额">
+            <el-table-column label="支票金额" align="right">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
@@ -169,8 +169,8 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-          <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column>
-          <el-table-column label="手续费金额" width="100">
+          <!-- <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column> -->
+          <el-table-column label="手续费金额" width="100" align="right">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="Number(scope.row.chargesAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')" placement="top-start">
                 <span class="abbreviate">{{Number(scope.row.chargesAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
@@ -199,7 +199,6 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
           <el-table-column label="银行账户">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.bankAccountName" placement="top-start">
@@ -227,8 +226,9 @@
           </el-tooltip>
         </template>
           </el-table-column>
-          <el-table-column prop="businessPartnerRef" label="BP Reference信息" width="140"></el-table-column>
+          <el-table-column prop="businessPartnerRef" label="BP Reference" width="140"></el-table-column>
           <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
+          <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
           <el-table-column label="操作" width="140" fixed="right">
             <template slot-scope="scope">
               <el-button @click="onOpenSICS(scope.row,'rmId')" v-if="$route.query.tag === 'payClose' || $route.query.tag === 'payment' || $route.query.tag === 'instancyPay' || $route.query.tag === 'partialDone'" type="text" size="small">Reverse</el-button>
@@ -244,7 +244,7 @@
     <el-row style="padding:0 16px;">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
-          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单111</div>
+          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单</div>
           <p v-if="$route.query.tag === 'payOperation' || $route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
         <el-table v-show="searchFlag3" :data="SgData" style="width: 100%" border>
@@ -314,17 +314,17 @@
                 </el-table-column>
                 <el-table-column prop="wsType" label="账单类型"></el-table-column>
                 <el-table-column prop="wsPeriod" label="账单期" width="100"></el-table-column>
-                <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-                <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
                 <el-table-column prop="dept" label="经营机构"></el-table-column>
                 <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
-                <el-table-column label="金额">
+                <el-table-column label="金额" align="right">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')" placement="top-start">
                       <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
+                <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
+                <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
                 <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
                 <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
                 <el-table-column label="备注">
@@ -371,8 +371,6 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
-          <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
           <el-table-column prop="sgStatus" label="SG状态"></el-table-column>
           <el-table-column prop="settlementIndicator" label="结算指标" width="100"></el-table-column>
           <el-table-column prop="sgCurrency" label="币值"></el-table-column>
@@ -388,7 +386,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="未结算金额" width="100">
+          <el-table-column label="未结算金额" width="100" align="right">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -425,6 +423,8 @@
               </el-tooltip>
             </template>
           </el-table-column>
+          <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
+          <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
           <el-table-column prop="createdBy" label="创建人" width="95"></el-table-column>
           <el-table-column label="创建时间">
             <template slot-scope="scope">
@@ -556,11 +556,9 @@
             </el-table-column>
             <el-table-column prop="wsType" label="账单类型"></el-table-column>
             <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
-            <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-            <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
             <el-table-column prop="dept" label="经营机构"></el-table-column>
             <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
-            <el-table-column label="金额">
+            <el-table-column label="金额" align="right">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -572,6 +570,8 @@
                 </el-tooltip>
               </template>
             </el-table-column>
+            <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
+            <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
             <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
             <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
             <el-table-column label="备注">
@@ -652,7 +652,7 @@
         <el-table-column prop="invoicePurchaser" label="购买方"></el-table-column>
         <el-table-column prop="invoiceSeller" label="销售方"></el-table-column>
         <el-table-column prop="invoiceChecker" label="核实人"></el-table-column>
-        <el-table-column label="开票金额">
+        <el-table-column label="开票金额" align="right">
           <template slot-scope="scope">
             <el-tooltip
               class="item"

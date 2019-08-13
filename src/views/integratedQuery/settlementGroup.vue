@@ -159,11 +159,10 @@
             </el-table-column>
             <el-table-column prop="wsType" label="账单类型"></el-table-column>
             <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
-            <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
-            <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+         
             <el-table-column prop="dept" label="经营机构"></el-table-column>
             <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
-            <el-table-column label="金额">
+            <el-table-column label="金额" align="right">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -189,6 +188,8 @@
                 </el-tooltip>
               </template>
             </el-table-column>
+            <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
+            <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
             <el-table-column fixed="right" label="操作"></el-table-column>
           </el-table>
         </template>
@@ -227,8 +228,6 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
       <el-table-column prop="sgStatus" label="SG状态"></el-table-column>
       <el-table-column prop="settlementIndicator" label="结算指标" width="95"></el-table-column>
       <el-table-column prop="sgCurrency" label="币值"></el-table-column>
@@ -244,7 +243,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="未结算金额" width="100">
+      <el-table-column label="未结算金额" width="100" align="right">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -299,6 +298,8 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <!-- <el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button> -->

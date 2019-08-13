@@ -154,11 +154,9 @@
             </template>
           </el-table-column>
           <el-table-column prop="wsPeriod" label="账单期" width="120"></el-table-column>
-          <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-          <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
           <el-table-column prop="dept" label="经营机构"></el-table-column>
           <el-table-column prop="wsCurrency" label="币制" width="60"></el-table-column>
-          <el-table-column label="金额">
+          <el-table-column label="金额" align="right">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')" placement="top-start">
                 <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
@@ -181,16 +179,19 @@
               </el-tooltip>
             </template>
           </el-table-column>
+          <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
+          <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <!-- <el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button> -->
-          <el-dropdown>
+          <el-dropdown placement="top-start">
             <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item><el-button v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'sortOperation'" @click.stop="handleClick(3,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
               <el-dropdown-item><el-button type="text" v-show="urlName === 'sortOperation'" size="small" @click.stop="handleClick(4,scope.row)">删除</el-button></el-dropdown-item> -->
               <el-dropdown-item><el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button type="text" size="small" @click.stop="handleClick(6,scope.row)">打开SICS</el-button></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -791,8 +792,19 @@ export default {
           // })
           
           break;
-        case 6: // 上传附件
-          
+        case 6: // 打开 sics
+        console.log(row["sgNum"])
+          this.$http
+            .post("api/sics/liveDesktop/openWorksheet", {
+              modifiedBy: this.$store.state.userName,
+              worksheetId: row["sgNum"]
+            })
+            .then(res => {
+              console.log(res)
+              // if(res.status === 200 && res.data.rows){
+              //   this.SICSData = res.data.rows;
+              // }
+            });
          break;
       } 
     },

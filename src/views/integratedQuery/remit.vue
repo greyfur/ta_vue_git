@@ -79,7 +79,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="支票金额" width="100">
+      <el-table-column label="支票金额" width="100" align="right">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -92,9 +92,9 @@
         </template>
       </el-table-column>
       <el-table-column prop="paymentTypeName" label="支付方式" width="110"></el-table-column>
-      <el-table-column prop="bankCurrency" label="实收/支币制" width="100"></el-table-column>
-      <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column>
-      <el-table-column label="手续费金额" width="100">
+      <el-table-column prop="bankCurrency" label="币制" width="100"></el-table-column>
+      <!-- <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column> -->
+      <el-table-column label="手续费金额" width="100" align="right">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -106,7 +106,6 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
       <el-table-column label="银行账户">
         <template slot-scope="scope">
           <el-tooltip
@@ -134,8 +133,15 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="businessPartnerRef" label="BP Reference信息" width="140"></el-table-column>
+      <el-table-column prop="businessPartnerRef" label="BP Reference" width="140"></el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
+      <el-table-column fixed="right" label="操作" width="80">
+        <template slot-scope="scope">
+          <!-- <el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button> -->
+          <el-button @click.stop="openSICS(scope.row)" type="text" size="mini">打开SICS</el-button>
+        </template>
+      </el-table-column>
       <!-- <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <el-dropdown>
@@ -498,6 +504,18 @@ export default {
               this.$message({ type: "success", message: "刷新成功" });
             }
           }
+        });
+    },
+     openSICS(row) {
+      this.$http
+        .post("api/sics/liveDesktop/openWorksheet", {
+          modifiedBy: this.$store.state.userName,
+          worksheetId: row["sgNum"]
+        })
+        .then(res => {
+          // if(res.status === 200 && res.data.rows){
+          //   this.SICSData = res.data.rows;
+          // }
         });
     },
     docView(row) {

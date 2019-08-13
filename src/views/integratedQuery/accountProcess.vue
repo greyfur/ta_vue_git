@@ -61,11 +61,8 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="rmCurrency" label="币制"></el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin"></el-table-column>
-      <el-table-column label="Base Company" prop="baseCompany">
-      </el-table-column>
-      <el-table-column prop="rmAmount" label="汇款金额" width="130">
+      <el-table-column prop="rmCurrency" label="币制" width="60"></el-table-column>
+      <el-table-column prop="rmAmount" label="汇款金额" width="130" align="right">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -83,11 +80,13 @@
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin"></el-table-column>
+      <el-table-column label="Base Company" prop="baseCompany"></el-table-column>
       <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->
       <!-- <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column> -->
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
-          <el-dropdown>
+          <el-dropdown placement="top-start">
             <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item> -->

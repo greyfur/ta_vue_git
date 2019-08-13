@@ -196,7 +196,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="wsCurrency" label="币制" width="80"></el-table-column>
-          <el-table-column label="金额">
+          <el-table-column label="金额" align="right">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"

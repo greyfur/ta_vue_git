@@ -91,7 +91,7 @@
       @selection-change="handleSelectionChange"
       @row-click="goDetail">
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="processId" label="ProcessID" width="130"></el-table-column>
+      <el-table-column prop="processId" label="流程编号" width="130"></el-table-column>
       <el-table-column width="140" label="结付公司">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
@@ -113,7 +113,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
-      <el-table-column label="汇款金额"  width="100">
+      <el-table-column label="汇款金额"  width="100" align="right">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -153,7 +153,6 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
       <el-table-column width="120" label="备注">
          <template slot-scope="scope">
           <el-tooltip
@@ -166,16 +165,27 @@
         </template>
       </el-table-column>
       <el-table-column prop="rmReceiptDate" width="120" label="到账日期"></el-table-column>
-      <el-table-column label="Base Company" prop="baseCompany" width="130"></el-table-column>
-      <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
-      <el-table-column width="110" label="任务来源">
+      <!-- <el-table-column width="110" label="任务来源">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
+      </el-table-column> hyd-->
+      <el-table-column width="110" label="录入人员">
+        <template slot-scope="scope">
+          <span>{{scope.row.registBy}}</span>
+        </template>
       </el-table-column>
+      <!-- <el-table-column v-if="urlName==='credReview'||urlName==='credVerification'||urlName==='viewInvalidate'||urlName==='collectiongEnd'" label="复核人员'" width="110">
+        <template slot-scope="scope">
+          <span>{{scope.row.closedBy}}</span>
+        </template>
+      </el-table-column> -->
+      <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
+      <el-table-column label="Base Company" prop="baseCompany" width="130"></el-table-column>
+      <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
-          <el-dropdown>
+          <el-dropdown placement="top-start">
             <span class="el-dropdown-link">
              <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i>
             </span>
@@ -227,7 +237,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
-      <el-table-column label="汇款金额" width="100">
+      <el-table-column label="汇款金额" width="100" align="right">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -268,13 +278,21 @@
       </el-table-column>
       <el-table-column prop="rmReceiptDate" width="120" label="到账日期"></el-table-column>
       <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
-      <el-table-column width="110" label="任务来源">
+      <!-- <el-table-column width="110" label="任务来源">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
+      </el-table-column> -->
+      <el-table-column width="110" label="录入人员">
+        <template slot-scope="scope">
+          <span>{{scope.row.registBy}}</span>
+        </template>
       </el-table-column>
-      <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
-      <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
+      <el-table-column v-if="urlName==='credReview'||urlName==='credVerification'||urlName==='viewInvalidate'||urlName==='collectiongEnd'" label="复核人员" width="110">
+        <template slot-scope="scope">
+          <span>{{scope.row.closedBy}}</span>
+        </template>
+      </el-table-column>
       <!-- <el-table-column prop="curOperator" width="120" label="操作员"></el-table-column> -->
       <el-table-column width="120" label="备注">
          <template slot-scope="scope">
@@ -287,6 +305,8 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
+      <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100" >
         <template slot-scope="scope">
           <!-- <el-dropdown>
@@ -303,7 +323,7 @@
               style="margin-right:8px;cursor: pointer;"
             >分配</span>
           </el-dropdown> -->
-          <el-dropdown>
+          <el-dropdown placement="top-start">
             <span class="el-dropdown-link">
                <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i>
             </span>

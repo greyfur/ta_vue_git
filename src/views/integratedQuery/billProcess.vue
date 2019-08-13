@@ -172,14 +172,14 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
       <el-table-column prop="curOperator" label="任务来源" width="120">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
       <el-table-column fixed="right" label="操作" width="120">
         <template slot-scope="scope">
           <el-button type="text" v-if="scope.row.processStatus=='已关闭'" size="small" @click.stop="reverse(scope.row)">reverse</el-button>
