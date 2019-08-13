@@ -78,7 +78,7 @@
               style="width: 100%;margin-top:10px;"
               class="document"
             >
-              <el-table-column label="文件名" width="240">
+              <el-table-column label="文件名">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
@@ -102,29 +102,39 @@
                   </el-tooltip>
                 </template>
               </el-table-column> -->
-              <el-table-column label="操作">
+              <el-table-column label="操作" width="80">
                 <template slot-scope="scope">
-                  <!-- ocr hyd -->
-                  <!-- <el-button
-                    :disabled="isHover"
-                    v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess'"
-                    @click.stop="handleClick(2,scope.row)"
-                    type="text"
-                    size="small"
-                  >OCR</el-button>
-                  <el-button
-                    :disabled="isHover"
-                    v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack'"
-                    @click.stop="handleClick(1,scope.row)"
-                    type="text"
-                    size="small"
-                  >删除</el-button> -->
-                  <el-button
-                    :disabled="isHover"
-                    @click.stop="handleClick(3,scope.row)"
-                    type="text"
-                    size="small"
-                  >下载</el-button>
+                  <el-dropdown>
+                    <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item>
+                        <el-button
+                          :disabled="isHover"
+                          v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack' && $route.query.tag !== 'billCheck'"
+                          @click.stop="handleClick(2,scope.row)"
+                          type="text"
+                          size="small"
+                        >OCR</el-button>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <el-button
+                          :disabled="isHover"
+                          v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack' && $route.query.tag !== 'billCheck'"
+                          @click.stop="handleClick(1,scope.row)"
+                          type="text"
+                          size="small"
+                        >删除</el-button>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <el-button
+                          :disabled="isHover"
+                          @click.stop="handleClick(3,scope.row)"
+                          type="text"
+                          size="small"
+                        >下载</el-button>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
                 </template>
               </el-table-column>
             </el-table>
@@ -355,26 +365,38 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
       <el-form label-width="120px">
         <el-form-item label="收件人" v-show="title==='邮件通知'">
-          <el-select v-model="mailInfo" placeholder="请选择">
-            <el-option
-              v-for="item in mailOption"
-              :key="item.id"
-              :label="item.contactName"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <el-autocomplete style="width:100%" v-model="mailInfo" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="elSelect">
+            <i class="el-icon-edit el-input__icon" slot="suffix"></i>
+            <template slot-scope="{ item }"><span>{{item.contactName}}：{{item.emailAddr}}</span></template>
+          </el-autocomplete>
         </el-form-item>
         <el-form-item label="邮件标题" v-show="title==='邮件通知'">
           <el-input type="text" placeholder="请输入内容" v-model="mailTitle"></el-input>
         </el-form-item>
         <el-form-item label="内容编辑" v-show="title==='邮件通知'">
-          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="emailContent"></el-input>
+          <el-input type="textarea" :rows="6" placeholder="请输入内容" v-model="emailContent"></el-input>
         </el-form-item>
         <el-form-item label="附件上传方式" v-show="title==='邮件通知'">
-          <el-radio-group v-model="uploadType" @change="OnuploadType">
-            <el-radio label="1">本地上传</el-radio>
-            <el-radio label="2">从附件列表中选取</el-radio>
-          </el-radio-group>
+          <el-tabs v-model="uploadType">
+            <el-tab-pane label="本地上传" name="1">
+              <el-upload
+                :disabled="uploadType!=1 && $route.query.tag === 'billSignBack'"
+                class="upload-demo"
+                action=""
+                :before-upload="beforeAvatarUpload"
+                :auto-upload="true"
+                :http-request="upload"
+                :headers="head"
+                :file-list="fileList">
+                <el-button plain :type="uploadType!=1?'info':'primary'">上传</el-button>
+              </el-upload>
+            </el-tab-pane>
+            <el-tab-pane label="附件列表选取" name="2">
+              <el-select v-model="chooseDocList" :disabled="uploadType != 2" style="width:100%" placeholder="请选择">
+                <el-option v-for="(item,i) in tableData" :key="i" :label="item.docName" :value="i"></el-option>
+              </el-select>
+            </el-tab-pane>
+          </el-tabs>
         </el-form-item>
         <el-form-item label="选择类型" v-show="title==='OCR上传'">
           <el-radio-group v-model="recognize_service" class="selfRadio">
@@ -391,25 +413,6 @@
             <el-radio label="zhongzai_yangguang">阳光账单</el-radio>
             <el-radio label="zhongzai_guoshoucai">国寿财</el-radio>
           </el-radio-group>
-        </el-form-item>
-        <el-form-item label="选择附件" v-show="title!=='OCR上传'">
-          <el-upload
-            :disabled="uploadType!=1 && $route.query.tag === 'billSignBack'"
-            class="upload-demo"
-            action=""
-            :before-upload="beforeAvatarUpload"
-            :auto-upload="true"
-            :http-request="upload"
-            :headers="head"
-            :file-list="fileList"
-          >
-            <el-button plain :type="uploadType!=1?'info':'primary'">上传</el-button>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="选择附件" v-show="title==='邮件通知'">
-          <el-select v-model="chooseDocList" :disabled="uploadType != 2" placeholder="请选择">
-            <el-option v-for="(item,i) in tableData" :key="i" :label="item.docName" :value="i"></el-option>
-          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" v-show="title==='邮件通知' || title==='OCR上传'">
@@ -606,7 +609,7 @@ export default {
       fileList: [],
       fileList2: [],
       path: "",
-      uploadType: null,
+      uploadType: '1',
       isHover: false,
       assignee: "",
       BHoptions: [
@@ -923,16 +926,22 @@ export default {
         this.file = [];
       }
     },
+    querySearch(queryString, cb) {
+      let restaurants = this.mailOption;
+      let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (restaurant.emailAddr.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
+    },
+    elSelect(item){
+      this.mailInfo = item.emailAddr
+    },
     send() {
       if (this.title == "OCR上传") {
-        this.$http
-          .post(
-            "api/anyShare/fileOperation/previewDocument",
-            Object.assign({}, this.ocrRow, {
-              processId: this.chooseRow.processId
-            }),
-            { responseType: "blob" }
-          )
+        this.$http.post("api/anyShare/fileOperation/previewDocument",Object.assign({}, this.ocrRow, { processId: this.chooseRow.processId}),{ responseType: "blob" })
           .then(res => {
             if (res.status == 200) {
               let resFile = new FormData();
@@ -958,17 +967,8 @@ export default {
             }
           });
       } else if (this.title == "邮件通知") {
-        let info = {},
-          params = null;
-        this.mailOption.forEach(el => {
-          if (el.id == this.mailInfo) {
-            info = Object.assign(
-              {},
-              { emailContent: this.emailContent, mailTitle: this.mailTitle },
-              el
-            );
-          }
-        });
+        let info = {},params = null;
+        info = Object.assign({},{emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle });
         // 本地上传
         if (this.file.length) {
           var resFile = new FormData();
@@ -993,17 +993,14 @@ export default {
                 for (let k in info) {
                   resFiles.append(k, info[k]);
                 }
-                this.$http
-                  .post("api/worksheet/wSEntry/sendEmail", resFiles)
+                this.$http.post("api/worksheet/wSEntry/sendEmail", resFiles)
                   .then(res => {
                     if (res.status === 200 && res.data.code == 0) {
-                      this.$message({
-                        type: "success",
-                        message: "邮件发送成功"
-                      });
+                      this.$message({type: "success",message: res.data.msg});
                       this.dialogFormVisible2 = false;
-                    } else if (res.data.code == 1 && res.data.msg) {
-                      this.$message.error(res.data.msg);
+                    } else{
+                      this.$message({type: "error",message: res.data.msg});
+                      this.dialogFormVisible2 = false;
                     }
                   });
               }
@@ -1011,14 +1008,16 @@ export default {
         }
         if (this.chooseDocList == null) {
           this.file.length ? (params = resFile) : (params = info);
-          this.$http
-            .post("api/worksheet/wSEntry/sendEmail", params)
+          this.$http.post("api/worksheet/wSEntry/sendEmail", params)
             .then(res => {
-              if (res.status === 200 && res.data.msg === "操作成功") {
-                this.$message({ type: "success", message: "邮件发送成功" });
+              if (res.status === 200 && res.data.code==0) {
+                this.$message({ type: "success", message:res.data.msg});
                 this.dialogFormVisible2 = false;
                 this.fileList = [];
                 this.file = [];
+              } else{
+                this.$message({type: "error",message: res.data.msg});
+                this.dialogFormVisible2 = false;
               }
             });
         }
@@ -1354,9 +1353,9 @@ export default {
             )
             .then(res => {
               if (res.status === 200 && res.data.code == 0) {
-                this.dialogFormVisible = false;
                 this.getBillInfo();
-                // this.$router.push({ name: this.$route.query.tag });
+                this.dialogFormVisible5 = false;
+                this.$message({type: "success",message: res.data.msg});
               } else if (res.data.code == 1) {
                 this.$message({type: "error",message: res.data.msg});
               }

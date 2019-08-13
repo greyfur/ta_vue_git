@@ -651,7 +651,7 @@ export default {
       modal: false,
       tableData: [],
       ZDoptions: [],
-      changeClientHight:446,
+      changeClientHight:null,
       baseCompanyList: [],
       businessOriginList: [],
       rmCurrencyList: [],
@@ -836,6 +836,7 @@ export default {
     }
   },
   created() {
+    this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
     if (this.urlName == "taskClaim") {
       this.taskClaimFlag = true;
     }
@@ -850,6 +851,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
+    // this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
     this.changeWindow();
     this.mustData.actOperator = this.$store.state.userName;
     this.formLabelAlign.modifiedBy = this.$store.state.userName;

@@ -100,15 +100,15 @@
               <el-dropdown-item><span v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(12,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(15,scope.row)" class="blueColor">附件查看</span></el-dropdown-item>
-              <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(13,scope.row)" class="blueColor">发送邮件</span></el-dropdown-item>
-              <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(20,scope.row)" class="blueColor">Reverse</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(13,scope.row)" class="blueColor">邮件通知</span></el-dropdown-item>
+              <!-- <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(20,scope.row)" class="blueColor">Reverse</span></el-dropdown-item> -->
             </el-dropdown-menu>
           </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
-      @size-change="handleSizeChange"
+      @size-change="handleSizeChange()"
       @current-change="handleCurrentChange"
       :current-page="mustData.pageNumber"
       :page-sizes="[20, 50, 80, 100]"
@@ -269,23 +269,44 @@
     </el-dialog>
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal" class="SwitchingMode">
-      <el-form :label-position="labelPosition" label-width="140px" :model="email">
-        <el-form-item label="收件人姓名">
-          <el-input v-model="email.contactName"></el-input>
+      <el-form label-width="120px">
+        <el-form-item label="收件人" v-show="title==='邮件通知'" style="width:100%">
+          <el-autocomplete v-model="mailInfo" style="width:100%" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="elSelect">
+            <i class="el-icon-edit el-input__icon" slot="suffix"></i>
+            <template slot-scope="{ item }"><span>{{item.contactName}}：{{item.emailAddr}}</span></template>
+          </el-autocomplete>
         </el-form-item>
-        <el-form-item label="收件人邮箱">
-          <el-input v-model="email.emailAddr"></el-input>
+        <el-form-item label="邮件标题" v-show="title==='邮件通知'" style="width:100%">
+          <el-input type="text" placeholder="请输入内容" v-model="mailTitle" style="width:100%"></el-input>
         </el-form-item>
-        <el-form-item label="邮件内容"> 
-          <el-input v-model="email.emailContent"></el-input>
+        <el-form-item label="内容编辑" v-show="title==='邮件通知'" style="width:100%">
+          <el-input type="textarea" :rows="6" placeholder="请输入内容" v-model="emailContent"></el-input>
         </el-form-item>
-        <el-form-item label="附件上传"> 
-          <el-input v-model="email.documentList"></el-input>
+        <el-form-item label="附件上传方式" v-show="title==='邮件通知'" style="width:100%">
+          <el-tabs v-model="uploadType">
+            <el-tab-pane label="本地上传" name="1">
+              <el-upload
+                :disabled="uploadType!=1 && $route.query.tag === 'billSignBack'"
+                class="upload-demo"
+                action=""
+                :before-upload="beforeAvatarUpload"
+                :auto-upload="true"
+                :http-request="upload"
+                :file-list="fileList">
+                <el-button plain :type="uploadType!=1?'info':'primary'">上传</el-button>
+              </el-upload>
+            </el-tab-pane>
+            <el-tab-pane label="附件列表选取" name="2">
+              <el-select v-model="chooseDocList" :disabled="uploadType != 2" style="width:100%" placeholder="请选择">
+                <el-option v-for="(item,i) in tableData" :key="i" :label="item.docName" :value="i"></el-option>
+              </el-select>
+            </el-tab-pane>
+          </el-tabs>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirm()">确 定</el-button>
+      <div slot="footer" class="dialog-footer" v-show="title==='邮件通知'">
+        <el-button size="small" @click="dialogFormVisible3 = false">取 消</el-button>
+        <el-button size="small" type="primary" plain @click="send()" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -310,14 +331,21 @@ export default {
     },
   data() {
       return {
+        emailFlag:false,
+        chooseDocList:null,
+        uploadType:'1',
+        emailContent:null,
+        mailTitle:null,
+        mailInfo:null,
         nameList:{},
         admFlag:false,
         searchFlag:false,
         modal:false,
-        changeClientHight:446,
+        changeClientHight:null,
         tableData:[],
         ZDoptions:[
         ],
+        mailOption:[],
         businessOriginList:[],
         baseCompanyList:[],
         rmCurrencyList:[],
@@ -495,13 +523,7 @@ export default {
             { required: true, message: '请选择Business Origin', trigger: 'blur' }
           ],
         },
-        email:{
-          contactName:null,
-          emailAddr:null,
-          emailContent:null,
-          documentList:null,
-        },
-        // baseCompanyrules:{P:'产再',G:'集团'},
+        
         dialogFlag:false,
         processStatusList:[],
       };
@@ -516,7 +538,8 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){
-    this. changeWindow();
+    this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+    this.changeWindow();
     // if(this.urlName === 'payment') {
     //   this.mustData.accountCloseFlag = '0';
     // } else if(this.urlName === 'instancyPay'){
@@ -549,7 +572,71 @@ export default {
     
   },
   methods: {
-     changeWindow(){
+    querySearch(queryString, cb) {
+      let restaurants = this.mailOption;
+      let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (restaurant.emailAddr.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
+    },
+    elSelect(item){
+      this.mailInfo = item.emailAddr
+    },
+    send() {
+      let info = {},params = null;
+      info = Object.assign({},{emailAddr:this.mailInfo, emailContent: this.emailContent, mailTitle: this.mailTitle });
+      // 本地上传
+      if (this.file.length) {
+        var resFile = new FormData();
+        resFile.append("file", this.file[0]);
+        for (let k in info) {
+          resFile.append(k, info[k]);
+        }
+      }
+      // docList 上传
+      if (this.chooseDocList != null) {
+        let row = this.tableData[this.chooseDocList];
+        this.$http.post("api/anyShare/fileOperation/previewDocument",Object.assign({}, row, { processId: this.chooseRow.processId }),{ responseType: "blob" })
+          .then(res => {
+            if (res.status === 200) {
+              let resFiles = new FormData();
+              resFiles.append("file", res.data);
+              for (let k in info) {
+                resFiles.append(k, info[k]);
+              }
+              this.$http.post("api/worksheet/wSEntry/sendEmail", resFiles)
+                .then(res => {
+                  if (res.status === 200 && res.data.code == 0) {
+                    this.$message({type: "success",message: res.data.msg});
+                    this.dialogFormVisible2 = false;
+                  } else{
+                    this.$message({type: "error",message: res.data.msg});
+                    this.dialogFormVisible2 = false;
+                  }
+                });
+            }
+          });
+      }
+      if (this.chooseDocList == null) {
+        this.file.length ? (params = resFile) : (params = info);
+        this.$http.post("api/worksheet/wSEntry/sendEmail", params)
+          .then(res => {
+            if (res.status === 200 && res.data.code==0) {
+              this.$message({ type: "success", message:res.data.msg});
+              this.dialogFormVisible2 = false;
+              this.fileList = [];
+              this.file = [];
+            } else{
+              this.$message({type: "error",message: res.data.msg});
+              this.dialogFormVisible2 = false;
+            }
+          });
+      }
+    },
+    changeWindow(){
       let that=this;
       document.body.onresize=function(e){
           that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
@@ -560,9 +647,9 @@ export default {
       let params = null;
       if(!this.admFlag){ 
         params = Object.assign({},this.mustData,{curOperator:this.$store.state.userName});
-       } else{
+        } else{
         params = Object.assign({},this.mustData);
-       }
+        }
       delete params['actOperator'];
       this.$http.post('api/pay/teskClaim/list',params).then(res =>{
         if(res.status === 200 ) {
@@ -651,7 +738,7 @@ export default {
                 this.cedentModel = i;
               }
             })
-           }
+            }
 
           this.title = '编辑';
           this.dialogFormVisible = true;
@@ -711,9 +798,18 @@ export default {
           this.title = '流程提交';
           this.dialogFormVisible2 = true;
         break;
-        case 13: //发送邮件
-          this.title = '发送邮件';
-          this.dialogFormVisible3 = true;
+        case 13: //邮件通知
+          this.$http.get("api/worksheet/wSEntry/getEmailContacts").then(res => {
+          if (res.status === 200 && res.data.length) {
+            this.dialogFormVisible3 = true;
+            this.title = "邮件通知";
+            this.mailOption = res.data;
+          } else {
+            this.$message.error("获取不到发送人列表信息");
+          }
+        });
+          // this.title = '邮件通知';
+          // this.dialogFormVisible3 = true;
         break; 
         case 15: //附件查看
           this.$http.post('api/worksheet/sortOperation/listDocument'
@@ -737,7 +833,7 @@ export default {
             this.title = '附件查看';
             this.dialogFormVisible2 = true;
         break;
-       
+        
 
       }
 
@@ -753,17 +849,20 @@ export default {
           this.$refs[formName].validate((valid) => {
             if(valid) {
               this.$http.post('api/pay/teskClaim/save',Object.assign({},{actOperator:this.$store.state.userName},this.mustData,this.formLabelAlign)).then(res =>{
-              if(res.status === 200 && res.data.msg === '操作成功'){
+              if(res.status === 200 && res.data.code == 0){
                 this.dialogFormVisible = false;
                 this.init();
                 this.$refs[formName].resetFields();
+                } else if(res.data.code == 1){
+                  this.$message({ type: "error", message:res.data.msg });
+                  this.dialogFormVisible = false;
                 }
               })
             }
           })
           break;
         case 3: //刷新
- 
+
           break;
         case 4: //查询
         let params = null;          
@@ -795,7 +894,7 @@ export default {
           })
           break;
         case 6: //编辑
-           this.$refs[formName].validate((valid) => {
+            this.$refs[formName].validate((valid) => {
             if(valid) {
               this.$http.post('api/pay/teskClaim/update',Object.assign({},this.mustData,this.formLabelAlign,{actOperator:this.$store.state.userName})).then(res =>{
                 if(res.status === 200 && res.data.msg === '操作成功'){
@@ -865,6 +964,9 @@ export default {
       this.init();
     },
     upload(file) {
+      if (this.title === "邮件通知") {
+        return false;
+      }
       let resFile = new FormData();
       resFile.append('file', this.file[0]);
       resFile.append('actOperator', this.mustData.actOperator);
@@ -924,6 +1026,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style scoped>

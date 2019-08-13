@@ -93,7 +93,7 @@
               <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
                 <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification'">
                   <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
-                </p>         z   
+                </p>         
               </div>
               <el-table :data="fileData" border style="width:100%;min-height:350px;max-height:500px;" class="document">
                 <el-table-column label="文件名" width="200">
@@ -2154,6 +2154,7 @@ export default {
         // } else{
           this.SgData = res.data.worksheetsgDOlist;
           this.RMData = res.data.remitDOlist;
+          this.WSData = res.data.workSheetDOlsit;
           // this.dataBaseSG();
         }
       })
