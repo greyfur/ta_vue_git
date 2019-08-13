@@ -26,7 +26,7 @@
             @click="submit(5)"
             plain
           >{{isHover?'已悬停':'状态悬停'}}</el-button>
-          <el-button @click="dialogFormVisible = true" :disabled="isHover" size="small" plain>条目拆分</el-button>
+          <el-button @click="dialogFormVisible = true" :disabled="isHover" size="small" plain>拆分</el-button>
           <el-button plain :disabled="isHover" size="small" @click="submit(6,'录入提交')">流程提交</el-button>
         </div>
         <!-- 复核 -->
@@ -74,6 +74,7 @@
               v-show="searchFlag2"
               stripe
               border
+              :header-row-class-name="StableClass"
               :data="tableData"
               style="width: 100%;margin-top:10px;"
               class="document"
@@ -182,6 +183,7 @@
           :data="SICSData"
           border
           width="100%"
+          :header-row-class-name="StableClass"
         >
           <el-table-column label="账单号">
             <template slot-scope="scope">
@@ -330,18 +332,18 @@
       </el-col>
     </el-row>
     <!-- 弹窗区域 -->
-    <el-dialog title="条目拆分" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
+    <el-dialog title="拆分" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-form label-width="120px">
-        <el-form-item label="条目拆分数量">
+        <el-form-item label="拆分数量">
           <el-input v-model="subProcess" style="width:200px" type="number"></el-input>
           <!-- <el-button type="primary" size="mini" style="margin-left:50px" @click="itemSplit">拆分</el-button> -->
         </el-form-item>
-        <el-form-item label="条目拆分理由">
+        <el-form-item label="拆分理由">
           <el-input
             type="textarea"
             :rows="4"
             style="width:400px"
-            placeholder="请输入条目拆分理由"
+            placeholder="请输入拆分理由"
             v-model="reason"
           ></el-input>
         </el-form-item>
@@ -690,6 +692,7 @@ export default {
       },
       textareaOpinion: "",
       value: [],
+      StableClass: "tableClass",
       docViewRow: {},
       value1: "",
       subProcess: null, // 条目拆分数量

@@ -95,7 +95,7 @@
                   <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
                 </p>         z   
               </div>
-              <el-table :data="fileData" border style="width:100%;min-height:350px;max-height:500px;" class="document">
+              <el-table :data="fileData" border style="width:100%;min-height:350px;max-height:500px;" class="document" :header-row-class-name="StableClass">
                 <el-table-column label="文件名" width="200">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -149,7 +149,7 @@
           <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getRMSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
          <el-collapse-transition>
-        <el-table v-show="searchFlag2" :data="RMData" style="width:100%" border>
+        <el-table v-show="searchFlag2" :data="RMData" style="width:100%" border :header-row-class-name="StableClass">
           <el-table-column label="支票号" width="110">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
@@ -452,7 +452,7 @@
           <p><i class="iconfont iconGroup26"></i></p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag4" border :data="WSData" style="width: 100%">
+          <el-table v-show="searchFlag4" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column label="账单号">
               <template slot-scope="scope">
                 <el-tooltip
@@ -645,7 +645,7 @@
           </el-upload>
           </el-form-item>
       </el-form>
-      <el-table :data="TaxList" border style="width: 100%" class="document" v-show="title==='增值税信息获取'">
+      <el-table :data="TaxList" border style="width: 100%" class="document" v-show="title==='增值税信息获取'" :header-row-class-name="StableClass">
         <el-table-column prop="invoiceId" label="增值税号"></el-table-column>
         <el-table-column prop="rmId" label="支票号"></el-table-column>
         <el-table-column prop="sgNum" label="SG号"></el-table-column>
@@ -898,6 +898,7 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        StableClass: "tableClass",
         WSData: [],
         saveLevel:null,
         partBankAccountList:[],
@@ -1401,6 +1402,7 @@ export default {
       if(id == 'rmId'){
         this.$http.post('api/sics/liveDesktop/openRemittance',{modifiedBy:this.$store.state.userName,remitId:row.rmId}).then(res =>{
           console.log(res,'打开SICS')
+          
         })
       } else{
         this.$http.post('api/sics/liveDesktop/openWorksheet',{modifiedBy:this.$store.state.userName,worksheetId:row[id]}).then(res =>{

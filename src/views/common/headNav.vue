@@ -30,7 +30,7 @@
               <i style="color:#fff;" :class="iconEmnu[el.name]"></i>
               <span>{{el.title}}</span>
             </template>
-              <el-menu-item v-for="(item,i) in el.children" :key="i" :index="item.name"  :class="{'is-active':$route.name == item.name}">
+              <el-menu-item v-for="(item,i) in el.children" :key="i" :index="item.name" :class="{'is-active':$route.name == item.name}">
                 <span slot="title">{{item.title}}</span>
               </el-menu-item>
           </el-submenu>
@@ -42,7 +42,7 @@
         <i class="el-icon-user-solid"></i><span style="color:rgba(0,0,0,0.65);">{{UName}}</span>
       </span>
       <span class="logOutWord" @click="logOut">
-        <i class="el-icon-switch-button"></i>退出
+        <i class="el-icon-switch-button" style="margin-right:4px;"></i>退出
       </span>
     </div>
   </div>
@@ -63,10 +63,10 @@ import {computeName} from '@/assets/js/util.js'
         fold:true,
         transtionflag:false,
         iconEmnu:{
-          'bill':'el-icon-tickets',
+          'bill':'iconfont iconGroup70',
           'receipt':'el-icon-coin',
           'pay':'el-icon-bank-card',
-          'integratedQuery':'el-icon-s-opportunity',
+          'integratedQuery':'el-icon-s-opportunity zonghechaxun',
           'admin':'el-icon-s-check',
         }
       };
@@ -265,13 +265,14 @@ import {computeName} from '@/assets/js/util.js'
     /* margin-right: 3px; */
   }
   .el-menu-item{
-    background-color: #00486F!important;
-    background: #00486F!important;
+    background-color: #01517C!important;
+    background: #01517C!important;
     color: rgba(255,255,255,.7)!important;
   }
   .vertical .is-active{
-    background: linear-gradient(270deg,rgba(0,72,111,1) 0%,rgba(64,152,195,0.37) 31%,rgba(64,152,195,0.37) 71%,rgba(0,72,111,1) 100%)!important;
-    background-color: linear-gradient(270deg,rgba(0,72,111,1) 0%,rgba(64,152,195,0.37) 31%,rgba(64,152,195,0.37) 71%,rgba(0,72,111,1) 100%)!important;
+    /* background: linear-gradient(270deg,rgba(0,72,111,1) 0%,rgba(64,152,195,0.37) 31%,rgba(64,152,195,0.37) 71%,rgba(0,72,111,1) 100%)!important; */
+    background-color: #014366 !important;
+    /* background-color: linear-gradient(270deg,rgba(0,72,111,1) 0%,rgba(64,152,195,0.37) 31%,rgba(64,152,195,0.37) 71%,rgba(0,72,111,1) 100%)!important; */
     color: rgba(255,255,255,1)!important;
   }
   .fold{

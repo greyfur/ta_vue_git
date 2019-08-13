@@ -141,8 +141,10 @@ input::-webkit-inner-spin-button {
   border-bottom-left-radius: 4px; */
   border-radius: 4px;
 }
-.tableClass th{
+.tableClass th,.tableClass th.is-right{
   background-color: #FAFAFA;
+  color: #000;
+  text-align: center;
 }
 .el-button--text{ color: #005C8D;  }
 .el-dropdown{ color: #005C8D; }

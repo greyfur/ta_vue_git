@@ -95,7 +95,7 @@
         </div>
         <el-collapse-transition>
           <div v-show="searchFlag2">
-            <el-table :data="RMData" style="width:100%" border>
+            <el-table :data="RMData" style="width:100%" border :header-row-class-name="StableClass">
               <el-table-column label="支票号" width="150">
                 <template slot-scope="scope">
                   <el-tooltip
@@ -230,7 +230,7 @@
           </p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag3" border :data="SgData" style="width: 100%">
+          <el-table v-show="searchFlag3" border :data="SgData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column type="expand">
               <template slot-scope="props">
                 <el-table :data="props.row.worksheetDOList" style="width: 100%" border>
@@ -538,7 +538,7 @@
           </p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag4" border :data="WSData" style="width: 100%">
+          <el-table v-show="searchFlag4" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column label="账单号">
               <template slot-scope="scope">
                 <el-tooltip
@@ -936,6 +936,7 @@
         style="width: 100%"
         class="document"
         v-show="title==='附件查看'"
+        :header-row-class-name="StableClass"
       >
         <el-table-column label="文件名" width="140">
           <template slot-scope="scope">
@@ -1022,6 +1023,7 @@ export default {
   name: "detailCred",
   data() {
     return {
+      StableClass: "tableClass",
       nameList: {},
       recepitList:[],
       searchFlag1: true,
