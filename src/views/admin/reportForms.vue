@@ -25,22 +25,22 @@
         oYearMonth:new Date().getTime(),
         ReportFormArr:[{
           name:'报表名称1',
-          type:'1'
+          type:'0'
         },{
           name:'报表名称2',
-          type:'2'
+          type:'1'
         },{
           name:'报表名称3',
-          type:'3'
+          type:'2'
         },{
           name:'报表名称4',
-          type:'4'
+          type:'3'
         },{
           name:'报表名称5',
-          type:'5'
+          type:'4'
         },{
           name:'报表名称6',
-          type:'6'
+          type:'5'
         }],
         reportType:null
       };

@@ -50,7 +50,7 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" height="480" border :header-row-class-name="StableClass">
+    <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-table :data="props.row.worksheetDOList" style="width: 100%" border :header-row-class-name="StableClass">
@@ -159,11 +159,10 @@
             </el-table-column>
             <el-table-column prop="wsType" label="账单类型"></el-table-column>
             <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
-            <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
-            <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
+         
             <el-table-column prop="dept" label="经营机构"></el-table-column>
             <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
-            <el-table-column label="金额">
+            <el-table-column label="金额" align="right">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -189,6 +188,8 @@
                 </el-tooltip>
               </template>
             </el-table-column>
+            <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
+            <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
             <el-table-column fixed="right" label="操作"></el-table-column>
           </el-table>
         </template>
@@ -227,8 +228,6 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
       <el-table-column prop="sgStatus" label="SG状态"></el-table-column>
       <el-table-column prop="settlementIndicator" label="结算指标" width="95"></el-table-column>
       <el-table-column prop="sgCurrency" label="币值"></el-table-column>
@@ -244,7 +243,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="未结算金额" width="100">
+      <el-table-column label="未结算金额" width="100" align="right">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -299,6 +298,8 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <!-- <el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button> -->
@@ -560,6 +561,7 @@ export default {
       nameList: {},
       searchFlag: false,
       modal: false,
+      changeClientHight:446,
       StableClass:'tableClass',
       tableData: [],
       ZDoptions: [],
@@ -760,6 +762,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
+    this.changeWindow();
     if (this.urlName === "payment") {
       this.mustData.accountCloseFlag = "0";
     } else if (this.urlName === "instancyPay") {
@@ -794,6 +797,12 @@ export default {
     this.init();
   },
   methods: {
+    changeWindow(){
+      let that=this;
+      document.body.onresize=function(e){
+          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+      }
+    },
     openSICS(row) {
       this.$http
         .post("api/sics/liveDesktop/openWorksheet", {

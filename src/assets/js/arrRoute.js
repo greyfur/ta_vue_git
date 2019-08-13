@@ -273,10 +273,10 @@ let data = [
       },
       {
         // title:'时间统计',
-        title:'统计',
-        path: '/timeStatistical',
-        name: 'timeStatistical',
-        component: () => import("@/views/admin/timeStatistical"), 
+        // title:'统计',
+        // path: '/timeStatistical',
+        // name: 'timeStatistical',
+        // component: () => import("@/views/admin/timeStatistical"), 
       },
       {
         title:'报表',

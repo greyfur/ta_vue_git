@@ -103,7 +103,7 @@
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
       <el-button type="info" plain size="small" @click="dialogReport=!dialogReport">导出报表</el-button>
     </div> 
-    <el-table :header-row-class-name="StableClass" :data="tableData" border style="width: 100%"  height="480">
+    <el-table :header-row-class-name="StableClass" :data="tableData" border style="width: 100%"  :height="changeClientHight">
       <el-table-column prop="createdAt" label="创建时间" width="100"></el-table-column>
       <el-table-column label="流程编号" width="140">
         <template slot-scope="scope">
@@ -172,14 +172,14 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
       <el-table-column prop="curOperator" label="任务来源" width="120">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
       <el-table-column fixed="right" label="操作" width="120">
         <template slot-scope="scope">
           <el-button type="text" v-if="scope.row.processStatus=='已关闭'" size="small" @click.stop="reverse(scope.row)">reverse</el-button>
@@ -280,6 +280,7 @@ export default {
         tableData:[],
         assignee:'',
         modal:false,
+        changeClientHight:446,
         reportArr:{
           reportName:null,
         },
@@ -455,6 +456,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){
+    this.changeWindow();
     this.$http.post('api/activiti/getAssigneeName',{roleName:'账单录入'}).then(res =>{
       if(res.status === 200){
         this.TJRoptions = res.data;
@@ -475,6 +477,12 @@ export default {
     },1000)
   },
   methods: {
+    changeWindow(){
+      let that=this;
+      document.body.onresize=function(e){
+          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+      }
+    },
     reverse(row){
       this.$http.post('api/worksheet/wSEntry/reverseWSProcess',{processId:row.processId,actOperator:this.$store.state.userName}).then(res =>{
         if(res.status == 200){
@@ -566,8 +574,11 @@ export default {
                     window.location = this.path;
                   } else {
                     a.href = this.path;
+                    let formatString = escape(res.headers['content-disposition'].split(';')[1].split('=')[1]);
+                    console.log(formatString)
+                    a.download =  decodeURI(formatString);
                     //  a.download = new Date().getTime();
-                    a.download = this.reportArr.reportName;
+                    // a.download = this.reportArr.reportName;
                     document.body.appendChild(a);
                     a.click();
                     a.remove();

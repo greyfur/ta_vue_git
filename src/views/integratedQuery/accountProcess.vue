@@ -48,7 +48,7 @@
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
        <el-button type="info" plain size="small" @click="dialogReport=!dialogReport">导出报表</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" height="480" border :header-row-class-name="StableClass">
+    <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">
       <el-table-column label="流程编号" width="145">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
@@ -62,11 +62,8 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="rmCurrency" label="币制"></el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin"></el-table-column>
-      <el-table-column label="Base Company" prop="baseCompany">
-      </el-table-column>
-      <el-table-column prop="rmAmount" label="汇款金额" width="130">
+      <el-table-column prop="rmCurrency" label="币制" width="60"></el-table-column>
+      <el-table-column prop="rmAmount" label="汇款金额" width="130" align="right">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -84,11 +81,13 @@
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin"></el-table-column>
+      <el-table-column label="Base Company" prop="baseCompany"></el-table-column>
       <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->
       <!-- <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column> -->
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
-          <el-dropdown>
+          <el-dropdown placement="top-start">
             <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item> -->
@@ -258,6 +257,7 @@ export default {
         searchFlag:false,
         modal:false,
         dialogReport:false,
+        changeClientHight:446,
         reportArr:{
           reportName:null,
         },
@@ -468,6 +468,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){
+    this.changeWindow();
     if(this.urlName === 'payment') {
       this.mustData.accountCloseFlag = '0';
     } else if(this.urlName === 'instancyPay'){
@@ -510,6 +511,12 @@ export default {
           this.mustData.total = res.data.total;
         }
       })
+    },
+    changeWindow(){
+      let that=this;
+      document.body.onresize=function(e){
+          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+      }
     },
     init(tag){
       // 进首页查询
@@ -579,8 +586,11 @@ export default {
                     window.location = this.path;
                   } else {
                     a.href = this.path;
+                    let formatString = escape(res.headers['content-disposition'].split(';')[1].split('=')[1]);
+                    console.log(formatString)
+                    a.download =  decodeURI(formatString);
                     //  a.download = new Date().getTime();
-                    a.download = this.reportArr.reportName;
+                    // a.download = this.reportArr.reportName;
                     document.body.appendChild(a);
                     a.click();
                     a.remove();

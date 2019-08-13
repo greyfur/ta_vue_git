@@ -37,12 +37,12 @@
       <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div>
     <el-table :data="tableData" border style="width: 100%" :height="changeClientHight" :header-row-class-name="StableClass">
-      <el-table-column label="流程编号" width="145">
+      <el-table-column label="流程编号" width="150">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
-      <el-table-column width="140" label="结付公司">
+      <el-table-column width="180" label="结付公司">
           <template slot-scope="scope">
           <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
             <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
@@ -50,10 +50,8 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
-      <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
-      <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
-      <el-table-column label="汇款金额" width="120">
+      <el-table-column prop="rmCurrency" width="60" label="币制"></el-table-column>
+      <el-table-column label="汇款金额" width="120" align="right">
          <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -65,12 +63,21 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="任务来源" width="110">
+      <!-- <el-table-column label="任务来源" width="110">
         <template slot-scope="scope">
             <span>{{nameList[scope.row.curOperator]}}</span>
           </template>
+      </el-table-column> -->
+      <el-table-column width="110" label="录入人员">
+        <template slot-scope="scope">
+          <span>{{scope.row.registBy}}</span>
+        </template>
       </el-table-column>
-
+      <el-table-column v-if="urlName==='payReview'||urlName==='payClose'||urlName==='emailNotify'||urlName==='payment'||urlName==='partialDone'" label="复核人员" width="110">
+        <template slot-scope="scope">
+          <span>{{scope.row.closedBy}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->
       <!-- <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column> -->
@@ -90,9 +97,11 @@
           </div>
         </template>
       </el-table-column>
+       <el-table-column prop="businessOrigin" width="160" label="Business Origin"></el-table-column>
+      <el-table-column label="Base Company" width="160" prop="baseCompany"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
-          <el-dropdown>
+          <el-dropdown placement="top-start">
             <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item><span v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" class="blueColor">编辑</span></el-dropdown-item>
@@ -232,7 +241,7 @@
         </el-collapse-item>
       </el-collapse>
       <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'" :header-row-class-name="StableClass">
-        <el-table-column prop="processId" label="流程编号" width="145"></el-table-column>
+        <el-table-column prop="processId" label="流程编号" width="150"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
         <el-table-column abel="任务来源">
           <template slot-scope="scope">
