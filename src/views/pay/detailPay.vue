@@ -20,9 +20,9 @@
         <div class="btn" v-if="$route.query.tag === 'payment' || $route.query.tag === 'partialDone' || $route.query.tag === 'instancyPay'">
           <el-button type="primary" v-if="$route.query.tag === 'partialDone'" @click="openBPSICS" plain>打开BpLedger</el-button>
           <!-- <el-button size="small" plain>附件上传</el-button> -->
-          <el-button size="small" plain @click="tongbu" v-if="$route.query.tag === 'instancyPay'">同步状态</el-button>
+          <el-button size="small" plain @click="tongbu">同步状态</el-button>
           <!-- <el-button size="small" plain @click="mailSend(2,'附件查看')">附件查看</el-button> -->
-          <el-button size="small" plain v-if="$route.query.tag === 'partialDone'">同步状态</el-button>
+          <!-- <el-button size="small" plain v-if="$route.query.tag === 'partialDone'">同步状态</el-button> -->
           <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button>
         </div>
         <!-- 操作 -->
@@ -241,7 +241,7 @@
       </el-col>
     </el-row>
     <!-- 结算清单 -->
-    <el-row style="padding:0 16px;">
+    <el-row style="padding:0 16px;padding-bottom:60px">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单</div>
@@ -1229,6 +1229,24 @@ export default {
     }
   },
   methods: {
+    getProcessInfo(){
+      this.$http.post('api/pay/teskClaim/list',{
+          pageNumber:1,  // 页数
+          pageSize:20,  //页面一次要展示的条数
+          processType:'付款',
+          processId:this.row.processId
+      }).then(res =>{
+        if(res.status === 200) {
+          let arr = res.data.rows[0];
+          console.log(res.data.rows[0]);
+          this.listData.forEach(el=>{
+            el['b'] = arr[el['c']];
+            if(el['a']=='任务来源'){ el["b"] = this.nameList[arr[el["c"]]]; }
+            if(el['a']=='结付公司'){ el["b"]=arr[el['c']] + '-' + arr[el['d']];}
+          })
+        }
+      })
+    },
     chongXiao(row){
       this.$http.post("api/receipt/credOperation/creatWfCheckRemit",{rmId:row.rmId,createdBy:this.$store.state.userName}).then(res => {
           if (res.status == 200 && res.data.errorCode == 1) {
@@ -1254,6 +1272,7 @@ export default {
         })
         .then(res => {
           console.log(res, "打开SICS");
+          this.$message({message:res.data,type: 'warning'});
         });
     },
     nextStep(){
@@ -1401,10 +1420,12 @@ export default {
       if(id == 'rmId'){
         this.$http.post('api/sics/liveDesktop/openRemittance',{modifiedBy:this.$store.state.userName,remitId:row.rmId}).then(res =>{
           console.log(res,'打开SICS')
+          this.$message({message:res.data,type: 'warning'});
         })
       } else{
         this.$http.post('api/sics/liveDesktop/openWorksheet',{modifiedBy:this.$store.state.userName,worksheetId:row[id]}).then(res =>{
           console.log(res,'打开SICS')
+          this.$message({message:res.data,type: 'warning'});
           // if(res.status === 200 && res.data.rows){
           //   this.SICSData = res.data.rows;
           // }
@@ -1419,6 +1440,7 @@ export default {
       }
       this.$http.post('api/sics/liveDesktop/openBpLedger',{modifiedBy:this.mustData.actOperator,bpId:this.row.rmSettleCompanyCode}).then(res =>{
         console.log(res,'打开SICS');
+        this.$message({message:res.data,type: 'warning'});
       })
     },
     dataBaseSG(){
@@ -1441,15 +1463,19 @@ export default {
             // this.SgData = res.data.worksheetsgDOlist;
             this.RMData = res.data.remitDOlist;
             this.WSData = res.data.workSheetDOlsit
+            this.getProcessInfo();
           }
         })
       } else{ this.$message.error('无账单，无法更新信息'); }
       
     },
     getSGSg(){
+      // this.getProcessInfo();
       this.$http.post('api/sics/basis/getWSAndSGfromSics',{actOperator:this.mustData.actOperator,processId:this.row.processId}).then(res =>{
         if(res.status === 200){ 
           this.SgData = res.data.worksheetsgDOlist;
+          this.searchFlag3=true,
+          this.getProcessInfo();
           // this.RMData = res.data.remitDOlist;
         }
       })
@@ -1747,19 +1773,22 @@ export default {
           // this.dialogFormVisible3 = true;
         break;
         case 7:   // 付款支票页面---流程提交=审批完成，在这里查开关账
-            if(this.RMData==null || !this.RMData.length){
-              this.$message.error('无支票信息，请获取支票信息');
-              return false;
+        this.$http.post("api/sics/basis/checkAmount",{processId:this.row.processId}).then(res => {
+          if (res.status === 200 && res.data.code == 0) {
+            this.acountquery()
+            let type = '';
+            if(this.accountCloseFlag == '0'){
+              type = '付款复核';
+            } else if(this.accountCloseFlag == '1'){
+              type = '付款录入';
             }
-          this.acountquery()
-          let type = '';
-          if(this.accountCloseFlag == '0'){
-            type = '付款复核';
-          } else if(this.accountCloseFlag == '1'){
-            type = '付款录入';
+            this.getName(type);
+            this.dialogFormVisible3 = true;
+          } else{
+            this.$message.error(res.data.msg);
+            return false;
           }
-          this.getName(type);
-          this.dialogFormVisible3 = true;
+        })
         break;
         case 8:   // 财务支付/紧急付款/partial完结------流程提交
           this.getName('付款录入');
@@ -2344,34 +2373,52 @@ export default {
             }
           }
         }) 
-        this.makeDocListEctype.zheNum = allNum>0?Number(allNum).toFixed(2):null;
+        this.makeDocListEctype.zheNum = Number(allNum).toFixed(2);
       }
     },
     makeDoc(tag,name){    // 生成审批文档
       if(tag == 'a'){  // 是操作页面，弹窗，S0,
-          if(this.row.rmCurrency){ 
-            this.makeDocListEctype.yuanType.push(this.row.rmCurrency);
-            this.makeDocListEctype.zheType = this.row.rmCurrency;
+        this.makeDocListEctype.yuanType=[];
+        this.makeDocListEctype.zheType=null;
+        this.makeDocListEctype.yuanNum=[];
+        this.makeDocListEctype.zheNum=null;
+        this.makeDocListEctype.shoukuanMode=null;
+        this.makeDocListEctype.yuanHuiLv=[];
+        this.makeDocListEctype.cedentModel=[];
+        this.makeDocNum = 0;
+        console.log(this.makeDocListEctype);
+        console.log(this.makeDocNum,'makeDocNum');
+        if(this.makeDocListEctype.yuanType){
+          for(let i=0; i<this.makeDocListEctype.yuanType.length; i++){
+            delete this.makeDocListEctype.yuanType[i];
           }
-          if(this.row.rmAmount){ 
-            this.makeDocListEctype.yuanNum.push(this.row.rmAmount);
-            this.makeDocNum = 1;
+        }
+        setTimeout(()=>{
+        if(this.row.rmCurrency){ 
+          this.makeDocListEctype.yuanType.push(this.row.rmCurrency);
+          this.makeDocListEctype.zheType = this.row.rmCurrency;
+        }
+        if(this.row.rmAmount){ 
+          this.makeDocListEctype.yuanNum.push(this.row.rmAmount);
+          this.makeDocNum = 1;
+          setTimeout(()=>{this.zheTypeChange();},20)
+        }
+        },30)
+        this.makeDocListEctype.cedentModel = [];
+        this.$http.post('api/pay/teskClaim/list',{
+          curOperator:this.$store.state.userName,
+          processId:this.row.processId,
+          pageNumber:1, 
+          pageSize:20,
+          processType:'付款',
+          processStatus:'待处理'
+          }).then(res =>{
+          if(res.status === 200 && res.data.rows){
+          //   此处填写生成审批文档 回显
           }
-          this.makeDocListEctype.cedentModel = [];
-          this.$http.post('api/pay/teskClaim/list',{
-            curOperator:this.$store.state.userName,
-            processId:this.row.processId,
-            pageNumber:1, 
-            pageSize:20,
-            processType:'付款',
-            processStatus:'待处理'
-            }).then(res =>{
-            if(res.status === 200 && res.data.rows){
-            //   此处填写生成审批文档 回显
-            }
-          })
-       
-        this.dialogFormVisible2 = true;
+        })
+      
+      this.dialogFormVisible2 = true;
       } else {
         if (tag == 2) {
          if(this.makeDocListEctype.zheNum&&this.makeDocListEctype.yuanType.length>0){

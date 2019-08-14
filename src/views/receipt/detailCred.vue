@@ -1440,6 +1440,7 @@ export default {
           bpId: this.row.rmSettleCompanyCode
         })
         .then(res => {
+          this.$message({message:res.data,type: 'warning'});
           console.log(res, "打开SICS");
         });
     },
@@ -1450,6 +1451,7 @@ export default {
           processId: this.row.processId
         })
         .then(res => {
+          this.$message({message:res.data,type: 'warning'});
           console.log(res, "打开SICS");
         });
     },
@@ -1461,6 +1463,7 @@ export default {
             remitId: row.rmId
           })
           .then(res => {
+            this.$message({message:res.data,type: 'warning'});
             console.log(res, "打开SICS");
           });
       } else {
@@ -1470,6 +1473,7 @@ export default {
             worksheetId: row[id]
           })
           .then(res => {
+            this.$message({message:res.data,type: 'warning'});
             console.log(res, "打开SICS");
             // if(res.status === 200 && res.data.rows){
             //   this.SICSData = res.data.rows;
@@ -1496,8 +1500,8 @@ export default {
                   }
                 })
                 this.SgData = arr5;
-            
-          }
+            this.$message({message: '操作成功',type: 'success'});
+          } else { this.$message({message: '操作失败',type: 'error'}); }
         });
     },
     makeReport() {
@@ -1544,8 +1548,8 @@ export default {
                 }
               })
               this.SgData = arr5;
-            
-          }
+            this.$message({message: '操作成功',type: 'success'}); 
+          } else{ this.$message.error("失败"); }
         });
     },
     getSg() {
@@ -1866,7 +1870,7 @@ export default {
               return false;
             }
             this.$http.post("api/sics/basis/checkAmount",{processId:this.row.processId}).then(res => {
-              if (res.status === 200 && res.data.code == 1) {
+              if (res.status === 200 && res.data.code == 0) {
                 this.getName(specialName);
                 this.dialogFormVisible3 = true;
               } else{

@@ -833,12 +833,9 @@ export default {
         });
         return false;
       }
-      this.$http
-        .post("api/sics/liveDesktop/openBpLedger", {
-          modifiedBy: this.$store.state.userName,
-          bpId: this.chooseRow.rmSettleCompanyCode
-        })
+      this.$http.post("api/sics/liveDesktop/openBpLedger", {modifiedBy: this.$store.state.userName,bpId: this.chooseRow.rmSettleCompanyCode})
         .then(res => {
+          this.$message({message:res.data,type: 'warning'});
           console.log(res, "打开SICS");
         });
     },
@@ -874,12 +871,10 @@ export default {
     },
     openSics(row) {
       //  获取当前选中worksheet
-      this.$http
-        .post("api/sics/liveDesktop/openWorksheet", {
-          modifiedBy: this.$store.state.userName,
-          worksheetId: row.wsId
-        })
-        .then(res => {});
+      this.$http.post("api/sics/liveDesktop/openWorksheet", {modifiedBy: this.$store.state.userName,worksheetId: row.wsId})
+        .then(res => {
+          this.$message({message:res.data,type: 'warning'});
+        });
     },
     onSics(tag) {
       let url = "";
@@ -1220,7 +1215,7 @@ export default {
                   if (res.status === 200 && res.data.errorCode == 1) {
                     this.dialogFormVisible = false;
                     this.$router.push({ name: this.$route.query.tag });
-                  }
+                  } else{ this.$message({type: "error",message: res.data.errorMessage}); }
                 });
             });
           }
