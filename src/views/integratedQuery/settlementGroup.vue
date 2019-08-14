@@ -194,7 +194,7 @@
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column label="SG号">
+      <el-table-column label="结算账单号" width="140">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.sgNum" placement="top-start">
             <span class="abbreviate">{{scope.row.sgNum}}</span>
@@ -220,11 +220,18 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="bpCode" label="BP number" width="100"></el-table-column>
+      <!-- <el-table-column prop="bpCode" label="BP number" width="100"></el-table-column>
       <el-table-column label="BP名称">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.bpName" placement="top-start">
             <span class="abbreviate">{{scope.row.bpName}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column> -->
+       <el-table-column label="结付公司">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.bpCode&&scope.row.bpName?scope.row.bpCode-scope.row.bpName:''" placement="top-start">
+            <span class="abbreviate" v-if="cope.row.bpCode&&scope.row.bpName">{{scope.row.bpCode}}-{{scope.row.bpName}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -302,8 +309,8 @@
       <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
+          <span class="blueColor" @click.stop="openSICS(scope.row)">打开SICS</span>
           <!-- <el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button> -->
-          <el-button @click.stop="openSICS(scope.row)" type="text" size="mini">打开SICS</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -445,8 +452,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="confirm">确定</el-button>
           <el-button @click="dialogFormVisible2 = false">取消</el-button>
+          <el-button type="primary" @click="confirm">确定</el-button>
         </el-form-item>
       </el-form>
       <!-- 上传附件 -->
@@ -483,7 +490,7 @@
         :data="fileData"
         style="width: 100%"
         class="document"
-        v-show="title==='上传附件' || title==='附件查看'"
+        v-show="title==='上传附件' || title==='附件'"
       >
         <el-table-column label="文件名">
           <template slot-scope="scope">
@@ -500,7 +507,7 @@
         </el-table-column>
         <el-table-column label="操作" width="100">
           <template slot-scope="scope">
-            <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
+            <span class="blueColor" @click.stop="detailRemove(scope.row)">删除</span>
           </template>
         </el-table-column>
       </el-table>
@@ -993,7 +1000,7 @@ export default {
                 this.fileData = res.data.rows;
               }
             });
-          this.title = "附件查看";
+          this.title = "附件";
           this.dialogFormVisible2 = true;
           break;
         

@@ -199,12 +199,12 @@
       <el-table-column :label="urlName==='sortOperation'?'任务来源':'录入人员'" width="110">
         <template slot-scope="scope">
           <span  v-if="urlName==='sortOperation'">{{nameList[scope.row.curOperator]}}</span>
-          <span v-else>{{scope.row.registBy}}</span>
+          <span v-else>{{nameList[scope.row.registBy]}}</span>
         </template>
       </el-table-column>
-       <el-table-column v-if="urlName==='billCheck'||urlName==='billSignBack'||urlName==='billEntry'" label="复核人员'" width="110">
+       <el-table-column v-if="urlName==='billCheck'||urlName==='billSignBack'||urlName==='billEntry'" label="复核人员" width="110">
         <template slot-scope="scope">
-          <span>{{scope.row.closedBy}}</span>
+          <span>{{nameList[scope.row.closedBy]}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
@@ -426,7 +426,7 @@
           <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
         </el-collapse-item>
       </el-collapse>
-      <el-table :data="fileData" style="width: 100%" class="document" border v-show="title=='编辑'">
+      <el-table :data="fileData" style="width: 100%;height:auto;" :header-row-class-name="StableClass" class="document" border v-show="title=='编辑'">
         <el-table-column label="文件名">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -444,11 +444,12 @@
         </el-table-column>
         <el-table-column label="操作" width="100">
           <template slot-scope="scope">
-            <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
+            <span class="blueColor" @click.stop="detailRemove(scope.row)">删除</span>
+            <!-- <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
-      <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
+      <el-table :data="track" border style="width: 100%;height:auto;" v-show="title==='踪迹'" :header-row-class-name="StableClass">
         <el-table-column prop="processId" label="流程编号" width="220"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
         <el-table-column label="录入人员" width="85">
@@ -680,7 +681,6 @@ export default {
     };
   },
   created() {
-    this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
     this.mustData.processStatus = this.processStatusCom;
     this.mustData.actOperator = this.$store.state.userName;
     if (this.urlName === "sortOperation" || this.urlName === "billEntry") {
@@ -693,6 +693,11 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
+    if(this.$route.name==='sortOperation'||this.$route.name==='billEntry'){
+      this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+    }else{
+      this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+    }
     this.changeWindow();
     this.$http
       .post("api/activiti/getAssigneeName", { roleName: "账单录入" })
@@ -724,10 +729,15 @@ export default {
       this.init();
   },
   methods: {
-    changeWindow(){
+     changeWindow(){
       let that=this;
       document.body.onresize=function(e){
-          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+          if(that.$route.name==='sortOperation'||that.$route.name==='billEntry'){
+             that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+          }else{
+            that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+          }
+          // that.changeClientHight=document.body.clientHeight-178-document.querySelector('.el-table').offsetTop;
       }
     },
     docView(row) {

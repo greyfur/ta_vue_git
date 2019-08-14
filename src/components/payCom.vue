@@ -108,7 +108,7 @@
               <el-dropdown-item><span v-show="urlName !== 'payOperation'" @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(12,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
-              <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(15,scope.row)" class="blueColor">附件查看</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(15,scope.row)" class="blueColor">附件</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(13,scope.row)" class="blueColor">邮件通知</span></el-dropdown-item>
               <!-- <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(20,scope.row)" class="blueColor">Reverse</span></el-dropdown-item> -->
             </el-dropdown-menu>
@@ -219,8 +219,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button size="small" type="primary" plain @click="confirm">确定</el-button>
           <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
+          <el-button size="small" type="primary" plain @click="confirm">确定</el-button>
         </el-form-item>
       </el-form>
         <!-- 上传附件 -->
@@ -240,7 +240,7 @@
           <img :src="picture" style="width:100%" @click="dialogFormVisibleA=true">
         </el-collapse-item>
       </el-collapse>
-      <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'" :header-row-class-name="StableClass">
+      <el-table :data="track" border style="width: 100%;height:auto;" v-show="title==='踪迹'" :header-row-class-name="StableClass">
         <el-table-column prop="processId" label="流程编号" width="150"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
         <el-table-column abel="任务来源">
@@ -253,7 +253,7 @@
         <el-table-column prop="remark" label="操作备注"></el-table-column>
       </el-table>
      
-      <el-table :data="fileData" style="width: 100%" border class="document" v-show="title==='上传附件' || title==='附件查看'" :header-row-class-name="StableClass">
+      <el-table :data="fileData" style="width: 100%;height:auto;" border class="document" v-show="title==='上传附件' || title==='附件'" :header-row-class-name="StableClass">
         <el-table-column label="文件名" width="140">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -547,7 +547,11 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){
-    this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+    if(this.$route.name==='payOperation'||this.$route.name==='payVerification'||this.$route.name==='approvalDone'){
+      this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+    }else{
+      this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+    }
     this.changeWindow();
     // if(this.urlName === 'payment') {
     //   this.mustData.accountCloseFlag = '0';
@@ -645,10 +649,15 @@ export default {
           });
       }
     },
-    changeWindow(){
+     changeWindow(){
       let that=this;
       document.body.onresize=function(e){
-          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+          if(that.$route.name==='payOperation'||that.$route.name==='payVerification'||that.$route.name==='approvalDone'){
+             that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+          }else{
+            that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+          }
+          // that.changeClientHight=document.body.clientHeight-178-document.querySelector('.el-table').offsetTop;
       }
     },
     init(tag){
@@ -820,7 +829,7 @@ export default {
           // this.title = '邮件通知';
           // this.dialogFormVisible3 = true;
         break; 
-        case 15: //附件查看
+        case 15: //附件查看改为附件 hyd
           this.$http.post('api/worksheet/sortOperation/listDocument'
             ,{actOperator:this.$store.state.userName,
             processId:this.chooseRow.processId,
@@ -839,7 +848,7 @@ export default {
                   this.fileData = arr5;
               }
             })
-            this.title = '附件查看';
+            this.title = '附件';
             this.dialogFormVisible2 = true;
         break;
         
