@@ -430,7 +430,7 @@
             <el-table-column prop="sgStatus" label="结算清单状态" width="110"></el-table-column>
             <el-table-column prop="settlementIndicator" label="结算指标"></el-table-column>
             <el-table-column prop="sgCurrency" label="币制"></el-table-column>
-            <el-table-column label="结算总额">
+            <el-table-column label="结算总额" align="right">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"

@@ -105,7 +105,7 @@
               </el-table-column> -->
               <el-table-column label="操作" width="80">
                 <template slot-scope="scope">
-                  <el-dropdown>
+                  <el-dropdown placement="top-start">
                     <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item>
