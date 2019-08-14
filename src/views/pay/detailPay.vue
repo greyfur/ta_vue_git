@@ -280,7 +280,7 @@
                     </el-tooltip>
                   </template>
                 </el-table-column>
-                <el-table-column label="SECTION">
+                <el-table-column label="SECTION" width="100">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.section" placement="top-start">
                       <span class="abbreviate">{{scope.row.section}}</span>
@@ -505,7 +505,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-              <el-table-column label="SECTION">
+              <el-table-column label="SECTION" width="100">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -851,7 +851,7 @@
             <el-option v-for="(item,index) in bscBankList" :key="index" :label="item.compName" :value="index"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="原币币制/金额" required>
+        <el-form-item label="原币币制/金额111" required>
           <el-form-item>
             <el-select filterable style="width:90%;height:40px;line-height:40px;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
               <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
@@ -866,6 +866,7 @@
                 v-model="makeDocListEctype.yuanNum[i]"
                 placeholder="请输入金额"
                 size="small"
+                dir="rtl"
               ></el-input>
               <span class="huilv">&nbsp;汇率：&nbsp;</span>
               <el-input
@@ -874,6 +875,7 @@
                 v-model="makeDocListEctype.yuanHuiLv[i]"
                 placeholder="请输入汇率"
                 size="small"
+                dir="rtl"
               ></el-input>
             </div>
           </el-form-item>
@@ -888,7 +890,7 @@
           </el-col>
           <el-col :span="10">
             <el-form-item>
-              <el-input v-model="makeDocListEctype.zheNum" class="curAmount"></el-input>
+              <el-input v-model="makeDocListEctype.zheNum" class="curAmount" dir="rtl"></el-input>
             </el-form-item>
           </el-col>
         </el-form-item>

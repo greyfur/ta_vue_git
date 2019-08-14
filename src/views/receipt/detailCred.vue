@@ -201,8 +201,8 @@
               <el-table-column label="操作" width="140" fixed="right">
                 <template slot-scope="scope">
                   <span class="blueColor" @click.stop="openSICS(scope.row,'rmId')">打开SICS</span>
-                  <span class="blueColor" -if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'" @click.stop="openSICS(scope.row,'rmId','R')">Reverse</span>
-                  <span class="blueColor" -if="$route.query.tag === 'credOperation'" @click.stop="chongXiao(scope.row)">冲销</span>
+                  <span class="blueColor" v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'" @click.stop="openSICS(scope.row,'rmId','R')">Reverse</span>
+                  <span class="blueColor" v-if="$route.query.tag === 'credOperation'" @click.stop="chongXiao(scope.row)">冲销</span>
                 </template>
               </el-table-column>
             </el-table>

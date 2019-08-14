@@ -397,6 +397,7 @@
           <input
             type="text"
             class="selfInput"
+            dir="rtl"
             v-model="formLabelAlign.rmAmount"
             @input="watchInput('rmAmount')">
         </el-form-item>

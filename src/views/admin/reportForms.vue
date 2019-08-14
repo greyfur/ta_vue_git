@@ -24,22 +24,22 @@
       return {
         oYearMonth:new Date().getTime(),
         ReportFormArr:[{
-          name:'报表名称1',
+          name:'Process统计报表',
           type:'1'
         },{
-          name:'报表名称2',
+          name:'未关闭流程统计报表',
           type:'2'
         },{
-          name:'报表名称3',
+          name:'悬停报表',
           type:'3'
         },{
-          name:'悬停报表',
+          name:'Process复核驳回报表',
           type:'4'
         },{
-          name:'报表名称5',
+          name:'Process对应账单清单报表',
           type:'5'
         },{
-          name:'报表名称6',
+          name:'账单流程汇总报表',
           type:'7'
         }],
         reportType:null
