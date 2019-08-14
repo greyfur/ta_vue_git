@@ -27,12 +27,7 @@
               <el-input v-model.trim="zq2" placeholder="请输入年份" class="wsPeriod"></el-input>
               <el-select filterable clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
                 <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
-              </el-select> -->
-              <el-date-picker
-                v-model="value2"
-                type="month"
-                placeholder="选择月">
-              </el-date-picker>
+              </el-select>
             </el-col>
           </el-row>
            <el-row :gutter="10" class="billRow"> 

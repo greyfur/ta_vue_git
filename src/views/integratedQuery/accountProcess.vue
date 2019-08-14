@@ -88,8 +88,8 @@
       </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <el-table-column prop="processType" label="收/付款"></el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin"></el-table-column>
-      <el-table-column label="Base Company" prop="baseCompany"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="140"></el-table-column>
+      <el-table-column label="Base Company" prop="baseCompany" width="140"></el-table-column>
       <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->
       <!-- <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column> -->
       <el-table-column fixed="right" label="操作" width="80">
