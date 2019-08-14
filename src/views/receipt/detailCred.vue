@@ -283,7 +283,7 @@
                       </el-tooltip>
                     </template>
                   </el-table-column>
-                  <el-table-column label="section">
+                  <el-table-column label="SECTION">
                     <template slot-scope="scope">
                       <el-tooltip
                         class="item"
@@ -588,7 +588,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="section">
+            <el-table-column label="SECTION">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"

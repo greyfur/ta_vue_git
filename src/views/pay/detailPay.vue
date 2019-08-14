@@ -95,7 +95,7 @@
                   <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
                 </p>         
               </div>
-              <el-table :data="fileData" border style="width:100%;min-height:350px;max-height:500px;" class="document" :header-row-class-name="StableClass">
+              <el-table :data="fileData" border style="width:100%;height:410px;" class="document" :header-row-class-name="StableClass">
                 <el-table-column label="文件名" width="200">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -282,7 +282,7 @@
                     </el-tooltip>
                   </template>
                 </el-table-column>
-                <el-table-column label="section">
+                <el-table-column label="SECTION">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.section" placement="top-start">
                       <span class="abbreviate">{{scope.row.section}}</span>
@@ -504,7 +504,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="section">
+            <el-table-column label="SECTION">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"

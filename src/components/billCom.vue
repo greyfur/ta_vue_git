@@ -199,12 +199,12 @@
       <el-table-column :label="urlName==='sortOperation'?'任务来源':'录入人员'" width="110">
         <template slot-scope="scope">
           <span  v-if="urlName==='sortOperation'">{{nameList[scope.row.curOperator]}}</span>
-          <span v-else>{{scope.row.registBy}}</span>
+          <span v-else>{{nameList[scope.row.registBy]}}</span>
         </template>
       </el-table-column>
-       <el-table-column v-if="urlName==='billCheck'||urlName==='billSignBack'||urlName==='billEntry'" label="复核人员'" width="110">
+       <el-table-column v-if="urlName==='billCheck'||urlName==='billSignBack'||urlName==='billEntry'" label="复核人员" width="110">
         <template slot-scope="scope">
-          <span>{{scope.row.closedBy}}</span>
+          <span>{{nameList[scope.row.closedBy]}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
@@ -278,7 +278,9 @@
         <el-form-item label="流程编号" v-show="title==='查询'">
           <el-input v-model.trim="billSearch.processId" placeholder="请输入流程编号"></el-input>
         </el-form-item>
-        <!--   以上只有查询有 --------->
+        <el-form-item label="流程名称" v-show="title==='手工创建' || title==='编辑' || title==='查询'" class="zqForm">
+          <el-input v-model.trim="billSearch.processName" placeholder="请输入流程名称"></el-input>
+        </el-form-item>
         <el-form-item label="任务类型" prop="wsBusinessType" v-show="title==='手工创建' || title==='编辑'">
           <el-select :disabled='RWFlag' clearable v-model="billSearch.wsBusinessType" placeholder="请选择任务类型">
             <el-option
@@ -341,12 +343,6 @@
               :value="item.code"
             ></el-option>
           </el-select>
-        </el-form-item>
-         <el-form-item
-          label="流程名称"
-          v-show="title==='手工创建' || title==='编辑' || title==='查询'"
-          class="zqForm">
-          <el-input v-model.trim="billSearch.processName" placeholder="请输入流程名称"></el-input>
         </el-form-item>
         <el-form-item
           label="账期"
@@ -681,7 +677,9 @@ export default {
   },
   created() {
     this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
-    this.mustData.processStatus = this.processStatusCom;
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
+  },
+  mounted() {
     this.mustData.actOperator = this.$store.state.userName;
     if (this.urlName === "sortOperation" || this.urlName === "billEntry") {
       this.$http.get("api/sics/basis/getReportUnitsForPC").then(res => {
@@ -690,9 +688,7 @@ export default {
         }
       });
     }
-    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
-  },
-  mounted() {
+    this.mustData.processStatus = this.processStatusCom;
     this.changeWindow();
     this.$http
       .post("api/activiti/getAssigneeName", { roleName: "账单录入" })
@@ -856,8 +852,6 @@ export default {
               params = Object.assign({}, this.mustData,this.billSearch, {curOperator: this.$store.state.userName});
             }
           }
-         
-            
           // if (this.urlName == "sortOperation" || this.admFlag) {
           //   params = Object.assign({}, this.mustData, this.billSearch);
           // }  
@@ -880,13 +874,9 @@ export default {
           });
           break;
         case 2: // 编辑
-          this.$http
-            .post(
-              "api/worksheet/wSEntry/update",
-              Object.assign({}, this.billSearch, this.mustData, {
-                processId: this.chooseRow.processId
-              })
-            )
+        let params1 = Object.assign({},this.billSearch, this.mustData, {processId: this.chooseRow.processId})
+        delete params1["processStatus"];
+          this.$http.post("api/worksheet/wSEntry/update",params1)
             .then(res => {
               if (res.status === 200 && res.data.msg === "操作成功") {
                 this.init();

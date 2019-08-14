@@ -857,6 +857,9 @@ export default {
   },
   created() {
     this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
+  },
+  mounted() {
     if (this.urlName == "taskClaim") {
       this.taskClaimFlag = true;
     }
@@ -868,9 +871,6 @@ export default {
     } else if (this.urlName === "collectiongEnd") {
       this.processStatusList = ["已完结", "REVERSED"];
     }
-    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
-  },
-  mounted() {
     // this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
     this.changeWindow();
     this.mustData.actOperator = this.$store.state.userName;
@@ -1174,7 +1174,7 @@ export default {
             return false;
           }
 
-          this.$confirm("是否任务认领？", "提示", {
+          this.$confirm("是否认领？", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
@@ -1194,7 +1194,7 @@ export default {
                   res.data.errorCode == 1
                 ) {
                   this.dialogFormVisible2 = false;
-                  this.$message({ type: "success", message: "提交成功" });
+                  this.$message({ type: "success", message: "认领成功" });
                   this.init();
                 } else {
                   if (res.status === 200 && res.data.errorMessage) {

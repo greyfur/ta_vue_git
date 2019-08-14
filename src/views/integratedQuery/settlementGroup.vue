@@ -108,7 +108,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="section">
+            <el-table-column label="SECTION">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -174,7 +174,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
+            <el-table-column prop="registBy" label="录入人" width="100"></el-table-column>
             <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
             <el-table-column label="备注">
               <template slot-scope="scope">
@@ -190,7 +190,7 @@
             </el-table-column>
             <el-table-column prop="businessOrigin" label="Business Origin" width="120"></el-table-column>
             <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column>
-            <el-table-column fixed="right" label="操作"></el-table-column>
+            <el-table-column label="操作"></el-table-column>
           </el-table>
         </template>
       </el-table-column>
@@ -229,7 +229,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="sgStatus" label="SG状态"></el-table-column>
-      <el-table-column prop="settlementIndicator" label="结算指标" width="95"></el-table-column>
+      <el-table-column prop="settlementIndicator" label="结算指标" width="100"></el-table-column>
       <el-table-column prop="sgCurrency" label="币值"></el-table-column>
       <el-table-column label="">
         <template slot-scope="scope">
@@ -264,7 +264,7 @@
       </el-table-column>
       <el-table-column prop="bookingYear" label="账单年份"></el-table-column>
       <el-table-column prop="bookingPeriod" label="账期" width="100"></el-table-column>
-      <el-table-column prop="accYear" label="统计年份"></el-table-column>
+      <el-table-column prop="accYear" label="统计年份" width="100"></el-table-column>
       <el-table-column prop="accPeriod" label="统计期" width="100"></el-table-column>
       <el-table-column label="类型">
         <template slot-scope="scope">
@@ -285,8 +285,8 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="createdBy" label="创建人" width="95"></el-table-column>
-      <el-table-column label="创建时间" width="95">
+      <el-table-column prop="createdBy" label="创建人" width="100"></el-table-column>
+      <el-table-column label="创建时间" width="100">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -298,9 +298,9 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="80">
+      <el-table-column prop="baseCompany" label="Base Company" width="135"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="135"></el-table-column>
+      <el-table-column label="操作" width="80">
         <template slot-scope="scope">
           <!-- <el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button> -->
           <el-button @click.stop="openSICS(scope.row)" type="text" size="mini">打开SICS</el-button>

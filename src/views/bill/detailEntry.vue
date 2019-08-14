@@ -13,8 +13,8 @@
         <!-- 签回 -->
         <div class="btn" v-if="$route.query.tag === 'billSignBack'">
           <el-button size="small" @click="mailSend(1)" plain>邮件通知</el-button>
-          <el-button size="small" plain @click="submit(6,'签回提交')">流程结束</el-button>
           <el-button size="small" plain @click="submit(7)">标记签回</el-button>
+          <el-button size="small" plain @click="submit(6,'签回提交')">流程结束</el-button>
         </div>
         <!-- 录入 -->
         <div class="btn" v-if="$route.query.tag === 'billEntry'">
@@ -70,7 +70,7 @@
               </p>
             </div>
             <el-table
-              height="400"
+              height="315"
               v-show="searchFlag2"
               stripe
               border
@@ -232,7 +232,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="section">
+          <el-table-column label="SECTION">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -400,6 +400,19 @@
             </el-tab-pane>
           </el-tabs>
         </el-form-item>
+        <el-form-item label="上传附件" v-show="title==='上传附件'">
+          <el-upload
+            :disabled="uploadType!=1 && $route.query.tag === 'billSignBack'"
+            class="upload-demo"
+            action=""
+            :before-upload="beforeAvatarUpload"
+            :auto-upload="true"
+            :http-request="upload"
+            :headers="head"
+            :file-list="fileList">
+            <el-button plain type="primary">上传</el-button>
+          </el-upload>
+        </el-form-item>
         <el-form-item label="选择类型" v-show="title==='OCR上传'">
           <el-radio-group v-model="recognize_service" class="selfRadio">
             <el-radio label="zhongzai_renbaozhangdan">人保账单</el-radio>
@@ -422,6 +435,7 @@
         <el-button size="small" type="primary" plain @click="send" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
+
     <el-dialog :title="title" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign">
         <el-form-item label="用户名">
@@ -1231,7 +1245,8 @@ export default {
           }).then(() => {this.$http.post("api/worksheet/wSEntry/update",
                 {
                   processId: this.chooseRow.processId,
-                  hasRecheckFlag:'1',
+                  // hasRecheckFlag:'1',
+                  wsHasSignback:'1',
                   // procInstId: this.chooseRow.processInstId,
                   // assignee: this.chooseRow.entryOperator,
                   // type: "SIGNBACK",

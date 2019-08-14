@@ -538,15 +538,15 @@ export default {
       };
     },
   created(){
-    this.mustData.processStatus = this.processStatusCom;
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
+  },
+  mounted(){
     if(this.urlName === 'payOperation'){
       this.processStatusList = ['待处理','已悬停'];
     } else if(this.urlName === 'payClose'){
       this.processStatusList = ['待核销','已悬停'];
     } 
-    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
-  },
-  mounted(){
+    this.mustData.processStatus = this.processStatusCom;
     this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
     this.changeWindow();
     // if(this.urlName === 'payment') {
