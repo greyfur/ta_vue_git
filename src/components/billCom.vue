@@ -27,7 +27,12 @@
               <el-input v-model.trim="zq2" placeholder="请输入年份" class="wsPeriod"></el-input>
               <el-select filterable clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
                 <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
-              </el-select>
+              </el-select> -->
+              <el-date-picker
+                v-model="value2"
+                type="month"
+                placeholder="选择月">
+              </el-date-picker>
             </el-col>
           </el-row>
            <el-row :gutter="10" class="billRow"> 
@@ -269,7 +274,7 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" :width="title==='踪迹'?'80%':'50%'">
       <el-form
         label-position="right"
-        label-width="140px"
+        label-width="120px"
         :model="billSearch"
         :rules="rules"
         ref="billSearch"
@@ -472,9 +477,10 @@
       <div
         slot="footer"
         class="dialog-footer"
+        style="margin-top:10px;"
         v-show="title=='手工创建' || title=='查询' || title=='编辑' || title=='流程提交'"
       >
-        <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button size="small" @click="dialogFormVisible = false" style="margin-right:5px;">取 消</el-button>
         <el-button size="small" type="primary" plain @click="confirm('billSearch')" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
@@ -1235,7 +1241,8 @@ export default {
   padding-right: 30px;
 }
 .btn {
-  margin-bottom: 18px;
+  margin-bottom: 8px;
+  margin-top: 16px;
 }
 .el-pagination {
   text-align: right;

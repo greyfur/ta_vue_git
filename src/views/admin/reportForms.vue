@@ -33,7 +33,7 @@
           name:'报表名称3',
           type:'2'
         },{
-          name:'报表名称4',
+          name:'悬停报表',
           type:'3'
         },{
           name:'报表名称5',
@@ -128,7 +128,7 @@
 .btn{
   width: 80px;
   height: 30px;
-  background: orange;
+  background: rgb(0, 92, 141);
   border-radius: 5px;
   color: #fff;
   cursor: pointer;

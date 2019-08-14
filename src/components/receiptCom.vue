@@ -362,7 +362,7 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" class="SwitchingMode">
       <el-form
         :label-position="labelPosition"
-        label-width="140px"
+        label-width="150px"
         :model="formLabelAlign"
         :rules="rules"
         ref="formLabelAlign"
