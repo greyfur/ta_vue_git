@@ -63,7 +63,8 @@ import {computeName} from '@/assets/js/util.js'
         fold:true,
         transtionflag:false,
         iconEmnu:{
-          'bill':'iconfont iconGroup70',
+          'bill':'el-icon-tickets',
+          // 'bill':'iconfont iconGroup70',
           'receipt':'el-icon-coin',
           'pay':'el-icon-bank-card',
           'integratedQuery':'el-icon-s-opportunity zonghechaxun',
