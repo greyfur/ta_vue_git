@@ -93,7 +93,7 @@
               <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
                 <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification'">
                   <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
-                </p>         z   
+                </p>         
               </div>
               <el-table :data="fileData" border style="width:100%;min-height:350px;max-height:500px;" class="document" :header-row-class-name="StableClass">
                 <el-table-column label="文件名" width="200">
@@ -615,12 +615,12 @@
           <el-input type="textarea" :rows="2" placeholder="请输入原因" v-model="rebut"></el-input>
         </el-form-item> -->
         <el-form-item label="选择处理人" v-show="putIn=='n'">
-          <el-select v-model="assignee"  placeholder="请选择">
+          <el-select filterable v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="title === '指派'?'选择指派人':'选择处理人'" v-show="title === '指派' || putIn=='b'">
-          <el-select v-model="assignee"  placeholder="请选择">
+          <el-select filterable v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName"></el-option>
           </el-select>
         </el-form-item>
@@ -675,7 +675,7 @@
     <el-dialog title="指派" :visible.sync="dialogFormVisibleFHRWZF" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="160px">
         <el-form-item label="选择指派人">
-          <el-select v-model="assignee"  placeholder="请选择">
+          <el-select filterable v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName || item.username == row.entryOperator"></el-option>
           </el-select>
         </el-form-item>
@@ -698,12 +698,12 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="支票状态" prop="rmStatusIndex">
-          <el-select v-model="formLabelAlign.rmStatusIndex" placeholder="请选择">
+          <el-select filterable v-model="formLabelAlign.rmStatusIndex" placeholder="请选择">
             <el-option v-for="(item,i) in rmStatusList" :key="item.n" :label="item.n" :value="i"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="支付方式" prop="paymentTypeIndex">
-          <el-select v-model="formLabelAlign.paymentTypeIndex" placeholder="请选择">
+          <el-select filterable v-model="formLabelAlign.paymentTypeIndex" placeholder="请选择">
             <el-option v-for="(item,i) in paymentTypeList" :key="item.n" :label="item.n" :value="i" :disabled="item.d==formLabelAlign.rmType"></el-option>
           </el-select>
         </el-form-item>
@@ -738,12 +738,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="收款账户" prop="partnerBankAccount" v-show="formLabelAlign.rmType=='P'">
-          <el-select v-model="formLabelAlign.partnerBankAccount" placeholder="请选择">
+          <el-select filterable v-model="formLabelAlign.partnerBankAccount" placeholder="请选择">
             <el-option v-for="(item,i) in recepitList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="item.objectId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="付款账户" prop="bankAccount1">
-          <el-select v-model="formLabelAlign.bankAccount1" placeholder="请选择">
+          <el-select filterable v-model="formLabelAlign.bankAccount1" placeholder="请选择">
             <el-option v-for="(item,i) in BankAccountList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="i"></el-option>
           </el-select>
         </el-form-item>
@@ -756,7 +756,7 @@
         <el-form-item label="币制/金额" required>
           <el-col :span="10">
             <el-form-item prop="bankCurrency">
-              <el-select v-model="formLabelAlign.bankCurrency" placeholder="请选择" class="curAmount" @change="bizhichange(0)">
+              <el-select filterable v-model="formLabelAlign.bankCurrency" placeholder="请选择" class="curAmount" @change="bizhichange(0)">
                 <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
               </el-select>
             </el-form-item>
@@ -771,7 +771,7 @@
         <el-form-item label="手续费币制/手续费金额">
           <el-col :span="10">
             <el-form-item>
-              <el-select v-model="formLabelAlign.chargesCurrency" placeholder="请选择" class="curAmount">
+              <el-select filterable v-model="formLabelAlign.chargesCurrency" placeholder="请选择" class="curAmount">
                 <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
               </el-select>
             </el-form-item>
@@ -833,7 +833,7 @@
         </el-form-item>
         <el-form-item label="原币币制/金额" required>
           <el-form-item>
-            <el-select style="width:90%;height:40px;line-height:40px;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
+            <el-select filterable style="width:90%;height:40px;line-height:40px;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
               <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
             </el-select>
           </el-form-item>
@@ -861,7 +861,7 @@
         <el-form-item label="折币币制/金额" required>
           <el-col :span="10">
             <el-form-item>
-              <el-select v-model="makeDocListEctype.zheType" placeholder="请选择" class="curAmount" @change="zheTypeChange">
+              <el-select filterable v-model="makeDocListEctype.zheType" placeholder="请选择" class="curAmount" @change="zheTypeChange">
                 <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
               </el-select>
             </el-form-item>
@@ -2156,6 +2156,7 @@ export default {
         // } else{
           this.SgData = res.data.worksheetsgDOlist;
           this.RMData = res.data.remitDOlist;
+          this.WSData = res.data.workSheetDOlsit;
           // this.dataBaseSG();
         }
       })

@@ -79,7 +79,7 @@
               style="width: 100%;margin-top:10px;"
               class="document"
             >
-              <el-table-column label="文件名" width="240">
+              <el-table-column label="文件名">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
@@ -103,29 +103,39 @@
                   </el-tooltip>
                 </template>
               </el-table-column> -->
-              <el-table-column label="操作">
+              <el-table-column label="操作" width="80">
                 <template slot-scope="scope">
-                  <!-- ocr hyd -->
-                  <!-- <el-button
-                    :disabled="isHover"
-                    v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess'"
-                    @click.stop="handleClick(2,scope.row)"
-                    type="text"
-                    size="small"
-                  >OCR</el-button>
-                  <el-button
-                    :disabled="isHover"
-                    v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack'"
-                    @click.stop="handleClick(1,scope.row)"
-                    type="text"
-                    size="small"
-                  >删除</el-button> -->
-                  <el-button
-                    :disabled="isHover"
-                    @click.stop="handleClick(3,scope.row)"
-                    type="text"
-                    size="small"
-                  >下载</el-button>
+                  <el-dropdown>
+                    <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item>
+                        <el-button
+                          :disabled="isHover"
+                          v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack' && $route.query.tag !== 'billCheck'"
+                          @click.stop="handleClick(2,scope.row)"
+                          type="text"
+                          size="small"
+                        >OCR</el-button>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <el-button
+                          :disabled="isHover"
+                          v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack' && $route.query.tag !== 'billCheck'"
+                          @click.stop="handleClick(1,scope.row)"
+                          type="text"
+                          size="small"
+                        >删除</el-button>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <el-button
+                          :disabled="isHover"
+                          @click.stop="handleClick(3,scope.row)"
+                          type="text"
+                          size="small"
+                        >下载</el-button>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
                 </template>
               </el-table-column>
             </el-table>
@@ -273,8 +283,7 @@
                 class="item"
                 effect="dark"
                 :content="scope.row.docName"
-                placement="top-start"
-              >
+                placement="top-start">
                 <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
               </el-tooltip>
             </template>
@@ -320,12 +329,11 @@
           <!-- <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column> -->
           <!-- <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column> -->
           <!-- <el-table-column prop="dept" label="经营机构"></el-table-column> -->
-          <el-table-column fixed="right" label="操作" width="140">
+          <el-table-column fixed="right" label="操作" width="180">
             <template slot-scope="scope">
               <el-button :disabled="isHover" @click.stop="openSics(scope.row)" type="text" size="small" >打开SICS</el-button>
-              <!-- <el-button :disabled="isHover" @click.stop="addRemark(scope.row)" type="text" size="small">添加意见</el-button> -->
-              <el-button :disabled="isHover" @click.stop="submit(2)" type="text" size="small">添加意见</el-button>
-              <el-button :disabled="isHover" v-show="scope.row.wsStatus=='Closed'" @click.stop="reverse(scope.row)" type="text" size="small">reverse</el-button>
+              <el-button :disabled="isHover" v-show="$route.query.tag == 'billCheck'" @click.stop="submit(2,'添加意见',scope.row.wsId)" type="text" size="small">添加意见</el-button>
+              <el-button :disabled="isHover" v-show="scope.row.wsStatus=='Closed' && $route.query.tag !== 'billCheck'" @click.stop="reverse(scope.row)" type="text" size="small">reverse</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -359,26 +367,38 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
       <el-form label-width="120px">
         <el-form-item label="收件人" v-show="title==='邮件通知'">
-          <el-select v-model="mailInfo" placeholder="请选择">
-            <el-option
-              v-for="item in mailOption"
-              :key="item.id"
-              :label="item.contactName"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <el-autocomplete style="width:100%" v-model="mailInfo" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="elSelect">
+            <i class="el-icon-edit el-input__icon" slot="suffix"></i>
+            <template slot-scope="{ item }"><span>{{item.contactName}}：{{item.emailAddr}}</span></template>
+          </el-autocomplete>
         </el-form-item>
         <el-form-item label="邮件标题" v-show="title==='邮件通知'">
           <el-input type="text" placeholder="请输入内容" v-model="mailTitle"></el-input>
         </el-form-item>
         <el-form-item label="内容编辑" v-show="title==='邮件通知'">
-          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="emailContent"></el-input>
+          <el-input type="textarea" :rows="6" placeholder="请输入内容" v-model="emailContent"></el-input>
         </el-form-item>
         <el-form-item label="附件上传方式" v-show="title==='邮件通知'">
-          <el-radio-group v-model="uploadType" @change="OnuploadType">
-            <el-radio label="1">本地上传</el-radio>
-            <el-radio label="2">从附件列表中选取</el-radio>
-          </el-radio-group>
+          <el-tabs v-model="uploadType">
+            <el-tab-pane label="本地上传" name="1">
+              <el-upload
+                :disabled="uploadType!=1 && $route.query.tag === 'billSignBack'"
+                class="upload-demo"
+                action=""
+                :before-upload="beforeAvatarUpload"
+                :auto-upload="true"
+                :http-request="upload"
+                :headers="head"
+                :file-list="fileList">
+                <el-button plain :type="uploadType!=1?'info':'primary'">上传</el-button>
+              </el-upload>
+            </el-tab-pane>
+            <el-tab-pane label="附件列表选取" name="2">
+              <el-select v-model="chooseDocList" :disabled="uploadType != 2" style="width:100%" placeholder="请选择">
+                <el-option v-for="(item,i) in tableData" :key="i" :label="item.docName" :value="i"></el-option>
+              </el-select>
+            </el-tab-pane>
+          </el-tabs>
         </el-form-item>
         <el-form-item label="选择类型" v-show="title==='OCR上传'">
           <el-radio-group v-model="recognize_service" class="selfRadio">
@@ -395,25 +415,6 @@
             <el-radio label="zhongzai_yangguang">阳光账单</el-radio>
             <el-radio label="zhongzai_guoshoucai">国寿财</el-radio>
           </el-radio-group>
-        </el-form-item>
-        <el-form-item label="选择附件" v-show="title!=='OCR上传'">
-          <el-upload
-            :disabled="uploadType!=1 && $route.query.tag === 'billSignBack'"
-            class="upload-demo"
-            action=""
-            :before-upload="beforeAvatarUpload"
-            :auto-upload="true"
-            :http-request="upload"
-            :headers="head"
-            :file-list="fileList"
-          >
-            <el-button plain :type="uploadType!=1?'info':'primary'">上传</el-button>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="选择附件" v-show="title==='邮件通知'">
-          <el-select v-model="chooseDocList" :disabled="uploadType != 2" placeholder="请选择">
-            <el-option v-for="(item,i) in tableData" :key="i" :label="item.docName" :value="i"></el-option>
-          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" v-show="title==='邮件通知' || title==='OCR上传'">
@@ -593,6 +594,7 @@ export default {
   name: "detailEntry",
   data() {
     return {
+      wsId:null,
       checkRobortUser:null,
       nameList:{},
       searchFlag3: true,
@@ -609,7 +611,7 @@ export default {
       fileList: [],
       fileList2: [],
       path: "",
-      uploadType: null,
+      uploadType: '1',
       isHover: false,
       assignee: "",
       BHoptions: [
@@ -749,56 +751,54 @@ export default {
       this.checkRobortUser = res.data;
       // 0 需要屏蔽自己，1不需要
     })
-    this.$http
-      .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
-      .then(res => {
-        if (res.status === 200) {
-          this.SICSData = res.data.workSheetVOlist;
-          res.data.processStatus === "已悬停"? (this.isHover = true):(this.isHover = false);
-          // this.tableData = res.data.bscDocumentVOlist;
-          let arr = res.data.bscDocumentVOlist;
-          arr.forEach(el=>{
-            if(el.docName){
-              let suffix = el.docName.split('.');
-              el['suffix'] = suffix[suffix.length-1];
-            }
-          })
-          this.tableData = arr;
-          let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
-          setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
-        }
-      });
-    // 获取详情的值
-    this.listData.forEach(el => {
-      if (el["c"] == "cedent") {
-        if(this.chooseRow["cedent"]==undefined){
-          return
-        }
-        el["b"] = `${this.chooseRow["wsCedentCode"]}-${
-          this.chooseRow["wsCedentName"]
-        }`;
-      } else if (el["c"] == "broker") {
-        if(this.chooseRow["broker"]==undefined){
-          return
-        }
-        el["b"] = `${this.chooseRow["wsBrokerCode"]}-${
-          this.chooseRow["wsBrokerName"]
-        }`;
-      } else if (
-        el["c"] == "wsBusinessType" &&
-        this.chooseRow["wsBusinessType"]
-      ) {
-        el["b"] = `${this.YWoptionsObj[this.chooseRow["wsBusinessType"]]}`;
-      } else {
-        el["b"] = this.chooseRow[el["c"]];
-      }
-      // if(el['a']=='任务来源'){ el["b"] = this.nameList[this.chooseRow[el["c"]]]; }
-    });
+    this.getBillInfo();
   },
   methods: {
     // openPage(){
     //   window.open(pageNew,'_blank');  
     // },
+    getBillInfo(){
+      this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
+        if (res.status === 200) {
+          this.chooseRow = res.data;
+          res.data.processStatus === "已悬停"? (this.isHover = true):(this.isHover = false);
+          this.SICSData = res.data.workSheetVOlist;
+          // 获取详情的值
+          console.log(this.chooseRow,'this.chooseRow');
+          this.listData.forEach(el => {
+            if (el["c"] == "cedent") {
+              if(this.chooseRow["wsCedentCode"]==undefined){return}
+              el["b"] = `${this.chooseRow["wsCedentCode"]}-${
+                this.chooseRow["wsCedentName"]
+              }`;
+            } else if (el["c"] == "broker") {
+              if(this.chooseRow["wsBrokerCode"]==undefined){return}
+              el["b"] = `${this.chooseRow["wsBrokerCode"]}-${
+                this.chooseRow["wsBrokerName"]
+              }`;
+            } else if (
+              el["c"] == "wsBusinessType" &&
+              this.chooseRow["wsBusinessType"]
+            ) {
+              el["b"] = `${this.YWoptionsObj[this.chooseRow["wsBusinessType"]]}`;
+            } else {
+              el["b"] = this.chooseRow[el["c"]];
+            }
+              // if(el['a']=='任务来源'){ el["b"] = this.nameList[this.chooseRow[el["c"]]]; }
+            });
+            let arr = res.data.bscDocumentVOlist;
+            arr.forEach(el=>{
+              if(el.docName){
+                let suffix = el.docName.split('.');
+                el['suffix'] = suffix[suffix.length-1];
+              }
+            })
+          this.tableData = arr;
+          let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
+          setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
+        }
+      });
+    },
     rotateMua(){
       this.rotateCount++;
        if(this.rotateCount>=5){
@@ -898,52 +898,6 @@ export default {
         }).then(res => {
           if (res.status === 200 && res.data) {
             this.SICSData = res.data;
-            this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
-              if (res.status === 200) {
-                this.chooseRow = res.data;
-                // 获取详情的值
-                this.listData.forEach(el => {
-                  if (el["c"] == "cedent") {
-                    if(this.chooseRow["cedent"]==undefined){
-                      return
-                    }
-                    el["b"] = `${this.chooseRow["wsCedentCode"]}-${
-                      this.chooseRow["wsCedentName"]
-                    }`;
-                  } else if (el["c"] == "broker") {
-                    if(this.chooseRow["broker"]==undefined){
-                      return
-                    }
-                    el["b"] = `${this.chooseRow["wsBrokerCode"]}-${
-                      this.chooseRow["wsBrokerName"]
-                    }`;
-                  } else if (
-                    el["c"] == "wsBusinessType" &&
-                    this.chooseRow["wsBusinessType"]
-                  ) {
-                    el["b"] = `${this.YWoptionsObj[this.chooseRow["wsBusinessType"]]}`;
-                  } else {
-                    el["b"] = this.chooseRow[el["c"]];
-                  }
-                    // if(el['a']=='任务来源'){ el["b"] = this.nameList[this.chooseRow[el["c"]]]; }
-                  });
-              
-                // this.SICSData = res.data.workSheetVOlist;
-                // res.data.processStatus === "已悬停"? (this.isHover = true):(this.isHover = false);
-                // let arr = res.data.bscDocumentVOlist;
-                // arr.forEach(el=>{
-                //   if(el.docName){
-                //     let suffix = el.docName.split('.');
-                //     el['suffix'] = suffix[suffix.length-1];
-                //   }
-                // })
-                // this.tableData = arr;
-                // let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
-                // setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
-              }
-            });
-
-
           }
         });
     },
@@ -975,16 +929,22 @@ export default {
         this.file = [];
       }
     },
+    querySearch(queryString, cb) {
+      let restaurants = this.mailOption;
+      let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (restaurant.emailAddr.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
+    },
+    elSelect(item){
+      this.mailInfo = item.emailAddr
+    },
     send() {
       if (this.title == "OCR上传") {
-        this.$http
-          .post(
-            "api/anyShare/fileOperation/previewDocument",
-            Object.assign({}, this.ocrRow, {
-              processId: this.chooseRow.processId
-            }),
-            { responseType: "blob" }
-          )
+        this.$http.post("api/anyShare/fileOperation/previewDocument",Object.assign({}, this.ocrRow, { processId: this.chooseRow.processId}),{ responseType: "blob" })
           .then(res => {
             if (res.status == 200) {
               let resFile = new FormData();
@@ -1010,17 +970,8 @@ export default {
             }
           });
       } else if (this.title == "邮件通知") {
-        let info = {},
-          params = null;
-        this.mailOption.forEach(el => {
-          if (el.id == this.mailInfo) {
-            info = Object.assign(
-              {},
-              { emailContent: this.emailContent, mailTitle: this.mailTitle },
-              el
-            );
-          }
-        });
+        let info = {},params = null;
+        info = Object.assign({},{emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle });
         // 本地上传
         if (this.file.length) {
           var resFile = new FormData();
@@ -1045,17 +996,14 @@ export default {
                 for (let k in info) {
                   resFiles.append(k, info[k]);
                 }
-                this.$http
-                  .post("api/worksheet/wSEntry/sendEmail", resFiles)
+                this.$http.post("api/worksheet/wSEntry/sendEmail", resFiles)
                   .then(res => {
                     if (res.status === 200 && res.data.code == 0) {
-                      this.$message({
-                        type: "success",
-                        message: "邮件发送成功"
-                      });
+                      this.$message({type: "success",message: res.data.msg});
                       this.dialogFormVisible2 = false;
-                    } else if (res.data.code == 1 && res.data.msg) {
-                      this.$message.error(res.data.msg);
+                    } else{
+                      this.$message({type: "error",message: res.data.msg});
+                      this.dialogFormVisible2 = false;
                     }
                   });
               }
@@ -1063,20 +1011,22 @@ export default {
         }
         if (this.chooseDocList == null) {
           this.file.length ? (params = resFile) : (params = info);
-          this.$http
-            .post("api/worksheet/wSEntry/sendEmail", params)
+          this.$http.post("api/worksheet/wSEntry/sendEmail", params)
             .then(res => {
-              if (res.status === 200 && res.data.msg === "操作成功") {
-                this.$message({ type: "success", message: "邮件发送成功" });
+              if (res.status === 200 && res.data.code==0) {
+                this.$message({ type: "success", message:res.data.msg});
                 this.dialogFormVisible2 = false;
                 this.fileList = [];
                 this.file = [];
+              } else{
+                this.$message({type: "error",message: res.data.msg});
+                this.dialogFormVisible2 = false;
               }
             });
         }
       }
     },
-    submit(tag, name) {
+    submit(tag, name,wsId) {
       this.dialogState = tag;
       this.tagName = name;
       this.assignee = null;
@@ -1092,6 +1042,7 @@ export default {
           break;
         case 2: // 添加意见  ----- 不需要选择人,但是有弹窗 assign：录入人
           this.opinion = "";
+          this.wsId = wsId;
           this.textareaOpinion = "";
           this.title = "添加意见";
           this.dialogFormVisible5 = true;
@@ -1393,19 +1344,21 @@ export default {
             return;
           }
           this.$http.post("api/worksheet/wSCheck/update",{
-                processId: this.chooseRow.processId,
-                procInstId: this.chooseRow.processInstId,
-                assignee: this.chooseRow.entryOperator,
+                wsId:this.wsId,
+                // processId: this.chooseRow.processId,
+                // procInstId: this.chooseRow.processInstId,
+                // assignee: this.chooseRow.entryOperator,
                 remark:this.textareaOpinion,
                 rejectType:this.opinion,
-                actOperator: this.chooseRow.curOperator,
-                type: "REJECT"
+                // actOperator: this.chooseRow.curOperator,
+                // type: "REJECT"
               }
             )
             .then(res => {
               if (res.status === 200 && res.data.code == 0) {
-                this.dialogFormVisible = false;
-                this.$router.push({ name: this.$route.query.tag });
+                this.getBillInfo();
+                this.dialogFormVisible5 = false;
+                this.$message({type: "success",message: res.data.msg});
               } else if (res.data.code == 1) {
                 this.$message({type: "error",message: res.data.msg});
               }
@@ -1492,11 +1445,11 @@ export default {
               this.$message({ type: "success", message: res.data.msg });
               this.textareaOpinion = "";
               this.dialogFormVisible5 = false;
-              this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
-              if (res.status === 200) {
-                  this.SICSData = res.data.workSheetVOlist;
-                }
-              });
+              // this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
+              // if (res.status === 200) {
+              //     this.SICSData = res.data.workSheetVOlist;
+              //   }
+              // });
             } else if(res.data.code == '1'){ this.$message({ type: "error", message: res.data.msg }); }
           });
         break;

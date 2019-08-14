@@ -59,9 +59,7 @@
     <!-- 详情 -->
     <div :class="searchFlag1===true?'searchNew':''" >
       <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
-        <div>
-          <i style="margin-right:8px;" :class="searchFlag1===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>详情11
-        </div>
+        <div><i style="margin-right:8px;" :class="searchFlag1===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>详情</div>
         <p class="info" style="color:#666;">流程编号:
           <el-tooltip class="item" effect="dark" content="点击复制" placement="top">
             <span style="color:#000;" id="proNum" @click.stop="copy('proNum')">{{row.processId}}</span>
@@ -702,7 +700,7 @@
           <el-input type="textarea" :rows="2" placeholder="请输入悬停原因" v-model="pendingReason"></el-input>
         </el-form-item>
         <el-form-item label="选择处理人" v-show="putIn=='n'">
-          <el-select v-model="assignee" placeholder="请选择">
+          <el-select filterable v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
               :key="item.userId"
@@ -715,7 +713,7 @@
           :label="title === '指派'?'选择指派人':'选择处理人'"
           v-show="title === '指派' || putIn=='b'"
         >
-          <el-select v-model="assignee" placeholder="请选择">
+          <el-select filterable v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
               :key="item.userId"
@@ -734,7 +732,7 @@
     <el-dialog title="指派" :visible.sync="dialogFormVisibleFHRWZF" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="160px">
         <el-form-item label="选择指派人">
-          <el-select v-model="assignee" placeholder="请选择">
+          <el-select filterable v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
               :key="item.userId"
@@ -767,12 +765,12 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="支票状态" prop="rmStatusIndex">
-          <el-select v-model="formLabelAlign.rmStatusIndex" placeholder="请选择">
+          <el-select filterable v-model="formLabelAlign.rmStatusIndex" placeholder="请选择">
             <el-option v-for="(item,i) in rmStatusList" :key="item.n" :label="item.n" :value="i"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="支付方式" prop="paymentTypeIndex">
-          <el-select v-model="formLabelAlign.paymentTypeIndex" placeholder="请选择">
+          <el-select filterable v-model="formLabelAlign.paymentTypeIndex" placeholder="请选择">
             <el-option v-for="(item,i) in paymentTypeList" :key="item.n" :label="item.n" :value="i" :disabled="item.d==formLabelAlign.rmType"></el-option>
           </el-select>
         </el-form-item>
@@ -808,7 +806,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="收款账户" prop="partnerBankAccount" v-show="formLabelAlign.rmType=='P'">
-          <el-select v-model="formLabelAlign.partnerBankAccount" placeholder="请选择">
+          <el-select filterable v-model="formLabelAlign.partnerBankAccount" placeholder="请选择">
             <el-option v-for="(item,i) in recepitList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="item.objectId"></el-option>
           </el-select>
         </el-form-item>
@@ -826,7 +824,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="银行账户" prop="bankAccount1">
-          <el-select v-model="formLabelAlign.bankAccount1" placeholder="请选择">
+          <el-select filterable v-model="formLabelAlign.bankAccount1" placeholder="请选择">
             <el-option
               v-for="(item,i) in BankAccountList"
               :key="i"
@@ -855,6 +853,7 @@
           <el-col :span="10">
             <el-form-item prop="bankCurrency">
               <el-select
+                filterable
                 v-model="formLabelAlign.bankCurrency"
                 placeholder="请选择"
                 class="curAmount"
@@ -885,6 +884,7 @@
           <el-col :span="10">
             <el-form-item>
               <el-select
+                filterable
                 v-model="formLabelAlign.chargesCurrency"
                 placeholder="请选择"
                 class="curAmount"

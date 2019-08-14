@@ -37,6 +37,7 @@
         </el-row>
         <el-row><el-col :span="24">
           <el-button type="primary" plain @click="handleClick(4)"><i class="iconfont iconGroup42"></i>查询</el-button>
+          <el-button type="primary" plain @click="mySubmit"><i class="iconfont iconGroup42"></i>我提交的</el-button>
           <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
         </el-col></el-row>
       </div>
@@ -498,6 +499,19 @@ export default {
     this.init();
   },
   methods: {
+    mySubmit(){
+      this.$http.post('apiintegeratedQuery/ProcessMessagelist',{
+          processType:['付款','收款'],
+          pageNumber:1,
+          pageSize:1000,
+          currentOperator:this.$store.state.userName
+      }).then(res =>{
+        if(res.status === 200 ) {
+          this.tableData = res.data.rows;
+          this.mustData.total = res.data.total;
+        }
+      })
+    },
     changeWindow(){
       let that=this;
       document.body.onresize=function(e){

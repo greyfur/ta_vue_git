@@ -400,7 +400,7 @@
             @input="watchInput('rmAmount')">
         </el-form-item>
         <el-form-item clearable label="币制" v-show="title==='创建' || title==='编辑'">
-          <el-select clearable v-model="formLabelAlign.rmCurrency" placeholder="请选择币制">
+          <el-select clearable filterable v-model="formLabelAlign.rmCurrency" placeholder="请选择币制">
             <el-option
               v-for="item in rmCurrencyList"
               :key="item.alpha"
@@ -550,7 +550,7 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="80%">
       <el-form label-width="140px" v-show="title==='流程提交'">
         <el-form-item label="选择处理人">
-          <el-select clearable v-model="assignee" placeholder="请选择">
+          <el-select filterable clearable v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
               :key="item.value"
@@ -671,7 +671,7 @@ export default {
       modal: false,
       tableData: [],
       ZDoptions: [],
-      changeClientHight:446,
+      changeClientHight:null,
       baseCompanyList: [],
       businessOriginList: [],
       rmCurrencyList: [],
@@ -856,6 +856,7 @@ export default {
     }
   },
   created() {
+    this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
     if (this.urlName == "taskClaim") {
       this.taskClaimFlag = true;
     }
@@ -870,6 +871,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
+    // this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
     this.changeWindow();
     this.mustData.actOperator = this.$store.state.userName;
     this.formLabelAlign.modifiedBy = this.$store.state.userName;

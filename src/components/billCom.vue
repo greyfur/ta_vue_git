@@ -25,7 +25,7 @@
             <el-col :span="10">
               <span class="slable">账期</span>
               <el-input v-model.trim="zq2" placeholder="请输入年份" class="wsPeriod"></el-input>
-              <!-- <el-select clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
+              <el-select filterable clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
                 <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
               </el-select> -->
               <el-date-picker
@@ -117,8 +117,7 @@
             class="item"
             effect="dark"
             :content="scope.row.processName"
-            placement="top-start"
-          >
+            placement="top-start">
             <span class="abbreviate">{{scope.row.processName}}</span>
           </el-tooltip>
         </template>
@@ -286,7 +285,7 @@
         </el-form-item>
         <!--   以上只有查询有 --------->
         <el-form-item label="任务类型" prop="wsBusinessType" v-show="title==='手工创建' || title==='编辑'">
-          <el-select clearable v-model="billSearch.wsBusinessType" placeholder="请选择任务类型">
+          <el-select :disabled='RWFlag' clearable v-model="billSearch.wsBusinessType" placeholder="请选择任务类型">
             <el-option
               v-for="item in YWoptions"
               :key="item.value"
@@ -351,9 +350,8 @@
          <el-form-item
           label="流程名称"
           v-show="title==='手工创建' || title==='编辑' || title==='查询'"
-          class="zqForm"
-        >
-          <el-input v-model.trim="zq3" placeholder="请输入流程名称"></el-input>
+          class="zqForm">
+          <el-input v-model.trim="billSearch.processName" placeholder="请输入流程名称"></el-input>
         </el-form-item>
         <el-form-item
           label="账期"
@@ -408,6 +406,7 @@
           <el-upload
             class="sort-upload"
             action=""
+            multiple
             :before-upload="beforeAvatarUpload"
             :auto-upload="true"
             :http-request="upload"
@@ -432,32 +431,32 @@
           <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
         </el-collapse-item>
       </el-collapse>
-      <el-table :data="fileData" style="width: 100%" class="document" border>
-            <el-table-column label="文件名" width="140">
-              <template slot-scope="scope">
-                <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                  <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
-                </el-tooltip> 
-              </template>
-            </el-table-column>
-            <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
-            <el-table-column label="录入人员" width="140">
-              <template slot-scope="scope">
-                <el-tooltip class="item" effect="dark" :content="scope.row.createdBy" placement="top">
-                  <span class="abbreviate">{{scope.row.createdBy}}</span>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" width="100">
-              <template slot-scope="scope">
-                <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+      <el-table :data="fileData" style="width: 100%" class="document" border v-show="title=='编辑'">
+        <el-table-column label="文件名">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
+              <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+            </el-tooltip> 
+          </template>
+        </el-table-column>
+        <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
+        <el-table-column label="录入人员" width="140">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" :content="nameList[scope.row.createdBy]" placement="top">
+              <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="100">
+          <template slot-scope="scope">
+            <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
       <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'">
         <el-table-column prop="processId" label="流程编号" width="220"></el-table-column>
         <el-table-column prop="actName" label="操作名称"></el-table-column>
-        <el-table-column label="任务来源" width="85">
+        <el-table-column label="录入人员" width="85">
           <template slot-scope="scope">
             <span>{{nameList[scope.row.actOperator]}}</span>
           </template>
@@ -519,12 +518,13 @@ export default {
   },
   data() {
     return {
+      RWFlag:false,
       nameList:{},
       searchFlag: false,
       tableData: [],
       assignee: "",
       modal: false,
-      changeClientHight:446,
+      changeClientHight:null,
       YWoptions: [
         { value: "T", label: "合约账单" },
         { value: "F", label: "临分账单" },
@@ -676,7 +676,6 @@ export default {
       ZJprocessId: "",
       zq1: "",
       zq2: "",
-      zq3:"",
       rules: {
         wsBusinessType: [
           { required: true, message: "请选择任务类型", trigger: "blur" }
@@ -686,9 +685,7 @@ export default {
     };
   },
   created() {
-    // console.log('屏幕分辨率',window.screen.width,window.screen.height)
-    // console.log('网页可见区',document.body.clientWidth,document.body.clientHeight)
-    // console.log('网页可见区+外边框',document.body.offsetWidth,document.body.offsetHeight)
+    this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
     this.mustData.processStatus = this.processStatusCom;
     this.mustData.actOperator = this.$store.state.userName;
     if (this.urlName === "sortOperation" || this.urlName === "billEntry") {
@@ -817,9 +814,6 @@ export default {
         if (this.zq2 && this.zq1) {
           this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;
         }
-        if(this.zq3){
-           this.billSearch.processName=`${this.zq3}`
-        }
       }
       if (this.cedentModel != null) {
         let obj = this.cedentList[this.cedentModel];
@@ -835,15 +829,14 @@ export default {
         case 0: // 创建
           this.$refs[formName].validate(valid => {
             if (valid) {
-              this.$http
-                .post(
-                  "api/worksheet/wSEntry/save",
-                  Object.assign({}, this.mustData, this.billSearch)
-                )
+              this.$http.post("api/worksheet/wSEntry/save",Object.assign({}, this.mustData, this.billSearch))
                 .then(res => {
-                  if (res.status === 200 && res.data.msg === "操作成功") {
+                  if (res.status === 200 && res.data.code == 0) {
                     this.dialogFormVisible = false;
                     this.init();
+                  } else if(res.data.code == 1){
+                    this.$message({ type: "error", message:res.data.msg });
+                    this.dialogFormVisible = false;
                   }
                 });
             }
@@ -948,13 +941,13 @@ export default {
       }
       this.zq2 = null;
       this.zq1 = null;
-      this.zq3=null;
       this.brokerModel = null;
       this.cedentModel = null;
     },
     handleClick(tag, row) {
       this.dialogState = tag;
       this.chooseRow = row;
+      this.RWFlag = false;
       this.assignee = null;
       switch (tag) {
         case 0:
@@ -976,6 +969,8 @@ export default {
           break;
         case 2:
           // 账单类型
+          this.RWFlag = row.processId.indexOf('RW')>0;
+          console.log(this.RWFlag);
           this.fileData = [];
           if (row.wsType) {
             this.ZDoptions.forEach((el, i) => {
@@ -1020,6 +1015,38 @@ export default {
           } else {
             this.brokerModel = null;
           }
+          // Business Origin
+         if(row.businessOrigin){
+            this.businessOriginList.forEach((el, i) => {
+              if (el.name == row.businessOrigin) {
+                this.billSearch.businessOrigin = el.code;
+              }
+            });
+          } else{ this.billSearch.businessOrigin = null; }
+
+          // Base Company
+         if(row.baseCompany){
+            this.baseCompanyList.forEach((el, i) => {
+              if (el.name == row.baseCompany) {
+                this.billSearch.baseCompany = el.code;
+              }
+            });
+          } else{ this.billSearch.baseCompany = null; }
+
+          // Reporting Unit
+         if(row.reportUnit){
+            this.ReportUnitList.forEach((el, i) => {
+              if (el.name == row.reportUnit) {
+                this.billSearch.reportUnit = el.code;
+              }
+            });
+          } else{ this.billSearch.reportUnit = null; }
+
+        // 流程名称
+         if(row.processName){
+            this.billSearch.processName = row.processName;
+          }
+        
           // 账期
           if (row.wsPeriod) {
             let arr = row.wsPeriod.split("-");
@@ -1127,14 +1154,17 @@ export default {
                 .then(res => {
                   if (res.status === 200) {
                     // this.fileData = res.data.bscDocumentVOlist;
-                    let arr4 = res.data.bscDocumentVOlist;
-                    arr4.forEach(el=>{
-                      if(el.docName){
-                        let suffix = el.docName.split('.');
-                        el['suffix'] = suffix[suffix.length-1];
-                      }
-                    })
-                    this.fileData = arr4;
+                    if(res.data.bscDocumentVOlist){
+                      let arr4 = res.data.bscDocumentVOlist;
+                      arr4.forEach(el=>{
+                        if(el.docName){
+                          let suffix = el.docName.split('.');
+                          el['suffix'] = suffix[suffix.length-1];
+                        }
+                      })
+                      this.fileData = arr4;
+                    } else{ this.fileData =[]; }
+                    
                   }
                 });
             }
@@ -1156,11 +1186,7 @@ export default {
         });
         resFile.append("actOperator", this.$store.state.userName);
         resFile.append("processId", this.chooseRow.processId);
-        this.$http
-            .post("api/anyShare/fileOperation/uploadFilesForPage", resFile, {  // 旧的
-            // .post("api/uploadFilesForPageBatch/uploadFilesForPageBatch", resFile, {  // 新的
-            headers: { "Content-Type": "application/json;charset=UTF-8" }
-          })
+        this.$http.post("api/anyShare/fileOperation/uploadFilesForPageBatch", resFile, {  headers: { "Content-Type": "application/json;charset=UTF-8" }})
           .then(res => {
             if (res.status === 200 && res.data.errorCode == 1) {
               this.fileList = [];
