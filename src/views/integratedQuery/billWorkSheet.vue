@@ -792,18 +792,10 @@ export default {
           // })
           
           break;
-        case 6: // 打开 sics
-        console.log(row["sgNum"])
-          this.$http
-            .post("api/sics/liveDesktop/openWorksheet", {
-              modifiedBy: this.$store.state.userName,
-              worksheetId: row["sgNum"]
-            })
+        case 6: // 打开SICS
+          this.$http.post("api/sics/liveDesktop/openWorksheet", {modifiedBy: this.$store.state.userName,worksheetId: row["sgNum"]})
             .then(res => {
-              console.log(res)
-              // if(res.status === 200 && res.data.rows){
-              //   this.SICSData = res.data.rows;
-              // }
+              this.$message({message:res.data,type: 'warning'});
             });
          break;
       } 

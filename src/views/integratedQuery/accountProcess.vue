@@ -34,6 +34,12 @@
             <span class="slable">到账日期</span>
               <el-date-picker value-format="timestamp" v-model="formLabelAlign.rmReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
           </el-col>
+          <el-col :span="8">
+            <span class="slable">收/付款</span>
+            <el-select clearable v-model="formLabelAlign.processType" placeholder="请选择">
+              <el-option v-for="item in [{'l':'收款','v':['收款']},{'l':'付款','v':['付款']},{'l':'全部','v':['付款','收款']}]" :key="item.l" :label="item.l" :value="item.v"></el-option>
+            </el-select>
+          </el-col>
         </el-row>
         <el-row><el-col :span="24">
           <el-button type="primary" plain @click="handleClick(4)"><i class="iconfont iconGroup42"></i>查询</el-button>
@@ -81,6 +87,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
+      <el-table-column prop="processType" label="收/付款"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin"></el-table-column>
       <el-table-column label="Base Company" prop="baseCompany"></el-table-column>
       <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->
@@ -92,6 +99,7 @@
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item> -->
               <el-dropdown-item><el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button></el-dropdown-item>
+              <el-dropdown-item><el-button v-if="scope.row.processStatus=='已完结'" @click.stop="reverse(scope.row)" type="text" size="mini">reverse</el-button></el-dropdown-item>
               <!-- <el-dropdown-item><el-button v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(12,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(15,scope.row)" type="text" size="small">附件查看</el-button></el-dropdown-item>
@@ -271,6 +279,7 @@ export default {
         hide:false,
         labelPosition:'right',
         formLabelAlign:{
+          processType:null,
           rmSettleCompanyCode:null,
           rmSettleCompanyName:null,
           rmCurrency:null,
@@ -499,6 +508,19 @@ export default {
     this.init();
   },
   methods: {
+    reverse(row){
+      let url='';
+      if(row.processType=='收款'){
+        url='api/receipt/finaCreat/reverseReceiptProcess'
+      } else{ url='api/pay/teskClaim/reversePayProcess' }
+      this.$http.post(url, {actOperator: this.$store.state.userName,processId:row.processId})
+        .then(res => {
+          if(res.status === 200&&res.data.code==0){
+            this.$message({message:res.data.msg,type: 'success'});
+          } else{ this.$message({message:res.data.msg,type: 'error'}); }
+          
+        });
+    },
     mySubmit(){
       this.$http.post('apiintegeratedQuery/ProcessMessagelist',{
           processType:['付款','收款'],

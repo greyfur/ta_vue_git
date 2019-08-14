@@ -804,15 +804,9 @@ export default {
       }
     },
     openSICS(row) {
-      this.$http
-        .post("api/sics/liveDesktop/openWorksheet", {
-          modifiedBy: this.$store.state.userName,
-          worksheetId: row["sgNum"]
-        })
+      this.$http.post("api/sics/liveDesktop/openWorksheet", {modifiedBy: this.$store.state.userName,worksheetId: row["sgNum"]})
         .then(res => {
-          // if(res.status === 200 && res.data.rows){
-          //   this.SICSData = res.data.rows;
-          // }
+          this.$message({message:res.data,type: 'warning'});
         });
     },
     init(tag) {

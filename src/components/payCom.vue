@@ -70,12 +70,12 @@
       </el-table-column> -->
       <el-table-column width="110" label="录入人员">
         <template slot-scope="scope">
-          <span>{{scope.row.registBy}}</span>
+          <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="urlName==='payReview'||urlName==='payClose'||urlName==='emailNotify'||urlName==='payment'||urlName==='partialDone'" label="复核人员" width="110">
         <template slot-scope="scope">
-          <span>{{scope.row.closedBy}}</span>
+          <span>{{nameList[scope.row.closedBy]}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
