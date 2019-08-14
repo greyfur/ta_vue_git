@@ -20,9 +20,9 @@
         <div class="btn" v-if="$route.query.tag === 'payment' || $route.query.tag === 'partialDone' || $route.query.tag === 'instancyPay'">
           <el-button type="primary" v-if="$route.query.tag === 'partialDone'" @click="openBPSICS" plain>打开BpLedger</el-button>
           <!-- <el-button size="small" plain>附件上传</el-button> -->
-          <el-button size="small" plain @click="tongbu">同步状态</el-button>
+          <el-button size="small" plain @click="tongbu" v-if="$route.query.tag === 'instancyPay'">同步状态</el-button>
           <!-- <el-button size="small" plain @click="mailSend(2,'附件查看')">附件查看</el-button> -->
-          <!-- <el-button size="small" plain v-if="$route.query.tag === 'partialDone'">同步状态</el-button> -->
+          <el-button size="small" plain v-if="$route.query.tag === 'partialDone'">同步状态</el-button>
           <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button>
         </div>
         <!-- 操作 -->
@@ -113,7 +113,7 @@
                 </el-table-column>
                 <el-table-column label="操作" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'">
                   <template slot-scope="scope">
-                    <el-button v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
+                    <span class="blueColor" -show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" @click.stop="detailRemove(scope.row)">删除</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -231,9 +231,9 @@
           <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
           <el-table-column label="操作" width="140" fixed="right">
             <template slot-scope="scope">
-              <el-button @click="onOpenSICS(scope.row,'rmId')" v-if="$route.query.tag === 'payClose' || $route.query.tag === 'payment' || $route.query.tag === 'instancyPay' || $route.query.tag === 'partialDone'" type="text" size="small">Reverse</el-button>
-              <el-button @click="onOpenSICS(scope.row,'rmId')"  type="text" size="small">打开SICS</el-button>
-              <el-button type="text" v-if="$route.query.tag === 'approvalDone'" @click.stop="chongXiao(scope.row)" size="mini">冲销</el-button>
+              <span class="blueColor" click="onOpenSICS(scope.row,'rmId')" v-if="$route.query.tag === 'payClose' || $route.query.tag === 'payment' || $route.query.tag === 'instancyPay' || $route.query.tag === 'partialDone'">Reverse</span>
+              <span class="blueColor" @click="onOpenSICS(scope.row,'rmId')">打开SICS</span>
+              <span class="blueColor" v-if="$route.query.tag === 'approvalDone'" @click.stop="chongXiao(scope.row)">冲销</span>
             </template>
           </el-table-column>
         </el-table>
@@ -241,16 +241,16 @@
       </el-col>
     </el-row>
     <!-- 结算清单 -->
-    <el-row style="padding:0 16px;padding-bottom:60px">
+    <el-row style="padding:0 16px;">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单</div>
           <p v-if="$route.query.tag === 'payOperation' || $route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
-        <el-table v-show="searchFlag3" :data="SgData" style="width: 100%" border>
+        <el-table v-show="searchFlag3" :data="SgData" style="width: 100%" border :header-row-class-name="StableClass">
           <el-table-column type="expand">
             <template slot-scope="props">
-              <el-table :data="props.row.worksheetDOList" style="width: 100%" border>
+              <el-table :data="props.row.worksheetDOList" style="width: 100%" border :header-row-class-name="StableClass">
                 <el-table-column label="账单号">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
@@ -258,13 +258,11 @@
                     </el-tooltip>
                   </template>
                 </el-table-column>
-                <el-table-column prop="wsStatus" label="账单状态" width="100">
-                  <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
-                </el-table-column>
-                <el-table-column label="账单标题">
+                <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
+                <el-table-column label="金额" align="right">
                   <template slot-scope="scope">
-                    <el-tooltip class="item" effect="dark" :content="scope.row.wsTitle" placement="top-start">
-                      <span class="abbreviate">{{scope.row.wsTitle}}</span>
+                    <el-tooltip class="item" effect="dark" :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')" placement="top-start">
+                      <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -290,18 +288,23 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="uwYear" label="业务年度"></el-table-column>
-                <el-table-column label="任务类型">
+                <el-table-column prop="wsPeriod" label="账单期" width="100"></el-table-column>
+                <el-table-column label="账单标题">
                   <template slot-scope="scope">
-                    <el-tooltip class="item" effect="dark" :content="scope.row.businessType" placement="top-start">
-                      <span class="abbreviate">{{scope.row.businessType}}</span>
+                    <el-tooltip class="item" effect="dark" :content="scope.row.wsTitle" placement="top-start">
+                      <span class="abbreviate">{{scope.row.wsTitle}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
-                <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
-                <el-table-column label="分出公司" width="120">
+                <el-table-column prop="wsStatus" label="账单状态" width="100">
+                  <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
+                </el-table-column>
+                <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
+                <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
+                <el-table-column label="附件名称">
                   <template slot-scope="scope">
-                    <el-tooltip class="item" effect="dark" :content="scope.row.cedentCode+'-'+scope.row.cedentName" placement="top-start">
-                      <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
+                    <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
+                      <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -312,21 +315,25 @@
                     </el-tooltip>
                   </template>
                 </el-table-column>
-                <el-table-column prop="wsType" label="账单类型"></el-table-column>
-                <el-table-column prop="wsPeriod" label="账单期" width="100"></el-table-column>
-                <el-table-column prop="dept" label="经营机构"></el-table-column>
-                <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
-                <el-table-column label="金额" align="right">
+                <el-table-column label="分出公司" width="120">
                   <template slot-scope="scope">
-                    <el-tooltip class="item" effect="dark" :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')" placement="top-start">
-                      <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
+                    <el-tooltip class="item" effect="dark" :content="scope.row.cedentCode+'-'+scope.row.cedentName" placement="top-start">
+                      <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
+                <el-table-column prop="wsType" label="账单类型"></el-table-column>
+                <el-table-column label="任务类型">
+                  <template slot-scope="scope">
+                    <el-tooltip class="item" effect="dark" :content="scope.row.businessType" placement="top-start">
+                      <span class="abbreviate">{{scope.row.businessType}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
+                <el-table-column prop="dept" label="经营机构"></el-table-column>
                 <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
                 <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
-                <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
-                <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
                 <el-table-column label="备注">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.remark" placement="top-start">
@@ -336,13 +343,13 @@
                 </el-table-column>
                 <el-table-column label="操作" width="120" fixed="right">
                   <template slot-scope="scope">
-                    <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
+                    <span class="blueColor" @click.stop="openSICS(scope.row,'wsId')">打开SICS</span>
                   </template>
                 </el-table-column>
               </el-table>
             </template>
           </el-table-column>
-          <el-table-column label="SG号">
+          <el-table-column label="结算清单号" width="140">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.sgNum" placement="top-start">
                 <span class="abbreviate">{{scope.row.sgNum}}</span>
@@ -363,18 +370,26 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="bpCode" label="BP number" width="100"></el-table-column>
+          <!-- <el-table-column prop="bpCode" label="BP number" width="100"></el-table-column>
           <el-table-column label="BP名称">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.bpName" placement="top-start">
                 <span class="abbreviate">{{scope.row.bpName}}</span>
               </el-tooltip>
             </template>
+          </el-table-column> hyd-->
+           <el-table-column width="180" label="结付公司">
+              <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark"  :content="scope.row.bpName&&scope.row.bpCode?scope.row.bpCode+'-'+scope.row.bpName:''" placement="top-start">
+                <span class="abbreviate" v-if="scope.row.bpName&&scope.row.bpCode">{{scope.row.bpCode}}-{{scope.row.bpName}}</span>
+                <span class="abbreviate" v-else></span>
+              </el-tooltip>
+            </template>
           </el-table-column>
-          <el-table-column prop="sgStatus" label="SG状态"></el-table-column>
+          <el-table-column prop="sgStatus" label="结算清单状态" width="110"></el-table-column>
           <el-table-column prop="settlementIndicator" label="结算指标" width="100"></el-table-column>
           <el-table-column prop="sgCurrency" label="币值"></el-table-column>
-          <el-table-column label="结算总额">
+          <el-table-column label="结算总额" align="right">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -435,8 +450,8 @@
           </el-table-column> 
           <el-table-column  label="操作" width="160" fixed="right">
             <template slot-scope="scope">
-              <el-button type="text" @click.stop="openSGSICS(scope.row,'sgNum')" size="mini">打开SICS</el-button>
-              <el-button v-if="$route.query.tag === 'approvalDone'" type="text" @click.stop="remitCreat(scope.row)" size="mini">创建支票</el-button>
+              <span class="blueColor" @click.stop="openSGSICS(scope.row,'sgNum')">打开SICS</span>
+              <span class="blueColor" v-if="$route.query.tag === 'approvalDone'" type="text" @click.stop="remitCreat(scope.row)">创建支票</span>
             </template>
           </el-table-column>
         </el-table>
@@ -465,18 +480,16 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="wsStatus" label="账单状态" width="100">
-              <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
-            </el-table-column>
-            <el-table-column label="账单标题">
+            <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
+            <el-table-column label="金额" align="right">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  :content="scope.row.wsTitle"
+                  :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
                   placement="top-start"
                 >
-                  <span class="abbreviate">{{scope.row.wsTitle}}</span>
+                  <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -492,19 +505,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="附件名称">
-              <template slot-scope="scope">
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  :content="scope.row.docName"
-                  placement="top-start"
-                >
-                  <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-            <el-table-column label="SECTION">
+              <el-table-column label="SECTION">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -517,28 +518,33 @@
               </template>
             </el-table-column>
             <el-table-column prop="uwYear" label="业务年度"></el-table-column>
-            <el-table-column label="任务类型">
+            <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
+            <el-table-column label="账单标题">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  :content="scope.row.businessType"
+                  :content="scope.row.wsTitle"
                   placement="top-start"
                 >
-                  <span class="abbreviate">{{scope.row.businessType}}</span>
+                  <span class="abbreviate">{{scope.row.wsTitle}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
-            <el-table-column label="分出公司" width="120">
+            <el-table-column prop="wsStatus" label="账单状态" width="100">
+              <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
+            </el-table-column>
+            <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
+            <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
+            <el-table-column label="附件名称">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  :content="scope.row.cedentCode+'-'+scope.row.cedentName"
+                  :content="scope.row.docName"
                   placement="top-start"
                 >
-                  <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
+                  <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -554,26 +560,40 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="wsType" label="账单类型"></el-table-column>
-            <el-table-column prop="wsPeriod" label="账单期"></el-table-column>
-            <el-table-column prop="dept" label="经营机构"></el-table-column>
-            <el-table-column prop="wsCurrency" label="币制" width="50"></el-table-column>
-            <el-table-column label="金额" align="right">
+            <el-table-column label="分出公司" width="120">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
+                  :content="scope.row.cedentCode+'-'+scope.row.cedentName"
                   placement="top-start"
                 >
-                  <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
+                  <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
+            <el-table-column prop="wsType" label="账单类型"></el-table-column>
+            <el-table-column label="任务类型">
+              <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.businessType"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.businessType}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            
+            
+            
+          
+            
+            <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column>
+            <el-table-column prop="dept" label="经营机构"></el-table-column>
             <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
             <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
-            <el-table-column prop="registBy" label="录入人" width="80"></el-table-column>
-            <el-table-column prop="registAt" label="录入时间" width="100"></el-table-column>
             <el-table-column label="备注">
               <template slot-scope="scope">
                 <el-tooltip
@@ -588,7 +608,7 @@
             </el-table-column>
             <el-table-column label="操作" width="120" fixed="right">
               <template slot-scope="scope">
-                <el-button type="text" @click.stop="openSICS(scope.row,'wsId')" size="mini">打开SICS</el-button>
+                <span class="blueColor" @click.stop="openSICS(scope.row,'wsId')">打开SICS</span>
               </template>
             </el-table-column>
           </el-table>
@@ -625,8 +645,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
           <el-button size="small" @click="dialogFormVisible3 = false" >取消</el-button>
+          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -648,7 +668,7 @@
       <el-table :data="TaxList" border style="width: 100%" class="document" v-show="title==='增值税信息获取'" :header-row-class-name="StableClass">
         <el-table-column prop="invoiceId" label="增值税号"></el-table-column>
         <el-table-column prop="rmId" label="支票号"></el-table-column>
-        <el-table-column prop="sgNum" label="SG号"></el-table-column>
+        <el-table-column prop="sgNum" label="结算清单号"></el-table-column>
         <el-table-column prop="invoicePurchaser" label="购买方"></el-table-column>
         <el-table-column prop="invoiceSeller" label="销售方"></el-table-column>
         <el-table-column prop="invoiceChecker" label="核实人"></el-table-column>
@@ -680,8 +700,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
           <el-button size="small" @click="dialogFormVisibleFHRWZF = false">取消</el-button>
+          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -784,8 +804,8 @@
           </el-col>
         </el-form-item>
         <el-form-item>
-          <el-button size="small" plain type="primary" @click="creatRM('formLabelAlign')" style="padding:0 16px;">确定</el-button>
           <el-button size="small" @click="dialogFormVisible = false">取消</el-button>
+          <el-button size="small" plain type="primary" @click="creatRM('formLabelAlign')" style="padding:0 16px;">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog> 
@@ -1230,24 +1250,6 @@ export default {
     }
   },
   methods: {
-    getProcessInfo(){
-      this.$http.post('api/pay/teskClaim/list',{
-          pageNumber:1,  // 页数
-          pageSize:20,  //页面一次要展示的条数
-          processType:'付款',
-          processId:this.row.processId
-      }).then(res =>{
-        if(res.status === 200) {
-          let arr = res.data.rows[0];
-          console.log(res.data.rows[0]);
-          this.listData.forEach(el=>{
-            el['b'] = arr[el['c']];
-            if(el['a']=='任务来源'){ el["b"] = this.nameList[arr[el["c"]]]; }
-            if(el['a']=='结付公司'){ el["b"]=arr[el['c']] + '-' + arr[el['d']];}
-          })
-        }
-      })
-    },
     chongXiao(row){
       this.$http.post("api/receipt/credOperation/creatWfCheckRemit",{rmId:row.rmId,createdBy:this.$store.state.userName}).then(res => {
           if (res.status == 200 && res.data.errorCode == 1) {
@@ -1273,7 +1275,6 @@ export default {
         })
         .then(res => {
           console.log(res, "打开SICS");
-          this.$message({message:res.data,type: 'warning'});
         });
     },
     nextStep(){
@@ -1421,12 +1422,11 @@ export default {
       if(id == 'rmId'){
         this.$http.post('api/sics/liveDesktop/openRemittance',{modifiedBy:this.$store.state.userName,remitId:row.rmId}).then(res =>{
           console.log(res,'打开SICS')
-          this.$message({message:res.data,type: 'warning'});
+          
         })
       } else{
         this.$http.post('api/sics/liveDesktop/openWorksheet',{modifiedBy:this.$store.state.userName,worksheetId:row[id]}).then(res =>{
           console.log(res,'打开SICS')
-          this.$message({message:res.data,type: 'warning'});
           // if(res.status === 200 && res.data.rows){
           //   this.SICSData = res.data.rows;
           // }
@@ -1441,7 +1441,6 @@ export default {
       }
       this.$http.post('api/sics/liveDesktop/openBpLedger',{modifiedBy:this.mustData.actOperator,bpId:this.row.rmSettleCompanyCode}).then(res =>{
         console.log(res,'打开SICS');
-        this.$message({message:res.data,type: 'warning'});
       })
     },
     dataBaseSG(){
@@ -1464,19 +1463,15 @@ export default {
             // this.SgData = res.data.worksheetsgDOlist;
             this.RMData = res.data.remitDOlist;
             this.WSData = res.data.workSheetDOlsit
-            this.getProcessInfo();
           }
         })
       } else{ this.$message.error('无账单，无法更新信息'); }
       
     },
     getSGSg(){
-      // this.getProcessInfo();
       this.$http.post('api/sics/basis/getWSAndSGfromSics',{actOperator:this.mustData.actOperator,processId:this.row.processId}).then(res =>{
         if(res.status === 200){ 
           this.SgData = res.data.worksheetsgDOlist;
-          this.searchFlag3=true,
-          this.getProcessInfo();
           // this.RMData = res.data.remitDOlist;
         }
       })
@@ -1774,22 +1769,19 @@ export default {
           // this.dialogFormVisible3 = true;
         break;
         case 7:   // 付款支票页面---流程提交=审批完成，在这里查开关账
-        this.$http.post("api/sics/basis/checkAmount",{processId:this.row.processId}).then(res => {
-          if (res.status === 200 && res.data.code == 0) {
-            this.acountquery()
-            let type = '';
-            if(this.accountCloseFlag == '0'){
-              type = '付款复核';
-            } else if(this.accountCloseFlag == '1'){
-              type = '付款录入';
+            if(this.RMData==null || !this.RMData.length){
+              this.$message.error('无支票信息，请获取支票信息');
+              return false;
             }
-            this.getName(type);
-            this.dialogFormVisible3 = true;
-          } else{
-            this.$message.error(res.data.msg);
-            return false;
+          this.acountquery()
+          let type = '';
+          if(this.accountCloseFlag == '0'){
+            type = '付款复核';
+          } else if(this.accountCloseFlag == '1'){
+            type = '付款录入';
           }
-        })
+          this.getName(type);
+          this.dialogFormVisible3 = true;
         break;
         case 8:   // 财务支付/紧急付款/partial完结------流程提交
           this.getName('付款录入');
@@ -2374,58 +2366,45 @@ export default {
             }
           }
         }) 
-        this.makeDocListEctype.zheNum = Number(allNum).toFixed(2);
+        this.makeDocListEctype.zheNum = allNum>0?Number(allNum).toFixed(2):null;
       }
     },
     makeDoc(tag,name){    // 生成审批文档
       if(tag == 'a'){  // 是操作页面，弹窗，S0,
-        this.makeDocListEctype.yuanType=[];
-        this.makeDocListEctype.zheType=null;
-        this.makeDocListEctype.yuanNum=[];
-        this.makeDocListEctype.zheNum=null;
-        this.makeDocListEctype.shoukuanMode=null;
-        this.makeDocListEctype.yuanHuiLv=[];
-        this.makeDocListEctype.cedentModel=[];
-        this.makeDocNum = 0;
-        console.log(this.makeDocListEctype);
-        console.log(this.makeDocNum,'makeDocNum');
-        if(this.makeDocListEctype.yuanType){
-          for(let i=0; i<this.makeDocListEctype.yuanType.length; i++){
-            delete this.makeDocListEctype.yuanType[i];
+          if(this.row.rmCurrency){ 
+            this.makeDocListEctype.yuanType.push(this.row.rmCurrency);
+            this.makeDocListEctype.zheType = this.row.rmCurrency;
           }
-        }
-        setTimeout(()=>{
-        if(this.row.rmCurrency){ 
-          this.makeDocListEctype.yuanType.push(this.row.rmCurrency);
-          this.makeDocListEctype.zheType = this.row.rmCurrency;
-        }
-        if(this.row.rmAmount){ 
-          this.makeDocListEctype.yuanNum.push(this.row.rmAmount);
-          this.makeDocNum = 1;
-          setTimeout(()=>{this.zheTypeChange();},20)
-        }
-        },30)
-        this.makeDocListEctype.cedentModel = [];
-        this.$http.post('api/pay/teskClaim/list',{
-          curOperator:this.$store.state.userName,
-          processId:this.row.processId,
-          pageNumber:1, 
-          pageSize:20,
-          processType:'付款',
-          processStatus:'待处理'
-          }).then(res =>{
-          if(res.status === 200 && res.data.rows){
-          //   此处填写生成审批文档 回显
+          if(this.row.rmAmount){ 
+            this.makeDocListEctype.yuanNum.push(this.row.rmAmount);
+            this.makeDocNum = 1;
           }
-        })
-      
-      this.dialogFormVisible2 = true;
+          this.makeDocListEctype.cedentModel = [];
+          this.$http.post('api/pay/teskClaim/list',{
+            curOperator:this.$store.state.userName,
+            processId:this.row.processId,
+            pageNumber:1, 
+            pageSize:20,
+            processType:'付款',
+            processStatus:'待处理'
+            }).then(res =>{
+            if(res.status === 200 && res.data.rows){
+            //   此处填写生成审批文档 回显
+            }
+          })
+       
+        this.dialogFormVisible2 = true;
       } else {
         if (tag == 2) {
          if(this.makeDocListEctype.zheNum&&this.makeDocListEctype.yuanType.length>0){
             // 是操作页面,2为点击确定---------------------生成审批文档提交
-            if(this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[1]&&this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[2]&&this.makeDocListEctype.cedentModel[1]==this.makeDocListEctype.cedentModel[2]){
-              this.$message.error('三个分公司不能一样');
+            if(this.makeDocListEctype.cedentModel[0]===undefined||this.makeDocListEctype.cedentModel[1]===undefined||this.makeDocListEctype.cedentModel[2]===undefined){
+              this.$message.error('每个分公司不能为空');
+              return;
+            }
+            if(this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[1]||this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[2]||this.makeDocListEctype.cedentModel[1]==this.makeDocListEctype.cedentModel[2]){
+              console.log(this.makeDocListEctype.cedentModel[0])
+              this.$message.error('每个分公司不能一样');
               return;
             }
           if (

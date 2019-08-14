@@ -109,30 +109,15 @@
                     <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item>
-                        <el-button
-                          :disabled="isHover"
-                          v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack' && $route.query.tag !== 'billCheck'"
-                          @click.stop="handleClick(2,scope.row)"
-                          type="text"
-                          size="small"
-                        >OCR</el-button>
+                        <span class="blueColor" v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack' && $route.query.tag !== 'billCheck'"
+                        @click.stop="handleClick(2,scope.row)">OCR</span>
                       </el-dropdown-item>
                       <el-dropdown-item>
-                        <el-button
-                          :disabled="isHover"
-                          v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack' && $route.query.tag !== 'billCheck'"
-                          @click.stop="handleClick(1,scope.row)"
-                          type="text"
-                          size="small"
-                        >删除</el-button>
+                        <span class="blueColor" v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack' && $route.query.tag !== 'billCheck'"
+                        @click.stop="handleClick(1,scope.row)">删除</span>
                       </el-dropdown-item>
                       <el-dropdown-item>
-                        <el-button
-                          :disabled="isHover"
-                          @click.stop="handleClick(3,scope.row)"
-                          type="text"
-                          size="small"
-                        >下载</el-button>
+                        <span class="blueColor" @click.stop="handleClick(3,scope.row)">下载</span>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -195,7 +180,7 @@
           width="100%"
           :header-row-class-name="StableClass"
         >
-          <el-table-column label="账单号">
+          <el-table-column label="账单号" width="160">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -331,9 +316,10 @@
           <!-- <el-table-column prop="dept" label="经营机构"></el-table-column> -->
           <el-table-column fixed="right" label="操作" width="180">
             <template slot-scope="scope">
-              <el-button :disabled="isHover" @click.stop="openSics(scope.row)" type="text" size="small" >打开SICS</el-button>
-              <el-button :disabled="isHover" v-show="$route.query.tag == 'billCheck'" @click.stop="submit(2,'添加意见',scope.row.wsId)" type="text" size="small">添加意见</el-button>
-              <el-button :disabled="isHover" v-show="scope.row.wsStatus=='Closed' && $route.query.tag !== 'billCheck'" @click.stop="reverse(scope.row)" type="text" size="small">reverse</el-button>
+              <span class="blueColor" @click.stop="openSics(scope.row)">打开SICS</span>
+              <span class="blueColor" v-show="$route.query.tag == 'billCheck'" @click.stop="submit(2,'驳回意见',scope.row.wsId)">驳回意见</span>
+              <!-- 把添加意见改为驳回意见 hyd -->
+              <span class="blueColor" v-show="scope.row.wsStatus=='Closed' && $route.query.tag !== 'billCheck'" @click.stop="reverse(scope.row)">Reverse</span>
             </template>
           </el-table-column>
         </el-table>
@@ -359,8 +345,8 @@
           <div class="inputWrap" id="idInputWrap"></div>
         </el-form-item>-->
         <el-form-item>
-          <el-button type="primary" plain @click="split()">确定</el-button>
           <el-button size="small" @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" plain @click="split()">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -532,7 +518,7 @@
     </el-dialog>
     <el-dialog :title="title" :visible.sync="dialogFormVisible5" :close-on-click-modal="modal">
       <el-form label-position="right" label-width="140px">
-        <el-form-item label="选择原因" v-show="title==='添加意见'">
+        <el-form-item label="选择原因" v-show="title==='驳回意见'">
           <el-select v-model="opinion" placeholder="请选择">
             <el-option v-for="item in BHoptions" :key="item" :label="item" :value="item"></el-option>
           </el-select>
@@ -540,7 +526,7 @@
         <el-form-item label="输入悬停原因" v-show="title==='悬停'">
           <el-input type="textarea" :rows="2" placeholder="请输入原因" v-model.trim="pendingReason"></el-input>
         </el-form-item>
-        <el-form-item label="原因填写" v-show="title==='添加意见'">
+        <el-form-item label="原因填写" v-show="title==='驳回意见'">
           <el-input
             type="textarea"
             :rows="2"
@@ -857,7 +843,7 @@ export default {
         });
     },
     addRemark(row){
-      this.title = '添加意见';
+      this.title = '驳回意见';
       this.dialogState = 8;
       this.textareaOpinion = "";
       this.dialogFormVisible5 = true;
@@ -1053,7 +1039,7 @@ export default {
           this.opinion = "";
           this.wsId = wsId;
           this.textareaOpinion = "";
-          this.title = "添加意见";
+          this.title = "驳回意见";
           this.dialogFormVisible5 = true;
           // 不用下拉框
           break;

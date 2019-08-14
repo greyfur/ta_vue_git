@@ -10,13 +10,13 @@
           <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
         </el-col>
         <el-col :span="8">
-          <span class="slable">账单类型</span>
+          <span class="slable">账单类型 &nbsp;&nbsp;</span>
           <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
             <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-col>
         <el-col :span="8">
-          <span class="slable">流程状态</span>
+          <span class="slable">流程状态 &nbsp;&nbsp;</span>
           <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
             <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','已悬停']" :key="item" :label="item" :value="item"></el-option>
           </el-select>
@@ -38,7 +38,7 @@
             </el-select>
         </el-col>
         <el-col :span="8">
-          <span class="slable">分出公司</span>
+          <span class="slable">分出公司 &nbsp;&nbsp;</span>
            <el-select clearable filterable v-model="cedentModel" placeholder="请选择分出公司">
               <el-option
                 v-for="(item,index) in cedentList"
@@ -52,7 +52,7 @@
             </el-select>
         </el-col>
         <el-col :span="8">
-          <span class="slable">经纪公司</span>
+          <span class="slable">经纪公司 &nbsp;&nbsp;</span>
            <el-select clearable filterable v-model="brokerModel" placeholder="请选择经纪公司">
               <el-option
                 v-for="(item,index) in brokerList"
@@ -67,21 +67,22 @@
         </el-col>
       </el-row>
       <el-row :gutter="10" class="billRow">  
-        <el-col :span="7">
+        <el-col :span="8">
           <span class="slable">是否需签回</span>
           <el-select clearable v-model="billSearch.wsSignbackFlag" placeholder="请选择">
             <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
           </el-select>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="8">
           <span class="slable">是否已签回</span>
           <el-select clearable v-model="billSearch.wsHasSignback" placeholder="请选择">
             <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
           </el-select>
         </el-col>
-        <el-col :span="10">
+        <el-col :span="8">
           <span class="slable">录入时间段</span>
             <el-date-picker
+              style="width:224px"
               value-format="timestamp"
               v-model="billSearch.registAt"
               type="daterange"
@@ -180,10 +181,15 @@
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="120">
+      <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
-          <el-button type="text" v-if="scope.row.processStatus=='已关闭'" size="small" @click.stop="reverse(scope.row)">reverse</el-button>
-          <el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button>
+          <el-dropdown placement="top-start">
+            <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item><span class="blueColor" v-if="scope.row.processStatus=='已关闭'" @click.stop="reverse(scope.row)">Reverse</span></el-dropdown-item>
+              <el-dropdown-item><span class="blueColor"  @click.stop="handleClick(5,scope.row)">踪迹</span></el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -575,7 +581,6 @@ export default {
                   } else {
                     a.href = this.path;
                     let formatString = escape(res.headers['content-disposition'].split(';')[1].split('=')[1]);
-                    console.log(formatString)
                     a.download =  decodeURI(formatString);
                     //  a.download = new Date().getTime();
                     // a.download = this.reportArr.reportName;

@@ -18,6 +18,7 @@
         <el-col :span="9" class="nowrap">
           <span class="slable">录入时间段</span>
            <el-date-picker
+              style="width:224px"
               value-format="timestamp"
               v-model="billSearch.registAt"
               type="daterange"
@@ -190,8 +191,8 @@
               <!-- <el-dropdown-item><el-button v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'sortOperation'" @click.stop="handleClick(3,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
               <el-dropdown-item><el-button type="text" v-show="urlName === 'sortOperation'" size="small" @click.stop="handleClick(4,scope.row)">删除</el-button></el-dropdown-item> -->
-              <el-dropdown-item><el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button></el-dropdown-item>
-              <el-dropdown-item><el-button type="text" size="small" @click.stop="handleClick(6,scope.row)">打开SICS</el-button></el-dropdown-item>
+              <el-dropdown-item><span class="blueColor" @click.stop="handleClick(5,scope.row)">踪迹</span></el-dropdown-item>
+              <el-dropdown-item><span class="blueColor" @click.stop="handleClick(6,scope.row)">打开SICS</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -298,7 +299,7 @@
             </el-table-column>
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
-                <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
+                <span class="blueColor" @click.stop="detailRemove(scope.row)">删除</span>
               </template>
             </el-table-column>
           </el-table>

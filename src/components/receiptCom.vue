@@ -172,12 +172,12 @@
       </el-table-column> hyd-->
       <el-table-column width="110" label="录入人员">
         <template slot-scope="scope">
-          <span>{{scope.row.registBy}}</span>
+          <span>{{nameList[scope.row.registBy]}}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column v-if="urlName==='credReview'||urlName==='credVerification'||urlName==='viewInvalidate'||urlName==='collectiongEnd'" label="复核人员'" width="110">
         <template slot-scope="scope">
-          <span>{{scope.row.closedBy}}</span>
+          <span>{{nameList[scope.row.closedBy]}}</span>
         </template>
       </el-table-column> -->
       <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
@@ -197,7 +197,7 @@
                   <span v-show="urlName === 'financialCreat'" @click.stop="handleClick(7,scope.row)" class="blueColor">删除</span>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <span v-show="urlName === 'taskClaim'" @click.stop="handleClick(12,scope.row)" class="blueColor">附件查看</span>
+                  <span v-show="urlName === 'taskClaim'" @click.stop="handleClick(12,scope.row)" class="blueColor">附件</span>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <span v-show="urlName !== 'financialCreat'" @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
@@ -285,12 +285,12 @@
       </el-table-column> -->
       <el-table-column width="110" label="录入人员">
         <template slot-scope="scope">
-          <span>{{scope.row.registBy}}</span>
+          <span>{{nameList[scope.row.registBy]}}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="urlName==='credReview'||urlName==='credVerification'||urlName==='viewInvalidate'||urlName==='collectiongEnd'" label="复核人员" width="110">
         <template slot-scope="scope">
-          <span>{{scope.row.closedBy}}</span>
+          <span>{{nameList[scope.row.closedBy]}}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column prop="curOperator" width="120" label="操作员"></el-table-column> -->
@@ -362,11 +362,12 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" class="SwitchingMode">
       <el-form
         :label-position="labelPosition"
-        label-width="150px"
+        label-width="140px"
         :model="formLabelAlign"
         :rules="rules"
         ref="formLabelAlign"
         class="SwitchingMode"
+        style="text-align:right"
       >
         <el-form-item label="结付公司">
           <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
@@ -502,7 +503,7 @@
       <el-table
             border
             :data="fileData"
-            style="width: 100%"
+            style="width: 100%;height:auto;"
             class="document"
             v-show="title==='编辑'"
             :header-row-class-name="StableClass"
@@ -529,7 +530,8 @@
             </el-table-column>
             <el-table-column label="操作" width="100">
               <template slot-scope="scope">
-                <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
+                <span class="blueColor"  @click.stop="detailRemove(scope.row)">删除</span>
+                <!-- <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button> -->
               </template>
             </el-table-column>
           </el-table>
@@ -568,8 +570,8 @@
         slot="footer"
         class="dialog-footer"
       >
+         <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
-          <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
       </div>
       <!-- 上传附件/批量创建 -->
       <el-upload
@@ -607,7 +609,7 @@
         :data="fileData"
         style="width: 100%"
         class="document"
-        v-show="title==='附件查看'"
+        v-show="title==='附件'"
         :header-row-class-name="StableClass"
       >
         <el-table-column label="文件名" width="140">
@@ -627,7 +629,8 @@
         </el-table-column>
         <el-table-column label="操作" width="100">
           <template slot-scope="scope">
-            <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
+            <span class="blueColor" @click.stop="detailRemove(scope.row)">删除</span>
+            <!-- <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -856,10 +859,6 @@ export default {
     }
   },
   created() {
-    this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
-    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
-  },
-  mounted() {
     if (this.urlName == "taskClaim") {
       this.taskClaimFlag = true;
     }
@@ -871,7 +870,15 @@ export default {
     } else if (this.urlName === "collectiongEnd") {
       this.processStatusList = ["已完结", "REVERSED"];
     }
-    // this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
+  },
+  mounted() {
+    if(this.$route.name==='financialCreat'||this.$route.name==='taskClaim'){
+      this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+    }else{
+      this.changeClientHight=document.body.clientHeight-278-document.querySelector('.el-table').offsetTop;
+    }
+    console.log(this.changeClientHight)
     this.changeWindow();
     this.mustData.actOperator = this.$store.state.userName;
     this.formLabelAlign.modifiedBy = this.$store.state.userName;
@@ -902,7 +909,12 @@ export default {
      changeWindow(){
       let that=this;
       document.body.onresize=function(e){
-          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+          if(that.$route.name==='financialCreat'||that.$route.name==='taskClaim'){
+             that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+          }else{
+            that.changeClientHight=document.body.clientHeight-278-document.querySelector('.el-table').offsetTop;
+          }
+          // that.changeClientHight=document.body.clientHeight-178-document.querySelector('.el-table').offsetTop;
       }
     },
     init(tag) {
@@ -1120,8 +1132,8 @@ export default {
               }
             });
           break;
-        case 12: //附件查看
-          this.title = "附件查看";
+        case 12: //附件查看改为附件 hyd
+          this.title = "附件";
           this.$http
             .post("api/worksheet/sortOperation/listDocument", {
               // actOperator:this.$store.state.userName,

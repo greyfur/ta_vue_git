@@ -35,8 +35,8 @@
     </el-table-column>
     <el-table-column fixed="right" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small">查看附件</el-button>
-          <el-button type="text" size="small">编辑</el-button>
+          <span class="blueColor">查看附件</span>
+          <span class="blueColor">编辑</span>
         </template>
       </el-table-column>
   </el-table>

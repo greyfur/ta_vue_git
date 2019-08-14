@@ -139,7 +139,7 @@
       <el-table-column fixed="right" label="操作" width="80">
         <template slot-scope="scope">
           <!-- <el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button> -->
-          <el-button @click.stop="openSICS(scope.row)" type="text" size="mini">打开SICS</el-button>
+          <span class="blueColor" @click.stop="openSICS(scope.row)">打开SICS</span>
         </template>
       </el-table-column>
       <!-- <el-table-column fixed="right" label="操作" width="80">
@@ -676,7 +676,7 @@ export default {
                 this.fileData = res.data.rows;
               }
             });
-          this.title = "附件查看";
+          this.title = "附件";
           this.dialogFormVisible2 = true;
           break;
         
