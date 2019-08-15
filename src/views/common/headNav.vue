@@ -10,7 +10,7 @@
           </span>
           <span class="line" v-show="!fold"></span>
           <span class="word" v-show="!fold">
-            <span style="font-size:15px;display: inline-block;transform: scale(.9);">账单结算管理系统</span><br/> 
+            <span style="font-size:15px;display: inline-block;transform: scale(.9);">账单结算管理</span><br/> 
             <span class="enWord">Accounts/Settlement</span>
           </span>
         </div>
@@ -63,12 +63,11 @@ import {computeName} from '@/assets/js/util.js'
         fold:true,
         transtionflag:false,
         iconEmnu:{
-          'bill':'el-icon-tickets',
-          // 'bill':'iconfont iconGroup70',
-          'receipt':'el-icon-coin',
-          'pay':'el-icon-bank-card',
-          'integratedQuery':'el-icon-s-opportunity zonghechaxun',
-          'admin':'el-icon-s-check',
+          'bill':'iconfont iconzhangdan',
+          'receipt':'iconfont iconshoukuan',
+          'pay':'iconfont iconfukuan',
+          'integratedQuery':'iconfont iconzonghechaxun',
+          'admin':'iconfont iconguanliyuan',
         }
       };
     },

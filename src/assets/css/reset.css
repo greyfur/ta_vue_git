@@ -97,6 +97,13 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
+body .el-table th.gutter {
+  display: table-cell !important;
+}
+
+body .el-table colgroup.gutter {
+  display: table-cell !important;
+}
 .el-button--primary.is-plain{
   height: 32px;
   background-color: #005C8D;
@@ -199,3 +206,4 @@ input::-webkit-inner-spin-button {
 .el-message-box__errormsg{
   margin-top: 10px;
 }
+.wrapInput .huilvInput input.el-input__inner,.wrapInput .singleInput  input.el-input__inner{text-align: right;}

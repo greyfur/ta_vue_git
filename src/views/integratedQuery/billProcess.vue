@@ -105,48 +105,48 @@
       <el-button type="info" plain size="small" @click="dialogReport=!dialogReport">导出报表</el-button>
     </div> 
     <el-table :header-row-class-name="StableClass" :data="tableData" border style="width: 100%"  :height="changeClientHight">
-      <el-table-column prop="createdAt" label="创建时间" width="100"></el-table-column>
-      <el-table-column label="流程编号" width="140">
+      <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
+      <el-table-column label="流程编号" width="130" align="center">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName !== 'sortOperation'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>
       </el-table-column> 
-      <el-table-column label="流程名称" width="400">
+      <el-table-column label="流程名称" width="350" align="center">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.processName" placement="top-start">
             <span class="abbreviate">{{scope.row.processName}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="账单类型" width="80">
+      <el-table-column label="账单类型" width="80" align="center">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.wsType" placement="top-start">
             <span class="abbreviate">{{scope.row.wsType}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="任务类型" width="80">
+      <el-table-column label="任务类型" width="80" align="center">
         <template slot-scope="scope">{{YWoptionsObj[scope.row.wsBusinessType]}}</template>
       </el-table-column>
-      <el-table-column label="账期">
+      <el-table-column label="账单期" width="120" align="center">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.wsPeriod" placement="top-start">
             <span class="abbreviate">{{scope.row.wsPeriod}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column v-if="urlName=='billSignBack'" label="是否需签回" width="100">
+      <el-table-column v-if="urlName=='billSignBack'" label="是否需签回" width="100" align="center">
         <template slot-scope="scope">
           <span>{{scope.row.wsSignbackFlag=="1"?'是':'否'}}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="urlName=='billSignBack'" label="是否已签回" width="100">
+      <el-table-column v-if="urlName=='billSignBack'" label="是否已签回" width="100" align="center">
         <template slot-scope="scope">
           <span>{{scope.row.wsHasSignback=="1"?'是':'否'}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="wsReceiptDate" width="120" label="账单收到日期"></el-table-column>
-      <el-table-column label="分出公司" width="120">
+      <el-table-column prop="wsReceiptDate" width="120" label="账单收到日期" align="center"></el-table-column>
+      <el-table-column label="分出公司" width="120" align="center">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" v-if="scope.row.wsCedentCode&&scope.row.wsCedentName" :content="scope.row.wsCedentCode+'-'+scope.row.wsCedentName" placement="top-start">
             <span class="abbreviate">{{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}</span>
@@ -156,7 +156,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="经纪公司" width="120">
+      <el-table-column label="经纪公司" width="120" align="center">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" v-if="scope.row.wsBrokerCode&&scope.row.wsBrokerName" :content="scope.row.wsBrokerCode+'-'+scope.row.wsBrokerName" placement="top-start">
             <span class="abbreviate">{{scope.row.wsBrokerCode}}-{{scope.row.wsBrokerName}}</span>
@@ -166,25 +166,39 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="Reporting Unit" width="120">
+      <el-table-column label="Reporting Unit" width="120" align="center">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.reportUnit" placement="top-start">
             <span class="abbreviate">{{scope.row.reportUnit}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="curOperator" label="任务来源" width="120">
+      <el-table-column prop="curOperator" label="任务来源" width="120" align="center">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="processStatus" label="流程状态"></el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="80">
+      <el-table-column label="录入人" width="110" align="center">
+        <template slot-scope="scope">
+          <span>{{nameList[scope.row.registBy]}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="录入时间" width="120" align="center">
+          <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.registAt" placement="top-start">
+            <span class="abbreviate">{{scope.row.registAt}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column prop="closedBy" label="复核人" width="130" align="center"></el-table-column>
+      <el-table-column prop="closedAt" label="复核时间" width="160" align="center"></el-table-column>
+      <el-table-column prop="processStatus" label="流程状态" align="center"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="130" align="center"></el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="130" align="center"></el-table-column>
+      <el-table-column fixed="right" label="操作" width="80" align="center">
         <template slot-scope="scope">
           <el-dropdown placement="top-start">
-            <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
+            <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup73" ></i></span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item><span class="blueColor" v-if="scope.row.processStatus=='已关闭'" @click.stop="reverse(scope.row)">Reverse</span></el-dropdown-item>
               <el-dropdown-item><span class="blueColor"  @click.stop="handleClick(5,scope.row)">踪迹</span></el-dropdown-item>

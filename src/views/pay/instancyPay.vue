@@ -13,26 +13,26 @@
           </p>
         </div>
         <el-table height="600" stripe border :header-row-class-name="StableClass" :data="tableData" class="document">
-          <el-table-column label="文件名">
+          <el-table-column label="文件名" align="center">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
                 <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
-          <el-table-column label="任务来源" width="100">
+          <el-table-column prop="createdAt" label="时间" width="160" align="center"></el-table-column>
+          <el-table-column label="任务来源" width="100" align="center">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="nameList[scope.row.createdBy]" placement="top">
                 <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="60">
+          <el-table-column label="操作" width="60" align="center">
             <template slot-scope="scope">
               <span class="blueColor" style="cursor: pointer;" @click.stop="downLoad(scope.row)">下载</span>
               <!-- <el-dropdown placement="top-start">
-                <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
+                <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup73" ></i></span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>
                   </el-dropdown-item>

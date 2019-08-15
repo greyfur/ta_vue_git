@@ -23,17 +23,17 @@
     <el-button type="primary" size="mini">不需处理</el-button>
   </div>
   <el-table ref="multipleTable" border :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-    <el-table-column v-if="activeName=='first'" type="selection" width="55"></el-table-column>
-    <el-table-column prop="a" label="任务名称"></el-table-column>
-    <el-table-column prop="b" label="公司"></el-table-column>
-    <el-table-column prop="c" label="账单类型"></el-table-column>
-    <el-table-column label="标签">
+    <el-table-column v-if="activeName=='first'" type="selection" width="55" align="center"></el-table-column>
+    <el-table-column prop="a" label="任务名称" align="center"></el-table-column>
+    <el-table-column prop="b" label="公司" align="center"></el-table-column>
+    <el-table-column prop="c" label="账单类型" align="center"></el-table-column>
+    <el-table-column label="标签" align="center">
        <template slot-scope="scope">
         <el-tag v-for="(el,i) in scope.row.d" :key="i" :type="el === 'CNY' ? 'primary' : 'success'" disable-transitions>{{el}}</el-tag>
         <!-- <el-tag type="success" disable-transitions>标签</el-tag> -->
       </template>
     </el-table-column>
-    <el-table-column fixed="right" label="操作">
+    <el-table-column fixed="right" label="操作" align="center">
         <template slot-scope="scope">
           <span class="blueColor">查看附件</span>
           <span class="blueColor">编辑</span>
