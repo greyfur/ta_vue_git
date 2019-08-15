@@ -63,9 +63,7 @@ import {computeName} from '@/assets/js/util.js'
         fold:true,
         transtionflag:false,
         iconEmnu:{
-          // 'bill':'el-icon-tickets',
           'bill':'iconfont iconzhangdan',
-          // 'receipt':'el-icon-coin',
           'receipt':'iconfont iconshoukuan',
           'pay':'iconfont iconfukuan',
           'integratedQuery':'iconfont iconzonghechaxun',

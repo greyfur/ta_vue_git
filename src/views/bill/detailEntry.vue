@@ -82,7 +82,7 @@
               style="width: 100%;margin-top:10px;"
               class="document"
             >
-              <el-table-column label="文件名">
+              <el-table-column label="文件名" align="center">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
@@ -106,10 +106,10 @@
                   </el-tooltip>
                 </template>
               </el-table-column> -->
-              <el-table-column label="操作" width="80">
+              <el-table-column label="操作" width="80" align="center">
                 <template slot-scope="scope">
                   <el-dropdown placement="top-start">
-                    <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
+                    <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup73" ></i></span>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item>
                         <span class="blueColor" v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack' && $route.query.tag !== 'billCheck'"
@@ -181,7 +181,7 @@
           width="100%"
           :header-row-class-name="StableClass"
         >
-          <el-table-column label="账单号" width="160">
+          <el-table-column label="账单号" width="160" align="center">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -193,7 +193,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="wsCurrency" label="币制" width="80"></el-table-column>
+          <el-table-column prop="wsCurrency" label="币制" width="80" align="center"></el-table-column>
           <el-table-column label="金额" align="right">
             <template slot-scope="scope">
               <el-tooltip
@@ -206,7 +206,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="业务编号">
+          <el-table-column label="业务编号" align="center">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -218,7 +218,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="SECTION" width="110">
+          <el-table-column label="SECTION" width="110" align="center">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -230,9 +230,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="uwYear" label="业务年度"></el-table-column>
-          <el-table-column prop="wsPeriod" label="账单期" width="120"></el-table-column>
-          <el-table-column label="账单标题">
+          <el-table-column prop="uwYear" label="业务年度" align="center"></el-table-column>
+          <el-table-column prop="wsPeriod" label="账单期" width="120" align="center"></el-table-column>
+          <el-table-column label="账单标题" align="center">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -244,15 +244,15 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="wsStatus" label="账单状态" width="100">
+          <el-table-column prop="wsStatus" label="账单状态" width="100" align="center">
             <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
           </el-table-column>
-          <el-table-column prop="registBy" label="录入人" width="130"></el-table-column>
-          <el-table-column prop="registAt" label="录入时间" width="160"></el-table-column>
-          <el-table-column prop="closedBy" label="复核人" width="130"></el-table-column>
-          <el-table-column prop="closedAt" label="复核时间" width="160"></el-table-column>
-          <el-table-column prop="rejectType" label="驳回原因类型" width="160"></el-table-column>
-          <el-table-column label="修改意见">
+          <el-table-column prop="registBy" label="录入人" width="130" align="center"></el-table-column>
+          <el-table-column prop="registAt" label="录入时间" width="160" align="center"></el-table-column>
+          <el-table-column prop="closedBy" label="复核人" width="130" align="center"></el-table-column>
+          <el-table-column prop="closedAt" label="复核时间" width="160" align="center"></el-table-column>
+          <el-table-column prop="rejectType" label="驳回原因类型" width="160" align="center"></el-table-column>
+          <el-table-column label="修改意见" align="left">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -263,7 +263,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="附件名称">
+          <el-table-column label="附件名称" align="center">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -315,7 +315,7 @@
           <!-- <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column> -->
           <!-- <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column> -->
           <!-- <el-table-column prop="dept" label="经营机构"></el-table-column> -->
-          <el-table-column fixed="right" label="操作" width="180">
+          <el-table-column fixed="right" label="操作" width="180" align="center">
             <template slot-scope="scope">
               <span class="blueColor" @click.stop="openSics(scope.row)">打开SICS</span>
               <span class="blueColor" v-show="$route.query.tag == 'billCheck'" @click.stop="submit(2,'驳回意见',scope.row.wsId)">驳回意见</span>

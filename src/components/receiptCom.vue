@@ -90,9 +90,9 @@
       :height="changeClientHight"
       @selection-change="handleSelectionChange"
       @row-click="goDetail">
-      <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="processId" label="流程编号" width="130"></el-table-column>
-      <el-table-column width="140" label="结付公司">
+      <el-table-column type="selection" width="55" align="center"></el-table-column>
+      <el-table-column prop="processId" label="流程编号" width="130" align="center"></el-table-column>
+      <el-table-column width="140" label="结付公司" align="center">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
             <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
@@ -100,7 +100,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column width="120" label="汇款人名称">
+      <el-table-column width="120" label="汇款人名称" align="center">
          <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -112,7 +112,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
+      <el-table-column prop="rmCurrency" width="55" label="币制" align="center"></el-table-column>
       <el-table-column label="汇款金额"  width="100" align="right">
         <template slot-scope="scope">
           <el-tooltip
@@ -126,7 +126,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="手续费" width="120">
+      <el-table-column label="手续费" width="120" align="center">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -141,7 +141,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column width="150" label="原收款公司名称">
+      <el-table-column width="150" label="原收款公司名称" align="center">
          <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -153,7 +153,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column width="120" label="备注">
+      <el-table-column width="120" label="备注" align="center">
          <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -164,13 +164,13 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="rmReceiptDate" width="120" label="到账日期"></el-table-column>
+      <el-table-column prop="rmReceiptDate" width="120" label="到账日期" align="center"></el-table-column>
       <!-- <el-table-column width="110" label="任务来源">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column> hyd-->
-      <el-table-column width="110" label="录入人员">
+      <el-table-column width="110" label="录入人员" align="center">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.registBy]}}</span>
         </template>
@@ -180,14 +180,14 @@
           <span>{{nameList[scope.row.closedBy]}}</span>
         </template>
       </el-table-column> -->
-      <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
-      <el-table-column label="Base Company" prop="baseCompany" width="130"></el-table-column>
-      <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="80">
+      <el-table-column prop="processStatus" width="95" label="流程状态" align="center"></el-table-column>
+      <el-table-column label="Base Company" prop="baseCompany" width="130" align="center"></el-table-column>
+      <el-table-column prop="businessOrigin" width="130" label="Business Origin" align="center"></el-table-column>
+      <el-table-column fixed="right" label="操作" width="80" align="center">
         <template slot-scope="scope">
           <el-dropdown placement="top-start">
             <span class="el-dropdown-link">
-             <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i>
+             <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup73" ></i>
             </span>
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>
@@ -208,7 +208,7 @@
       </el-table-column>
     </el-table>
     <el-table :height="changeClientHight" v-show="urlName!='taskClaim' && urlName!='financialCreat'" :header-row-class-name="StableClass" :data="tableData" border  style="width: 100%">
-      <el-table-column label="流程编号" width="145">
+      <el-table-column label="流程编号" width="145" align="center">
         <template slot-scope="scope">
           <span
             :class="{'smallHand':urlName!=='financialCreat' && urlName!=='taskClaim'}"
@@ -216,7 +216,7 @@
           >{{scope.row.processId}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="rmSettleCompanyName" width="140" label="结付公司"> 
+      <el-table-column prop="rmSettleCompanyName" width="140" label="结付公司" align="center"> 
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
             <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
@@ -224,7 +224,7 @@
           </el-tooltip>
         </template>
         </el-table-column>
-      <el-table-column width="120" label="汇款人名称">
+      <el-table-column width="120" label="汇款人名称" align="center">
          <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -236,7 +236,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="rmCurrency" width="55" label="币制"></el-table-column>
+      <el-table-column prop="rmCurrency" width="55" label="币制" align="center"></el-table-column>
       <el-table-column label="汇款金额" width="100" align="right">
         <template slot-scope="scope">
           <el-tooltip
@@ -249,7 +249,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="手续费" width="120">
+      <el-table-column label="手续费" width="120" align="center">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -264,7 +264,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column width="150" label="原收款公司名称">
+      <el-table-column width="150" label="原收款公司名称" align="center">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -276,25 +276,25 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="rmReceiptDate" width="120" label="到账日期"></el-table-column>
-      <el-table-column prop="processStatus" width="95" label="流程状态"></el-table-column>
+      <el-table-column prop="rmReceiptDate" width="120" label="到账日期" align="center"></el-table-column>
+      <el-table-column prop="processStatus" width="95" label="流程状态" align="center"></el-table-column>
       <!-- <el-table-column width="110" label="任务来源">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column> -->
-      <el-table-column width="110" label="录入人员">
+      <el-table-column width="110" label="录入人员" align="center">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.registBy]}}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="urlName==='credReview'||urlName==='credVerification'||urlName==='viewInvalidate'||urlName==='collectiongEnd'" label="复核人员" width="110">
+      <el-table-column align="center" v-if="urlName==='credReview'||urlName==='credVerification'||urlName==='viewInvalidate'||urlName==='collectiongEnd'" label="复核人员" width="110">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.closedBy]}}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column prop="curOperator" width="120" label="操作员"></el-table-column> -->
-      <el-table-column width="120" label="备注">
+      <el-table-column width="120" label="备注" align="center">
          <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -305,9 +305,9 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="businessOrigin" width="130" label="Business Origin"></el-table-column>
-      <el-table-column label="Base Company" width="130" prop="baseCompany"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="100" >
+      <el-table-column prop="businessOrigin" width="130" label="Business Origin" align="center"></el-table-column>
+      <el-table-column label="Base Company" width="130" prop="baseCompany" align="center"></el-table-column>
+      <el-table-column fixed="right" label="操作" width="100" align="center">
         <template slot-scope="scope">
           <!-- <el-dropdown>
             <span
@@ -325,7 +325,7 @@
           </el-dropdown> -->
           <el-dropdown placement="top-start">
             <span class="el-dropdown-link">
-               <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i>
+               <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup73" ></i>
             </span>
             <el-dropdown-menu slot="dropdown">
                <el-dropdown-item>
@@ -510,15 +510,15 @@
             v-show="title==='编辑'"
             :header-row-class-name="StableClass"
           >
-            <el-table-column label="文件名" width="140">
+            <el-table-column label="文件名" width="140" align="center">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
                   <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
-            <el-table-column label="任务来源" width="140">
+            <el-table-column prop="createdAt" label="时间" width="160" align="center"></el-table-column>
+            <el-table-column label="任务来源" width="140" align="center">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -530,7 +530,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="100">
+            <el-table-column label="操作" width="100" align="center">
               <template slot-scope="scope">
                 <span class="blueColor"  @click.stop="detailRemove(scope.row)">删除</span>
                 <!-- <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button> -->
@@ -594,16 +594,16 @@
         </el-collapse-item>
       </el-collapse>
       <el-table :header-row-class-name="StableClass" :data="track" border style="width: 100%" v-show="title==='踪迹'">
-        <el-table-column prop="processId" label="流程编号" width="140"></el-table-column>
-        <el-table-column prop="actName" label="操作名称"></el-table-column>
+        <el-table-column prop="processId" label="流程编号" width="140" align="center"></el-table-column>
+        <el-table-column prop="actName" label="操作名称" align="center"></el-table-column>
         <el-table-column label="任务来源">
           <template slot-scope="scope">
             <span>{{nameList[scope.row.actOperator]}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="actTime" label="操作时间"></el-table-column>
-        <el-table-column prop="reason" label="操作原因"></el-table-column>
-        <el-table-column prop="remark" label="操作备注"></el-table-column>
+        <el-table-column prop="actTime" label="操作时间" align="center"></el-table-column>
+        <el-table-column prop="reason" label="操作原因" align="center"></el-table-column>
+        <el-table-column prop="remark" label="操作备注" align="center"></el-table-column>
       </el-table>
       <el-table
 
@@ -614,22 +614,22 @@
         v-show="title==='附件'"
         :header-row-class-name="StableClass"
       >
-        <el-table-column label="文件名" width="140">
+        <el-table-column label="文件名" width="140" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
               <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="createdAt" label="时间" width="160"></el-table-column>
-        <el-table-column label="任务来源" width="140">
+        <el-table-column prop="createdAt" label="时间" width="160" align="center"></el-table-column>
+        <el-table-column label="任务来源" width="140" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="nameList[scope.row.createdBy]" placement="top">
               <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100">
+        <el-table-column label="操作" width="100" align="center">
           <template slot-scope="scope">
             <span class="blueColor" @click.stop="detailRemove(scope.row)">删除</span>
             <!-- <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button> -->

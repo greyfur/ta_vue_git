@@ -67,7 +67,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="支票状态">
+      <el-table-column label="支票状态" align="center">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -91,8 +91,8 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="paymentTypeName" label="支付方式" width="110"></el-table-column>
-      <el-table-column prop="bankCurrency" label="币制" width="100"></el-table-column>
+      <el-table-column prop="paymentTypeName" label="支付方式" width="110" align="center"></el-table-column>
+      <el-table-column prop="bankCurrency" label="币制" width="100" align="center"></el-table-column>
       <!-- <el-table-column prop="chargesCurrency" label="手续费币制" width="100"></el-table-column> -->
       <el-table-column label="手续费金额" width="100" align="right">
         <template slot-scope="scope">
@@ -106,7 +106,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="银行账户">
+      <el-table-column label="银行账户" align="center">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -118,10 +118,10 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="valueDate" label="起息日" width="100"></el-table-column>
-      <el-table-column prop="dueDate" label="到期日" width="100"></el-table-column>
-      <el-table-column prop="partnerCode" label="汇款人代码" width="100"></el-table-column>
-      <el-table-column label="汇款人名称" width="100">
+      <el-table-column prop="valueDate" label="起息日" width="100" align="center"></el-table-column>
+      <el-table-column prop="dueDate" label="到期日" width="100" align="center"></el-table-column>
+      <el-table-column prop="partnerCode" label="汇款人代码" width="100" align="center"></el-table-column>
+      <el-table-column label="汇款人名称" width="100" align="center">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -133,10 +133,10 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="businessPartnerRef" label="BP Reference" width="140"></el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="80">
+      <el-table-column prop="businessPartnerRef" label="BP Reference" width="140" align="center"></el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="130" align="center"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="130" align="center"></el-table-column>
+      <el-table-column fixed="right" label="操作" width="80" align="center">
         <template slot-scope="scope">
           <!-- <el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button> -->
           <span class="blueColor" @click.stop="openSICS(scope.row)">打开SICS</span>

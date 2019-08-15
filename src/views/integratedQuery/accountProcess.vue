@@ -55,12 +55,12 @@
        <el-button type="info" plain size="small" @click="dialogReport=!dialogReport">导出报表</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">
-      <el-table-column label="流程编号" width="145">
+      <el-table-column label="流程编号" width="145" align="center">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
-      <el-table-column width="140" label="结付公司">
+      <el-table-column width="140" label="结付公司" align="center">
           <template slot-scope="scope">
           <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
             <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
@@ -68,7 +68,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="rmCurrency" label="币制" width="60"></el-table-column>
+      <el-table-column prop="rmCurrency" label="币制" width="60" align="center"></el-table-column>
       <el-table-column prop="rmAmount" label="汇款金额" width="130" align="right">
         <template slot-scope="scope">
           <el-tooltip
@@ -81,21 +81,21 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="任务来源" width="130">
+      <el-table-column label="任务来源" width="130" align="center">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="processStatus" label="流程状态"></el-table-column>
-      <el-table-column prop="processType" label="收/付款"></el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin" width="140"></el-table-column>
-      <el-table-column label="Base Company" prop="baseCompany" width="140"></el-table-column>
+      <el-table-column prop="processStatus" label="流程状态" align="center"></el-table-column>
+      <el-table-column prop="processType" label="收/付款" align="center"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="140" align="center"></el-table-column>
+      <el-table-column label="Base Company" prop="baseCompany" width="140" align="center"></el-table-column>
       <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->
       <!-- <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column> -->
-      <el-table-column fixed="right" label="操作" width="80">
+      <el-table-column fixed="right" label="操作" width="80" align="center">
         <template slot-scope="scope">
           <el-dropdown placement="top-start">
-            <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup66" ></i></span>
+            <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup73" ></i></span>
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item> -->
               <el-dropdown-item><span class="blueColor" @click.stop="handleClick(11,scope.row)">踪迹</span></el-dropdown-item>
@@ -154,32 +154,32 @@
         </el-collapse-item>
       </el-collapse>
       <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'" :header-row-class-name="StableClass">
-        <el-table-column prop="processId" label="流程编号" width="140"></el-table-column>
-        <el-table-column prop="actName" label="操作名称"></el-table-column>
-        <el-table-column label="任务来源">
+        <el-table-column prop="processId" label="流程编号" width="140" align="center"></el-table-column>
+        <el-table-column prop="actName" label="操作名称" align="center"></el-table-column>
+        <el-table-column label="任务来源" align="center">
           <template slot-scope="scope">
             <span>{{nameList[scope.row.actOperator]}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="actTime" label="操作时间"></el-table-column>
-        <el-table-column prop="reason" label="操作原因"></el-table-column>
-        <el-table-column prop="remark" label="操作备注"></el-table-column>
+        <el-table-column prop="actTime" label="操作时间" align="center"></el-table-column>
+        <el-table-column prop="reason" label="操作原因" align="center"></el-table-column>
+        <el-table-column prop="remark" label="操作备注" align="center"></el-table-column>
       </el-table>
       <el-table border :header-row-class-name="StableClass" :data="fileData" style="width: 100%" class="document" v-show="title==='上传附件' || title==='附件'">
-        <el-table-column label="文件名">
+        <el-table-column label="文件名" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
               <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="createdAt" label="时间"></el-table-column>
-        <el-table-column label="任务来源">
+        <el-table-column prop="createdAt" label="时间" align="center"></el-table-column>
+        <el-table-column label="任务来源" align="center">
            <template slot-scope="scope">
             <span>{{nameList[scope.row.createdBy]}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100">
+        <el-table-column label="操作" width="100" align="center">
           <template slot-scope="scope">
             <span class="blueColor" @click.stop="detailRemove(scope.row)">删除</span>
           </template>
