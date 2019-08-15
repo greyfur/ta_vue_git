@@ -231,14 +231,14 @@
        <el-table-column label="结付公司">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.bpCode&&scope.row.bpName?scope.row.bpCode-scope.row.bpName:''" placement="top-start">
-            <span class="abbreviate" v-if="cope.row.bpCode&&scope.row.bpName">{{scope.row.bpCode}}-{{scope.row.bpName}}</span>
+            <span class="abbreviate" v-if="scope.row.bpCode&&scope.row.bpName">{{scope.row.bpCode}}-{{scope.row.bpName}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column prop="sgStatus" label="SG状态"></el-table-column>
       <el-table-column prop="settlementIndicator" label="结算指标" width="100"></el-table-column>
-      <el-table-column prop="sgCurrency" label="币值"></el-table-column>
-      <el-table-column label="">
+      <el-table-column prop="sgCurrency" label="币制"></el-table-column>
+      <el-table-column label="金额">
         <template slot-scope="scope">
           <el-tooltip
             class="item"

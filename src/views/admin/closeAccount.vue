@@ -1,15 +1,19 @@
 <template>
   <div class="closeAccount">
-    <div>账期设置</div>
-    <el-radio-group v-model="radio" @change="onChange">
-      <el-radio :label="0">开账</el-radio>
-      <el-radio :label="1">关账</el-radio>
-    </el-radio-group>
-    <div>邮箱锁定状态设置</div>
-    <el-radio-group v-model="radio2" @change="onChange2">
-      <el-radio :label="1">锁定状态</el-radio>
-      <el-radio :label="0">解锁状态</el-radio>
-    </el-radio-group>
+    <el-form label-width="140px">
+      <el-form-item label="账期设置：">
+        <el-radio-group v-model="radio" @change="onChange">
+          <el-radio :label="0">开账</el-radio>
+          <el-radio :label="1">关账</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="邮箱锁定状态设置：">
+        <el-radio-group v-model="radio2" @change="onChange2">
+          <el-radio :label="1">锁定状态</el-radio>
+          <el-radio :label="0">解锁状态</el-radio>
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 

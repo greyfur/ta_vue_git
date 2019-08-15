@@ -509,7 +509,7 @@
             v-show="title==='编辑'"
             :header-row-class-name="StableClass"
           >
-            <el-table-column label="文件名" width="140">
+            <el-table-column label="文件名">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
                   <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
@@ -1040,9 +1040,7 @@ export default {
           } else {
             this.cedentModel = null;
           }
-
-          this.$http
-            .post("api/worksheet/sortOperation/listDocument", {
+          this.$http.post("api/worksheet/sortOperation/listDocument", {
               actOperator: this.$store.state.userName,
               processId: this.chooseRow.processId,
               pageNumber: 1,
@@ -1135,8 +1133,7 @@ export default {
           break;
         case 12: //附件查看改为附件 hyd
           this.title = "附件";
-          this.$http
-            .post("api/worksheet/sortOperation/listDocument", {
+          this.$http.post("api/worksheet/sortOperation/listDocument", {
               // actOperator:this.$store.state.userName,
               processId: this.chooseRow.processId,
               pageNumber: 1,
@@ -1156,7 +1153,7 @@ export default {
                 this.init();
               }
             });
-          this.dialogFormVisible2 = true;
+            this.dialogFormVisible2 = true; 
           break;
         case 13: // 任务认领
           let url = "",
@@ -1464,11 +1461,22 @@ export default {
             docName: row.docName,
             processId: row.processId,
             actOperator: this.$store.state.userName
-          })
-          .then(res => {
+          }).then(res => {
             if (res.data.errorCode == 1) {
-              this.handleClick(12, { processId: this.singlePId });
-            }
+              this.$http.post("api/worksheet/sortOperation/listDocument", {processId: row.processId,pageNumber: 1,pageSize: 100})
+                .then(res => {
+                  if (res.status === 200) {
+                    let arr4 = res.data.rows;
+                    arr4.forEach(el=>{
+                      if(el.docName){
+                        let suffix = el.docName.split('.');
+                        el['suffix'] = suffix[suffix.length-1];
+                      }
+                    })
+                    this.fileData = arr4;
+                  }
+                });
+            } else{ this.$message.error(res.data.errorMessage); }
           });
       });
     },

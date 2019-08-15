@@ -60,7 +60,7 @@
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
-      <el-table-column width="140" label="结付公司">
+      <el-table-column width="160" label="结付公司">
           <template slot-scope="scope">
           <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
             <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
@@ -86,8 +86,8 @@
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="processStatus" label="流程状态"></el-table-column>
-      <el-table-column prop="processType" label="收/付款"></el-table-column>
+      <el-table-column prop="processStatus" label="流程状态" width="140"></el-table-column>
+      <el-table-column prop="processType" label="收/付款" width="140"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="140"></el-table-column>
       <el-table-column label="Base Company" prop="baseCompany" width="140"></el-table-column>
       <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->

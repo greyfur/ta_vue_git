@@ -96,7 +96,7 @@
                 </p>         
               </div>
               <el-table :data="fileData" border style="width:100%;height:410px;" class="document" :header-row-class-name="StableClass">
-                <el-table-column label="文件名" width="200">
+                <el-table-column label="文件名">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
                       <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
@@ -380,8 +380,8 @@
           </el-table-column> hyd-->
            <el-table-column width="180" label="结付公司">
               <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark"  :content="scope.row.bpName&&scope.row.bpCode?scope.row.bpCode+'-'+scope.row.bpName:''" placement="top-start">
-                <span class="abbreviate" v-if="scope.row.bpName&&scope.row.bpCode">{{scope.row.bpCode}}-{{scope.row.bpName}}</span>
+              <el-tooltip class="item" effect="dark"  :content="scope.row.partnerName&&scope.row.partnerCode?scope.row.partnerCode+'-'+scope.row.partnerName:''" placement="top-start">
+                <span class="abbreviate" v-if="scope.row.partnerName&&scope.row.partnerCode">{{scope.row.partnerCode}}-{{scope.row.partnerName}}</span>
                 <span class="abbreviate" v-else></span>
               </el-tooltip>
             </template>

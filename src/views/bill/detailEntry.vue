@@ -20,12 +20,7 @@
         <div class="btn" v-if="$route.query.tag === 'billEntry'">
           <el-button size="small" :disabled="isHover" @click="submit(4)" plain>置废</el-button>
           <el-button size="small" :disabled="isHover" @click="submit(1,'录入指派')" plain>指派</el-button>
-          <el-button
-            :type="isHover?'info':''"
-            size="small"
-            @click="submit(5)"
-            plain
-          >{{isHover?'已悬停':'状态悬停'}}</el-button>
+          <el-button :type="isHover?'info':''" size="small" @click="submit(5)" plain>{{isHover?'已悬停':'状态悬停'}}</el-button>
           <el-button @click="dialogFormVisible = true" :disabled="isHover" size="small" plain>拆分</el-button>
           <el-button plain :disabled="isHover" size="small" @click="submit(6,'录入提交')">流程提交</el-button>
         </div>
@@ -59,7 +54,7 @@
             </ul>
           </div>
           <div :class="searchFlag2===true?'searchNew':''"  style="margin-top:16px;">
-            <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
+            <div class="titleSearch detailSearch" @click.stop="searchFlag2 = !searchFlag2">
               <div>
                 <i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表
               </div>
@@ -160,18 +155,8 @@
     </el-row>
     <el-row>
       <el-col :span="24" style="padding:0 16px;padding-bottom:100px">
-
-        <div
-          class="titleSearch detailSearch"
-          style="margin-bottom:10px;"
-          
-          @click="searchFlag3 = !searchFlag3">
-          <div>
-            <i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息
-          </div>
-          <p>
-            <i class="iconfont iconGroup26"></i>
-          </p>
+        <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
+          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息</div>
         </div>
         <el-table
           v-show="searchFlag3"
@@ -369,8 +354,8 @@
             <el-tab-pane label="本地上传" name="1">
               <el-upload
                 :disabled="uploadType!=1 && $route.query.tag === 'billSignBack'"
-                class="upload-demo"
                 action=""
+                multiple
                 :before-upload="beforeAvatarUpload"
                 :auto-upload="true"
                 :http-request="upload"
@@ -380,19 +365,18 @@
               </el-upload>
             </el-tab-pane>
             <el-tab-pane label="附件列表选取" name="2">
-              <el-select v-model="chooseDocList" :disabled="uploadType != 2" style="width:100%" placeholder="请选择">
-                <el-option v-for="(item,i) in tableData" :key="i" :label="item.docName" :value="i"></el-option>
+              <el-select v-model="chooseDocList" multiple :disabled="uploadType != 2" style="width:100%" placeholder="请选择">
+                <el-option v-for="(item,i) in tableData" :key="i" :label="item.docName" :value="item.docCloudId"></el-option>
               </el-select>
             </el-tab-pane>
           </el-tabs>
         </el-form-item>
         <el-form-item label="上传附件" v-show="title==='上传附件'">
           <el-upload
-            :disabled="uploadType!=1 && $route.query.tag === 'billSignBack'"
-            class="upload-demo"
             action=""
             :before-upload="beforeAvatarUpload"
             :auto-upload="true"
+            multiple
             :http-request="upload"
             :headers="head"
             :file-list="fileList">
@@ -518,23 +502,23 @@
     </el-dialog>
     <el-dialog :title="title" :visible.sync="dialogFormVisible5" :close-on-click-modal="modal">
       <el-form label-position="right" label-width="140px">
-        <el-form-item label="选择原因" v-show="title==='驳回意见'">
-          <el-select v-model="opinion" placeholder="请选择">
+        <el-form-item label="驳回原因类型" v-show="title==='驳回意见'">
+          <el-select v-model="opinion" placeholder="请选择" style="width:100%">
             <el-option v-for="item in BHoptions" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="输入悬停原因" v-show="title==='悬停'">
           <el-input type="textarea" :rows="2" placeholder="请输入原因" v-model.trim="pendingReason"></el-input>
         </el-form-item>
-        <el-form-item label="原因填写" v-show="title==='驳回意见'">
+        <el-form-item label="驳回意见" v-show="title==='驳回意见'">
           <el-input
             type="textarea"
-            :rows="2"
+            :rows="4"
             placeholder="请输入原因"
             v-model="textareaOpinion"
           ></el-input>
         </el-form-item>
-        <el-form-item label="选择处理人" v-show="title==='流程提交' && $route.query.tag !== 'billEntry' && checkRobortUser==1">
+        <el-form-item label="选择处理人" v-show="title==='流程提交' && $route.query.tag === 'billEntry' && checkRobortUser==1">
           <el-select v-model="assignee" placeholder="请选择">
             <el-option
               v-for="item in TJRoptions"
@@ -566,7 +550,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="是否签回" v-show="title==='流程提交' && $route.query.tag === 'billEntry'">
+        <el-form-item label="是否签回" v-show="title==='流程提交' && $route.query.tag === 'billEntry' && chooseRow.wsBusinessType!='F'">
           <el-radio v-model="radio" label="1">是</el-radio>
           <el-radio v-model="radio" label="0">否</el-radio>
         </el-form-item>
@@ -729,7 +713,7 @@ export default {
         pageSize: 20, //页面一次要展示的条数
         total: 0 //总条数
       },
-      chooseDocList: null,
+      chooseDocList: [],
       subProcessFlag: false,
       billCheckType: null,
       rotateCount:0,
@@ -916,14 +900,6 @@ export default {
         this.title = "上传附件";
       }
     },
-    OnuploadType() {
-      if (this.uploadType == 1) {
-        this.chooseDocList = null;
-      } else {
-        this.fileList = [];
-        this.file = [];
-      }
-    },
     querySearch(queryString, cb) {
       let restaurants = this.mailOption;
       let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
@@ -970,44 +946,43 @@ export default {
         // 本地上传
         if (this.file.length) {
           var resFile = new FormData();
-          resFile.append("file", this.file[0]);
-          for (let k in info) {
-            resFile.append(k, info[k]);
-          }
+          this.file.forEach(el => {resFile.append("file", el);});
+          // resFile.append("file", this.file[0]);
+          for (let k in info) {resFile.append(k, info[k]);}
         }
         // docList 上传
-        if (this.chooseDocList != null) {
-          let row = this.tableData[this.chooseDocList];
-          this.$http
-            .post(
-              "api/anyShare/fileOperation/previewDocument",
-              Object.assign({}, row, { processId: this.chooseRow.processId }),
-              { responseType: "blob" }
-            )
-            .then(res => {
-              if (res.status === 200) {
-                let resFiles = new FormData();
-                resFiles.append("file", res.data);
-                for (let k in info) {
-                  resFiles.append(k, info[k]);
-                }
-                this.$http.post("api/worksheet/wSEntry/sendEmail", resFiles)
-                  .then(res => {
-                    if (res.status === 200 && res.data.code == 0) {
-                      this.$message({type: "success",message: res.data.msg});
-                      this.dialogFormVisible2 = false;
-                    } else{
-                      this.$message({type: "error",message: res.data.msg});
-                      this.dialogFormVisible2 = false;
-                    }
-                  });
-              }
-            });
-        }
-        if (this.chooseDocList == null) {
+        if (this.chooseDocList && this.chooseDocList.length) {
+          // let row = this.tableData[this.chooseDocList];
+          // this.$http.post("api/anyShare/fileOperation/previewDocument",Object.assign({}, row, { processId: this.chooseRow.processId }),{ responseType: "blob" })
+          //   .then(res => {
+          //     if (res.status === 200) {
+          //       let resFiles = new FormData();
+          //       resFiles.append("file", res.data);
+          //       for (let k in info) { resFiles.append(k, info[k]); }
+          //       this.$http.post("api/worksheet/wSEntry/sendEmail", resFiles)
+          //         .then(res => {
+          //           if (res.status === 200 && res.data.code == 0) {
+          //             this.$message({type: "success",message: res.data.msg});
+          //             this.dialogFormVisible2 = false;
+          //           } else{
+          //             this.$message({type: "error",message: res.data.msg});
+          //             this.dialogFormVisible2 = false;
+          //           }
+          //         });
+          //     }
+          //   });
+          this.$http.post("api/worksheet/wSEntry/sendEmail", {emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle, docCId:this.chooseDocList}).then(res => {
+            if (res.status === 200 && res.data.code == 0) {
+              this.$message({type: "success",message: res.data.msg});
+              this.dialogFormVisible2 = false;
+            } else{
+              this.$message({type: "error",message: res.data.msg});
+              this.dialogFormVisible2 = false;
+            }
+          });
+        } else{ 
           this.file.length ? (params = resFile) : (params = info);
-          this.$http.post("api/worksheet/wSEntry/sendEmail", params)
-            .then(res => {
+          this.$http.post("api/worksheet/wSEntry/sendEmail", params).then(res => {
               if (res.status === 200 && res.data.code==0) {
                 this.$message({ type: "success", message:res.data.msg});
                 this.dialogFormVisible2 = false;
@@ -1103,20 +1078,25 @@ export default {
 
           break;
         case 4: // 置废
-          this.$confirm("是否置废？", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
-          }).then(() => {
-            this.$http
-              .post(
-                "api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
+          // this.$confirm("是否置废？", "提示", {
+          //   confirmButtonText: "确定",
+          //   cancelButtonText: "取消",
+          //   type: "warning"
+          // }).then(() => {
+            this.$prompt('请输入置废原因', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              inputPattern: /[\u4e00-\u9fa5_a-zA-Z0-9]+/,
+              inputErrorMessage: '请输入正确内容'
+            }).then(({ value }) => {
+            this.$http.post("api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
                 {
                   processId: this.chooseRow.processId,
                   procInstId: this.chooseRow.processInstId,
                   assignee: this.$store.state.userName,
                   type: "INACTIVE",
-                  actOperator: this.chooseRow.curOperator
+                  actOperator: this.chooseRow.curOperator,
+                  opinion:value,
                 }
               )
               .then(res => {
@@ -1567,43 +1547,51 @@ export default {
     },
     beforeAvatarUpload(file) {
       this.file.push(file);
+      clearTimeout(this.setTime);
+    },
+    reloadTableData(){
+      this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
+        if (res.status === 200) {
+          // this.tableData = res.data.bscDocumentVOlist;
+          let arr = res.data.bscDocumentVOlist;
+          arr.forEach(el=>{
+            if(el.docName){
+              let suffix = el.docName.split('.');
+              el['suffix'] = suffix[suffix.length-1];
+            }
+          })
+          this.tableData = arr;
+          this.searchFlag2 = true;
+        }
+      });
     },
     upload(file) {
       if (this.title === "邮件通知") {
         return false;
       }
-      let resFile = new FormData();
-      resFile.append("file", this.file[0]);
-      resFile.append("actOperator", this.$store.state.userName);
-      resFile.append("processId", this.chooseRow.processId);
-      this.$http
-        .post("api/anyShare/fileOperation/uploadFilesForPage", resFile, {
-          headers: { "Content-Type": "application/json;charset=UTF-8" }
-        })
-        .then(res => {
-          this.fileList = [];
-          this.file = [];
-          if (res.status === 200 && res.data.errorCode == 1) {
-            this.dialogFormVisible2 = false;
-            this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
-                if (res.status === 200) {
-                  // this.tableData = res.data.bscDocumentVOlist;
-                  let arr = res.data.bscDocumentVOlist;
-                  arr.forEach(el=>{
-                    if(el.docName){
-                      let suffix = el.docName.split('.');
-                      el['suffix'] = suffix[suffix.length-1];
-                    }
-                  })
-                  this.tableData = arr;
-                }
-              });
-          } else if (res.data.errorCode == "0" && res.data.errorMessage) {
-            this.$message.error(res.data.errorMessage);
-          } else {
-            this.$message.error("上传失败");
-          }
+      this.setTime = setTimeout(() => {
+        let resFile = new FormData();
+        this.file.forEach(el => {
+          resFile.append("file", el);
         });
+        // resFile.append("file", this.file[0]);
+        resFile.append("actOperator", this.$store.state.userName);
+        resFile.append("processId", this.chooseRow.processId);
+        this.$http.post("api/anyShare/fileOperation/uploadFilesForPageBatch", resFile, {headers: { "Content-Type": "application/json;charset=UTF-8" }})
+          .then(res => {
+            this.fileList = [];
+            this.file = [];
+            if (res.status === 200 && res.data.errorCode == 1) {
+              this.dialogFormVisible2 = false;
+              this.reloadTableData();
+            } else if (res.data.errorCode == "0" && res.data.errorMessage) {
+              this.$message.error(res.data.errorMessage);
+              this.reloadTableData();
+            } else {
+              this.$message.error("上传失败");
+            }
+          });
+      }, 500);
     },
     split() {
       let arr = document.querySelectorAll(".itemNum");

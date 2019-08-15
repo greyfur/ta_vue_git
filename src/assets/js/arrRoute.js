@@ -186,7 +186,7 @@ let data = [
         component: () => import("@/views/pay/payment"),
       },
       {
-        title:'partial',
+        title:'PARTIAL',
         path: '/partialDone',
         name: 'partialDone',
         component: () => import("@/views/pay/partialDone"),
