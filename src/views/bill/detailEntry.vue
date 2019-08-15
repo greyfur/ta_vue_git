@@ -104,7 +104,7 @@
               <el-table-column label="操作" width="80" align="center">
                 <template slot-scope="scope">
                   <el-dropdown placement="top-start">
-                    <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup73" ></i></span>
+                    <span class="el-dropdown-link"><i class="iconfont iconGroup73"></i></span>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item>
                         <span class="blueColor" v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack' && $route.query.tag !== 'billCheck'"

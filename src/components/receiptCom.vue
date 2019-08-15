@@ -187,7 +187,7 @@
         <template slot-scope="scope">
           <el-dropdown placement="top-start">
             <span class="el-dropdown-link">
-             <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup73" ></i>
+             <i class="iconfont iconGroup73"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>
@@ -325,7 +325,7 @@
           </el-dropdown> -->
           <el-dropdown placement="top-start">
             <span class="el-dropdown-link">
-               <i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup73" ></i>
+               <i class="iconfont iconGroup73"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
                <el-dropdown-item>
