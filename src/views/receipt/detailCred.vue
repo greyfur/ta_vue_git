@@ -212,20 +212,9 @@
     </el-row>
     <el-row v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate' || $route.query.tag === 'collectiongEnd'">
       <el-col :span="24">
-        <div
-          class="titleSearch detailSearch"
-          style="margin-bottom:10px;"
-          @click="searchFlag3 = !searchFlag3"
-        >
-          <div>
-            <i
-              style="margin-right:8px;"
-              :class="searchFlag3===false?'el-icon-arrow-down':'el-icon-arrow-up'"
-            ></i>结算清单
-          </div>
-          <p>
-            <i class="iconfont iconGroup26"></i>
-          </p>
+        <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
+          <div><i style="margin-right:8px;" :class="searchFlag3===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>结算清单</div>
+          <p><i class="iconfont iconGroup26"></i></p>
         </div>
         <el-collapse-transition>
           <el-table v-show="searchFlag3" border :data="SgData" style="width: 100%" :header-row-class-name="StableClass">
@@ -426,8 +415,8 @@
             </el-table-column> hyd-->
             <el-table-column width="180" label="结付公司" align="center">
                 <template slot-scope="scope">
-                <el-tooltip class="item" effect="dark"  :content="scope.row.partnerName&&scope.row.partnerCode?scope.row.partnerCode+'-'+scope.row.partnerName:''" placement="top-start">
-                  <span class="abbreviate" v-if="scope.row.partnerName&&scope.row.partnerCode">{{scope.row.partnerCode}}-{{scope.row.partnerName}}</span>
+                <el-tooltip class="item" effect="dark"  :content="scope.row.bpName&&scope.row.bpCode?scope.row.bpCode+'-'+scope.row.bpName:''" placement="top-start">
+                  <span class="abbreviate" v-if="scope.row.bpName&&scope.row.bpCode">{{scope.row.bpCode}}-{{scope.row.bpName}}</span>
                   <span class="abbreviate" v-else></span>
                 </el-tooltip>
               </template>
