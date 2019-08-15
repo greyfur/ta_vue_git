@@ -151,7 +151,7 @@
           </el-select>
         </el-form-item> -->
         <el-form-item label="Business Origin" prop="businessOrigin" v-show="title==='创建' || title==='编辑'"> 
-          <el-select clearable v-model="formLabelAlign.businessOrigin" placeholder="请选择Business Origin">
+          <el-select clearable v-model="formLabelAlign.businessOrigin" placeholder="请选择Business Origin111">
             <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>

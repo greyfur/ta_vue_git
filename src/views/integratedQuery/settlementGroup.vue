@@ -189,7 +189,7 @@
             </el-table-column>
             <el-table-column prop="businessOrigin" label="Business Origin" width="120" align="center"></el-table-column>
             <el-table-column prop="baseCompany" label="Base Company" width="120" align="center"></el-table-column>
-            <el-table-column label="操作" align="center"></el-table-column>
+            <!-- <el-table-column label="操作" align="center"></el-table-column> -->
           </el-table>
         </template>
       </el-table-column>

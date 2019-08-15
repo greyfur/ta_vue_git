@@ -22,6 +22,7 @@
           <el-button size="small" :disabled="isHover" @click="submit(1,'录入指派')" plain>指派</el-button>
           <el-button :type="isHover?'info':''" size="small" @click="submit(5)" plain>{{isHover?'已悬停':'状态悬停'}}</el-button>
           <el-button @click="dialogFormVisible = true" :disabled="isHover" size="small" plain>拆分</el-button>
+          <el-button size="small" @click="onSics()"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写</el-button>
           <el-button plain :disabled="isHover" size="small" @click="submit(6,'录入提交')">流程提交</el-button>
         </div>
         <!-- 复核 -->
@@ -29,9 +30,7 @@
           <el-button size="small" @click="submit(1,'复核指派')" plain>指派</el-button>
           <el-button size="small" @click="submit(8)" plain>复核驳回</el-button>
           <el-button size="small" @click="submit(3)" plain>复核通过</el-button>
-          <el-button size="small" @click="onSics()">
-                <i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写
-          </el-button>
+          <el-button size="small" @click="onSics()"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写</el-button>
         </div>
         <div class="left">
           <div :class="searchFlag1===true?'searchNew':''" >

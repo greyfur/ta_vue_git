@@ -377,11 +377,11 @@
                 <span class="abbreviate">{{scope.row.bpName}}</span>
               </el-tooltip>
             </template>
-          </el-table-column> hyd-->
+          </el-table-column> hyd--> 
            <el-table-column width="180" label="结付公司" align="center">
               <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark"  :content="scope.row.partnerName&&scope.row.partnerCode?scope.row.partnerCode+'-'+scope.row.partnerName:''" placement="top-start">
-                <span class="abbreviate" v-if="scope.row.partnerName&&scope.row.partnerCode">{{scope.row.partnerCode}}-{{scope.row.partnerName}}</span>
+              <el-tooltip class="item" effect="dark"  :content="scope.row.bpName&&scope.row.bpCode?scope.row.bpCode+'-'+scope.row.bpName:''" placement="top-start">
+                <span class="abbreviate" v-if="scope.row.bpName&&scope.row.bpCode">{{scope.row.bpCode}}-{{scope.row.bpName}}</span>
                 <span class="abbreviate" v-else></span>
               </el-tooltip>
             </template>
@@ -629,9 +629,17 @@
         <!-- <el-form-item label="原因填写" v-show="title==='审批驳回'">
           <el-input type="textarea" :rows="2" placeholder="请输入原因" v-model="rebut"></el-input>
         </el-form-item> -->
-        <el-form-item label="选择处理人" v-show="putIn=='n'">
+        <el-form-item label="选择下一处理人" v-show="putIn=='n'">
           <el-select filterable v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否代理" v-show="title==='审批通过'">
+          <el-checkbox v-model="proxyFlag" @change="proxyMan=null">是</el-checkbox>
+        </el-form-item>
+        <el-form-item label="选择代理人" v-show="title==='审批通过'">
+          <el-select filterable v-model="proxyMan"  placeholder="请选择" :disabled="!proxyFlag">
+            <el-option v-for="(item,i) in TJRoptions" :key="item.userId" :label="item.name" :value="i" :disabled="item.username == $store.state.userName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="title === '指派'?'选择指派人':'选择处理人'" v-show="title === '指派' || putIn=='b'">
@@ -917,6 +925,9 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        updateFlag:false,
+        proxyFlag:false,
+        proxyMan:null,
         StableClass: "tableClass",
         WSData: [],
         saveLevel:null,
@@ -1179,7 +1190,7 @@ export default {
     this.formLabelAlign.dueDate = new Date().getTime();
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
-  beforeMount(){this.copy('proNum',1)},
+  beforeMount(){this.copy('proNum',1); this.updateFlag = true;},
   mounted(){ 
     console.log(this.row,'this.row');
     this.mustData.actOperator = this.$store.state.userName;
@@ -1246,6 +1257,7 @@ export default {
   updated(){
     if(this.$route.query.tag === 'payVerification'){
       this.nextStep();
+      this.updateFlag = false;
     }
   },
   methods: {
@@ -1691,51 +1703,39 @@ export default {
           this.dialogFormVisible3 = true;
         break;
         case 5:  // 审批通过 --------------
-          let param = {
-            processId:this.row.processId,
-            actOperator:this.$store.state.userName,
-            operatorLevel:this.row.approvalLevel+1,
-            approvalName:sessionStorage.getItem('userCName')
-          }
-          this.$http.post('api/docOperation/addSignature',param).then(res =>{
-            if(res.data.code == 0){
-              this.$http.post('api/pay/activitiForPay/getNextStep',{processId:this.row.processId, approvalLevel:this.row.approvalLevel}).then(res =>{
-                if(res.status == 200){
-                  if(res.data){
-                    // this.getName('付款录入');
-                    this.$confirm('是否审批通过', '提示', {
-                      confirmButtonText: '确定',
-                      cancelButtonText: '取消',
-                      confirmButtonClass:'confirmBtn',
-                      type: 'warning'
-                    }).then(() => {
-                      this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-                      ,{processId:this.row.processId, 
-                        procInstId:this.row.processInstId, 
-                        assignee:this.row.entryOperator, 
-                        type:this.$route.query.name,
-                        actOperator:this.$store.state.userName,
-                        approvalLevel:this.row.approvalLevel,
-                        })
-                      .then(res =>{
-                        if(res.status === 200 && res.data.errorCode == 1){
-                          this.dialogFormVisible3 = false;
-                          this.$router.push({name:this.$route.query.tag}); 
-                          this.assignee = null;
-                        } else if(res.data.errorCode == 0){
-                          this.$message({type: 'error', message:res.data.errorMessage }); 
-                        }
-                      })
+          this.$http.post('api/pay/activitiForPay/getNextStep',{processId:this.row.processId, approvalLevel:this.row.approvalLevel}).then(res =>{
+            if(res.status == 200){
+              if(res.data){
+                // this.getName('付款录入');
+                this.$confirm('是否审批通过', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  confirmButtonClass:'confirmBtn',
+                  type: 'warning'
+                }).then(() => {
+                  this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
+                  ,{processId:this.row.processId, 
+                    procInstId:this.row.processInstId, 
+                    assignee:this.row.entryOperator, 
+                    type:this.$route.query.name,
+                    actOperator:this.$store.state.userName,
+                    approvalLevel:this.row.approvalLevel,
                     })
-                  } else{   
-                    this.getName(this.emnuGetName[this.row.approvalLevel]);
-                    this.dialogFormVisible3 = true;
-                  }
-                  
-                }
-              })
-            } else if(res.data.code == 1 && res.data.msg){
-              this.$message.error(res.data.msg);
+                  .then(res =>{
+                    if(res.status === 200 && res.data.errorCode == 1){
+                      this.dialogFormVisible3 = false;
+                      this.$router.push({name:this.$route.query.tag}); 
+                      this.assignee = null;
+                    } else if(res.data.errorCode == 0){
+                      this.$message({type: 'error', message:res.data.errorMessage }); 
+                    }
+                  })
+                })
+              } else{   
+                this.getName(this.emnuGetName[this.row.approvalLevel]);
+                this.dialogFormVisible3 = true;
+              }
+              
             }
           })
         break;
@@ -1874,23 +1874,38 @@ export default {
             this.$message.error('请选择审批人');
             return false;
           }
-          this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-            ,{processId:this.row.processId, 
-              procInstId:this.row.processInstId, 
-              assignee:this.assignee, 
-              type:this.$route.query.name,
-              actOperator:this.$store.state.userName,
-              approvalLevel:this.row.approvalLevel,
-              })
-            .then(res =>{
-              if(res.status === 200 && res.data.errorCode == 1){
-                this.dialogFormVisible3 = false;
-                this.$router.push({name:this.$route.query.tag}); 
-                this.assignee = null;
-              } else if(res.data.errorCode == 0){
-                this.$message({type: 'error', message:res.data.errorMessage }); 
+          let param = {
+            processId:this.row.processId,
+            actOperator:this.$store.state.userName,
+            operatorLevel:this.row.approvalLevel+1,
+            approvalName:sessionStorage.getItem('userCName'),
+            proxyName:this.proxyMan==null?this.proxyMan:this.TJRoptions[this.proxyMan]['name'],
+            proxyEName:this.proxyMan==null?this.proxyMan:this.TJRoptions[this.proxyMan]['username'],
+          }
+          this.$http.post('api/docOperation/addSignature',param).then(res =>{
+              if(res.data.code == 0){
+                this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
+                  ,{processId:this.row.processId, 
+                    procInstId:this.row.processInstId, 
+                    assignee:this.assignee, 
+                    type:this.$route.query.name,
+                    actOperator:this.$store.state.userName,
+                    approvalLevel:this.row.approvalLevel,
+                    }).then(res =>{
+                    if(res.status === 200 && res.data.errorCode == 1){
+                      this.dialogFormVisible3 = false;
+                      this.$router.push({name:this.$route.query.tag}); 
+                      this.assignee = null;
+                    } else if(res.data.errorCode == 0){
+                      this.$message({type: 'error', message:res.data.errorMessage }); 
+                    }
+                  })
+              } else if(res.data.code == 1 && res.data.msg){
+                this.$message.error(res.data.msg);
               }
             })
+
+          
         break;
         case 6:  // 复核通过
           // if(!this.assignee){
@@ -2520,7 +2535,7 @@ export default {
   },
    watch:{
     title:function(n,o){
-      // b可以选自己，n不可以，0开账，1关账，关账支票可选自己
+      // b不可以选自己，n可以，0开账，1关账，关账支票可选自己
       // title === '流程提交' || title==='审批通过' title === '复核通过'
       if(n === '流程提交' && this.$route.query.tag === 'payOperation'){
         this.putIn = 'b';

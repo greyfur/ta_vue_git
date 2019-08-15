@@ -506,11 +506,11 @@
     <!-- 拆分 -->
     <el-dialog title="拆分" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal">
       <el-form label-width="120px" :rules="rules">
-        <el-form-item label="拆分数量">
-          <el-input v-model="subProcess" style="width:200px" type="number"></el-input>
+        <el-form-item label="拆分数量" required>
+          <el-input v-model="subProcess" style="width:200px" type="number" ></el-input>
           <!-- <el-button type="primary" size="mini" style="margin-left:50px" @click="itemSplit">拆分</el-button> -->
         </el-form-item>
-        <el-form-item label="拆分理由">
+        <el-form-item label="拆分理由" required>
           <el-input
             type="textarea"
             :rows="4"

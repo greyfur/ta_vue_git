@@ -136,7 +136,7 @@
       <el-table-column prop="businessPartnerRef" label="BP Reference" width="140" align="center"></el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="130" align="center"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130" align="center"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="80" align="center">
+      <el-table-column fixed="right" label="操作" width="100" align="center">
         <template slot-scope="scope">
           <!-- <el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button> -->
           <span class="blueColor" @click.stop="openSICS(scope.row)">打开SICS</span>
