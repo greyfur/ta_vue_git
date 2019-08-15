@@ -3,8 +3,8 @@
     <!-- <div class="goBack" v-show="false"> -->
     <router-link
       :to="{name:$route.query.tag}"
-      style="color:#333;position:absolute;top:20px;left:70px;z-index:100;">
-      <span class="arrows" style="font-weight: 700;">＜</span>
+      style="color:#333;position:fixed;top:10px;left:70px;z-index:100;background:#fff;padding:10px 10px;border-radius:5px;">
+      <span class="arrows" style="font-weight: 700;">&lt;</span>
       <span class="word">返回上一级</span>
     </router-link>
     <!-- </div>  -->
@@ -34,6 +34,9 @@
           <el-button size="small" @click="submit(1,'复核指派')" plain>指派</el-button>
           <el-button size="small" @click="submit(8)" plain>复核驳回</el-button>
           <el-button size="small" @click="submit(3)" plain>复核通过</el-button>
+          <el-button size="small" @click="onSics()">
+                <i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写
+          </el-button>
         </div>
         <div class="left">
           <div :class="searchFlag1===true?'searchNew':''" >
@@ -138,9 +141,7 @@
                 <i style="margin-right:8px;" class="iconfont iconGroup26"></i>
                 <a href="../../../static/Preview/index.html" target="_blank">全屏</a>
               </el-button>
-              <el-button size="small" :disabled="isHover" @click="onSics()">
-                <i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写
-              </el-button>
+              
               <el-button class="rotate" size="mini" @click="rotateMua" style="">顺时针旋转</el-button>
               <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button>
             </p>
@@ -217,7 +218,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="SECTION">
+          <el-table-column label="SECTION" width="110">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"

@@ -108,7 +108,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="SECTION">
+            <el-table-column label="SECTION" width="110">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"

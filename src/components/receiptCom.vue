@@ -394,10 +394,11 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="汇款金额" v-show="title==='编辑' || title==='创建'">
+          <!-- dir="rtl" foucs 右到左-->
           <input
             type="text"
             class="selfInput"
-            dir="rtl"
+            style="text-align:right"
             v-model="formLabelAlign.rmAmount"
             @input="watchInput('rmAmount')">
         </el-form-item>

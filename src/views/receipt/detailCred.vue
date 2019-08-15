@@ -2,8 +2,8 @@
   <div class="detailCred">
     <router-link
       :to="{name:$route.query.tag}"
-      style="color:#333;position:absolute;top:20px;left:70px;z-index:100;">
-      <span class="arrows">＜</span>
+      style="color:#333;position:fixed;top:10px;left:70px;z-index:100;background:#fff;padding:10px 10px;border-radius:5px;">
+      <span class="arrows">&lt;</span>
       <span class="word">返回上一级</span>
     </router-link>
     <!-- 核销完成 -->
@@ -269,7 +269,7 @@
                       </el-tooltip>
                     </template>
                   </el-table-column>
-                  <el-table-column label="SECTION">
+                  <el-table-column label="SECTION" width="110">
                     <template slot-scope="scope">
                       <el-tooltip
                         class="item"
@@ -583,7 +583,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="SECTION">
+            <el-table-column label="SECTION" width="110">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"

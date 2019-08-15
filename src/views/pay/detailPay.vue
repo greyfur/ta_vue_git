@@ -1,7 +1,7 @@
 <template>
   <div class="detailPay">
-    <router-link :to="{name:$route.query.tag}" style="color:#333;position:absolute;top:20px;left:70px;z-index:100;">
-      <span class="arrows" style="font-weight: 700;">＜</span>
+    <router-link :to="{name:$route.query.tag}" style="color:#333;position:fixed;top:10px;left:70px;z-index:100;background:#fff;padding:10px 10px;border-radius:5px;">
+      <span class="arrows" style="font-weight: 700;">&lt;</span>
       <span class="word">返回上一级</span>
     </router-link>
     <el-row>
@@ -280,7 +280,7 @@
                     </el-tooltip>
                   </template>
                 </el-table-column>
-                <el-table-column label="SECTION" width="100">
+                <el-table-column label="SECTION" width="110">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.section" placement="top-start">
                       <span class="abbreviate">{{scope.row.section}}</span>
@@ -505,7 +505,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-              <el-table-column label="SECTION" width="100">
+              <el-table-column label="SECTION" width="110">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -851,7 +851,7 @@
             <el-option v-for="(item,index) in bscBankList" :key="index" :label="item.compName" :value="index"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="原币币制/金额111" required>
+        <el-form-item label="原币币制/金额" required>
           <el-form-item>
             <el-select filterable style="width:90%;height:40px;line-height:40px;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
               <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
@@ -866,7 +866,6 @@
                 v-model="makeDocListEctype.yuanNum[i]"
                 placeholder="请输入金额"
                 size="small"
-                dir="rtl"
               ></el-input>
               <span class="huilv">&nbsp;汇率：&nbsp;</span>
               <el-input
@@ -875,7 +874,6 @@
                 v-model="makeDocListEctype.yuanHuiLv[i]"
                 placeholder="请输入汇率"
                 size="small"
-                dir="rtl"
               ></el-input>
             </div>
           </el-form-item>
@@ -890,7 +888,7 @@
           </el-col>
           <el-col :span="10">
             <el-form-item>
-              <el-input v-model="makeDocListEctype.zheNum" class="curAmount" dir="rtl"></el-input>
+              <el-input v-model="makeDocListEctype.zheNum" class="curAmount"></el-input>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -2773,7 +2771,9 @@ li.detail-item{
 .wrapInput .huilvInput input.el-input__inner,.wrapInput .singleInput  input.el-input__inner{
   border: none;
   height: 37px;
+  text-align: right !important;
 }
+
 /* .wrapInput >.singleInput{
   border: none;
   height: 37px;

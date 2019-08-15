@@ -178,6 +178,11 @@
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column>
+      <el-table-column label="录入人" width="110">
+        <template slot-scope="scope">
+          <span>{{nameList[scope.row.registBy]}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="processStatus" label="流程状态"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="130"></el-table-column>
