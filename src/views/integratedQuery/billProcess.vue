@@ -118,7 +118,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="账单类型" width="80" align="center">
+      <el-table-column label="账单类型" width="260" align="center">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.wsType" placement="top-start">
             <span class="abbreviate">{{scope.row.wsType}}</span>
@@ -128,7 +128,7 @@
       <el-table-column label="任务类型" width="80" align="center">
         <template slot-scope="scope">{{YWoptionsObj[scope.row.wsBusinessType]}}</template>
       </el-table-column>
-      <el-table-column label="账单期" width="120" align="center">
+      <el-table-column label="账单期" width="140" align="center">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.wsPeriod" placement="top-start">
             <span class="abbreviate">{{scope.row.wsPeriod}}</span>
@@ -198,7 +198,7 @@
       <el-table-column fixed="right" label="操作" width="80" align="center">
         <template slot-scope="scope">
           <el-dropdown placement="top-start">
-            <span class="el-dropdown-link"><i class="iconfont iconGroup73"></i></span>
+            <span class="el-dropdown-link"><i class="iconfont iconcaozuoliebiao"></i></span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item><span class="blueColor" v-if="scope.row.processStatus=='已关闭'" @click.stop="reverse(scope.row)">Reverse</span></el-dropdown-item>
               <el-dropdown-item><span class="blueColor"  @click.stop="handleClick(5,scope.row)">踪迹</span></el-dropdown-item>

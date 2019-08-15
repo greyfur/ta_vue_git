@@ -55,7 +55,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="流程编号">
+      <el-table-column label="流程编号" width="140">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -67,7 +67,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="支票状态" align="center">
+      <el-table-column label="支票状态" align="center" width="150">
         <template slot-scope="scope">
           <el-tooltip
             class="item"

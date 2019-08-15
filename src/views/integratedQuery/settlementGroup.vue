@@ -200,7 +200,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="流程编号" align="center">
+      <el-table-column label="流程编号" align="center" width="140">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -212,7 +212,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="支票号" align="center">
+      <el-table-column label="支票号" align="center" width="150">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
             <span class="abbreviate">{{scope.row.rmId}}</span>
@@ -272,14 +272,14 @@
       <el-table-column prop="bookingPeriod" label="账期" width="100" align="center"></el-table-column>
       <el-table-column prop="accYear" label="统计年份" width="100" align="center"></el-table-column>
       <el-table-column prop="accPeriod" label="统计期" width="100" align="center"></el-table-column>
-      <el-table-column label="类型" align="center">
+      <el-table-column label="类型" align="center" width="200">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.sgType" placement="top-start">
             <span class="abbreviate">{{scope.row.sgType}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="参考" align="center">
+      <el-table-column label="参考" align="center" width="150">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -292,7 +292,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="createdBy" label="创建人" width="100" align="center"></el-table-column>
-      <el-table-column label="创建时间" width="100" align="center">
+      <el-table-column label="创建时间" width="200" align="center">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -306,7 +306,7 @@
       </el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="135" align="center"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="135" align="center"></el-table-column>
-      <el-table-column label="操作" width="80" align="center">
+      <el-table-column label="操作" width="100" fixed="right" align="center">
         <template slot-scope="scope">
           <span class="blueColor" @click.stop="openSICS(scope.row)">打开SICS</span>
           <!-- <el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button> -->

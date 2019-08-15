@@ -149,7 +149,7 @@ body .el-table colgroup.gutter {
   border-radius: 4px;
 }
 .tableClass th,.tableClass th.is-right{
-  background-color: #FAFAFA;
+  background-color: #F5F5F5;
   color: #000;
   text-align: center;
 }

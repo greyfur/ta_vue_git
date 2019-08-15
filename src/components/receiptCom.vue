@@ -183,11 +183,12 @@
       <el-table-column prop="processStatus" width="95" label="流程状态" align="center"></el-table-column>
       <el-table-column label="Base Company" prop="baseCompany" width="130" align="center"></el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin" align="center"></el-table-column>
+      <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80" align="center">
         <template slot-scope="scope">
           <el-dropdown placement="top-start">
             <span class="el-dropdown-link">
-             <i class="iconfont iconGroup73"></i>
+             <i class="iconfont iconcaozuoliebiao"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>
@@ -325,7 +326,7 @@
           </el-dropdown> -->
           <el-dropdown placement="top-start">
             <span class="el-dropdown-link">
-               <i class="iconfont iconGroup73"></i>
+               <i class="iconfont iconcaozuoliebiao"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
                <el-dropdown-item>

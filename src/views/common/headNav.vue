@@ -267,7 +267,7 @@ import {computeName} from '@/assets/js/util.js'
   .el-menu-item{
     background-color: #01517C!important;
     background: #01517C!important;
-    color: rgba(255,255,255,.7)!important;
+    color: rgba(255,255,255,.65)!important;
   }
   .vertical .is-active{
     /* background: linear-gradient(270deg,rgba(0,72,111,1) 0%,rgba(64,152,195,0.37) 31%,rgba(64,152,195,0.37) 71%,rgba(0,72,111,1) 100%)!important; */

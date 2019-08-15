@@ -32,7 +32,7 @@
             <template slot-scope="scope">
               <span class="blueColor" style="cursor: pointer;" @click.stop="downLoad(scope.row)">下载</span>
               <!-- <el-dropdown placement="top-start">
-                <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconGroup73" ></i></span>
+                <span class="el-dropdown-link"><i  style="margin-left:8px; width:8px;display:inline-block;transform: scale(0.4)" class="iconfont iconcaozuoliebiao" ></i></span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>
                   </el-dropdown-item>

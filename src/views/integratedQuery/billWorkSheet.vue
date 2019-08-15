@@ -111,7 +111,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="业务编号" align="center">
+          <el-table-column label="业务编号" align="center" width="120">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.businessId" placement="top-start">
                 <span class="abbreviate">{{scope.row.businessId}}</span>
@@ -133,7 +133,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="uwYear" label="业务年度" align="center"></el-table-column>
-          <el-table-column label="任务类型" align="center">
+          <el-table-column label="任务类型" align="center" width="100">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.businessType" placement="top-start">
                 <span class="abbreviate">{{scope.row.businessType}}</span>
@@ -155,7 +155,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="账单类型" width="130" align="center">
+          <el-table-column label="账单类型" width="260" align="center">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.wsType" placement="top-start">
                 <span class="abbreviate">{{scope.row.wsType}}</span>
@@ -177,7 +177,7 @@
               <span>{{nameList[scope.row.registBy]}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="录入时间" width="120" align="center">
+          <el-table-column label="录入时间" width="180" align="center">
              <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.registAt" placement="top-start">
                 <span class="abbreviate">{{scope.row.registAt}}</span>
@@ -198,7 +198,7 @@
         <template slot-scope="scope">
           <!-- <el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button> -->
           <el-dropdown placement="top-start">
-            <span class="el-dropdown-link"><i class="iconfont iconGroup73"></i></span>
+            <span class="el-dropdown-link"><i class="iconfont iconcaozuoliebiao"></i></span>
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item><el-button v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'sortOperation'" @click.stop="handleClick(3,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>

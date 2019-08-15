@@ -842,8 +842,12 @@
           </el-col>
         </el-form-item>
         <el-form-item label="受款公司">
+          <!-- 470 hyd -->
           <el-select clearable filterable v-model="makeDocListEctype.shoukuanMode" placeholder="请选择">
-            <el-option v-for="(item,index) in bscBankList" :key="index" :label="item.compName" :value="index"></el-option>
+            <el-tooltip v-for="(item,index) in bscBankList" :key="index" class="item" effect="dark" placement="top-start">
+              <div slot="content">{{item.bankAcnt}}<br/>{{item.bankAddr}}<br/>{{item.bankInfo}}<br/>{{item.bankName}}</div>
+              <el-option :key="index" :label="item.compName" :value="index"></el-option>
+            </el-tooltip>
           </el-select>
         </el-form-item>
         <el-form-item label="原币币制/金额" required>
@@ -1384,6 +1388,7 @@ export default {
       this.$http.post('api/othersDO/bscBankInfo/list',{}).then(res =>{
         if(res.status === 200 && res.data.rows){
           this.bscBankList = res.data.rows;
+          console.log(res.data.rows)
         }
       })
     },

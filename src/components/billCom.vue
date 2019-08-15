@@ -149,7 +149,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="账单类型" width="80" align="center">
+      <el-table-column label="账单类型" width="260" align="center">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.wsType" placement="top-start">
             <span class="abbreviate">{{scope.row.wsType}}</span>
@@ -159,7 +159,7 @@
       <el-table-column label="任务类型" width="80" align="center">
         <template slot-scope="scope">{{YWoptionsObj[scope.row.wsBusinessType]}}</template>
       </el-table-column>
-      <el-table-column label="账期" align="center">
+      <el-table-column label="账期" align="center" width="130">
         <template slot-scope="scope">
           <el-tooltip
             class="item"
@@ -223,7 +223,7 @@
           <el-dropdown placement="top-start">
             <span class="el-dropdown-link">
               <!-- <i style="margin-left:8px;" class="el-icon-arrow-down"></i> -->
-              <i  class="iconfont iconGroup73" ></i>
+              <i class="iconfont iconcaozuoliebiao"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
                <el-dropdown-item>
@@ -233,13 +233,20 @@
                 class="blueColor"
               >编辑</span>
             </el-dropdown-item>
-          <el-dropdown-item>
-            <span
-              v-show="urlName === 'sortOperation'"
-              @click.stop="handleClick(3,scope.row)"
-              class="blueColor"
-            >分配</span>
-          </el-dropdown-item>
+             <el-dropdown-item>
+              <span
+                v-show="urlName === 'sortOperation'"
+                @click.stop="dialogFormVisible3 = true"
+                class="blueColor"
+              >拆分</span>
+            </el-dropdown-item>
+            <el-dropdown-item>
+              <span
+                v-show="urlName === 'sortOperation'"
+                @click.stop="handleClick(3,scope.row)"
+                class="blueColor"
+              >分配</span>
+            </el-dropdown-item>
               <el-dropdown-item>
                 <span
                   v-show="urlName === 'sortOperation'"
@@ -496,6 +503,31 @@
         <img :src="picture" style="width:100%;height:1005;">
       </div>
     </el-dialog>
+    <!-- 拆分 -->
+    <el-dialog title="拆分" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal">
+      <el-form label-width="120px" :rules="rules">
+        <el-form-item label="拆分数量">
+          <el-input v-model="subProcess" style="width:200px" type="number"></el-input>
+          <!-- <el-button type="primary" size="mini" style="margin-left:50px" @click="itemSplit">拆分</el-button> -->
+        </el-form-item>
+        <el-form-item label="拆分理由">
+          <el-input
+            type="textarea"
+            :rows="4"
+            style="width:400px"
+            placeholder="请输入拆分理由"
+            v-model="reason"
+          ></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="拆分金额">
+          <div class="inputWrap" id="idInputWrap"></div>
+        </el-form-item>-->
+        <el-form-item>
+          <el-button size="small" @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" plain @click="split()">确定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -513,6 +545,9 @@ export default {
       RWFlag:false,
       nameList:{},
       searchFlag: false,
+      subProcess: null, // 条目拆分数量
+      reason: "", // 条目拆分理由
+      subProcessFlag: false,
       tableData: [],
       assignee: "",
       modal: false,
@@ -619,6 +654,7 @@ export default {
       hide: false,
       dialogFormVisible: false,
       dialogFormVisible1: false,
+      dialogFormVisible3:false,
       admFlag: false,
       billSearch: {
         wsSignbackFlag:null,
@@ -671,7 +707,13 @@ export default {
       rules: {
         wsBusinessType: [
           { required: true, message: "请选择任务类型", trigger: "blur" }
-        ]
+        ],
+        subProcess: [
+            { required: true, message: '请输入拆分数量', trigger: 'blur' }
+          ],
+        reason: [
+          { required: true, message: '请输入拆分理由', trigger: 'blur' }
+        ],
       },
       pendingFlag: false
     };
@@ -727,6 +769,65 @@ export default {
       this.init();
   },
   methods: {
+       split() {
+        let arr = document.querySelectorAll(".itemNum");
+        // let subProcessArr = [];
+        // arr.forEach(el=>{
+        //   let obj = {'rmAmount':el.value};
+        //   subProcessArr.push(obj);
+        // })
+        // if(!subProcessArr.length){
+        //   this.$message.error('请填写拆分金额');
+        //   return;
+        // }
+        if (!this.subProcess) {
+          this.$message.error("请填写拆分数量");
+          return;
+        }
+        if (!this.reason) {
+          this.$message.error("请填写拆分理由");
+          return;
+        }
+        this.$http
+          .post("api/worksheet/wSEntry/processSplit", {
+            processId: this.chooseRow.processId,
+            // subProcess:subProcessArr,
+            subProcess: +this.subProcess,
+            actOperator: this.chooseRow.curOperator,
+            reason: this.reason
+          })
+          .then(res => {
+            if (res.status == 200 && res.data.code == 0) {
+              this.$message({ message: "拆分成功", type: "success" });
+              this.dialogFormVisible3 = false;
+            } else if (res.data.code == 1 && res.data.msg) {
+              this.$message.error(res.data.msg);
+            }
+          });
+      },
+      itemSplit() {
+        if (!this.subProcessFlag) {
+          this.subProcessFlag = false;
+          return false;
+        }
+        let idInputWrap = document.getElementById("idInputWrap");
+        let child = document.querySelectorAll(".item");
+        if (child.length) {
+          child.forEach(el => {
+            idInputWrap.removeChild(el);
+          });
+        }
+        if (this.subProcess && !isNaN(+this.subProcess) && this.subProcess > 0) {
+          for (let i = 0; i < this.subProcess; i++) {
+            let item = document.createElement("div");
+            item.className = "item";
+            item.innerHTML = `<span>第${i +
+              1}条</span><input type="number" class="itemNum">`;
+            idInputWrap.append(item);
+          }
+        }
+        this.subProcessFlag = false;
+      },
      changeWindow(){
       let that=this;
       document.body.onresize=function(e){
@@ -1108,6 +1209,8 @@ export default {
 
           break;
         case 6: // 上传附件
+          break;
+        case 7://  拆分
           break;
       }
     },
