@@ -189,7 +189,7 @@
             </el-table-column>
             <el-table-column prop="businessOrigin" label="Business Origin" width="120" align="center"></el-table-column>
             <el-table-column prop="baseCompany" label="Base Company" width="120" align="center"></el-table-column>
-            <el-table-column label="操作" align="center"></el-table-column>
+            <!-- <el-table-column label="操作" align="center"></el-table-column> -->
           </el-table>
         </template>
       </el-table-column>
@@ -306,7 +306,7 @@
       </el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="135" align="center"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="135" align="center"></el-table-column>
-      <el-table-column label="操作" width="80" align="center">
+      <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
           <span class="blueColor" @click.stop="openSICS(scope.row)">打开SICS</span>
           <!-- <el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button> -->
