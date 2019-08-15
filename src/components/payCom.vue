@@ -78,7 +78,7 @@
           <span>{{nameList[scope.row.closedBy]}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="processStatus" label="流程状态" align="center"></el-table-column>
+      <el-table-column prop="processStatus" label="流程状态" width="110" align="center"></el-table-column>
       <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->
       <!-- <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column> -->
       <el-table-column label="状态" v-if="urlName === 'payOperation' || urlName === 'approvalDone'"  align="center">
@@ -276,7 +276,7 @@
         </el-table-column> -->
       </el-table>
     </el-dialog>
-
+ 
     <el-dialog :title="title" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal" class="SwitchingMode">
       <el-form label-width="120px">
         <el-form-item label="收件人" v-show="title==='邮件通知'" style="width:100%">
@@ -298,6 +298,7 @@
                 :disabled="uploadType!=1 && $route.query.tag === 'billSignBack'"
                 class="upload-demo"
                 action=""
+                multiple
                 :before-upload="beforeAvatarUpload"
                 :auto-upload="true"
                 :http-request="upload"
@@ -306,8 +307,8 @@
               </el-upload>
             </el-tab-pane>
             <el-tab-pane label="附件列表选取" name="2">
-              <el-select v-model="chooseDocList" :disabled="uploadType != 2" style="width:100%" placeholder="请选择">
-                <el-option v-for="(item,i) in tableData" :key="i" :label="item.docName" :value="i"></el-option>
+              <el-select v-model="chooseDocList" multiple :disabled="uploadType != 2" style="width:100%" placeholder="请选择">
+                <el-option v-for="(item,i) in tableData" :key="i" :label="item.docName" :value="item.docCloudId"></el-option>
               </el-select>
             </el-tab-pane>
           </el-tabs>
@@ -341,7 +342,7 @@ export default {
   data() {
       return {
         emailFlag:false,
-        chooseDocList:null,
+        chooseDocList:[],
         uploadType:'1',
         emailContent:null,
         mailTitle:null,
@@ -610,41 +611,49 @@ export default {
         }
       }
       // docList 上传
-      if (this.chooseDocList != null) {
-        let row = this.tableData[this.chooseDocList];
-        this.$http.post("api/anyShare/fileOperation/previewDocument",Object.assign({}, row, { processId: this.chooseRow.processId }),{ responseType: "blob" })
-          .then(res => {
-            if (res.status === 200) {
-              let resFiles = new FormData();
-              resFiles.append("file", res.data);
-              for (let k in info) {
-                resFiles.append(k, info[k]);
-              }
-              this.$http.post("api/worksheet/wSEntry/sendEmail", resFiles)
-                .then(res => {
-                  if (res.status === 200 && res.data.code == 0) {
-                    this.$message({type: "success",message: res.data.msg});
-                    this.dialogFormVisible2 = false;
-                  } else{
-                    this.$message({type: "error",message: res.data.msg});
-                    this.dialogFormVisible2 = false;
-                  }
-                });
-            }
-          });
-      }
-      if (this.chooseDocList == null) {
+      if (this.chooseDocList && this.chooseDocList.length) {
+        // let row = this.tableData[this.chooseDocList];
+        // this.$http.post("api/anyShare/fileOperation/previewDocument",Object.assign({}, row, { processId: this.chooseRow.processId }),{ responseType: "blob" })
+        //   .then(res => {
+        //     if (res.status === 200) {
+        //       let resFiles = new FormData();
+        //       resFiles.append("file", res.data);
+        //       for (let k in info) {
+        //         resFiles.append(k, info[k]);
+        //       }
+        //       this.$http.post("api/worksheet/wSEntry/sendEmail", resFiles)
+        //         .then(res => {
+        //           if (res.status === 200 && res.data.code == 0) {
+        //             this.$message({type: "success",message: res.data.msg});
+        //             this.dialogFormVisible2 = false;
+        //           } else{
+        //             this.$message({type: "error",message: res.data.msg});
+        //             this.dialogFormVisible2 = false;
+        //           }
+        //         });
+        //     }
+        //   });
+        this.$http.post("api/worksheet/wSEntry/sendEmail", {emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle, docCId:this.chooseDocList}).then(res => {
+          if (res.status === 200 && res.data.code == 0) {
+            this.$message({type: "success",message: res.data.msg});
+            this.dialogFormVisible3 = false;
+          } else{
+            this.$message({type: "error",message: res.data.msg});
+            this.dialogFormVisible3 = false;
+          }
+        });
+      } else{
         this.file.length ? (params = resFile) : (params = info);
         this.$http.post("api/worksheet/wSEntry/sendEmail", params)
           .then(res => {
             if (res.status === 200 && res.data.code==0) {
               this.$message({ type: "success", message:res.data.msg});
-              this.dialogFormVisible2 = false;
+              this.dialogFormVisible3 = false;
               this.fileList = [];
               this.file = [];
             } else{
               this.$message({type: "error",message: res.data.msg});
-              this.dialogFormVisible2 = false;
+              this.dialogFormVisible3 = false;
             }
           });
       }
@@ -816,9 +825,10 @@ export default {
           this.title = '流程提交';
           this.dialogFormVisible2 = true;
         break;
-        case 13: //邮件通知
+        case 13: //邮件通知 
           this.$http.get("api/worksheet/wSEntry/getEmailContacts").then(res => {
           if (res.status === 200 && res.data.length) {
+            this.tableData = this.chooseRow.bscDocumentVOlist;
             this.dialogFormVisible3 = true;
             this.title = "邮件通知";
             this.mailOption = res.data;
@@ -989,7 +999,7 @@ export default {
       resFile.append('file', this.file[0]);
       resFile.append('actOperator', this.mustData.actOperator);
       resFile.append('processId', this.chooseRow.processId);
-      this.$http.post(`api/anyShare/fileOperation/uploadFilesForPage`,resFile,{headers:{ 'Content-Type': "application/json;charset=UTF-8" }}).then(res =>{
+      this.$http.post(`api/anyShare/fileOperation/uploadFilesForPageBatch`,resFile,{headers:{ 'Content-Type': "application/json;charset=UTF-8" }}).then(res =>{
         if(res.status === 200){
           if(res.data.errorCode && res.data.errorCode == 1){
             this.dialogFormVisible2 = false;

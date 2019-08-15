@@ -81,7 +81,7 @@
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)">
         <i class="iconfont iconGroup91"></i>手工创建
       </el-button>
-      <el-button type="primary" plain @click="init(0)">
+      <el-button type="primary" plain @click="init2">
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
 
@@ -776,16 +776,18 @@ export default {
       this.ZJObj.pageNumber = val;
       this.getZJData(this.ZJprocessId);
     },
-    init(tag) {
-      if (tag == 0) {
-        if (this.urlName === "sortOperation") {
-          this.$http
-            .get("api/worksheet/wSEntry/refreshEmail")
-            .then(res => {
-              this.$message({ type: "success", message: res.data.msg });
-            });
-        } else{ this.$message({ type: "success", message: "刷新成功" }); }
+    init2(){
+      if (this.urlName === "sortOperation") {
+        this.$http.get("api/worksheet/wSEntry/refreshEmail").then(res => {
+            this.$message({ type: "success", message: res.data.msg });
+            this.init();
+          });
+      } else{
+        this.init();
+        this.$message({ type: "success", message: "刷新成功" }); 
       }
+    },
+    init() {
       // 进首页查询
       let params = null;
       if (this.urlName == "sortOperation" || this.admFlag) {
@@ -798,14 +800,10 @@ export default {
       delete params["actOperator"];
       this.$http.post("api/worksheet/wSEntry/list", params).then(res => {
         if (res.status === 200) {
-          console.log(res.data.rows,'www')
           this.tableData = res.data.rows;
           this.mustData.total = res.data.total;
           if (res.data && res.data.rows && res.data.rows.length) {
-            if (
-              res.data.rows[0].processStatus === "待处理" &&
-              this.urlName === "billEntry"
-            ) {
+            if (res.data.rows[0].processStatus === "待处理" && this.urlName === "billEntry") {
               this.pendingFlag = true;
             }
           }
@@ -853,8 +851,7 @@ export default {
           }
           if (!this.billSearch.processStatus) {
             if (this.urlName == "sortOperation" || this.admFlag) {
-              params = Object.assign({}, this.mustData,this.billSearch,{processStatus:this.
-              Com});
+              params = Object.assign({}, this.mustData,this.billSearch,{processStatus:this.processStatusCom});
             }else {
               params = Object.assign({}, this.mustData,this.billSearch, {curOperator: this.$store.state.userName,processStatus:this.processStatusCom});
             }
@@ -1172,6 +1169,22 @@ export default {
     refresh() {
       window.location.reload();
     },
+    reloadTableData(){
+      this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
+        .then(res => {
+          if (res.status == 200) {
+            // this.fileData = res.data.bscDocumentVOlist;
+            let arr2 = res.data.bscDocumentVOlist;
+            arr2.forEach(el=>{
+              if(el.docName){
+                let suffix = el.docName.split('.');
+                el['suffix'] = suffix[suffix.length-1];
+              }
+            })
+            this.fileData = arr2;
+          }
+        });
+    },
     beforeAvatarUpload(file) {
       this.file.push(file);
       clearTimeout(this.setTime);
@@ -1189,24 +1202,11 @@ export default {
             if (res.status === 200 && res.data.errorCode == 1) {
               this.fileList = [];
               this.file = [];
-              this.$http
-                .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
-                .then(res => {
-                  if (res.status == 200) {
-                    // this.fileData = res.data.bscDocumentVOlist;
-                    let arr2 = res.data.bscDocumentVOlist;
-                    arr2.forEach(el=>{
-                      if(el.docName){
-                        let suffix = el.docName.split('.');
-                        el['suffix'] = suffix[suffix.length-1];
-                      }
-                    })
-                    this.fileData = arr2;
-                  }
-                });
+              this.reloadTableData();
             } else {
               if (res.data.errorMessage) {
                 this.$message.error(res.data.errorMessage);
+                this.reloadTableData();
               }
               this.fileList = [];
               this.file = [];

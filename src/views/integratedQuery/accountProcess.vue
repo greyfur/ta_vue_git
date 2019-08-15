@@ -86,8 +86,8 @@
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="processStatus" label="流程状态" align="center"></el-table-column>
-      <el-table-column prop="processType" label="收/付款" align="center"></el-table-column>
+      <el-table-column prop="processStatus" label="流程状态" width="140" align="center"></el-table-column>
+      <el-table-column prop="processType" label="收/付款" width="140" align="center"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="140" align="center"></el-table-column>
       <el-table-column label="Base Company" prop="baseCompany" width="140" align="center"></el-table-column>
       <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->
