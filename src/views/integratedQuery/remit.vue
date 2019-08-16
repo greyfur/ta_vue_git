@@ -508,10 +508,9 @@ export default {
         });
     },
      openSICS(row) {
-      this.$http.post("api/sics/liveDesktop/openWorksheet", {modifiedBy: this.$store.state.userName,worksheetId: row["sgNum"]})
-        .then(res => {
-          this.$message({message:res.data,type: 'warning'});
-        });
+       this.$http.post('api/sics/liveDesktop/openRemittance',{modifiedBy:this.$store.state.userName,remitId:row.rmId}).then(res =>{
+          console.log(res,'打开SICS')
+        })
     },
     docView(row) {
       if (row) {

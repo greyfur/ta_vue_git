@@ -55,10 +55,20 @@
         <!-- 审批 -->
         <div class="btn approvalDoneBtn" v-if="$route.query.tag === 'payVerification'">
           <div class="btnChild">
-            <el-button size="small" plain @click="submite(5,'审批通过')">审批通过</el-button>
+            <el-button size="mini" plain class="approved" style="height: 32px; position:relative">
+              <span class="approvedName" @click="submite(5,'审批通过')">审批通过</span>
+              <el-dropdown size="mini" style="padding-left:10px" placement="top-end">
+                <span class="el-dropdown-link"><i class="el-icon-arrow-down el-icon--right"></i></span>
+                <el-dropdown-menu slot="dropdown" style="border-color:#005C8D">
+                  <el-dropdown-item style="width:90px;color:#005C8D;font-weight:700">
+                    <span @click="proxyApprove">代理审批</span>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </el-button>
             <el-button size="small" plain @click="submite(9,'审批驳回')">审批驳回</el-button>
-            <!-- <el-button size="small" plain @click="mailSend(2,'附件查看')">附件查看</el-button> -->
             <el-button size="small" plain @click="submite(2,'指派','审批')">指派</el-button>
+             <!-- <el-button size="small" plain @click="submite(5,'审批通过')">审批通过</el-button> -->
           </div>
         </div>
 
@@ -629,16 +639,16 @@
         <!-- <el-form-item label="原因填写" v-show="title==='审批驳回'">
           <el-input type="textarea" :rows="2" placeholder="请输入原因" v-model="rebut"></el-input>
         </el-form-item> -->
-        <el-form-item label="选择下一处理人" v-show="putIn=='n'">
+        <el-form-item label="选择下一处理人" v-show="putIn=='n' && !preApprove">
           <el-select filterable v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="是否代理" v-show="title==='审批通过'">
+        <!-- <el-form-item label="是否代理" v-show="title==='审批通过'">
           <el-checkbox v-model="proxyFlag" @change="proxyMan=null">是</el-checkbox>
-        </el-form-item>
-        <el-form-item label="选择代理人" v-show="title==='审批通过'">
-          <el-select filterable v-model="proxyMan"  placeholder="请选择" :disabled="!proxyFlag">
+        </el-form-item> -->
+        <el-form-item label="选择代理人" v-show="title==='审批通过' && proxyFlag">
+          <el-select filterable v-model="proxyMan"  placeholder="请选择">
             <el-option v-for="(item,i) in TJRoptions" :key="item.userId" :label="item.name" :value="i" :disabled="item.username == $store.state.userName"></el-option>
           </el-select>
         </el-form-item>
@@ -761,7 +771,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="收款账户" prop="partnerBankAccount" v-show="formLabelAlign.rmType=='P'">
-          <el-select filterable v-model="formLabelAlign.partnerBankAccount" placeholder="请选择">
+          <el-select filterable v-model="formLabelAlign.partnerBankAccount" placeholder="请选择" v-if="formLabelAlign.rmType=='P'">
             <el-option v-for="(item,i) in recepitList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="item.objectId"></el-option>
           </el-select>
         </el-form-item>
@@ -925,6 +935,8 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        preApprove:false,
+        approvedName:'审批通过',
         updateFlag:false,
         proxyFlag:false,
         proxyMan:null,
@@ -1133,6 +1145,9 @@ export default {
           bankAccount1: [
             { required: true, message: '请选择银行账户', trigger: 'blur' }
           ],
+          partnerBankAccount: [
+            { required: true, message: '请选择收款账户', trigger: 'blur' }
+          ],
           bankCurrency: [
             { required: true, message: '请选择币制', trigger: 'blur' }
           ],
@@ -1261,6 +1276,20 @@ export default {
     }
   },
   methods: {
+    proxyApprove(){  // 代理审批
+       this.$http.post('api/pay/activitiForPay/getNextStep',{processId:this.row.processId, approvalLevel:this.row.approvalLevel}).then(res =>{
+          if(res.status == 200){  // 到最后一个节点了
+            this.preApprove = true;
+            this.proxyFlag = true;
+            this.title = '审批通过';
+            this.getName(this.emnuGetName[this.row.approvalLevel]);
+            this.dialogFormVisible3 = true;
+          } else{
+            this.submite(5,'审批通过');
+            this.proxyFlag = true;
+          }
+       })
+    },
     chongXiao(row){
       this.$http.post("api/receipt/credOperation/creatWfCheckRemit",{rmId:row.rmId,createdBy:this.$store.state.userName}).then(res => {
           if (res.status == 200 && res.data.errorCode == 1) {
@@ -1434,7 +1463,6 @@ export default {
       if(id == 'rmId'){
         this.$http.post('api/sics/liveDesktop/openRemittance',{modifiedBy:this.$store.state.userName,remitId:row.rmId}).then(res =>{
           console.log(res,'打开SICS')
-          
         })
       } else{
         this.$http.post('api/sics/liveDesktop/openWorksheet',{modifiedBy:this.$store.state.userName,worksheetId:row[id]}).then(res =>{
@@ -1703,41 +1731,41 @@ export default {
           this.dialogFormVisible3 = true;
         break;
         case 5:  // 审批通过 --------------
-          this.$http.post('api/pay/activitiForPay/getNextStep',{processId:this.row.processId, approvalLevel:this.row.approvalLevel}).then(res =>{
-            if(res.status == 200){
-              if(res.data){
-                // this.getName('付款录入');
-                this.$confirm('是否审批通过', '提示', {
-                  confirmButtonText: '确定',
-                  cancelButtonText: '取消',
-                  confirmButtonClass:'confirmBtn',
-                  type: 'warning'
-                }).then(() => {
-                  this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-                  ,{processId:this.row.processId, 
-                    procInstId:this.row.processInstId, 
-                    assignee:this.row.entryOperator, 
-                    type:this.$route.query.name,
-                    actOperator:this.$store.state.userName,
-                    approvalLevel:this.row.approvalLevel,
+          this.proxyFlag = false;
+            this.$http.post('api/pay/activitiForPay/getNextStep',{processId:this.row.processId, approvalLevel:this.row.approvalLevel}).then(res =>{
+              if(res.status == 200){
+                if(res.data){
+                  // this.getName('付款录入');
+                  this.$confirm('是否审批通过', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    confirmButtonClass:'confirmBtn',
+                    type: 'warning'
+                  }).then(() => {
+                    this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
+                    ,{processId:this.row.processId, 
+                      procInstId:this.row.processInstId, 
+                      assignee:this.row.entryOperator, 
+                      type:this.$route.query.name,
+                      actOperator:this.$store.state.userName,
+                      approvalLevel:this.row.approvalLevel,
+                      })
+                    .then(res =>{
+                      if(res.status === 200 && res.data.errorCode == 1){
+                        this.dialogFormVisible3 = false;
+                        this.$router.push({name:this.$route.query.tag}); 
+                        this.assignee = null;
+                      } else if(res.data.errorCode == 0){
+                        this.$message({type: 'error', message:res.data.errorMessage }); 
+                      }
                     })
-                  .then(res =>{
-                    if(res.status === 200 && res.data.errorCode == 1){
-                      this.dialogFormVisible3 = false;
-                      this.$router.push({name:this.$route.query.tag}); 
-                      this.assignee = null;
-                    } else if(res.data.errorCode == 0){
-                      this.$message({type: 'error', message:res.data.errorMessage }); 
-                    }
                   })
-                })
-              } else{   
-                this.getName(this.emnuGetName[this.row.approvalLevel]);
-                this.dialogFormVisible3 = true;
+                } else{   
+                  this.getName(this.emnuGetName[this.row.approvalLevel]);
+                  this.dialogFormVisible3 = true;
+                }
               }
-              
-            }
-          })
+            })
         break;
         case 6:   // 复核通过  -------付款复核通过还缺 是否有支票的校验----7.15日，改为无选择人
           this.$http.post('api/sics/basis/getPayReviewMessage',{processId:this.row.processId}).then(res =>{
@@ -2245,6 +2273,13 @@ export default {
       // }
     },
     bizhichange(tag){
+      if(tag==1){
+        if(this.formLabelAlign.rmType=='R'){  // 收款
+          delete this.rules['partnerBankAccount'];
+        } else{  // 付款
+          this.rules['partnerBankAccount'] = [{ required: true, message: '请选择收款账户', trigger: 'blur' }];
+        }
+      }
       if(tag==0 && this.formLabelAlign.rmType=='R'){   // 收款币制change,只校验银行账户
         this.bankCurrencyChange();
       } else{
@@ -2833,4 +2868,15 @@ li.detail-item{
   border: 1px solid #005c8d;
   color: #005c8d;
 }
+.approved::after{
+  position: absolute;
+  top: 0px;
+  right: 38px;
+  content: '';
+  width:1px;
+  height: 31px;
+  background-color: #005c8d;
+  z-index: 100000000;
+}
+
 </style>

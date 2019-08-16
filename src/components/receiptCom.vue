@@ -511,7 +511,7 @@
             v-show="title==='编辑'"
             :header-row-class-name="StableClass"
           >
-            <el-table-column label="文件名" width="140" align="center">
+            <el-table-column label="文件名" align="center">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
                   <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
@@ -615,7 +615,7 @@
         v-show="title==='附件'"
         :header-row-class-name="StableClass"
       >
-        <el-table-column label="文件名" width="140" align="center">
+        <el-table-column label="文件名" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
               <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>

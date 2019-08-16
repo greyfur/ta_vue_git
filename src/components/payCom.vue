@@ -7,7 +7,7 @@
         <el-row :gutter="10" class="billRow" class-name="transition-box">
         <el-col :span="8">
           <span class="slable">流程编号</span>
-          <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processID"></el-input>
+          <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processId"></el-input>
         </el-col>
         <el-col :span="8">
           <span class="slable">结付公司</span>
@@ -50,48 +50,40 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="rmCurrency" width="60" label="币制" align="center"></el-table-column>
+      <el-table-column prop="rmCurrency" label="币制" align="center"></el-table-column>
       <el-table-column label="汇款金额" width="120" align="right">
          <template slot-scope="scope">
           <el-tooltip
             class="item"
             effect="dark"
             :content="Number(scope.row.rmAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
-            placement="top-start"
-          >
+            placement="top-start">
             <span class="abbreviate">{{Number(scope.row.rmAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="任务来源" width="110">
-        <template slot-scope="scope">
-            <span>{{nameList[scope.row.curOperator]}}</span>
-          </template>
-      </el-table-column> -->
       <el-table-column width="110" label="录入人员" align="center">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="urlName==='payReview'||urlName==='payClose'||urlName==='emailNotify'||urlName==='payment'||urlName==='partialDone'" label="复核人员" width="110" align="center">
-        <template slot-scope="scope">
+        <template slot-scope="scope" v-if="urlName==='payReview'||urlName==='payClose'||urlName==='emailNotify'||urlName==='payment'||urlName==='partialDone'">
           <span>{{nameList[scope.row.closedBy]}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" label="流程状态" width="110" align="center"></el-table-column>
-      <!-- <el-table-column prop="rmChargesCurrency" width="100" label="手续费币制"></el-table-column> -->
-      <!-- <el-table-column prop="rmChargesAmount" width="100" label="手续费金额"></el-table-column> -->
       <el-table-column label="状态" v-if="urlName === 'payOperation' || urlName === 'approvalDone'"  align="center">
-        <template slot-scope="scope" v-show="urlName === 'payOperation' || urlName === 'approvalDone'">
-          <div style="display: flex;align-items: center;" v-show="urlName === 'payOperation' || urlName === 'approvalDone'">
+        <template slot-scope="scope" v-if="urlName === 'payOperation' || urlName === 'approvalDone'">
+          <div style="display: flex;align-items: center;">
             <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
             <span>{{scope.row.rejectedFlag == '1'?'异常':'正常'}}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="是否紧急" v-if="urlName === 'payment'" align="center">
-        <template slot-scope="scope" v-show="urlName === 'payment'">
-          <div style="display: flex;align-items: center;" v-show="urlName === 'payment'">
+        <template slot-scope="scope" v-if="urlName === 'payment'">
+          <div style="display: flex;align-items: center;">
             <span :class="scope.row.accountCloseFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
             <span>{{scope.row.accountCloseFlag == '1'?'紧急':'正常'}}</span>
           </div>
@@ -244,7 +236,7 @@
       <el-table :data="track" border style="width: 100%;height:auto;" v-show="title==='踪迹'" :header-row-class-name="StableClass">
         <el-table-column prop="processId" label="流程编号" width="150" align="center"></el-table-column>
         <el-table-column prop="actName" label="操作名称" align="center"></el-table-column>
-        <el-table-column abel="任务来源" align="center">
+        <el-table-column label="任务来源" align="center">
           <template slot-scope="scope">
             <span>{{nameList[scope.row.actOperator]}}</span>
           </template>
@@ -547,7 +539,7 @@ export default {
       this.processStatusList = ['待处理','已悬停'];
     } else if(this.urlName === 'payClose'){
       this.processStatusList = ['待核销','已悬停'];
-    } 
+    } else{ this.processStatusList = Array.of(this.processStatusCom); }
     this.mustData.processStatus = this.processStatusCom;
     if(this.$route.name==='payOperation'||this.$route.name==='payVerification'||this.$route.name==='approvalDone'){
       this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;

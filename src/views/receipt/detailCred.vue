@@ -800,8 +800,8 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="收款账户" prop="partnerBankAccount" v-show="formLabelAlign.rmType=='P'">
-          <el-select filterable v-model="formLabelAlign.partnerBankAccount" placeholder="请选择">
+        <el-form-item label="收款账户" prop="partnerBankAccount" v-if="formLabelAlign.rmType=='P'">
+          <el-select filterable v-model="formLabelAlign.partnerBankAccount" placeholder="请选择" v-if="formLabelAlign.rmType=='P'">
             <el-option v-for="(item,i) in recepitList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="item.objectId"></el-option>
           </el-select>
         </el-form-item>
@@ -933,7 +933,7 @@
         v-show="title==='附件'"
         :header-row-class-name="StableClass"
       >
-        <el-table-column label="文件名" width="140" align="center">
+        <el-table-column label="文件名" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
               <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
@@ -947,8 +947,7 @@
               class="item"
               effect="dark"
               :content="nameList[scope.row.createdBy]"
-              placement="top"
-            >
+              placement="top">
               <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
             </el-tooltip>
           </template>
@@ -957,11 +956,11 @@
           label="操作"
           width="100"
           v-show="$route.query.tag !== 'credVerification' && $route.query.tag !== 'viewInvalidate' && $route.query.tag !== 'collectiongEnd'"
-          align="center"
-        >
+          align="center">
           <template slot-scope="scope">
             <span class="blueColor" v-show="$route.query.tag !== 'credVerification' && $route.query.tag !== 'viewInvalidate' && $route.query.tag !== 'collectiongEnd'"
             @click.stop="detailRemove(scope.row)">删除</span>
+            <span class="blueColor" @click.stop="onDownLoad(scope.row)">下载</span>
           </template>
         </el-table-column>
       </el-table>
@@ -1227,12 +1226,15 @@ export default {
         bankCurrency: [
           { required: true, message: "请选择币制", trigger: "blur" }
         ],
+        partnerBankAccount: [
+          { required: true, message: '请选择收款账户', trigger: 'blur' }
+        ],
         rmType: [
             { required: true, message: '请选支票类型', trigger: 'change' }
           ],
-        // partnerBankAccount: [
-        //   { required: true, message: "请选择收款账户", trigger: "blur" }
-        // ],
+        partnerBankAccount: [
+          { required: true, message: "请选择收款账户", trigger: "blur" }
+        ],
         valueDate: [
           {
             type: "date",
@@ -1336,6 +1338,42 @@ export default {
     });
   },
   methods: {
+    onDownLoad(row){
+      // 下载
+      this.$http.post("api/anyShare/fileOperation/downloadDocument",Object.assign({}, row, { processId: this.row.processId }),{ responseType: "blob" })
+        .then(res => {
+          if (res.status === 200) {
+            // this.path = res.data;
+            this.path = this.getObjectURL(res.data);
+            if (res.data) {
+              var a = document.createElement("a");
+              if (typeof a.download === "undefined") {
+                window.location = this.path;
+              } else {
+                a.href = this.path;
+                a.download = row.docName;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+              }
+            } 
+          }
+        });
+    },
+    getObjectURL(file) {
+      let url = null;
+      if (window.createObjectURL != undefined) {
+        // basic
+        url = window.createObjectURL(file);
+      } else if (window.webkitURL != undefined) {
+        // webkit or chrome
+        url = window.webkitURL.createObjectURL(file);
+      } else if (window.URL != undefined) {
+        // mozilla(firefox)
+        url = window.URL.createObjectURL(file);
+      }
+      return url;
+    },
     chongXiao(row){
       this.$http.post("api/receipt/credOperation/creatWfCheckRemit",{rmId:row.rmId,createdBy:this.$store.state.userName}).then(res => {
           if (res.status == 200 && res.data.errorCode == 1) {
@@ -1395,6 +1433,15 @@ export default {
       }
     },
     bizhichange(tag){
+      console.log(this.formLabelAlign.rmType);
+      if(tag==1){
+        if(this.formLabelAlign.rmType=='R'){  // 收款
+          delete this.rules['partnerBankAccount'];
+        } else{  // 付款
+          this.rules['partnerBankAccount'] = [{ required: true, message: '请选择收款账户', trigger: 'blur' }];
+        }
+      }
+      console.log(this.rules,'rules');
       if(tag==0 && this.formLabelAlign.rmType=='R'){   // 收款币制change,只校验银行账户
         this.bankCurrencyChange();
       } else{
