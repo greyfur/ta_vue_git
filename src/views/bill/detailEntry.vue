@@ -113,7 +113,7 @@
                         <span class="blueColor" v-show="$route.query.tag !== 'billWorkSheet' && $route.query.tag !== 'billProcess' && $route.query.tag !== 'billSignBack' && $route.query.tag !== 'billCheck'"
                         @click.stop="handleClick(1,scope.row)">删除</span>
                       </el-dropdown-item>
-                      <el-dropdown-item>
+                      <el-dropdown-item> 
                         <span class="blueColor" @click.stop="handleClick(3,scope.row)">下载</span>
                       </el-dropdown-item>
                     </el-dropdown-menu>
@@ -1376,13 +1376,11 @@ export default {
             return false;
           }
           if (this.tagName === "录入提交") {
-            if (this.radio == null) {
+            if (this.radio == null && this.chooseRow.wsBusinessType!='F') {
               this.$message({ type: "error", message: "请选择是否需要签回" });
               return false;
             }
-            this.$http
-              .post(
-                "api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
+            this.$http.post("api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
                 {
                   processId: this.chooseRow.processId,
                   procInstId: this.chooseRow.processInstId,

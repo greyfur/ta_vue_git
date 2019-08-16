@@ -806,8 +806,8 @@ export default {
           
           break;
         case 6: // 打开SICS
-          this.$http.post("api/sics/liveDesktop/openWorksheet", {modifiedBy: this.$store.state.userName,worksheetId: row["sgNum"]})
-            .then(res => {
+          this.$http.post("api/sics/liveDesktop/openWorksheet", {modifiedBy: this.$store.state.userName,worksheetId:row.wsId})
+            .then(res => { 
               this.$message({message:res.data,type: 'warning'});
             });
          break;
