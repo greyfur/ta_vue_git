@@ -51,8 +51,8 @@
     </div>
     <div class="btn">
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
-      <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
-       <el-button type="info" plain size="small" @click="dialogReport=!dialogReport">导出报表</el-button>
+      <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37"></i>刷新</el-button>
+       <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">
       <el-table-column label="流程编号" width="145" align="center">
@@ -266,7 +266,7 @@ export default {
         searchFlag:false,
         modal:false,
         dialogReport:false,
-        changeClientHight:446,
+        changeClientHight:null,
         reportArr:{
           reportName:null,
         },
@@ -478,6 +478,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){
+    this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
     this.changeWindow();
     if(this.urlName === 'payment') {
       this.mustData.accountCloseFlag = '0';

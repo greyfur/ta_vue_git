@@ -43,7 +43,7 @@
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'">
         <i class="iconfont iconGroup91"></i>创建
       </el-button>
-      <el-button type="primary" plain @click="init(0)">
+      <el-button type="primary" plain @click="init(0)" class="borderBtn">
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
     </div>
@@ -252,7 +252,7 @@ export default {
       modal: false,
       tableData: [],
       ZDoptions: [],
-      changeClientHight:446,
+      changeClientHight:null,
       StableClass:'tableClass',
       businessOriginList: [],
       baseCompanyList: [],
@@ -445,6 +445,7 @@ export default {
     }
   },
   mounted() {
+    this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
     this.changeWindow();
     if (this.urlName === "payment") {
       this.mustData.accountCloseFlag = "0";

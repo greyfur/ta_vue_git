@@ -22,12 +22,23 @@
                 ></el-option>
               </el-select>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="10" class="zq1Parent">
               <span class="slable">账期</span>
-              <el-input v-model.trim="zq2" placeholder="请输入年份" class="wsPeriod"></el-input>
-              <el-select filterable clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
+              <!-- <el-input v-model.trim="zq2" placeholder="请输入年份" class="wsPeriod"></el-input> -->
+              <!-- <el-select filterable clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
                 <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
-              </el-select>
+              </el-select> -->
+              <input class="wsDate" style="width:224px;height:40px;border-radius:5px;outline:none;border:1px solid #DCDFE6;" placeholder="请选择账期" v-model="billSearch.wsPeriod" @click.stop="zq1FlagFn()" />
+              <div class="zq1" v-show="zq1Flag">
+                  <p class="zqTitle">
+                    <span style="color:#ccc;transform: scale(.6);" @click="countYear('-')"><i class="iconfont iconGroup33"></i></span>
+                    <span style="color:#000;">{{zq1Year}}</span>
+                    <span style="color:#ccc;transform: scale(.6);" @click="countYear('+')"><i class="iconfont iconGroup11"></i></span>
+                  </p>
+                  <ul class="zq" id="zq">
+                      <li v-for="(item,index) in zqList" :key="item" :class="zq1Day===index?'active':''" @click="chooseDay(item,index)">{{item}}</li>
+                  </ul>
+              </div>
             </el-col>
           </el-row>
            <el-row :gutter="10" class="billRow" v-show="urlName === 'billCheck' ||urlName === 'billSignBack'||urlName === 'billEntry'"> 
@@ -81,7 +92,7 @@
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)">
         <i class="iconfont iconGroup91"></i>手工创建
       </el-button>
-      <el-button type="primary" plain @click="init2">
+      <el-button type="primary" plain @click="init2" class="borderBtn">
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
 
@@ -356,10 +367,21 @@
           v-show="title==='手工创建' || title==='编辑' || title==='查询'"
           class="zqForm"
         >
-          <el-input v-model.trim="zq2"  placeholder="年份" class="wsPeriod" maxlength="4"></el-input>
+          <!-- <el-input v-model.trim="zq2"  placeholder="年份" class="wsPeriod" maxlength="4"></el-input>
           <el-select clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
             <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
-          </el-select>
+          </el-select> -->
+          <input class="wsDate" style="width:196px;height:40px;border-radius:5px;outline:none;border:1px solid #DCDFE6;" placeholder="请选择账期" v-model="billSearch.wsPeriod" @click="zq1FlagFn()" />
+              <div class="zq1" v-show="zq1Flag">
+                  <p class="zqTitle">
+                    <span style="color:#ccc;transform: scale(.6);" @click="countYear('-')"><i class="iconfont iconGroup33"></i></span>
+                    <span style="color:#000;">{{zq1Year}}</span>
+                    <span style="color:#ccc;transform: scale(.6);" @click="countYear('+')"><i class="iconfont iconGroup11"></i></span>
+                  </p>
+                  <ul class="zq" id="zq">
+                      <li v-for="(item,index) in zqList" :key="item" :class="zq1Day===index?'active':''" @click="chooseDay(item,index)">{{item}}</li>
+                  </ul>
+              </div>
         </el-form-item>
         <el-form-item label="流程状态" v-show="title === '查询' && urlName === 'billEntry'">
           <el-select clearable v-model="billSearch.processStatus" placeholder="请选择流程状态">
@@ -566,6 +588,9 @@ export default {
         O: "转分账单",
         C: "修正账单"
       },
+      zq1Flag:false,
+      zq1Day:null,
+      zq1Year:new Date().getFullYear(),
       zqList: [
         "Variable",
         "10th Of 12",
@@ -674,7 +699,7 @@ export default {
         businessOrigin: null,
         baseCompany: null,
         reportUnit: null,
-        registBy:null
+        registBy:null,
       },
       mustData: {
         actOperator: null,
@@ -723,6 +748,9 @@ export default {
   //   this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   // },
   mounted() {
+    window.onclick=()=>{
+      this.zq1Flag=false;
+    }
     this.mustData.actOperator = this.$store.state.userName;
     if (this.urlName === "sortOperation" || this.urlName === "billEntry") {
       this.$http.get("api/sics/basis/getReportUnitsForPC").then(res => {
@@ -769,6 +797,21 @@ export default {
       this.init();
   },
   methods: {
+    countYear(str){
+      if(str==='-'){
+        this.zq1Year--;
+      }else if(str==='+'){
+        this.zq1Year++;
+      }
+    },
+    chooseDay(day,index){
+      this.billSearch.wsPeriod=this.zq1Year+'-'+day;
+      this.zq1Day=index
+      this.zq1Flag=false;
+    },
+    zq1FlagFn(){
+      this.zq1Flag=!this.zq1Flag
+    },
        split() {
         let arr = document.querySelectorAll(".itemNum");
         // let subProcessArr = [];
@@ -912,11 +955,11 @@ export default {
       });
     },
     confirm(formName) {
-      if (this.title === "手工创建" || this.title === "编辑") {
-        if (this.zq2 && this.zq1) {
-          this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;
-        }
-      }
+      // if (this.title === "手工创建" || this.title === "编辑") {
+      //   if (this.zq2 && this.zq1) {
+      //     this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;
+      //   }
+      // }
       if (this.cedentModel != null) {
         let obj = this.cedentList[this.cedentModel];
         this.billSearch.wsCedentCode = obj.codecode;
@@ -1156,6 +1199,7 @@ export default {
               if (res.status === 200) {
                 // this.fileData = res.data.bscDocumentVOlist;
                 let arr3 = res.data.bscDocumentVOlist;
+                if(arr3===null)return;
                 arr3.forEach(el=>{
                   if(el.docName){
                     let suffix = el.docName.split('.');
@@ -1419,5 +1463,61 @@ export default {
 .searchNew .el-col-24 {
   margin-bottom: 12px;
   text-align: right;
+}
+.zq1Parent{
+  position: relative;
+}
+.zq1{
+  width:280px;
+  height:288px;
+  background:rgba(255,255,255,1);
+  box-shadow:0px 2px 8px 0px rgba(0,0,0,0.15);
+  border-radius:4px;
+  margin-top: 20px;
+  position: absolute;
+  left: 0;
+  top: 24px;
+  z-index: 999;
+}
+.zq{
+    width: 280px;
+    height: 256px;
+    overflow-y: auto;
+    background: #FFFFFF;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 10px;
+    box-sizing: border-box;
+}
+.zq li{
+    width: 30%;
+    text-align: center;
+    cursor: pointer;
+    margin: 5px 3px;
+    font-size: 14px;
+    border-radius: 2px;
+    padding: 0 2px;
+    box-sizing: border-box;
+}
+.zq li.active{
+  background: #409eff;
+  color: #fff;
+}
+.zqTitle{
+  width: 280px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(0,0,0,0.09);
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+.wsDate::-webkit-input-placeholder{
+  color: #ccc;
 }
 </style>

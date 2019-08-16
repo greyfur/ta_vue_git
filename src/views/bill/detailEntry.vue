@@ -3,9 +3,8 @@
     <!-- <div class="goBack" v-show="false"> -->
     <router-link
       :to="{name:$route.query.tag}"
-      style="color:#333;position:fixed;top:10px;left:70px;z-index:100;background:#fff;padding:10px 10px;border-radius:5px;">
-      <span class="arrows" style="font-weight: 700;">&lt;</span>
-      <span class="word">返回上一级</span>
+      style="color:#333;position:fixed;top:20px;left:80px;z-index:100;">
+      <i class="iconfont iconleft-circle-o"></i>
     </router-link>
     <!-- </div>  -->
     <el-row>
@@ -22,7 +21,7 @@
           <el-button size="small" :disabled="isHover" @click="submit(1,'录入指派')" plain>指派</el-button>
           <el-button :type="isHover?'info':''" size="small" @click="submit(5)" plain>{{isHover?'已悬停':'状态悬停'}}</el-button>
           <el-button @click="dialogFormVisible = true" :disabled="isHover" size="small" plain>拆分</el-button>
-          <el-button size="small" @click="onSics()"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写</el-button>
+          <el-button size="mini" @click="onSics()"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写</el-button>
           <el-button plain :disabled="isHover" size="small" @click="submit(6,'录入提交')">流程提交</el-button>
         </div>
         <!-- 复核 -->
@@ -30,7 +29,7 @@
           <el-button size="small" @click="submit(1,'复核指派')" plain>指派</el-button>
           <el-button size="small" @click="submit(8)" plain>复核驳回</el-button>
           <el-button size="small" @click="submit(3)" plain>复核通过</el-button>
-          <el-button size="small" @click="onSics()"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写</el-button>
+          <el-button size="mini" @click="onSics()"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>账单回写</el-button>
         </div>
         <div class="left">
           <div :class="searchFlag1===true?'searchNew':''" >
@@ -178,7 +177,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="wsCurrency" label="币制" width="80" align="center"></el-table-column>
-          <el-table-column label="金额" align="right">
+          <el-table-column label="金额" align="right" width="120">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -190,7 +189,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="业务编号" align="center">
+          <el-table-column label="业务编号" align="center" width="110">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -235,7 +234,17 @@
           <el-table-column prop="registAt" label="录入时间" width="160" align="center"></el-table-column>
           <el-table-column prop="closedBy" label="复核人" width="130" align="center"></el-table-column>
           <el-table-column prop="closedAt" label="复核时间" width="160" align="center"></el-table-column>
-          <el-table-column prop="rejectType" label="驳回原因类型" width="160" align="center"></el-table-column>
+          <el-table-column label="驳回原因类型" width="160" align="center">
+            <template slot-scope="scope">
+              <el-tooltip
+                class="item"
+                effect="dark"
+                :content="scope.row.rejectType"
+                placement="top-start">
+                <span class="abbreviate">{{scope.row.rejectType}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column label="修改意见" align="left">
             <template slot-scope="scope">
               <el-tooltip
@@ -771,6 +780,7 @@ export default {
               // if(el['a']=='任务来源'){ el["b"] = this.nameList[this.chooseRow[el["c"]]]; }
             });
             let arr = res.data.bscDocumentVOlist;
+            if(arr===null){return;}
             arr.forEach(el=>{
               if(el.docName){
                 let suffix = el.docName.split('.');
@@ -1781,14 +1791,12 @@ export default {
   margin-left: 0;
   margin-right: 10px;
   border: 1px solid #005c8d;
-  background-color: #fff;
-  color: #005c8d;
+  background-color: #005c8d;
+  color: #fff;
 }
 .btn .el-button.is-plain:focus,
 .btn .el-button.is-plain:hover {
-  background: #f5f5f5;
-  border-color: #f5f5f5;
-  border: 1px solid #005c8d;
+   background-color: #1A6C98;
 }
 .detail-word {
   /* background-color: #ecf5ff; */

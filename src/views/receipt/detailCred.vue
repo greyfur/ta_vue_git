@@ -2,9 +2,8 @@
   <div class="detailCred">
     <router-link
       :to="{name:$route.query.tag}"
-      style="color:#333;position:fixed;top:10px;left:70px;z-index:100;background:#fff;padding:10px 10px;border-radius:5px;">
-      <span class="arrows">&lt;</span>
-      <span class="word">返回上一级</span>
+      style="color:#333;position:fixed;top:20px;left:80px;z-index:100;">
+      <i class="iconfont iconleft-circle-o"></i>
     </router-link>
     <!-- 核销完成 -->
     <div class="btn" v-if="$route.query.tag === 'collectiongEnd'">
@@ -2328,8 +2327,8 @@ export default {
   margin-left: 0;
   margin-right: 10px;
   border: 1px solid #005c8d;
-  background-color: #fff;
-  color: #005c8d;
+  background-color: #005C8D;
+  color: #fff;
 }
 .detail-word {
   background-color: #ecf5ff;
@@ -2389,9 +2388,7 @@ li.detail-item {
 }
 .btn .el-button.is-plain:focus,
 .btn .el-button.is-plain:hover {
-  background: #f5f5f5;
-  border-color: #f5f5f5;
-  border: 1px solid #005c8d;
+  background-color: #1A6C98 ;
 }
 .detailCred .el-collapse .el-collapse-item {
   padding: 0 20px;
