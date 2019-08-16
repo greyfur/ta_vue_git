@@ -68,13 +68,13 @@
       <el-button type="primary" plain @click="handleClick(2)" v-show="urlName === 'financialCreat'">
         <i class="iconfont iconGroup91"></i>批量创建
       </el-button>
-      <el-button type="primary" plain @click="handleClick(14)" v-show="urlName === 'financialCreat'">
+      <el-button type="primary" plain @click="handleClick(14)" v-show="urlName === 'financialCreat'" class="borderBtn">
         <i class="iconfont iconGroup91"></i>批量提交
       </el-button>
-      <el-button type="primary" plain @click="handleClick(13)" v-show="urlName === 'taskClaim'">
+      <el-button type="primary" plain @click="handleClick(13)" v-show="urlName === 'taskClaim'" class="borderBtn">
         <i class="iconfont iconpaperclip"></i>任务认领
       </el-button>
-      <el-button type="primary" plain @click="init(0)">
+      <el-button type="primary" plain @click="init(0)" class="borderBtn">
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
       <!-- <el-button type="primary" plain @click="handleClick(4)">查询</el-button> -->

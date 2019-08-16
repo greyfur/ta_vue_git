@@ -101,8 +101,8 @@
     </div>
     <div class="btn">
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91"></i>手工创建</el-button>
-      <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
-      <el-button type="info" plain size="small" @click="dialogReport=!dialogReport">导出报表</el-button>
+      <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37"></i>刷新</el-button>
+      <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button>
     </div> 
     <el-table :header-row-class-name="StableClass" :data="tableData" border style="width: 100%"  :height="changeClientHight">
       <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
@@ -300,7 +300,7 @@ export default {
         tableData:[],
         assignee:'',
         modal:false,
-        changeClientHight:446,
+        changeClientHight:null,
         reportArr:{
           reportName:null,
         },
@@ -476,6 +476,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){
+    this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
     this.changeWindow();
     this.$http.post('api/activiti/getAssigneeName',{roleName:'账单录入'}).then(res =>{
       if(res.status === 200){

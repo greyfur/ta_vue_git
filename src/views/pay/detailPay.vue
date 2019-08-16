@@ -1,8 +1,7 @@
 <template>
   <div class="detailPay">
-    <router-link :to="{name:$route.query.tag}" style="color:#333;position:fixed;top:10px;left:70px;z-index:100;background:#fff;padding:10px 10px;border-radius:5px;">
-      <span class="arrows" style="font-weight: 700;">&lt;</span>
-      <span class="word">返回上一级</span>
+    <router-link :to="{name:$route.query.tag}" style="color:#333;position:fixed;top:20px;left:80px;z-index:100;">
+      <i class="iconfont iconleft-circle-o"></i>
     </router-link>
     <el-row>
       <el-col :span="11" style="padding:0 16px;">
@@ -27,7 +26,7 @@
         </div>
         <!-- 操作 -->
         <div class="btn" v-if="$route.query.tag === 'payOperation'">
-          <el-button size="small" @click="openSICS">打开SICS</el-button>
+          <el-button size="small" @click="openSICS" plain>打开SICS</el-button>
           <el-button size="small" plain @click="makeDoc('a')">生成审批文档</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(3,'置废','操作')">置废</el-button>
           <!-- <el-button size="small" :disabled="czState" @click="mailSend(1,'上传附件')" plain>上传附件</el-button> -->
@@ -84,6 +83,7 @@
           <ul class="detail-ul" v-show="searchFlag1">
             <li v-for="(item,i) in listData" :key="i" class="detail-item">
               <span class="detail-name">{{item.a}} : </span><span class="detail-content" v-if="typeof item.b=='number'">{{ Number(item.b).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
+              <span class="detail-content" v-else-if="item.b=='null-null'"></span>
              <span class="detail-content" v-else>{{item.b}}</span>
             </li>
           </ul>
@@ -2412,20 +2412,12 @@ export default {
       } else {
         if (tag == 2) {
          if(this.makeDocListEctype.zheNum&&this.makeDocListEctype.yuanType.length>0){
-            // 是操作页面,2为点击确定---------------------生成审批文档提交
-            if(this.makeDocListEctype.cedentModel[0]===undefined||this.makeDocListEctype.cedentModel[1]===undefined||this.makeDocListEctype.cedentModel[2]===undefined){
-              this.$message.error('每个分公司不能为空');
-              return;
-            }
-            if(this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[1]||this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[2]||this.makeDocListEctype.cedentModel[1]==this.makeDocListEctype.cedentModel[2]){
-              console.log(this.makeDocListEctype.cedentModel[0])
-              this.$message.error('每个分公司不能一样');
-              return;
-            }
-          if (
-            this.makeDocListEctype.cedentModel &&
-            this.makeDocListEctype.cedentModel.length
-          ) {
+            // 是操作页面,2为点击确定---------------------生成审批文档提交hyd
+            // if(this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[1]||this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[2]||this.makeDocListEctype.cedentModel[1]==this.makeDocListEctype.cedentModel[2]){
+            //   this.$message.error('分公司不能一样');
+            //   return;
+            // }
+          if (this.makeDocListEctype.cedentModel &&this.makeDocListEctype.cedentModel.length) {
             this.makeDocList.rmCedentName = this.makeDocListEctype.cedentModel.join(
               "/"
             );
@@ -2446,7 +2438,6 @@ export default {
             })
             this.makeDocList.primitiveAmount = arr.join(';');
           }
-
           let param = Object.assign({},this.makeDocList,{
             processId:this.row.processId,
             actOperator:this.$store.state.userName,
@@ -2648,17 +2639,17 @@ export default {
   margin-left: 0;
   margin-right: 10px;
   border: 1px solid #005C8D;
-  background-color: #fff;
-  color: #005C8D;
+  background-color: #005C8D;
+  color: #fff;
 }
 .btn .info{
   margin-right: 10px;
   color: #fff;
 }
 .btn .el-button.is-plain:focus, .btn .el-button.is-plain:hover {
-    background: #f5f5f5;
-    border-color: #f5f5f5;
     border: 1px solid #005C8D;
+    background-color: #1A6C98 ;
+    color: #fff;
     /* color: #2B3E50; */
 }
 .detail-word {
@@ -2783,12 +2774,14 @@ li.detail-item{
   flex: 1;
   height: 37px;
 }
-.wrapInput .huilvInput input.el-input__inner,.wrapInput .singleInput  input.el-input__inner{
+.wrapInput .huilvInput input.el-input__inner,.wrapInput .singleInput  input.el-input__inner,.wrapInput .curAmount input.el-input__inner{
   border: none;
   height: 37px;
   text-align: right !important;
 }
-
+.curAmount .el-input{
+  background: red;
+}
 /* .wrapInput >.singleInput{
   border: none;
   height: 37px;

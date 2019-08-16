@@ -91,7 +91,7 @@
     </div>
     <div class="btn" style="margin-bottom:10px;">
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91"></i>手工创建</el-button>
-      <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
+      <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div> 
     <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">
       <el-table-column label="账单号" align="center">
@@ -381,7 +381,7 @@ export default {
         assignee:'',
         modal:false,
         StableClass:'tableClass',
-        changeClientHight:446,
+        changeClientHight:null,
         YWoptions:[
           {value: 'T',label: '合约账单'},
           {value: 'F',label: '临分账单'},
@@ -548,6 +548,7 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted(){
+    this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
     this.changeWindow();
     this.$http.post('api/activiti/getAssigneeName',{roleName:'账单录入'}).then(res =>{
       if(res.status === 200){

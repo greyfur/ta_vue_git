@@ -34,7 +34,7 @@
     </div>
     <div class="btn">
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
-      <el-button type="primary" plain @click="init(0)"><i class="iconfont iconGroup37"></i>刷新</el-button>
+      <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div>
     <el-table :data="tableData" border style="width: 100%" :height="changeClientHight" :header-row-class-name="StableClass">
       <el-table-column label="流程编号" width="150" align="center">
@@ -151,7 +151,7 @@
           </el-select>
         </el-form-item> -->
         <el-form-item label="Business Origin" prop="businessOrigin" v-show="title==='创建' || title==='编辑'"> 
-          <el-select clearable v-model="formLabelAlign.businessOrigin" placeholder="请选择Business Origin111">
+          <el-select clearable v-model="formLabelAlign.businessOrigin" placeholder="请选择Business Origin">
             <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>

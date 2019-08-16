@@ -25,7 +25,7 @@
           text-color="#fff"
           @open="handleOpen"
           active-text-color="#fff">
-          <el-submenu :index="el.name" v-for="(el,index) in urlArr" :key="index">
+          <el-submenu :index="el.name" v-for="(el,index) in urlArr" :key="index" class="navFirst">
             <template slot="title">
               <i style="color:#fff;" :class="iconEmnu[el.name]"></i>
               <span>{{el.title}}</span>
@@ -263,6 +263,12 @@ import {computeName} from '@/assets/js/util.js'
     opacity:0.2587;
     margin-left: -7px;
     /* margin-right: 3px; */
+  }
+  .el-submenu__title,.el-submenu__title>i{
+    color: rgba(255,255,255,.65)!important;
+  }
+  .vertical .is-active .el-submenu__title,.vertical .is-active .el-submenu__title>i{
+    color: rgba(255,255,255,1)!important;
   }
   .el-menu-item{
     background-color: #01517C!important;
