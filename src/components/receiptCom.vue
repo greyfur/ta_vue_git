@@ -935,6 +935,8 @@ export default {
       this.$http.post("api/receipt/finaCreat/list", params).then(res => {
         if (res.status === 200) {
           this.tableData = res.data.rows;
+          console.log(res.data.rows,'hyd')
+          console.log(res.data.rows[0].rmSettleCompanyCode.split(';'),res.data.rows[0].rmSettleCompanyName.split(';'))
           this.mustData.total = res.data.total;
           if (res.data && res.data.rows && res.data.rows.length) {
             if (
