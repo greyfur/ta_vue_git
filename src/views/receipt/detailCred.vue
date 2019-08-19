@@ -90,7 +90,7 @@
         </div>
         <el-collapse-transition>
           <div v-show="searchFlag2">
-            <el-table :data="RMData" style="width:100%" border :header-row-class-name="StableClass">
+            <el-table :data="RMData" height="300px" style="width:100%" border :header-row-class-name="StableClass">
               <el-table-column label="支票号" width="150" align="center">
                 <template slot-scope="scope">
                   <el-tooltip
@@ -214,7 +214,7 @@
           <p><i class="iconfont iconGroup26"></i></p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag3" border :data="SgData" style="width: 100%" :header-row-class-name="StableClass">
+          <el-table v-show="searchFlag3" height="300px" border :data="SgData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column type="expand" align="center">
               <template slot-scope="props">
                 <el-table :data="props.row.worksheetDOList" style="width: 100%" border :header-row-class-name="StableClass">
@@ -527,7 +527,7 @@
           </p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag4" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
+          <el-table v-show="searchFlag4" height="300px" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column label="账单号" align="center" width="160">
               <template slot-scope="scope">
                 <el-tooltip
@@ -1032,8 +1032,7 @@ export default {
         {
           a: "结付公司",
           b: "",
-          c: "rmSettleCompanyCode",
-          d:'rmSettleCompanyName'
+          c: "codeName",
         },
         {
           a: "汇款人名称",
@@ -1332,7 +1331,7 @@ export default {
       if (el["a"] == "结算人员") {
         el["b"] = this.nameList[this.row[el["c"]]];
       }
-      if(el['a']=='结付公司'){ el["b"]=this.row[el['c']] + '-' + this.row[el['d']];}
+      if(el['a']=='结付公司'){ el["b"]=this.row[el['c']] }
     });
   },
   methods: {
