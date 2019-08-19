@@ -58,7 +58,7 @@
             <el-button size="mini" plain class="approved" style="height: 32px; position:relative">
               <span class="approvedName" @click="submite(5,'审批通过')">审批通过</span>
               <el-dropdown size="mini" style="padding-left:10px" placement="top-end">
-                <span class="el-dropdown-link"><i class="el-icon-arrow-down el-icon--right"></i></span>
+                <span class="el-dropdown-link"><i class="el-icon-arrow-down el-icon--right" style="color:#fff"></i></span>
                 <el-dropdown-menu slot="dropdown" style="border-color:#005C8D">
                   <el-dropdown-item style="width:90px;color:#005C8D;font-weight:700">
                     <span @click="proxyApprove">代理审批</span>
@@ -223,19 +223,14 @@
           </el-table-column>
           <el-table-column prop="valueDate" label="起息日" width="100" align="center"></el-table-column>
           <el-table-column prop="dueDate" label="到期日" width="100" align="center"></el-table-column>
-          <el-table-column prop="partnerCode" label="汇款人代码" width="100" align="center"></el-table-column>
-          <el-table-column label="汇款人名称" width="100" align="center">
-           <template slot-scope="scope">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="scope.row.payerName"
-            placement="top-start"
-          >
-            <span class="abbreviate">{{scope.row.payerName}}</span>
-          </el-tooltip>
-        </template>
-          </el-table-column>
+          <el-table-column width="140" label="结付公司" align="center">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark"  :content="scope.row.partnerName&&scope.row.partnerCode?scope.row.partnerCode+'-'+scope.row.partnerName:''" placement="top-start">
+                <span class="abbreviate" v-if="scope.row.partnerName&&scope.row.partnerCode">{{scope.row.partnerCode}}-{{scope.row.partnerName}}</span>
+                <span class="abbreviate" v-else></span>
+              </el-tooltip>
+            </template>
+          </el-table-column> 
           <el-table-column prop="businessPartnerRef" label="BP Reference" width="140" align="center"></el-table-column>
           <el-table-column prop="businessOrigin" label="Business Origin" width="130" align="center"></el-table-column>
           <el-table-column prop="baseCompany" label="Base Company" width="130" align="center"></el-table-column>
@@ -630,23 +625,21 @@
           </el-select>
         </el-form-item>
         <el-form-item label="原因填写" v-show="title==='复核驳回' || title==='审批驳回'">
-          <!-- <el-input :disabled="opinion!='其它'" type="textarea" :rows="2" placeholder="请输入原因" v-model="rebut"></el-input> -->
           <el-input type="textarea" :rows="2" placeholder="请输入原因" v-model="rebut"></el-input>
         </el-form-item> 
         <el-form-item label="输入悬停原因" v-show="title==='悬停'">
           <el-input type="textarea" :rows="2" placeholder="请输入悬停原因" v-model="pendingReason"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="原因填写" v-show="title==='审批驳回'">
-          <el-input type="textarea" :rows="2" placeholder="请输入原因" v-model="rebut"></el-input>
-        </el-form-item> -->
-        <el-form-item label="选择下一处理人" v-show="putIn=='n' && !preApprove">
+        <el-form-item label="选择下一处理人" v-show="putIn=='n'">
           <el-select filterable v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="是否代理" v-show="title==='审批通过'">
-          <el-checkbox v-model="proxyFlag" @change="proxyMan=null">是</el-checkbox>
-        </el-form-item> -->
+        <el-form-item label="选择下一处理人" v-show="title==='审批通过' && !preApprove" >
+          <el-select filterable v-model="assignee"  placeholder="请选择">
+            <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="选择代理人" v-show="title==='审批通过' && proxyFlag">
           <el-select filterable v-model="proxyMan"  placeholder="请选择">
             <el-option v-for="(item,i) in TJRoptions" :key="item.userId" :label="item.name" :value="i" :disabled="item.username == $store.state.userName"></el-option>
@@ -1278,15 +1271,21 @@ export default {
   methods: {
     proxyApprove(){  // 代理审批
        this.$http.post('api/pay/activitiForPay/getNextStep',{processId:this.row.processId, approvalLevel:this.row.approvalLevel}).then(res =>{
-          if(res.status == 200){  // 到最后一个节点了
+          if(res.status == 200 && res.data){  // 到最后一个节点了-------只展示是否选择下一处理人
             this.preApprove = true;
             this.proxyFlag = true;
             this.title = '审批通过';
+            this.flag = 5;
             this.getName(this.emnuGetName[this.row.approvalLevel]);
             this.dialogFormVisible3 = true;
           } else{
-            this.submite(5,'审批通过');
+            this.title = '审批通过';
+            this.preApprove = false;
             this.proxyFlag = true;
+            this.flag = 5;
+            this.getName(this.emnuGetName[this.row.approvalLevel]);
+            this.dialogFormVisible3 = true;
+            
           }
        })
     },
@@ -1346,12 +1345,6 @@ export default {
           statusArr[this.row.approvalLevel].className = "status pending";
         }
     },
-    // rotateMua(){
-    //   document.querySelector('.browseDoc').className='browseDoc mua'
-    // },
-    //  rotateMuas(){
-    //   document.querySelector('.browseDoc').className='browseDoc muas'
-    // },
     urgencyPay(){
       this.$confirm('是否紧急付款？', '提示', {
         confirmButtonText: '确定',
@@ -1761,6 +1754,7 @@ export default {
                     })
                   })
                 } else{   
+                  this.preApprove = false;
                   this.getName(this.emnuGetName[this.row.approvalLevel]);
                   this.dialogFormVisible3 = true;
                 }
@@ -1797,10 +1791,24 @@ export default {
           // this.dialogFormVisible3 = true;
         break;
         case 7:   // 付款支票页面---流程提交=审批完成，在这里查开关账
-            if(this.RMData==null || !this.RMData.length){
-              this.$message.error('无支票信息，请获取支票信息');
+        if(this.$route.query.tag === 'approvalDone'){
+          this.$http.post("api/sics/basis/checkAmount",{processId:this.row.processId}).then(res => {
+            if (res.status === 200 && res.data.code == 0) {
+              this.acountquery()
+              let type = '';
+              if(this.accountCloseFlag == '0'){
+                type = '付款复核';
+              } else if(this.accountCloseFlag == '1'){
+                type = '付款录入';
+              }
+              this.getName(type);
+              this.dialogFormVisible3 = true;
+            } else{
+              this.$message.error(res.data.msg);
               return false;
             }
+          })
+        } else{
           this.acountquery()
           let type = '';
           if(this.accountCloseFlag == '0'){
@@ -1810,6 +1818,7 @@ export default {
           }
           this.getName(type);
           this.dialogFormVisible3 = true;
+        }
         break;
         case 8:   // 财务支付/紧急付款/partial完结------流程提交
           this.getName('付款录入');
@@ -2572,9 +2581,7 @@ export default {
         this.putIn = 'n';
       } else if(n === '复核通过'){
         this.putIn = 'n';
-      } else if(n === '审批通过'){
-        this.putIn = 'n';
-      } else{ this.putIn = false; }
+      }  else{ this.putIn = false; }
     },
     // 监听原币币制
     'makeDocListEctype.yuanType':{
@@ -2875,7 +2882,7 @@ li.detail-item{
   content: '';
   width:1px;
   height: 31px;
-  background-color: #005c8d;
+  background-color: #fff;
   z-index: 100000000;
 }
 

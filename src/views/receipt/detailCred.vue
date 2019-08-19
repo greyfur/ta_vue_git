@@ -1,8 +1,6 @@
 <template>
   <div class="detailCred">
-    <router-link
-      :to="{name:$route.query.tag}"
-      style="color:#333;position:fixed;top:20px;left:80px;z-index:100;">
+    <router-link :to="{name:$route.query.tag}" style="color:#333;position:fixed;top:20px;left:80px;z-index:100;">
       <i class="iconfont iconleft-circle-o"></i>
     </router-link>
     <!-- 核销完成 -->
@@ -193,7 +191,7 @@
                     <span class="abbreviate" v-else></span>
                   </el-tooltip>
                 </template>
-              </el-table-column>
+              </el-table-column> 
               <el-table-column prop="businessPartnerRef" label="BP Reference" width="140" align="center"></el-table-column>
               <el-table-column prop="businessOrigin" label="Business Origin" width="130" align="center"></el-table-column>
               <el-table-column prop="baseCompany" label="Base Company" width="130" align="center"></el-table-column>
