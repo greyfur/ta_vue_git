@@ -187,8 +187,8 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="businessOrigin" label="Business Origin" width="120" align="center"></el-table-column>
-            <el-table-column prop="baseCompany" label="Base Company" width="120" align="center"></el-table-column>
+            <el-table-column prop="businessOrigin" label="Business Origin" width="140" align="center"></el-table-column>
+            <el-table-column prop="baseCompany" label="Base Company" width="140" align="center"></el-table-column>
             <!-- <el-table-column label="操作" align="center"></el-table-column> -->
           </el-table>
         </template>
@@ -304,8 +304,8 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="baseCompany" label="Base Company" width="135" align="center"></el-table-column>
-      <el-table-column prop="businessOrigin" label="Business Origin" width="135" align="center"></el-table-column>
+      <el-table-column prop="baseCompany" label="Base Company" width="140" align="center"></el-table-column>
+      <el-table-column prop="businessOrigin" label="Business Origin" width="140" align="center"></el-table-column>
       <el-table-column label="操作" width="100" fixed="right" align="center">
         <template slot-scope="scope">
           <span class="blueColor" @click.stop="openSICS(scope.row)">打开SICS</span>

@@ -7,12 +7,12 @@
       <el-collapse-transition>
         <div v-show="searchFlag" class-name="transition-box">
           <el-row :gutter="10" class="billRow" >
-            <el-col :span="7">
-              <span class="slable">流程编号</span>
+            <el-col :span="8">
+              <span class="slable">流程编号 &nbsp;&nbsp;</span>
               <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
             </el-col>
-            <el-col :span="7">
-              <span class="slable">账单类型</span>
+            <el-col :span="8">
+              <span class="slable">账单类型 &nbsp;&nbsp;</span>
               <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
                 <el-option
                   v-for="item in ZDoptions"
@@ -22,8 +22,8 @@
                 ></el-option>
               </el-select>
             </el-col>
-            <el-col :span="10" class="zq1Parent">
-              <span class="slable">账期</span>
+            <el-col :span="8" class="zq1Parent">
+              <span class="slable">账期 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;</span>
               <!-- <el-input v-model.trim="zq2" placeholder="请输入年份" class="wsPeriod"></el-input> -->
               <!-- <el-select filterable clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
                 <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
@@ -31,9 +31,9 @@
               <input class="wsDate" style="width:224px;height:40px;border-radius:5px;outline:none;border:1px solid #DCDFE6;" placeholder="请选择账期" v-model="billSearch.wsPeriod" @click.stop="zq1FlagFn()" />
               <div class="zq1" v-show="zq1Flag">
                   <p class="zqTitle">
-                    <span style="color:#ccc;transform: scale(.6);" @click="countYear('-')"><i class="iconfont iconGroup33"></i></span>
+                    <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('-')"><i class="iconfont iconGroup33"></i></span>
                     <span style="color:#000;">{{zq1Year}}</span>
-                    <span style="color:#ccc;transform: scale(.6);" @click="countYear('+')"><i class="iconfont iconGroup11"></i></span>
+                    <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('+')"><i class="iconfont iconGroup11"></i></span>
                   </p>
                   <ul class="zq" id="zq">
                       <li v-for="(item,index) in zqList" :key="item" :class="zq1Day===index?'active':''" @click="chooseDay(item,index)">{{item}}</li>
@@ -41,8 +41,17 @@
               </div>
             </el-col>
           </el-row>
-           <el-row :gutter="10" class="billRow" v-show="urlName === 'billCheck' ||urlName === 'billSignBack'||urlName === 'billEntry'"> 
-            <el-col :span="8" v-show="urlName === 'billCheck'">
+          <!-- v-show="urlName === 'billCheck' ||urlName === 'billSignBack'||urlName === 'billEntry'" -->
+           <el-row :gutter="10" class="billRow"> 
+            <!-- v-show="urlName === 'billEntry'" -->
+            <el-col :span="8">
+              <span class="slable">流程状态 &nbsp;&nbsp;</span>
+              <el-select clearable v-model="billSearch.processStatus" placeholder="请选择流程状态">
+                <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-col>
+             <!-- v-show="urlName === 'billCheck'" -->
+            <el-col :span="8">
               <span class="slable">录入人查询</span>
               <!-- <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input> -->
               <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人查询">
@@ -56,7 +65,53 @@
               </el-option>
             </el-select>
             </el-col>
-            <el-col :span="7" v-show="urlName === 'billSignBack'">
+            <el-col :span="8">
+              <span class="slable">复核人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
+              <el-select clearable v-model="billSearch.wsSignbackFlag" placeholder="请选择">
+                <el-option v-for="(item,index) in tableData.closedBy" :key="index" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10" class="billRow"> 
+            <!-- v-show="urlName === 'billEntry'" -->
+            <el-col :span="8">
+              <span class="slable">分出公司 &nbsp;&nbsp;</span>
+              <el-select clearable filterable v-model="cedentModel" placeholder="请选择分出公司">
+                <el-option
+                  v-for="(item,index) in cedentList"
+                  :key="index"
+                  :label="item.codecode+' - '+item.codeName"
+                  :value="index"
+                >
+                  <span style="float:left">{{ item.codecode }}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+                </el-option>
+              </el-select>
+            </el-col>
+             <!-- v-show="urlName === 'billCheck'" -->
+            <el-col :span="8">
+              <span class="slable">经纪公司 &nbsp;&nbsp;</span>
+              <el-select clearable filterable v-model="brokerModel" placeholder="请选择经纪公司">
+                <el-option
+                  v-for="(item,index) in brokerList"
+                  :key="index"
+                  :label="item.codecode+' - '+item.codeName"
+                  :value="index"
+                >
+                  <span style="float:left">{{ item.codecode }}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+                </el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="8">
+              <span class="slable">账单状态 &nbsp;&nbsp;</span>
+              <el-select clearable v-model="billSearch.wsStatus" placeholder="请选择">
+                <el-option v-for="(v,k) of {'Inactive':'2','Open':'1','Closed':'0'}" :key="v" :label="k" :value="v"></el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10" class="billRow">
+            <el-col :span="8" v-show="urlName === 'billSignBack'">
               <span class="slable">是否需签回</span>
               <el-select clearable v-model="billSearch.wsSignbackFlag" placeholder="请选择">
                 <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
@@ -66,12 +121,6 @@
               <span class="slable">是否已签回</span>
               <el-select clearable v-model="billSearch.wsHasSignback" placeholder="请选择">
                 <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
-              </el-select>
-            </el-col>
-            <el-col :span="8" v-show="urlName === 'billEntry'">
-              <span class="slable">流程状态</span>
-              <el-select clearable v-model="billSearch.processStatus" placeholder="请选择流程状态">
-                <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-col>
           </el-row>
@@ -247,7 +296,7 @@
              <el-dropdown-item>
               <span
                 v-show="urlName === 'sortOperation'"
-                @click.stop="dialogFormVisible3 = true"
+                @click.stop="splits(scope.row.processId)"
                 class="blueColor"
               >拆分</span>
             </el-dropdown-item>
@@ -374,9 +423,9 @@
           <input class="wsDate" style="width:196px;height:40px;border-radius:5px;outline:none;border:1px solid #DCDFE6;" placeholder="请选择账期" v-model="billSearch.wsPeriod" @click="zq1FlagFn()" />
               <div class="zq1" v-show="zq1Flag">
                   <p class="zqTitle">
-                    <span style="color:#ccc;transform: scale(.6);" @click="countYear('-')"><i class="iconfont iconGroup33"></i></span>
+                    <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('-')"><i class="iconfont iconGroup33"></i></span>
                     <span style="color:#000;">{{zq1Year}}</span>
-                    <span style="color:#ccc;transform: scale(.6);" @click="countYear('+')"><i class="iconfont iconGroup11"></i></span>
+                    <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('+')"><i class="iconfont iconGroup11"></i></span>
                   </p>
                   <ul class="zq" id="zq">
                       <li v-for="(item,index) in zqList" :key="item" :class="zq1Day===index?'active':''" @click="chooseDay(item,index)">{{item}}</li>
@@ -545,7 +594,7 @@
           <div class="inputWrap" id="idInputWrap"></div>
         </el-form-item>-->
         <el-form-item>
-          <el-button size="small" @click="dialogFormVisible = false">取消</el-button>
+          <el-button size="small" @click="dialogFormVisible3 = false">取消</el-button>
           <el-button type="primary" plain @click="split()">确定</el-button>
         </el-form-item>
       </el-form>
@@ -680,6 +729,7 @@ export default {
       dialogFormVisible: false,
       dialogFormVisible1: false,
       dialogFormVisible3:false,
+      splitId:null,
       admFlag: false,
       billSearch: {
         wsSignbackFlag:null,
@@ -691,6 +741,7 @@ export default {
         wsType: null,
         wsPeriod: null,
         wsBusinessType: null,
+        wsStatus:null,
         wsCedentCode: null,
         wsCedentName: null,
         wsBrokerCode: null,
@@ -812,7 +863,13 @@ export default {
     zq1FlagFn(){
       this.zq1Flag=!this.zq1Flag
     },
+    splits(processId){
+        this.dialogFormVisible3=true;
+        this.splitId=processId;
+    },
        split() {
+         
+         
         let arr = document.querySelectorAll(".itemNum");
         // let subProcessArr = [];
         // arr.forEach(el=>{
@@ -823,23 +880,30 @@ export default {
         //   this.$message.error('请填写拆分金额');
         //   return;
         // }
+        console.log(this.subProcess)
+
         if (!this.subProcess) {
           this.$message.error("请填写拆分数量");
+          return;
+        }else if (this.subProcess==='1'){
+          this.$message.error("拆分数量不能小于1");
           return;
         }
         if (!this.reason) {
           this.$message.error("请填写拆分理由");
           return;
         }
+        let that=this;
         this.$http
           .post("api/worksheet/wSEntry/processSplit", {
-            processId: this.chooseRow.processId,
+            processId: that.splitId,
             // subProcess:subProcessArr,
             subProcess: +this.subProcess,
-            actOperator: this.chooseRow.curOperator,
+            actOperator: this.mustData.actOperator,
             reason: this.reason
           })
           .then(res => {
+            console.log(res)
             if (res.status == 200 && res.data.code == 0) {
               this.$message({ message: "拆分成功", type: "success" });
               this.dialogFormVisible3 = false;

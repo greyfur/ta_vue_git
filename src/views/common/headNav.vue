@@ -162,6 +162,15 @@ import {computeName} from '@/assets/js/util.js'
         }        
       }
     },
+    // updated(){
+    //   [...document.querySelectorAll('.navFirst')].forEach(item=>{
+    //     if(item.classList.contains('is-opened')){
+    //       console.log(item.firstChild)
+    //       item.firstChild.styleText="background-color: #014366 !important;color: rgba(255,255,255,1)!important;"
+    //     }
+    //   })
+    //   // if()
+    // },
     mounted(){
       if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
         this.fold = true;
@@ -270,6 +279,9 @@ import {computeName} from '@/assets/js/util.js'
   .vertical .is-active .el-submenu__title,.vertical .is-active .el-submenu__title>i{
     color: rgba(255,255,255,1)!important;
   }
+  .vertical .is-opened .el-submenu__title,.vertical .is-opened .el-submenu__title>i{
+    color: rgba(255,255,255,1)!important;
+  }
   .el-menu-item{
     background-color: #01517C!important;
     background: #01517C!important;
@@ -281,6 +293,7 @@ import {computeName} from '@/assets/js/util.js'
     /* background-color: linear-gradient(270deg,rgba(0,72,111,1) 0%,rgba(64,152,195,0.37) 31%,rgba(64,152,195,0.37) 71%,rgba(0,72,111,1) 100%)!important; */
     color: rgba(255,255,255,1)!important;
   }
+
   .fold{
     position: absolute;
     top: 30px;

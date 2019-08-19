@@ -94,10 +94,10 @@
       <el-table-column prop="processId" label="流程编号" width="130" align="center"></el-table-column>
       <el-table-column width="140" label="结付公司" align="center">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
-            <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
-            <span class="abbreviate" v-else></span>
-          </el-tooltip>
+            <el-tooltip class="item" effect="dark"  :content="scope.row.codeName&&scope.row.codeName?scope.row.codeName:''" placement="top-start">
+              <span class="abbreviate" v-if="scope.row.codeName&&scope.row.codeName">{{scope.row.codeName}}</span>
+              <span class="abbreviate" v-else></span>
+            </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column width="120" label="汇款人名称" align="center">
@@ -217,12 +217,12 @@
           >{{scope.row.processId}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="rmSettleCompanyName" width="140" label="结付公司" align="center"> 
+      <el-table-column width="140" label="结付公司" align="center"> 
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
-            <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
-            <span class="abbreviate" v-else></span>
-          </el-tooltip>
+            <el-tooltip class="item" effect="dark"  :content="scope.row.codeName&&scope.row.codeName?scope.row.codeName:''" placement="top-start">
+              <span class="abbreviate" v-if="scope.row.codeName&&scope.row.codeName">{{scope.row.codeName}}</span>
+              <span class="abbreviate" v-else></span>
+            </el-tooltip>
         </template>
         </el-table-column>
       <el-table-column width="120" label="汇款人名称" align="center">
@@ -934,9 +934,20 @@ export default {
       }
       this.$http.post("api/receipt/finaCreat/list", params).then(res => {
         if (res.status === 200) {
-          this.tableData = res.data.rows;
-          console.log(res.data.rows,'hyd')
-          console.log(res.data.rows[0].rmSettleCompanyCode.split(';'),res.data.rows[0].rmSettleCompanyName.split(';'))
+          let newRows=res.data.rows.map((item,index)=>{
+              let codeName={};
+              item.rmSettleCompanyCode=item.rmSettleCompanyCode!==null?item.rmSettleCompanyCode.split(';'):item.rmSettleCompanyCode;
+              item.rmSettleCompanyName=item.rmSettleCompanyName!==null?item.rmSettleCompanyName.split(';'):item.rmSettleCompanyName;
+              item.codeName=item.rmSettleCompanyCode&&item.rmSettleCompanyCode.map((items,indexs)=>{
+               items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items;
+                return items
+              });
+              item.codeName=item.codeName&&item.codeName.join('');
+              console.log(item.codeName)
+              return item;
+          })
+          console.log(newRows)
+          this.tableData = newRows;
           this.mustData.total = res.data.total;
           if (res.data && res.data.rows && res.data.rows.length) {
             if (

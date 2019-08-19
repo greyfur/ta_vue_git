@@ -159,7 +159,7 @@
           <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getRMSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
          <el-collapse-transition>
-        <el-table v-show="searchFlag2" :data="RMData" style="width:100%" border :header-row-class-name="StableClass">
+        <el-table v-show="searchFlag2" height="300px" :data="RMData" style="width:100%" border :header-row-class-name="StableClass">
           <el-table-column label="支票号" width="160" align="center">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
@@ -252,7 +252,7 @@
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单</div>
           <p v-if="$route.query.tag === 'payOperation' || $route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
-        <el-table v-show="searchFlag3" :data="SgData" style="width: 100%" border :header-row-class-name="StableClass">
+        <el-table v-show="searchFlag3" height="300px" :data="SgData" style="width: 100%" border :header-row-class-name="StableClass">
           <el-table-column type="expand" align="center">
             <template slot-scope="props">
               <el-table :data="props.row.worksheetDOList" style="width: 100%" border :header-row-class-name="StableClass">
@@ -472,7 +472,7 @@
           <p><i class="iconfont iconGroup26"></i></p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag4" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
+          <el-table v-show="searchFlag4" height="300px" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column label="账单号" align="center">
               <template slot-scope="scope">
                 <el-tooltip
@@ -827,7 +827,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="分出公司">
-          <el-col :span="10">
+          <el-col :span="7" style="margin-right:5px;">
             <el-select clearable filterable v-model="makeDocListEctype.cedentModel[0]" placeholder="请选择">
               <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="item.codeName">
                 <span style="float:left">{{ item.codecode }}</span>
@@ -835,7 +835,7 @@
               </el-option>
             </el-select>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="7" style="margin-right:5px;">
             <el-select clearable filterable v-model="makeDocListEctype.cedentModel[1]" placeholder="请选择">
               <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="item.codeName">
                 <span style="float:left">{{ item.codecode }}</span>
@@ -843,7 +843,7 @@
               </el-option>
             </el-select>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="7" style="margin-right:5px;">
             <el-select clearable filterable v-model="makeDocListEctype.cedentModel[2]" placeholder="请选择">
               <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="item.codeName">
                 <span style="float:left">{{ item.codecode }}</span>
@@ -851,6 +851,11 @@
               </el-option>
             </el-select>
           </el-col>
+           <!-- <el-col :span="2">
+             <template>
+               <el-checkbox v-model="checked">various</el-checkbox>
+             </template>
+           </el-col> -->
         </el-form-item>
         <el-form-item label="受款公司">
           <!-- 470 hyd -->
@@ -940,6 +945,7 @@ export default {
         brokerListHK:[],
         recepitList:[],
         nameList:{},
+        checked:false,
         searchFlag1:true,
         searchFlag2:true,
         searchFlag3:true,
@@ -1201,6 +1207,7 @@ export default {
   beforeMount(){this.copy('proNum',1); this.updateFlag = true;},
   mounted(){ 
     console.log(this.row,'this.row');
+    console.log(this.checked)
     this.mustData.actOperator = this.$store.state.userName;
     let strArr = [];
     if(this.$route.query.tag === 'payVerification'){
@@ -2456,6 +2463,7 @@ export default {
       } else {
         if (tag == 2) {
          if(this.makeDocListEctype.zheNum&&this.makeDocListEctype.yuanType.length>0){
+           console.log(this.checked)
             // 是操作页面,2为点击确定---------------------生成审批文档提交hyd
             // if(this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[1]||this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[2]||this.makeDocListEctype.cedentModel[1]==this.makeDocListEctype.cedentModel[2]){
             //   this.$message.error('分公司不能一样');
