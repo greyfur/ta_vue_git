@@ -1275,12 +1275,14 @@ export default {
             this.preApprove = true;
             this.proxyFlag = true;
             this.title = '审批通过';
+            this.flag = 5;
             this.getName(this.emnuGetName[this.row.approvalLevel]);
             this.dialogFormVisible3 = true;
           } else{
             this.title = '审批通过';
             this.preApprove = false;
             this.proxyFlag = true;
+            this.flag = 5;
             this.getName(this.emnuGetName[this.row.approvalLevel]);
             this.dialogFormVisible3 = true;
             
@@ -1789,10 +1791,24 @@ export default {
           // this.dialogFormVisible3 = true;
         break;
         case 7:   // 付款支票页面---流程提交=审批完成，在这里查开关账
-            if(this.RMData==null || !this.RMData.length){
-              this.$message.error('无支票信息，请获取支票信息');
+        if(this.$route.query.tag === 'approvalDone'){
+          this.$http.post("api/sics/basis/checkAmount",{processId:this.row.processId}).then(res => {
+            if (res.status === 200 && res.data.code == 0) {
+              this.acountquery()
+              let type = '';
+              if(this.accountCloseFlag == '0'){
+                type = '付款复核';
+              } else if(this.accountCloseFlag == '1'){
+                type = '付款录入';
+              }
+              this.getName(type);
+              this.dialogFormVisible3 = true;
+            } else{
+              this.$message.error(res.data.msg);
               return false;
             }
+          })
+        } else{
           this.acountquery()
           let type = '';
           if(this.accountCloseFlag == '0'){
@@ -1802,6 +1818,7 @@ export default {
           }
           this.getName(type);
           this.dialogFormVisible3 = true;
+        }
         break;
         case 8:   // 财务支付/紧急付款/partial完结------流程提交
           this.getName('付款录入');
