@@ -38,15 +38,15 @@
     </div>
     <!-- 核销 -->
     <div class="btn" v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'">
-      <el-button type="primary" :disabled="hxState" plain @click="submite(1,'流程提交','收款录入')">流程提交</el-button>
+      <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BpLedger</el-button>
       <el-button type="primary" :disabled="hxState" @click="tbState" plain>同步状态</el-button>
       <el-button type="primary" plain @click="mailSend(2,'附件')">附件</el-button>
-      <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BpLedger</el-button>
       <el-button
         :type="hxState?'info':'primary'"
         @click="gangUp('核销')"
         plain
       >{{!hxState?'挂起':'暂挂待销'}}</el-button>
+      <el-button type="primary" :disabled="hxState" plain @click="submite(1,'流程提交','收款录入')">流程提交</el-button>
     </div>
     <!-- 暂挂 -->
     <!-- <div class="btn" v-if="$route.query.tag === 'viewInvalidate'">
