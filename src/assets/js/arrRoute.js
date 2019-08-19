@@ -250,6 +250,12 @@ let data = [
         name: 'accountProcess',
         component: () => import("@/views/integratedQuery/accountProcess"), 
       },
+      {
+        title:'结算报表',
+        path: '/settlementReport',
+        name: 'settlementReport',
+        component: () => import("@/views/integratedQuery/settlementReport"), 
+      },
     ]
   },
   // Tab页-管理员

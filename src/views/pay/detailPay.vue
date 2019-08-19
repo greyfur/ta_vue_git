@@ -630,7 +630,12 @@
         <el-form-item label="输入悬停原因" v-show="title==='悬停'">
           <el-input type="textarea" :rows="2" placeholder="请输入悬停原因" v-model="pendingReason"></el-input>
         </el-form-item>
-        <el-form-item label="选择下一处理人" v-show="putIn=='n' && !preApprove">
+        <el-form-item label="选择下一处理人" v-show="putIn=='n'">
+          <el-select filterable v-model="assignee"  placeholder="请选择">
+            <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="选择下一处理人" v-show="title==='审批通过' && !preApprove" >
           <el-select filterable v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
@@ -1266,15 +1271,19 @@ export default {
   methods: {
     proxyApprove(){  // 代理审批
        this.$http.post('api/pay/activitiForPay/getNextStep',{processId:this.row.processId, approvalLevel:this.row.approvalLevel}).then(res =>{
-          if(res.status == 200){  // 到最后一个节点了
+          if(res.status == 200 && res.data){  // 到最后一个节点了-------只展示是否选择下一处理人
             this.preApprove = true;
             this.proxyFlag = true;
             this.title = '审批通过';
             this.getName(this.emnuGetName[this.row.approvalLevel]);
             this.dialogFormVisible3 = true;
           } else{
-            this.submite(5,'审批通过');
-            // this.proxyFlag = true;
+            this.title = '审批通过';
+            this.preApprove = false;
+            this.proxyFlag = true;
+            this.getName(this.emnuGetName[this.row.approvalLevel]);
+            this.dialogFormVisible3 = true;
+            
           }
        })
     },
@@ -1713,7 +1722,7 @@ export default {
           this.dialogFormVisible3 = true;
         break;
         case 5:  // 审批通过 --------------
-          // this.proxyFlag = false;
+          this.proxyFlag = false;
             this.$http.post('api/pay/activitiForPay/getNextStep',{processId:this.row.processId, approvalLevel:this.row.approvalLevel}).then(res =>{
               if(res.status == 200){
                 if(res.data){
@@ -1743,6 +1752,7 @@ export default {
                     })
                   })
                 } else{   
+                  this.preApprove = false;
                   this.getName(this.emnuGetName[this.row.approvalLevel]);
                   this.dialogFormVisible3 = true;
                 }
@@ -2554,9 +2564,7 @@ export default {
         this.putIn = 'n';
       } else if(n === '复核通过'){
         this.putIn = 'n';
-      } else if(n === '审批通过'){
-        this.putIn = 'n';
-      } else{ this.putIn = false; }
+      }  else{ this.putIn = false; }
     },
     // 监听原币币制
     'makeDocListEctype.yuanType':{
