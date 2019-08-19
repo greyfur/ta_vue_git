@@ -897,8 +897,7 @@
                 type="text"
                 class="selfInput"
                 v-model="formLabelAlign.chargesAmount"
-                @input="watchInput('chargesAmount')"
-              >
+                @input="watchInput('chargesAmount')">
               <!-- <el-input v-model="formLabelAlign.chargesAmount" @input.native="watchInput('chargesAmount')" class="curAmount"></el-input> -->
             </el-form-item>
           </el-col>
@@ -1335,6 +1334,26 @@ export default {
     });
   },
   methods: {
+    WritebackProcess(){   // processStatus: "待处理,已悬停"
+      this.$http.post("api/receipt/finaCreat/list", {
+        pageNumber: 1,
+        pageSize: 20,
+        processId: this.row.processId,
+        processStatus: "待处理,已悬停",
+        processType: "收款",
+      }).then(res => {
+        if (res.status === 200) {
+          this.row = res.data.rows[0];
+          this.listData.forEach(el => {
+            el["b"] = this.row[el["c"]];
+            if (el["a"] == "结算人员") {
+              el["b"] = this.nameList[this.row[el["c"]]];
+            }
+            if(el['a']=='结付公司'){ el["b"]=this.row[el['c']] + '-' + this.row[el['d']];}
+          });
+        }
+      })
+    },
     onDownLoad(row){
       // 下载
       this.$http.post("api/anyShare/fileOperation/downloadDocument",Object.assign({}, row, { processId: this.row.processId }),{ responseType: "blob" })
@@ -1754,6 +1773,7 @@ export default {
                 if (res.status === 200 && res.data.errorCode == 1) {
                   this.$message({ message: "创建成功", type: "success" });
                   this.queryRM();
+                  this.WritebackProcess();
                 } else if (res.data.errorCode == 0 && res.data.errorMessage) {
                   this.$message.error(res.data.errorMessage);
                 }
