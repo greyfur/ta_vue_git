@@ -194,6 +194,7 @@
           </el-table-column>
           <el-table-column prop="businessOrigin" label="Business Origin" width="130" align="center"></el-table-column>
           <el-table-column prop="baseCompany" label="Base Company" width="130" align="center"></el-table-column>
+          <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80" align="center">
         <template slot-scope="scope">
           <!-- <el-button type="text" size="small" @click.stop="handleClick(5,scope.row)">踪迹</el-button> -->

@@ -760,6 +760,7 @@ export default {
           this.SICSData = res.data.workSheetVOlist;
           // 获取详情的值
           console.log(this.chooseRow,'this.chooseRow');
+          console.log(this.listData,'222')
           this.listData.forEach(el => {
             if (el["c"] == "cedent") {
               if(this.chooseRow["wsCedentCode"]==undefined){return}
