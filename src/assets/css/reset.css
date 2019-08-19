@@ -216,3 +216,12 @@ body .el-table colgroup.gutter {
 .btn .borderBtn.el-button.is-plain:hover {
   background-color: #fafafa !important;
 }
+.mailTemplate{
+  padding: unset;
+  border: none;
+  border-bottom: 1px solid #000;
+  outline: none;
+  text-indent: 1em;
+  color: #333;
+  font-size: 14px;
+}

@@ -183,8 +183,7 @@
                 class="item"
                 effect="dark"
                 :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
-                placement="top-start"
-              >
+                placement="top-start">
                 <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
               </el-tooltip>
             </template>
@@ -732,7 +731,9 @@ export default {
   created() {
     sessionStorage.setItem("data", JSON.stringify({}));
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
+    // 日期判断    Edate
   },
+  
   beforeMount(){ this.copy('proNum',1) },
   mounted() {
     // 查询账单详情
@@ -747,9 +748,6 @@ export default {
     this.getBillInfo();
   },
   methods: {
-    // openPage(){
-    //   window.open(pageNew,'_blank');  
-    // },
     getBillInfo(){
       this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
         if (res.status === 200) {
@@ -890,11 +888,9 @@ export default {
           }
         });
     },
-    mailSend(tag) {
-      if (tag == 1) {
-        // 邮件通知
-        // this.title = '邮件通知';
-        //  this.dialogFormVisible2 = true;
+    mailSend(tag) {  
+      if (tag == 1) { // 邮件通知
+        // 显示内容模板
         this.$http.get("api/worksheet/wSEntry/getEmailContacts").then(res => {
           if (res.status === 200 && res.data.length) {
             this.dialogFormVisible2 = true;
@@ -927,16 +923,20 @@ export default {
       if (this.title == "OCR上传") {
         this.$http.post("api/anyShare/fileOperation/previewDocument",Object.assign({}, this.ocrRow, { processId: this.chooseRow.processId}),{ responseType: "blob" })
           .then(res => {
-            if (res.status == 200) {
+            if (res.status == 200) { 
               let resFile = new FormData();
+              // 旧的
               resFile.append("filePatn", res.data);
               resFile.append("recognize_service", this.recognize_service);
-              this.$http
-                .post("ocrApi/PrivatizingOcrTest/ocrDiscern.do", resFile, {
-                  headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                  }
-                })
+              this.$http.post("ocrApi/PrivatizingOcrTest/ocrDiscern.do", resFile, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
+              // 新的
+              // resFile.append("filePatn", res.data);
+              // resFile.append("docCloudId", this.ocrRow.docCloudId);
+              // resFile.append("port", '8080');
+              // resFile.append("ocrUrl", 'PrivatizingOcrTest/ocrDiscern.do');
+              // resFile.append("ip", '172.30.19.200');
+              // resFile.append("recognize_service", this.recognize_service);
+              // this.$http.post("api/ocrSystem/requestOCR", resFile, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
                 .then(res => {
                   if (res.status === 200 && res.data) {
                     this.$message({ type: "success", message: "提交成功" });

@@ -1032,9 +1032,12 @@ export default {
         delete params1["processStatus"];
           this.$http.post("api/worksheet/wSEntry/update",params1)
             .then(res => {
-              if (res.status === 200 && res.data.msg === "操作成功") {
+              if (res.status === 200 && res.data.code == 0) {
+                this.$message({ type: "success", message: res.data.msg });
                 this.init();
                 this.dialogFormVisible = false;
+              } else{
+                this.$message({ type: "error", message: res.data.msg });
               }
             });
           break;
@@ -1043,9 +1046,7 @@ export default {
             this.$message.error("请选择任务处理人");
             return false;
           }
-          this.$http
-            .post(
-              "api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
+          this.$http.post("api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
               {
                 processId: this.chooseRow.processId,
                 procInstId: this.chooseRow.processInstId,
