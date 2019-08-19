@@ -104,7 +104,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="bankCurrency" label="币制" width="60" align="center"></el-table-column>
-              <el-table-column label="支票金额" align="right">
+              <el-table-column label="支票金额" align="right" width="120">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
@@ -128,7 +128,7 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column label="支票状态" align="center">
+              <el-table-column label="支票状态" align="center" width="100">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
@@ -140,7 +140,7 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-               <el-table-column label="核销状态" align="center">
+               <el-table-column label="核销状态" align="center" width="100">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
@@ -153,7 +153,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="paymentTypeName" label="支付方式" width="110" align="center"></el-table-column>
-              <el-table-column label="流程编号" align="center">
+              <el-table-column label="流程编号" align="center" width="120">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
@@ -184,8 +184,8 @@
               </el-table-column>
               <el-table-column prop="valueDate" label="起息日" width="100" align="center"></el-table-column>
               <el-table-column prop="dueDate" label="到期日" width="100" align="center"></el-table-column>
-              <el-table-column width="140" label="结付公司" align="center">
-                <template slot-scope="scope">
+              <el-table-column width="260" label="结付公司" align="center">
+                  <template slot-scope="scope">
                   <el-tooltip class="item" effect="dark"  :content="scope.row.partnerName&&scope.row.partnerCode?scope.row.partnerCode+'-'+scope.row.partnerName:''" placement="top-start">
                     <span class="abbreviate" v-if="scope.row.partnerName&&scope.row.partnerCode">{{scope.row.partnerCode}}-{{scope.row.partnerName}}</span>
                     <span class="abbreviate" v-else></span>
@@ -528,7 +528,7 @@
         </div>
         <el-collapse-transition>
           <el-table v-show="searchFlag4" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
-            <el-table-column label="账单号" align="center">
+            <el-table-column label="账单号" align="center" width="160">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -540,8 +540,8 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="wsCurrency" label="币制" width="50" align="center"></el-table-column>
-            <el-table-column label="金额" align="right">
+            <el-table-column prop="wsCurrency" label="币制" width="60" align="center"></el-table-column>
+            <el-table-column label="金额" align="right" width="120">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -553,7 +553,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column label="业务编号" align="center">
+            <el-table-column label="业务编号" align="center" width="100">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -577,9 +577,9 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="uwYear" label="业务年度" align="center"></el-table-column>
-            <el-table-column prop="wsPeriod" label="账单期" align="center"></el-table-column>
-             <el-table-column label="账单标题" align="center">
+            <el-table-column prop="uwYear" label="业务年度" align="center" width="100"></el-table-column>
+            <el-table-column prop="wsPeriod" label="账单期" align="center" width="100"></el-table-column>
+             <el-table-column label="账单标题" align="center" width="100">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
