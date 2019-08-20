@@ -2,7 +2,7 @@
   <div class="payCom">
     <div :class="searchFlag===true?'searchNew':''" >
       <div class="titleSearch" @click="searchFlag = !searchFlag"><i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询</div>
-      <el-collapse-transition>
+      <el-collapse-transition> 
       <div v-show="searchFlag">
         <el-row :gutter="10" class="billRow" class-name="transition-box">
         <el-col :span="8">
@@ -42,12 +42,20 @@
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
-      <el-table-column width="180" label="结付公司" align="center">
+      <!-- <el-table-column width="180" label="结付公司" align="center">
           <template slot-scope="scope">
           <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
             <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
             <span class="abbreviate" v-if="!scope.row.rmSettleCompanyName&&!scope.row.rmSettleCompanyCode"></span>
           </el-tooltip>
+        </template>
+      </el-table-column> -->
+      <el-table-column width="140" label="结付公司" align="center">
+        <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark"  :content="scope.row.codeName&&scope.row.codeName?scope.row.codeName:''" placement="top-start">
+              <span class="abbreviate" v-if="scope.row.codeName&&scope.row.codeName">{{scope.row.codeName}}</span>
+              <span class="abbreviate" v-if="!scope.row.codeName&&!scope.row.codeName"></span>
+            </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column prop="rmCurrency" label="币制" align="center"></el-table-column>
@@ -673,22 +681,21 @@ export default {
         }
       delete params['actOperator'];
       this.$http.post('api/pay/teskClaim/list',params).then(res =>{
-        if(res.status === 200 ) {
-          // let newRows=res.data.rows.map((item,index)=>{
-          //     item.rmSettleCompanyCode=item.rmSettleCompanyCode!==null?item.rmSettleCompanyCode.split(';'):item.rmSettleCompanyCode;
-          //     item.rmSettleCompanyName=item.rmSettleCompanyName!==null?item.rmSettleCompanyName.split(';'):item.rmSettleCompanyName;
-          //       // console.log(item.rmSettleCompanyName[0])
-              
-          //     item.codeName=item.rmSettleCompanyCode&&item.rmSettleCompanyCode.map((items,indexs)=>{
-          //      items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items||item.rmSettleCompanyName[indexs];
-          //       return items
-          //     });
-          //     item.codeName=item.codeName&&item.codeName.join('');
-          //     return item;
-          // })
-          // console.log(newRows)
-          // this.tableData = res.data.rows;
+        if(res.status === 200 ) { 
+          console.log(res,'res,付款');
+          let newRows=res.data.rows.map((item,index)=>{
+              item.rmSettleCompanyCode=item.rmSettleCompanyCode!==null?item.rmSettleCompanyCode.split(';'):item.rmSettleCompanyCode;
+              item.rmSettleCompanyName=item.rmSettleCompanyName!==null?item.rmSettleCompanyName.split(';'):item.rmSettleCompanyName;
+                // console.log(item.rmSettleCompanyName[0])
+              item.codeName=item.rmSettleCompanyCode&&item.rmSettleCompanyCode.map((items,indexs)=>{
+              //  items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items||item.rmSettleCompanyName[indexs];
+                return items
+              });
+              item.codeName=item.codeName&&item.codeName.join('');
+              return item;
+          })
           this.tableData = res.data.rows;
+          console.log(this.tableData);
           this.mustData.total = res.data.total;
           if(res.data && res.data.rows && res.data.rows.length){
             if(res.data.rows[0].processStatus === '待处理' && this.urlName === 'payOperation'){
@@ -747,8 +754,7 @@ export default {
           this.dialogFormVisible = true;
           break;
         case 3: //刷新
-
-          break;
+        break;
         case 4: //查询
           this.title = '查询';
           // this.dialogFormVisible = true;
@@ -902,23 +908,22 @@ export default {
           })
           break;
         case 3: //刷新
-
-          break;
+        break;
         case 4: //查询
-        let params = null;          
-        if(!this.formLabelAlign.processStatus){
-          if(!this.admFlag){ 
-            params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName,processStatus:this.processStatusList.join(',')});
+          let params = null;          
+          if(!this.formLabelAlign.processStatus){
+            if(!this.admFlag){ 
+              params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName,processStatus:this.processStatusList.join(',')});
+            } else{
+              params = Object.assign({},this.mustData,this.formLabelAlign,{processStatus:this.processStatusList.join(',')});
+            }
           } else{
-            params = Object.assign({},this.mustData,this.formLabelAlign,{processStatus:this.processStatusList.join(',')});
+            if(!this.admFlag){ 
+              params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
+            } else{
+              params = Object.assign({},this.mustData,this.formLabelAlign);
+            }
           }
-        } else{
-          if(!this.admFlag){ 
-            params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
-          } else{
-            params = Object.assign({},this.mustData,this.formLabelAlign);
-          }
-        }
           delete params['actOperator'];
           delete params.modifiedBy;
           this.$http.post('api/pay/teskClaim/list',params).then(res =>{

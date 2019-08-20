@@ -2442,12 +2442,16 @@ export default {
     },
     makeDoc(tag,name){    // 生成审批文档
       if(tag == 'a'){  // 是操作页面，弹窗，S0,
-          if(this.row.rmCurrency){ 
-            this.makeDocListEctype.yuanType.push(this.row.rmCurrency);
+          if(this.row.rmCurrency){
+            if(this.makeDocListEctype.yuanType && this.makeDocListEctype.yuanType.length){
+              this.makeDocListEctype.yuanType[0] = this.row.rmCurrency;
+            } else{ this.makeDocListEctype.yuanType.push(this.row.rmCurrency); }
             this.makeDocListEctype.zheType = this.row.rmCurrency;
           }
           if(this.row.rmAmount){ 
-            this.makeDocListEctype.yuanNum.push(this.row.rmAmount);
+            if(this.makeDocListEctype.yuanNum && this.makeDocListEctype.yuanNum.length){
+              this.makeDocListEctype.yuanNum[0] = this.row.rmAmount;
+            } else{ this.makeDocListEctype.yuanNum.push(this.row.rmAmount); }
             this.makeDocNum = 1;
           }
           this.makeDocListEctype.cedentModel = [];

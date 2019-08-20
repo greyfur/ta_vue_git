@@ -9,11 +9,11 @@
           <el-row :gutter="10" class="billRow" >
             <el-col :span="8">
               <span class="slable">流程编号 &nbsp;&nbsp;</span>
-              <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
+              <el-input placeholder="请输入流程编号" v-model.trim="querySearch.processId"></el-input>
             </el-col>
             <el-col :span="8">
               <span class="slable">账单类型 &nbsp;&nbsp;</span>
-              <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
+              <el-select clearable v-model="querySearch.wsType" placeholder="请选择账单类型">
                 <el-option
                   v-for="item in ZDoptions"
                   :key="item.code"
@@ -28,7 +28,7 @@
               <!-- <el-select filterable clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
                 <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
               </el-select> -->
-              <input class="wsDate" style="width:224px;height:40px;border-radius:5px;outline:none;border:1px solid #DCDFE6;" placeholder="请选择账期" v-model="billSearch.wsPeriod" @click.stop="zq1FlagFn()" />
+              <input class="wsDate" style="width:224px;height:40px;border-radius:5px;outline:none;border:1px solid #DCDFE6;" placeholder="请选择账期" v-model="querySearch.wsPeriod" @click.stop="zq1FlagFn()" />
               <div class="zq1" v-show="zq1Flag">
                   <p class="zqTitle">
                     <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('-')"><i class="iconfont iconGroup33"></i></span>
@@ -36,7 +36,7 @@
                     <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('+')"><i class="iconfont iconGroup11"></i></span>
                   </p>
                   <ul class="zq" id="zq">
-                      <li v-for="(item,index) in zqList" :key="item" :class="zq1Day===index?'active':''" @click="chooseDay(item,index)">{{item}}</li>
+                      <li v-for="(item,index) in zqList" :key="item" :class="zq1Day===index?'active':''" @click="chooseDay(item,index,1)">{{item}}</li>
                   </ul>
               </div>
             </el-col>
@@ -46,7 +46,7 @@
             <!-- v-show="urlName === 'billEntry'" -->
             <el-col :span="8">
               <span class="slable">流程状态 &nbsp;&nbsp;</span>
-              <el-select clearable v-model="billSearch.processStatus" placeholder="请选择流程状态">
+              <el-select clearable v-model="querySearch.processStatus" placeholder="请选择流程状态">
                 <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-col>
@@ -54,12 +54,8 @@
             <el-col :span="8">
               <span class="slable">录入人查询</span>
               <!-- <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input> -->
-              <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人查询">
-              <el-option
-                v-for="(item,index) in nameList"
-                :key="item"
-                :value="index"
-                :label="item">
+              <el-select clearable filterable v-model="querySearch.registBy" placeholder="请选择录入人查询">
+              <el-option v-for="(item,index) in nameList" :key="item" :value="index" :label="item">
                 <span style="float:left">{{item}}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{index}}</span>
               </el-option>
@@ -67,7 +63,7 @@
             </el-col>
             <el-col :span="8">
               <span class="slable">复核人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
-              <el-select clearable v-model="billSearch.wsSignbackFlag" placeholder="请选择">
+              <el-select clearable v-model="querySearch.closedBy" placeholder="请选择">
                 <el-option v-for="(item,index) in tableData.closedBy" :key="index" :label="item" :value="item"></el-option>
               </el-select>
             </el-col>
@@ -76,13 +72,12 @@
             <!-- v-show="urlName === 'billEntry'" -->
             <el-col :span="8">
               <span class="slable">分出公司 &nbsp;&nbsp;</span>
-              <el-select clearable filterable v-model="cedentModel" placeholder="请选择分出公司">
+              <el-select clearable filterable v-model="querySearch.cedentModel" placeholder="请选择分出公司">
                 <el-option
                   v-for="(item,index) in cedentList"
                   :key="index"
                   :label="item.codecode+' - '+item.codeName"
-                  :value="index"
-                >
+                  :value="index">
                   <span style="float:left">{{ item.codecode }}</span>
                   <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
                 </el-option>
@@ -91,13 +86,12 @@
              <!-- v-show="urlName === 'billCheck'" -->
             <el-col :span="8">
               <span class="slable">经纪公司 &nbsp;&nbsp;</span>
-              <el-select clearable filterable v-model="brokerModel" placeholder="请选择经纪公司">
+              <el-select clearable filterable v-model="querySearch.brokerModel" placeholder="请选择经纪公司">
                 <el-option
                   v-for="(item,index) in brokerList"
                   :key="index"
                   :label="item.codecode+' - '+item.codeName"
-                  :value="index"
-                >
+                  :value="index">
                   <span style="float:left">{{ item.codecode }}</span>
                   <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
                 </el-option>
@@ -105,7 +99,7 @@
             </el-col>
             <el-col :span="8">
               <span class="slable">账单状态 &nbsp;&nbsp;</span>
-              <el-select clearable v-model="billSearch.wsStatus" placeholder="请选择">
+              <el-select clearable v-model="querySearch.wsStatus" placeholder="请选择">
                 <el-option v-for="(v,k) of {'Inactive':'2','Open':'1','Closed':'0'}" :key="v" :label="k" :value="v"></el-option>
               </el-select>
             </el-col>
@@ -113,13 +107,13 @@
           <el-row :gutter="10" class="billRow">
             <el-col :span="8" v-show="urlName === 'billSignBack'">
               <span class="slable">是否需签回</span>
-              <el-select clearable v-model="billSearch.wsSignbackFlag" placeholder="请选择">
+              <el-select clearable v-model="querySearch.wsSignbackFlag" placeholder="请选择">
                 <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
               </el-select>
             </el-col>
             <el-col :span="8" v-show="urlName === 'billSignBack'">
               <span class="slable">是否已签回</span>
-              <el-select clearable v-model="billSearch.wsHasSignback" placeholder="请选择">
+              <el-select clearable v-model="querySearch.wsHasSignback" placeholder="请选择">
                 <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
               </el-select>
             </el-col>
@@ -174,8 +168,7 @@
             class="item"
             effect="dark"
             :content="scope.row.wsCedentCode&&scope.row.wsCedentName?scope.row.wsCedentCode+'-'+scope.row.wsCedentName:''"
-            placement="top-start"
-          >
+            placement="top-start">
             <span
               class="abbreviate"
               v-if="scope.row.wsCedentCode&&scope.row.wsCedentName"
@@ -215,8 +208,7 @@
             class="item"
             effect="dark"
             :content="scope.row.wsPeriod"
-            placement="top-start"
-          >
+            placement="top-start">
             <span class="abbreviate">{{scope.row.wsPeriod}}</span>
           </el-tooltip>
         </template>
@@ -238,8 +230,7 @@
             class="item"
             effect="dark"
             :content="scope.row.reportUnit"
-            placement="top-start"
-          >
+            placement="top-start">
             <span class="abbreviate">{{scope.row.reportUnit}}</span>
           </el-tooltip>
         </template>
@@ -324,14 +315,7 @@
     ></el-pagination>
     <!-- 弹窗 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" :width="title==='踪迹'?'80%':'50%'">
-      <el-form
-        label-position="right"
-        label-width="120px"
-        :model="billSearch"
-        :rules="rules"
-        ref="billSearch"
-        class="SwitchingMode"
-      >
+      <el-form label-position="right" label-width="120px" :model="billSearch" :rules="rules" ref="billSearch" class="SwitchingMode">
         <el-form-item label="流程编号" v-show="title==='查询'">
           <el-input v-model.trim="billSearch.processId" placeholder="请输入流程编号"></el-input>
         </el-form-item>
@@ -340,12 +324,7 @@
         </el-form-item>
         <el-form-item label="任务类型" prop="wsBusinessType" v-show="title==='手工创建' || title==='编辑'">
           <el-select :disabled='RWFlag' clearable v-model="billSearch.wsBusinessType" placeholder="请选择任务类型">
-            <el-option
-              v-for="item in YWoptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
+            <el-option v-for="item in YWoptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="账单类型" v-show="title==='手工创建' || title==='编辑' || title==='查询'">
@@ -358,11 +337,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="Business Origin"
-          prop="businessOrigin"
-          v-show="title==='手工创建' || title==='编辑'"
-        >
+        <el-form-item label="Business Origin" prop="businessOrigin" v-show="title==='手工创建' || title==='编辑'">
           <el-select clearable v-model="billSearch.businessOrigin" placeholder="请选择Business Origin">
             <el-option
               v-for="item in businessOriginList"
@@ -372,11 +347,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="Base Company"
-          v-show="title==='手工创建' || title==='编辑'"
-          prop="baseCompany"
-        >
+        <el-form-item label="Base Company" v-show="title==='手工创建' || title==='编辑'" prop="baseCompany">
           <el-select clearable v-model="billSearch.baseCompany" placeholder="请选择Base Company">
             <el-option
               v-for="item in baseCompanyList"
@@ -427,8 +398,8 @@
             <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-          <el-form-item label="分出公司" v-show="title === '手工创建' || title==='编辑'">
-            <el-select clearable filterable v-model="cedentModel" placeholder="请选择分出公司">
+          <el-form-item label="分出公司" prop="cedentModel" v-show="title === '手工创建' || title==='编辑'">
+            <el-select clearable filterable v-model="billSearch.cedentModel" placeholder="请选择分出公司">
               <el-option
                 v-for="(item,index) in cedentList"
                 :key="index"
@@ -453,7 +424,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="账单收到日期" v-show="title === '手工创建' || title==='编辑'">
+          <el-form-item label="账单收到日期" prop="wsReceiptDate" v-show="title === '手工创建' || title==='编辑'">
             <el-date-picker
               value-format="timestamp"
               v-model="billSearch.wsReceiptDate"
@@ -548,8 +519,7 @@
       title="文档预览"
       width="fit-content"
       :visible.sync="dialogFormVisible1"
-      :close-on-click-modal="modal"
-    >
+      :close-on-click-modal="modal">
       <div class="browseDoc" v-show="title!='踪迹'" style="width:600px">
         <iframe
           src="../../static/Preview/index.html"
@@ -722,9 +692,26 @@ export default {
       dialogFormVisible3:false,
       splitId:null,
       admFlag: false,
-      billSearch: {
+      querySearch:{
+        wsPeriod:null,
+        processId:null,
+        wsType:null,
+        processStatus:null,
+        registBy:null,
+        wsSignbackFlag:null,
+        cedentModel:null,
+        brokerModel:null,
+        wsStatus:null,
         wsSignbackFlag:null,
         wsHasSignback:null,
+        wsCedentCode:null,
+        wsCedentName:null,
+        wsBrokerCode:null,
+        wsBrokerName:null,
+      },
+      billSearch: {
+        cedentModel: null,
+        billSearch:null,
         hasRecheckFlag:null,
         processId: null,
         processStatus: null,
@@ -741,7 +728,6 @@ export default {
         businessOrigin: null,
         baseCompany: null,
         reportUnit: null,
-        registBy:null,
       },
       mustData: {
         actOperator: null,
@@ -772,23 +758,18 @@ export default {
       zq1: "",
       zq2: "",
       rules: {
-        wsBusinessType: [
-          { required: true, message: "请选择任务类型", trigger: "blur" }
-        ],
-        subProcess: [
-            { required: true, message: '请输入拆分数量', trigger: 'blur' }
-          ],
-        reason: [
-          { required: true, message: '请输入拆分理由', trigger: 'blur' }
-        ],
+        wsBusinessType: [{ required: true, message: "请选择任务类型", trigger: "blur" }],
+        subProcess: [{ required: true, message: '请输入拆分数量', trigger: 'blur' }],
+        reason: [{ required: true, message: '请输入拆分理由', trigger: 'blur' }],
+        cedentModel:[{ required: true, message: "请选择分出公司", trigger: "blur" }],
+        wsReceiptDate:[{ type: 'date', required: true, message: '请选择账单收到期', trigger: 'blur' }],
       },
       pendingFlag: false
     };
   },
-  // created() {
-  //   this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
-  //   this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
-  // },
+  created() {
+    // this.docView();
+  },
   mounted() {
     window.onclick=()=>{
       this.zq1Flag=false;
@@ -814,7 +795,7 @@ export default {
       .then(res => {
         if (res.status === 200) {
           this.TJRoptions = res.data;
-        }
+        } 
       });
     setTimeout(() => {
       // 分出人
@@ -846,8 +827,11 @@ export default {
         this.zq1Year++;
       }
     },
-    chooseDay(day,index){
-      this.billSearch.wsPeriod=this.zq1Year+'-'+day;
+    chooseDay(day,index,tag){
+      if(tag){
+        this.querySearch.wsPeriod=this.zq1Year+'-'+day;
+      } else{ this.billSearch.wsPeriod=this.zq1Year+'-'+day; }
+      
       this.zq1Day=index
       this.zq1Flag=false;
     },
@@ -940,7 +924,6 @@ export default {
         let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && this.suffixFlag){ return false; }
-        this.dialogFormVisible1 = true;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
             document.getElementById("iframeId").contentWindow.postMessage(
@@ -962,6 +945,7 @@ export default {
         document.getElementById("iframeId").contentWindow.postMessage({}, "*");
         document.getElementById("iframeId").contentWindow.location.reload(true);
       }
+      this.dialogFormVisible1 = true;
     },
     handleSizeChange(val) {
       this.mustData.pageSize = val;
@@ -1009,20 +993,21 @@ export default {
       });
     },
     confirm(formName) {
-      // if (this.title === "手工创建" || this.title === "编辑") {
-      //   if (this.zq2 && this.zq1) {
-      //     this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;
-      //   }
-      // }
-      if (this.cedentModel != null) {
-        let obj = this.cedentList[this.cedentModel];
+      if (this.billSearch.cedentModel != null) {
+        let obj = this.cedentList[this.billSearch.cedentModel];
         this.billSearch.wsCedentCode = obj.codecode;
         this.billSearch.wsCedentName = obj.codeName;
+      } else{
+        this.billSearch.wsCedentCode = null;
+        this.billSearch.wsCedentName = null;
       }
       if (this.brokerModel != null) {
         let obj = this.brokerList[this.brokerModel];
         this.billSearch.wsBrokerCode = obj.codecode;
         this.billSearch.wsBrokerName = obj.codeName;
+      } else{
+        this.billSearch.wsBrokerCode = null;
+        this.billSearch.wsBrokerName = null;
       }
       switch (this.dialogState) {
         case 0: // 创建
@@ -1042,22 +1027,38 @@ export default {
           });
 
           break;
-        case 1: // 查询hyd
+        case 1: // 查询hyd   //querySearch
+          if (this.querySearch.cedentModel != null) {
+              let obja = this.cedentList[this.querySearch.cedentModel];
+              this.querySearch.wsCedentCode = obja.codecode;
+              this.querySearch.wsCedentName = obja.codeName;
+            } else{
+              this.querySearch.wsCedentCode = null;
+              this.querySearch.wsCedentName = null;
+            }
+            if (this.querySearch.brokerModel != null) {
+              let objb = this.brokerList[this.querySearch.brokerModel];
+              this.querySearch.wsBrokerCode = objb.codecode;
+              this.querySearch.wsBrokerName = objb.codeName;
+            } else{
+              this.querySearch.wsBrokerCode = null;
+              this.querySearch.wsBrokerName = null;
+            }
           let params = null;
           if (this.zq2 && this.zq1) {
-            this.billSearch.wsPeriod = `${this.zq2}-${this.zq1}`;
+            this.querySearch.wsPeriod = `${this.zq2}-${this.zq1}`;
           }
-          if (!this.billSearch.processStatus) {
+          if (!this.querySearch.processStatus) {
             if (this.urlName == "sortOperation" || this.admFlag) {
-              params = Object.assign({}, this.mustData,this.billSearch,{processStatus:this.processStatusCom});
+              params = Object.assign({}, this.mustData,this.querySearch,{processStatus:this.processStatusCom});
             }else {
-              params = Object.assign({}, this.mustData,this.billSearch, {curOperator: this.$store.state.userName,processStatus:this.processStatusCom});
+              params = Object.assign({}, this.mustData,this.querySearch, {curOperator: this.$store.state.userName,processStatus:this.processStatusCom});
             }
           } else{
             if (this.urlName == "sortOperation" || this.admFlag) {
-              params = Object.assign({}, this.mustData,this.billSearch,);
+              params = Object.assign({}, this.mustData,this.querySearch,);
             }else {
-              params = Object.assign({}, this.mustData,this.billSearch, {curOperator: this.$store.state.userName});
+              params = Object.assign({}, this.mustData,this.querySearch, {curOperator: this.$store.state.userName});
             }
           }
           // if (this.urlName == "sortOperation" || this.admFlag) {
@@ -1069,6 +1070,7 @@ export default {
           //   });
           // }
           delete params["actOperator"];
+          
           this.$http.post("api/worksheet/wSEntry/list", params).then(res => {
             if (res.status === 200) {
               if (!res.data.rows.length) {
@@ -1082,18 +1084,24 @@ export default {
           });
           break;
         case 2: // 编辑
-        let params1 = Object.assign({},this.billSearch, this.mustData, {processId: this.chooseRow.processId})
-        delete params1["processStatus"];
-          this.$http.post("api/worksheet/wSEntry/update",params1)
-            .then(res => {
-              if (res.status === 200 && res.data.code == 0) {
-                this.$message({ type: "success", message: res.data.msg });
-                this.init();
-                this.dialogFormVisible = false;
-              } else{
-                this.$message({ type: "error", message: res.data.msg });
-              }
-            });
+          this.$refs[formName].validate(valid => {
+            if (valid) {
+              console.log(valid,'valid');
+              let params1 = Object.assign({},this.billSearch, this.mustData, {processId: this.chooseRow.processId})
+              delete params1["processStatus"];
+                this.$http.post("api/worksheet/wSEntry/update",params1)
+                  .then(res => {
+                    if (res.status === 200 && res.data.code == 0) {
+                      this.$message({ type: "success", message: res.data.msg });
+                      this.init();
+                      this.dialogFormVisible = false;
+                    } else{
+                      this.$message({ type: "error", message: res.data.msg });
+                    }
+                  });
+            }
+          })
+        
           break;
         case 3: // 分配
           if (!this.assignee) {
@@ -1135,8 +1143,8 @@ export default {
       }
       this.zq2 = null;
       this.zq1 = null;
-      this.brokerModel = null;
-      this.cedentModel = null;
+      this.querySearch.brokerModel = null;
+      this.querySearch.cedentModel = null;
     },
     handleClick(tag, row) {
       this.dialogState = tag;
@@ -1146,13 +1154,6 @@ export default {
       switch (tag) {
         case 0:
           this.reset();
-          // for(let k in this.billSearch){
-          //   this.billSearch[k] = null;
-          // }
-          // this.zq2 = null;
-          // this.zq1 = null;
-          // this.brokerModel = null;
-          // this.cedentModel = null;
           this.dialogFormVisible = true;
           this.title = "手工创建";
           break;
@@ -1193,11 +1194,11 @@ export default {
           if (row.wsCedentCode) {
             this.cedentList.forEach((el, i) => {
               if (el.codecode == row.wsCedentCode) {
-                this.cedentModel = i;
+                this.billSearch.cedentModel = i;
               }
             });
           } else {
-            this.cedentModel = null;
+            this.billSearch.cedentModel = null;
           }
           // 经纪人brokerModel   brokerList
           if (row.wsBrokerCode) {

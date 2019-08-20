@@ -19,8 +19,7 @@
                 v-for="(item,index) in cedentList"
                 :key="index"
                 :label="item.codecode+' - '+item.codeName"
-                :value="index"
-              >
+                :value="index">
                 <span style="float:left">{{ item.codecode }}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
               </el-option>
@@ -936,6 +935,7 @@ export default {
       }
       this.$http.post("api/receipt/finaCreat/list", params).then(res => {
         if (res.status === 200) {
+          console.log(res,'res,收款');
           let newRows=res.data.rows.map((item,index)=>{
               item.rmSettleCompanyCode=item.rmSettleCompanyCode!==null?item.rmSettleCompanyCode.split(';'):item.rmSettleCompanyCode;
               item.rmSettleCompanyName=item.rmSettleCompanyName!==null?item.rmSettleCompanyName.split(';'):item.rmSettleCompanyName;
@@ -1018,7 +1018,7 @@ export default {
           this.dialogFormVisible2 = true;
           break;
         case 3: //刷新
-          break;
+        break;
         case 4: //查询
           this.title = "查询";
           this.confirm();
@@ -1370,13 +1370,7 @@ export default {
           });
           break;
         case 6: //编辑
-          this.$http
-            .post(
-              "api/receipt/finaCreat/update",
-              Object.assign({}, this.mustData, this.formLabelAlign, {
-                actOperator: this.$store.state.userName
-              })
-            )
+          this.$http.post("api/receipt/finaCreat/update",Object.assign({}, this.mustData, this.formLabelAlign, {actOperator: this.$store.state.userName}))
             .then(res => {
               if (res.status === 200 && res.data.msg === "操作成功") {
                 this.dialogFormVisible = false;
