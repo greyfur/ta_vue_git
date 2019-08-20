@@ -62,7 +62,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column width="110" label="录入人员111" align="center">
+      <el-table-column width="110" label="录入人员" align="center">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>

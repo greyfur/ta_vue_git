@@ -141,8 +141,11 @@
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)">
         <i class="iconfont iconGroup91"></i>手工创建
       </el-button>
-      <el-button type="primary" plain @click="init2" class="borderBtn">
+      <el-button type="primary" plain @click="init" class="borderBtn">
         <i class="iconfont iconGroup37"></i>刷新
+      </el-button>
+      <el-button type="primary" plain @click="init2" class="borderBtn" v-show="urlName === 'sortOperation'">
+        <i class="iconfont iconGroup37"></i>更新邮箱
       </el-button>
 
       <!-- <el-upload
@@ -504,7 +507,7 @@
         <el-table-column label="文件名" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-              <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+              <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
             </el-tooltip> 
           </template>
         </el-table-column>
@@ -613,6 +616,7 @@ export default {
   },
   data() {
     return {
+      suffixFlag:false,
       RWFlag:false,
       nameList:{},
       searchFlag: false,
@@ -948,7 +952,12 @@ export default {
     },
     docView(row) {
       if (row) {
-        if(row.suffix && row.suffix=='eml'){ return false; }
+        console.log(row.suffix,'row.suffix');
+        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
+        this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
+        // if(row.suffix && row.suffix=='eml'){ return false; }
+        console.log(this.suffixFlag,'this.suffixFlag');
+        if(row.suffix && this.suffixFlag){ return false; }
         this.dialogFormVisible1 = true;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
@@ -991,7 +1000,6 @@ export default {
             this.init();
           });
       } else{
-        this.init();
         this.$message({ type: "success", message: "刷新成功" }); 
       }
     },
@@ -1250,7 +1258,6 @@ export default {
          if(row.processName){
             this.billSearch.processName = row.processName;
           }
-        
           // 账期
           if (row.wsPeriod) {
             let arr = row.wsPeriod.split("-");
@@ -1269,6 +1276,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
+                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
                 this.fileData = arr3;
@@ -1367,6 +1375,7 @@ export default {
                         if(el.docName){
                           let suffix = el.docName.split('.');
                           el['suffix'] = suffix[suffix.length-1];
+                          el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
                         }
                       })
                       this.fileData = arr4;
@@ -1391,6 +1400,7 @@ export default {
               if(el.docName){
                 let suffix = el.docName.split('.');
                 el['suffix'] = suffix[suffix.length-1];
+                el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
               }
             })
             this.fileData = arr2;
