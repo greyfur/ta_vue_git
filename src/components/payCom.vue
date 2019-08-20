@@ -111,7 +111,6 @@
               <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(12,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(15,scope.row)" class="blueColor">附件</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(13,scope.row)" class="blueColor">邮件通知</span></el-dropdown-item>
-              <!-- <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(20,scope.row)" class="blueColor">Reverse</span></el-dropdown-item> -->
             </el-dropdown-menu>
           </el-dropdown>
         </template>
