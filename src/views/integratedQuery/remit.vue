@@ -136,6 +136,7 @@
       <el-table-column prop="businessPartnerRef" label="BP Reference" width="140" align="center"></el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="130" align="center"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130" align="center"></el-table-column>
+      <el-table-column prop="createdAt" label="创建时间" width="180" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100" align="center">
         <template slot-scope="scope">
           <!-- <el-button @click.stop="handleClick(11,scope.row)" type="text" size="mini">踪迹</el-button> -->

@@ -308,6 +308,7 @@
       </el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin" align="center"></el-table-column>
       <el-table-column label="Base Company" width="130" prop="baseCompany" align="center"></el-table-column>
+      <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100" align="center">
         <template slot-scope="scope">
           <!-- <el-dropdown>

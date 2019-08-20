@@ -126,11 +126,11 @@
           </el-row>
            <el-row :gutter="10">
             <el-col :span="24">
-              <el-button type="primary" plain @click="handleClick(1)">
-                <i class="iconfont iconGroup42"></i>查询
+              <el-button type="primary" plain @click="handleClick(1)" style="text-align:center;">
+                <i class="iconfont iconGroup42" style="margin:0"></i>
               </el-button>
-              <el-button type="primary" plain @click="reset">
-                <i class="iconfont iconGroup39"></i>重置
+              <el-button type="primary" plain @click="reset" class="borderBtn">
+                <i class="iconfont iconGroup39" style="margin:0"></i>
               </el-button>
             </el-col>
           </el-row>
