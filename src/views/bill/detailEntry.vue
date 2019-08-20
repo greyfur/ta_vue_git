@@ -323,7 +323,7 @@
                     <span class="blueColor" @click.stop="openSics(scope.row)">打开SICS</span>
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <span class="blueColor" v-show="$route.query.tag == 'billCheck'" @click.stop="submit(2,'驳回意见',scope.row.wsId)">驳回意见</span>
+                    <span class="blueColor" v-show="$route.query.tag == 'billCheck'" @click.stop="submit(2,'添加意见',scope.row.wsId)">添加意见</span>
                   </el-dropdown-item>
                   <el-dropdown-item> 
                     <span class="blueColor" v-show="scope.row.wsStatus=='Closed' && $route.query.tag !== 'billCheck'" @click.stop="reverse(scope.row)">Reverse</span>
@@ -527,16 +527,17 @@
     </el-dialog>
     <el-dialog :title="title" :visible.sync="dialogFormVisible5" :close-on-click-modal="modal">
       <el-form label-position="right" label-width="140px">
-        <el-form-item label="驳回原因类型" v-show="title==='驳回意见'">
-          <el-select v-model="opinion" placeholder="请选择" style="width:100%">
+        <el-form-item label="驳回原因类型" v-show="title==='添加意见'">
+          <el-select v-model="opinion" placeholder="请选择" style="width:100%" @change="yijian">
             <el-option v-for="item in BHoptions" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="输入悬停原因" v-show="title==='悬停'">
           <el-input type="textarea" :rows="2" placeholder="请输入原因" v-model.trim="pendingReason"></el-input>
         </el-form-item>
-        <el-form-item label="驳回意见" v-show="title==='驳回意见'">
+        <el-form-item label="添加意见" v-show="title==='添加意见'">
           <el-input
+            :disabled="opinion!='其它'"
             type="textarea"
             :rows="4"
             placeholder="请输入原因"
@@ -579,14 +580,6 @@
           <el-radio v-model="radio" label="1">是</el-radio>
           <el-radio v-model="radio" label="0">否</el-radio>
         </el-form-item>
-        <!-- <el-form-item label="添加意见" v-show="title==='添加意见'">
-          <el-input
-            type="textarea"
-            :rows="2"
-            placeholder="请输入原因"
-            v-model="textareaOpinion"
-          ></el-input>
-        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogFormVisible5 = false">取 消</el-button>
@@ -752,7 +745,7 @@ export default {
   },
   
   beforeMount(){ this.copy('proNum',1) },
-  mounted() {
+  mounted(){
     // 查询账单详情
     if (this.$route.query.tag !== "billSignBack") {
       this.uploadType = 1;
@@ -765,6 +758,7 @@ export default {
     this.getBillInfo();
   },
   methods: {
+    yijian(){if(this.opinion!='其它'){ this.textareaOpinion=null;}},
     getBillInfo(){
       this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
         if (res.status === 200) {
@@ -864,7 +858,7 @@ export default {
         });
     },
     addRemark(row){
-      this.title = '驳回意见';
+      this.title = '添加意见';
       this.dialogState = 8;
       this.textareaOpinion = "";
       this.dialogFormVisible5 = true;
@@ -1053,7 +1047,7 @@ export default {
           this.opinion = "";
           this.wsId = wsId;
           this.textareaOpinion = "";
-          this.title = "驳回意见";
+          this.title = "添加意见";
           this.dialogFormVisible5 = true;
           // 不用下拉框
           break;
@@ -1693,7 +1687,7 @@ export default {
       }
       this.subProcessFlag = false;
     }
-  }
+  },
   // watch:{
   //   subProcess(n,o){
   //     this.subProcessFlag = n?true:false;
