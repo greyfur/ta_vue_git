@@ -151,7 +151,7 @@
           <el-tooltip class="item" effect="dark" v-if="scope.row.wsCedentCode&&scope.row.wsCedentName" :content="scope.row.wsCedentCode+'-'+scope.row.wsCedentName" placement="top-start">
             <span class="abbreviate">{{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}</span>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" v-else placement="top-start">
+          <el-tooltip class="item" effect="dark" v-if="!scope.row.wsCedentCode&&!scope.row.wsCedentName" placement="top-start">
             <span class="abbreviate"></span>
           </el-tooltip>
         </template>
@@ -161,7 +161,7 @@
           <el-tooltip class="item" effect="dark" v-if="scope.row.wsBrokerCode&&scope.row.wsBrokerName" :content="scope.row.wsBrokerCode+'-'+scope.row.wsBrokerName" placement="top-start">
             <span class="abbreviate">{{scope.row.wsBrokerCode}}-{{scope.row.wsBrokerName}}</span>
           </el-tooltip>
-          <el-tooltip class="item" v-else effect="dark" placement="top-start">
+          <el-tooltip class="item" v-if="!scope.row.wsBrokerCode&&!scope.row.wsBrokerName" effect="dark" placement="top-start">
             <span class="abbreviate"></span>
           </el-tooltip>
         </template>

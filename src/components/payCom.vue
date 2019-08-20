@@ -46,7 +46,7 @@
           <template slot-scope="scope">
           <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
             <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
-            <span class="abbreviate" v-else></span>
+            <span class="abbreviate" v-if="!scope.row.rmSettleCompanyName&&!scope.row.rmSettleCompanyCode"></span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -674,6 +674,20 @@ export default {
       delete params['actOperator'];
       this.$http.post('api/pay/teskClaim/list',params).then(res =>{
         if(res.status === 200 ) {
+          // let newRows=res.data.rows.map((item,index)=>{
+          //     item.rmSettleCompanyCode=item.rmSettleCompanyCode!==null?item.rmSettleCompanyCode.split(';'):item.rmSettleCompanyCode;
+          //     item.rmSettleCompanyName=item.rmSettleCompanyName!==null?item.rmSettleCompanyName.split(';'):item.rmSettleCompanyName;
+          //       // console.log(item.rmSettleCompanyName[0])
+              
+          //     item.codeName=item.rmSettleCompanyCode&&item.rmSettleCompanyCode.map((items,indexs)=>{
+          //      items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items||item.rmSettleCompanyName[indexs];
+          //       return items
+          //     });
+          //     item.codeName=item.codeName&&item.codeName.join('');
+          //     return item;
+          // })
+          // console.log(newRows)
+          // this.tableData = res.data.rows;
           this.tableData = res.data.rows;
           this.mustData.total = res.data.total;
           if(res.data && res.data.rows && res.data.rows.length){
@@ -923,7 +937,8 @@ export default {
             this.$refs[formName].validate((valid) => {
             if(valid) {
               this.$http.post('api/pay/teskClaim/update',Object.assign({},this.mustData,this.formLabelAlign,{actOperator:this.$store.state.userName})).then(res =>{
-                if(res.status === 200 && res.data.msg === '操作成功'){
+                // && res.data.msg === '操作成功'
+                if(res.status === 200 ){
                   this.dialogFormVisible = false;
                   this.init();
                   this.$refs[formName].resetFields();

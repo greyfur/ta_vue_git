@@ -96,7 +96,7 @@
         <template slot-scope="scope">
             <el-tooltip class="item" effect="dark"  :content="scope.row.codeName&&scope.row.codeName?scope.row.codeName:''" placement="top-start">
               <span class="abbreviate" v-if="scope.row.codeName&&scope.row.codeName">{{scope.row.codeName}}</span>
-              <span class="abbreviate" v-else></span>
+              <span class="abbreviate" v-if="!scope.row.codeName&&!scope.row.codeName"></span>
             </el-tooltip>
         </template>
       </el-table-column>
@@ -137,7 +137,7 @@
               class="abbreviate"
               v-if="scope.row.rmChargesCurrency&&scope.row.rmChargesAmount"
             >{{scope.row.rmChargesCurrency}}-{{scope.row.rmChargesAmount}}</span>
-            <span class="abbreviate" v-else></span>
+            <span class="abbreviate" v-if="!scope.row.rmChargesCurrency&&!scope.row.rmChargesAmount"></span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -221,7 +221,7 @@
         <template slot-scope="scope">
             <el-tooltip class="item" effect="dark"  :content="scope.row.codeName&&scope.row.codeName?scope.row.codeName:''" placement="top-start">
               <span class="abbreviate" v-if="scope.row.codeName&&scope.row.codeName">{{scope.row.codeName}}</span>
-              <span class="abbreviate" v-else></span>
+              <span class="abbreviate" v-if="!scope.row.codeName&&!scope.row.codeName"></span>
             </el-tooltip>
         </template>
         </el-table-column>
@@ -261,7 +261,7 @@
               class="abbreviate"
               v-if="scope.row.rmChargesCurrency&&scope.row.rmChargesAmount"
             >{{scope.row.rmChargesCurrency}}-{{scope.row.rmChargesAmount}}</span>
-            <span class="abbreviate" v-else></span>
+            <span class="abbreviate" v-if="!scope.row.rmChargesCurrency&&!scope.row.rmChargesAmount"></span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -943,11 +943,9 @@ export default {
                items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items||item.rmSettleCompanyName[indexs];
                 return items
               });
-               console.log(item.codeName,'www')
               item.codeName=item.codeName&&item.codeName.join('');
               return item;
           })
-          console.log(newRows)
           this.tableData = newRows;
           this.mustData.total = res.data.total;
           if (res.data && res.data.rows && res.data.rows.length) {
