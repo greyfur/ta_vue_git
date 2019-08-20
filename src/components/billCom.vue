@@ -147,18 +147,6 @@
       <el-button type="primary" plain @click="init2" class="borderBtn" v-show="urlName === 'sortOperation'">
         <i class="iconfont iconGroup37"></i>更新邮箱
       </el-button>
-
-      <!-- <el-upload
-        class="sort-upload"
-        action=""
-        multiple
-        :before-upload="beforeAvatarUpload"
-        :auto-upload="true"
-        :http-request="upload"
-        :file-list="fileList">
-        <el-button type="primary" plain>上传</el-button>
-      </el-upload> -->
-
     </div>
     <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;text-align:center;margin:0 auto;">
       <el-table-column label="流程编号" width="155" align="center">
@@ -186,12 +174,8 @@
             class="item"
             effect="dark"
             :content="scope.row.wsCedentCode&&scope.row.wsCedentName?scope.row.wsCedentCode+'-'+scope.row.wsCedentName:''"
-            placement="top-start"
-          >
-            <span
-              class="abbreviate"
-              v-if="scope.row.wsCedentCode&&scope.row.wsCedentName"
-            >{{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}</span>
+            placement="top-start">
+            <span class="abbreviate" v-if="scope.row.wsCedentCode&&scope.row.wsCedentName">{{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}</span>
             <span class="abbreviate" v-else></span>
           </el-tooltip>
         </template>
@@ -202,8 +186,7 @@
             class="item"
             effect="dark"
             :content="scope.row.wsBrokerCode&&scope.row.wsBrokerName?scope.row.wsBrokerCode+'-'+scope.row.wsBrokerName:''"
-            placement="top-start"
-          >
+            placement="top-start">
             <span
               class="abbreviate"
               v-if="scope.row.wsBrokerCode&&scope.row.wsBrokerName"
@@ -868,77 +851,75 @@ export default {
       this.zq1Flag=!this.zq1Flag
     },
     splits(processId){
-        this.dialogFormVisible3=true;
-        this.splitId=processId;
+      this.dialogFormVisible3=true;
+      this.splitId=processId;
     },
-       split() {
-         
-         
-        let arr = document.querySelectorAll(".itemNum");
-        // let subProcessArr = [];
-        // arr.forEach(el=>{
-        //   let obj = {'rmAmount':el.value};
-        //   subProcessArr.push(obj);
-        // })
-        // if(!subProcessArr.length){
-        //   this.$message.error('请填写拆分金额');
-        //   return;
-        // }
-        console.log(this.subProcess)
+    split() {
+      let arr = document.querySelectorAll(".itemNum");
+      // let subProcessArr = [];
+      // arr.forEach(el=>{
+      //   let obj = {'rmAmount':el.value};
+      //   subProcessArr.push(obj);
+      // })
+      // if(!subProcessArr.length){
+      //   this.$message.error('请填写拆分金额');
+      //   return;
+      // }
+      console.log(this.subProcess)
 
-        if (!this.subProcess) {
-          this.$message.error("请填写拆分数量");
-          return;
-        }else if (this.subProcess==='1'){
-          this.$message.error("拆分数量不能小于1");
-          return;
-        }
-        if (!this.reason) {
-          this.$message.error("请填写拆分理由");
-          return;
-        }
-        let that=this;
-        this.$http
-          .post("api/worksheet/wSEntry/processSplit", {
-            processId: that.splitId,
-            // subProcess:subProcessArr,
-            subProcess: +this.subProcess,
-            actOperator: this.mustData.actOperator,
-            reason: this.reason
-          })
-          .then(res => {
-            console.log(res)
-            if (res.status == 200 && res.data.code == 0) {
-              this.$message({ message: "拆分成功", type: "success" });
-              this.dialogFormVisible3 = false;
-            } else if (res.data.code == 1 && res.data.msg) {
-              this.$message.error(res.data.msg);
-            }
-          });
-      },
-      itemSplit() {
-        if (!this.subProcessFlag) {
-          this.subProcessFlag = false;
-          return false;
-        }
-        let idInputWrap = document.getElementById("idInputWrap");
-        let child = document.querySelectorAll(".item");
-        if (child.length) {
-          child.forEach(el => {
-            idInputWrap.removeChild(el);
-          });
-        }
-        if (this.subProcess && !isNaN(+this.subProcess) && this.subProcess > 0) {
-          for (let i = 0; i < this.subProcess; i++) {
-            let item = document.createElement("div");
-            item.className = "item";
-            item.innerHTML = `<span>第${i +
-              1}条</span><input type="number" class="itemNum">`;
-            idInputWrap.append(item);
+      if (!this.subProcess) {
+        this.$message.error("请填写拆分数量");
+        return;
+      }else if (this.subProcess==='1'){
+        this.$message.error("拆分数量不能小于1");
+        return;
+      }
+      if (!this.reason) {
+        this.$message.error("请填写拆分理由");
+        return;
+      }
+      let that=this;
+      this.$http
+        .post("api/worksheet/wSEntry/processSplit", {
+          processId: that.splitId,
+          // subProcess:subProcessArr,
+          subProcess: +this.subProcess,
+          actOperator: this.mustData.actOperator,
+          reason: this.reason
+        })
+        .then(res => {
+          console.log(res)
+          if (res.status == 200 && res.data.code == 0) {
+            this.$message({ message: "拆分成功", type: "success" });
+            this.dialogFormVisible3 = false;
+          } else if (res.data.code == 1 && res.data.msg) {
+            this.$message.error(res.data.msg);
           }
-        }
+        });
+    },
+    itemSplit() {
+      if (!this.subProcessFlag) {
         this.subProcessFlag = false;
-      },
+        return false;
+      }
+      let idInputWrap = document.getElementById("idInputWrap");
+      let child = document.querySelectorAll(".item");
+      if (child.length) {
+        child.forEach(el => {
+          idInputWrap.removeChild(el);
+        });
+      }
+      if (this.subProcess && !isNaN(+this.subProcess) && this.subProcess > 0) {
+        for (let i = 0; i < this.subProcess; i++) {
+          let item = document.createElement("div");
+          item.className = "item";
+          item.innerHTML = `<span>第${i +
+            1}条</span><input type="number" class="itemNum">`;
+          idInputWrap.append(item);
+        }
+      }
+      this.subProcessFlag = false;
+    },
      changeWindow(){
       let that=this;
       document.body.onresize=function(e){

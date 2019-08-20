@@ -945,7 +945,6 @@ export default {
                 return items
               });
               item.codeName=item.codeName&&item.codeName.join('');
-              console.log(item.codeName)
               return item;
           })
           console.log(newRows)

@@ -1,6 +1,7 @@
 <template>
   <div class="credVerification">
-    <receipt-com goDetailName='CLOSE' processStatusCom='待核销,已悬停' urlName='credVerification'></receipt-com>
+    <!-- <receipt-com goDetailName='CLOSE' processStatusCom='待核销,已悬停' urlName='credVerification'></receipt-com> -->
+    <receipt-com goDetailName='COMPLETE' processStatusCom='待核销,已悬停' urlName='credVerification'></receipt-com>
   </div>
 </template>
 <script>
