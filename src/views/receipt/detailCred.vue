@@ -9,21 +9,17 @@
       <el-button type="primary" plain @click="makeReport">生成核销报告</el-button>
       <el-button type="primary" plain @click="mailSend(2,'附件')">附件</el-button>
       <el-button type="primary" plain @click="getTaxInfo">增值税信息获取</el-button>
-      <!-- <el-button type="primary" plain @click="openReverse">Reversed</el-button> -->
+      <el-button type="primary" plain @click="submite(6,'流程结束')">流程结束</el-button>
     </div>
     <!-- 操作 -->
     <div class="btn" v-if="$route.query.tag === 'credOperation'">
       <el-button type="primary" :disabled="czState" plain @click="mailSend(1,'上传附件')">上传附件</el-button>
       <el-button type="primary" :disabled="czState" plain @click="mailSend(2,'附件')">附件</el-button>
-      <el-button
-        type="primary"
-        :disabled="czState"
-        plain
-        @click="submite(2,'指派','操作','收款录入')"
-      >指派</el-button>
+      <el-button type="primary" :disabled="czState" plain @click="submite(2,'指派','操作','收款录入')">指派</el-button>
       <el-button type="primary" :disabled="czState" plain @click="submite(3,'置废')">置废</el-button>
       <el-button :type="czState?'info':'primary'" @click="gangUp('操作')" plain>{{!czState?'挂起':'悬停'}}</el-button>
       <el-button type="primary" :disabled="czState" plain @click="creatRM('a')">支票创建</el-button>
+      <el-button type="primary" :disabled="czState" plain @click="onVerification('DELAY')">暂挂待销</el-button>
       <el-button type="primary" :disabled="czState" plain @click="submite(1,'流程提交','收款复核')">流程提交</el-button>
     </div>
     <!-- 复核 -->
@@ -36,15 +32,13 @@
     </div>
     <!-- 核销 -->
     <div class="btn" v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'">
+      <!-- 8.20号，hasRecheckFlag如果不为1，操作指过来，流程推动按钮不让用：挂起、流程提交。。。不为1情况下有恢复按钮 -->
       <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BpLedger</el-button>
       <el-button type="primary" :disabled="hxState" @click="tbState" plain>同步状态</el-button>
       <el-button type="primary" plain @click="mailSend(2,'附件')">附件</el-button>
-      <el-button
-        :type="hxState?'info':'primary'"
-        @click="gangUp('核销')"
-        plain
-      >{{!hxState?'挂起':'暂挂待销'}}</el-button>
-      <el-button type="primary" :disabled="hxState" plain @click="submite(1,'流程提交','收款录入')">流程提交</el-button>
+      <el-button :type="hxState?'info':'primary'" v-show="row.hasRecheckFlag==1" @click="gangUp('核销')" plain>{{!hxState?'挂起':'暂挂待销'}}</el-button>
+      <el-button type="primary" :disabled="hxState" v-show="row.hasRecheckFlag==1" plain @click="submite(1,'流程提交','收款录入')">流程提交</el-button>
+      <el-button type="primary" :disabled="hxState" v-show="row.hasRecheckFlag!=1" plain @click="onVerification('UNDELAY')">恢复至操作</el-button>
     </div>
     <!-- 暂挂 -->
     <!-- <div class="btn" v-if="$route.query.tag === 'viewInvalidate'">
@@ -1619,13 +1613,11 @@ export default {
         this.RMData.forEach(el => {
           rmIds += `${el.rmId},`;
         });
-        this.$http
-          .post("api/sics/basis/getPayRemitFromSics", {
+        this.$http.post("api/sics/basis/getPayRemitFromSics", {
             actOperator: this.mustData.actOperator,
             processId: this.row.processId,
             rmIds: rmIds
-          })
-          .then(res => {
+          }).then(res => {
             if (res.status === 200) {
               // this.SgData = res.data.worksheetsgDOlist;
               this.RMData = res.data.remitDOlist;
@@ -1640,6 +1632,28 @@ export default {
                   }  
                 })
                 this.SgData = arr5;
+              }
+              // 8.20 完结同步状态，判断支票Settled的状态，触发接口(所有数据里只要有一个不是Settled，就调接口)
+              if(res.data.remitDOlist && res.data.remitDOlist.length){
+                let closeFlag = res.data.remitDOlist.every(el=>{ return el.setlmntInd=='Settled'; })
+                if(!closeFlag){
+                  this.$http.post("api/receipt/activitiForReceipt/commonActivitiForReceipt",
+                    {
+                      processId: this.row.processId,
+                      procInstId: this.row.processInstId,
+                      assignee: this.$store.state.userName,
+                      type: 'RENEW',
+                      actOperator: this.$store.state.userName
+                    }
+                  ).then(res => {
+                    if (res.status === 200 && res.data.errorCode == 1) {
+                      this.$message({ type: "success", message: res.data.errorMessage});
+                    } else if (res.data.errorCode == 0) {
+                      this.$message({type: "error",message: res.data.errorMessage});
+                    }
+                  });
+                }
+
               }
             }
           });
@@ -1954,9 +1968,7 @@ export default {
                     cancelButtonText: "取消",
                     type: "warning"
                   }).then(() => {
-                    this.$http
-                      .post(
-                        "api/receipt/activitiForReceipt/commonActivitiForReceipt",
+                    this.$http.post("api/receipt/activitiForReceipt/commonActivitiForReceipt",
                         {
                           processId: this.row.processId,
                           procInstId: this.row.processInstId,
@@ -1964,8 +1976,7 @@ export default {
                           type: this.$route.query.name,
                           actOperator: this.$store.state.userName
                         }
-                      )
-                      .then(res => {
+                      ).then(res => {
                         if (res.status === 200 && res.data.errorCode == 1) {
                           this.dialogFormVisible3 = false;
                           this.$router.push({ name: this.$route.query.tag });
@@ -2058,7 +2069,7 @@ export default {
           break;
         case 4: // 复核驳回
           this.dialogFormVisible3 = true;
-          break;
+        break;
         case 5: // 状态恢复
           this.$confirm("是否恢复？", "提示", {
             confirmButtonText: "确定",
@@ -2085,8 +2096,56 @@ export default {
                 }
               });
           });
-          break;
+        break;
+        case 6:  // 完结页面，流程结束
+          this.$confirm("是否流程结束？", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(() => {
+            this.$http.post("api/receipt/activitiForReceipt/commonActivitiForReceipt",
+              {
+                processId: this.row.processId,
+                procInstId: this.row.processInstId,
+                assignee: this.$store.state.userName,
+                type: 'CLOSE',
+                actOperator: this.$store.state.userName
+              }
+            ).then(res => {
+              if (res.status === 200 && res.data.errorCode == 1) {
+                this.$message({ type: "success", message: res.data.errorMessage});
+                this.$router.push({ name: this.$route.query.tag });
+              } else if (res.data.errorCode == 0) {
+                this.$message({type: "error",message: res.data.errorMessage});
+              }
+            });
+          });
+        break;
       }
+    },
+    onVerification(type1){
+      this.$confirm("是否暂挂待销？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$http.post("api/receipt/activitiForReceipt/commonActivitiForReceipt",
+          {
+            processId: this.row.processId,
+            procInstId: this.row.processInstId,
+            assignee: this.$store.state.userName,
+            type: type1,
+            actOperator: this.$store.state.userName
+          }
+        ).then(res => {
+          if (res.status === 200 && res.data.errorCode == 1) {
+            this.$message({ type: "success", message: res.data.errorMessage});
+            this.$router.push({ name: this.$route.query.tag });
+          } else if (res.data.errorCode == 0) {
+            this.$message({type: "error",message: res.data.errorMessage});
+          }
+        });
+      });
     },
     confirm() {
       switch (this.flag) {

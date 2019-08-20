@@ -1,12 +1,10 @@
 <template> 
   <div class="detailEntry">
-    <!-- <div class="goBack" v-show="false"> -->
     <router-link
       :to="{name:$route.query.tag}"
       style="color:#333;position:fixed;top:20px;left:80px;z-index:100;">
       <i class="iconfont iconleft-circle-o"></i>
     </router-link>
-    <!-- </div>  -->
     <el-row>
       <el-col :span="8">
         <!-- 签回 -->
@@ -74,8 +72,7 @@
               :header-row-class-name="StableClass"
               :data="tableData"
               style="width: 100%;margin-top:10px;"
-              class="document"
-            >
+              class="document">
               <el-table-column label="文件名" align="center">
                 <template slot-scope="scope">
                   <el-tooltip
@@ -232,10 +229,8 @@
             <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
           </el-table-column>
           <el-table-column prop="registBy" label="录入人" width="130" align="center"></el-table-column>
-          <el-table-column prop="registAt" label="录入时间" width="160" align="center"></el-table-column>
           <el-table-column prop="closedBy" label="复核人" width="130" align="center"></el-table-column>
-          <el-table-column prop="closedAt" label="复核时间" width="160" align="center"></el-table-column>
-          <el-table-column label="驳回原因类型" width="160" align="center">
+          <!-- <el-table-column label="驳回原因类型" width="160" align="center">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"
@@ -256,6 +251,14 @@
                 <span class="abbreviate">{{scope.row.remark}}</span>
               </el-tooltip>
             </template>
+          </el-table-column> -->
+          <el-table-column width="180" label="修改意见" align="center">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark"  :content="scope.row.rejectType&&scope.row.remark?scope.row.remark+'-'+scope.row.rejectType:''" placement="top-start">
+                <span class="abbreviate" v-if="scope.row.rejectType&&scope.row.remark">{{scope.row.rejectType}}-{{scope.row.remark}}</span>
+                <span class="abbreviate" v-else></span>
+              </el-tooltip>
+            </template>
           </el-table-column>
           <el-table-column label="附件名称" align="center">
             <template slot-scope="scope">
@@ -268,6 +271,8 @@
               </el-tooltip>
             </template>
           </el-table-column>
+          <el-table-column prop="registAt" label="录入时间" width="160" align="center"></el-table-column>
+          <el-table-column prop="closedAt" label="复核时间" width="160" align="center"></el-table-column>
           <!-- <el-table-column label="任务类型">
             <template slot-scope="scope">
               <el-tooltip
@@ -309,12 +314,22 @@
           <!-- <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column> -->
           <!-- <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column> -->
           <!-- <el-table-column prop="dept" label="经营机构"></el-table-column> -->
-          <el-table-column fixed="right" label="操作" width="180" align="center">
+          <el-table-column fixed="right" label="操作" width="80" align="center">
             <template slot-scope="scope">
-              <span class="blueColor" @click.stop="openSics(scope.row)">打开SICS</span>
-              <span class="blueColor" v-show="$route.query.tag == 'billCheck'" @click.stop="submit(2,'驳回意见',scope.row.wsId)">驳回意见</span>
-              <!-- 把添加意见改为驳回意见 hyd -->
-              <span class="blueColor" v-show="scope.row.wsStatus=='Closed' && $route.query.tag !== 'billCheck'" @click.stop="reverse(scope.row)">Reverse</span>
+              <el-dropdown placement="top-start">
+                <span class="el-dropdown-link"><i class="iconfont iconcaozuoliebiao"></i></span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>
+                    <span class="blueColor" @click.stop="openSics(scope.row)">打开SICS</span>
+                  </el-dropdown-item>
+                  <el-dropdown-item>
+                    <span class="blueColor" v-show="$route.query.tag == 'billCheck'" @click.stop="submit(2,'驳回意见',scope.row.wsId)">驳回意见</span>
+                  </el-dropdown-item>
+                  <el-dropdown-item> 
+                    <span class="blueColor" v-show="scope.row.wsStatus=='Closed' && $route.query.tag !== 'billCheck'" @click.stop="reverse(scope.row)">Reverse</span>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </template>
           </el-table-column>
         </el-table>
