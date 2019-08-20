@@ -250,7 +250,7 @@
         <el-table-column label="文件名" width="140" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-              <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+              <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -334,6 +334,7 @@ export default {
     },
   data() {
       return {
+        suffixFlag:false,
         emailFlag:false,
         chooseDocList:[],
         uploadType:'1',
@@ -688,7 +689,9 @@ export default {
     },
     docView(row) {
       if(row){
-        if(row.suffix && row.suffix=='eml'){ return false; }
+        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
+        this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
+        if(row.suffix && this.suffixFlag){ return false; }
         this.dialogFormVisibleA = true;
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
         if(res.status == 200){
@@ -792,6 +795,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
+                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
                 this.fileData = arr4;
@@ -846,6 +850,7 @@ export default {
                     if(el.docName){
                       let suffix = el.docName.split('.');
                       el['suffix'] = suffix[suffix.length-1];
+                      el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
                     }
                   })
                   this.fileData = arr5;
