@@ -64,7 +64,7 @@
           <template slot-scope="scope">
           <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
             <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
-            <span class="abbreviate" v-else></span>
+            <span class="abbreviate" v-if="!scope.row.rmSettleCompanyName&&!scope.row.rmSettleCompanyCode"></span>
           </el-tooltip>
         </template>
       </el-table-column>

@@ -188,7 +188,7 @@
                   <template slot-scope="scope">
                   <el-tooltip class="item" effect="dark"  :content="scope.row.partnerName&&scope.row.partnerCode?scope.row.partnerCode+'-'+scope.row.partnerName:''" placement="top-start">
                     <span class="abbreviate" v-if="scope.row.partnerName&&scope.row.partnerCode">{{scope.row.partnerCode}}-{{scope.row.partnerName}}</span>
-                    <span class="abbreviate" v-else></span>
+                    <span class="abbreviate" v-if="!scope.row.partnerName&&!scope.row.partnerCode"></span>
                   </el-tooltip>
                 </template>
               </el-table-column> 
@@ -413,7 +413,7 @@
                 <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark"  :content="scope.row.bpName&&scope.row.bpCode?scope.row.bpCode+'-'+scope.row.bpName:''" placement="top-start">
                   <span class="abbreviate" v-if="scope.row.bpName&&scope.row.bpCode">{{scope.row.bpCode}}-{{scope.row.bpName}}</span>
-                  <span class="abbreviate" v-else></span>
+                  <span class="abbreviate" v-if="!scope.row.bpName&&!scope.row.bpCode"></span>
                 </el-tooltip>
               </template>
             </el-table-column>

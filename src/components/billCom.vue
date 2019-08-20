@@ -192,7 +192,7 @@
               class="abbreviate"
               v-if="scope.row.wsCedentCode&&scope.row.wsCedentName"
             >{{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}</span>
-            <span class="abbreviate" v-else></span>
+            <span class="abbreviate" v-if="!scope.row.wsCedentCode&&!scope.row.wsCedentName"></span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -208,7 +208,7 @@
               class="abbreviate"
               v-if="scope.row.wsBrokerCode&&scope.row.wsBrokerName"
             >{{scope.row.wsBrokerCode}}-{{scope.row.wsBrokerName}}</span>
-            <span class="abbreviate" v-else></span>
+            <span class="abbreviate" v-if="!scope.row.wsBrokerCode&&!scope.row.wsBrokerName"></span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -262,7 +262,7 @@
       <el-table-column :label="urlName==='sortOperation'?'任务来源':'录入人员'" width="110" align="center">
         <template slot-scope="scope">
           <span  v-if="urlName==='sortOperation'">{{nameList[scope.row.curOperator]}}</span>
-          <span v-else>{{nameList[scope.row.registBy]}}</span>
+          <span v-if="urlName!=='sortOperation'">{{nameList[scope.row.registBy]}}</span>
         </template>
       </el-table-column>
        <el-table-column v-if="urlName==='billCheck'||urlName==='billSignBack'||urlName==='billEntry'" label="复核人员" width="110" align="center">

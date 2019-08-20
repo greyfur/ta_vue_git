@@ -227,7 +227,7 @@
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark"  :content="scope.row.partnerName&&scope.row.partnerCode?scope.row.partnerCode+'-'+scope.row.partnerName:''" placement="top-start">
                 <span class="abbreviate" v-if="scope.row.partnerName&&scope.row.partnerCode">{{scope.row.partnerCode}}-{{scope.row.partnerName}}</span>
-                <span class="abbreviate" v-else></span>
+                <span class="abbreviate" v-if="!scope.row.partnerName&&!scope.row.partnerCode"></span>
               </el-tooltip>
             </template>
           </el-table-column> 
@@ -387,7 +387,7 @@
               <template slot-scope="scope">
               <el-tooltip class="item" effect="dark"  :content="scope.row.bpName&&scope.row.bpCode?scope.row.bpCode+'-'+scope.row.bpName:''" placement="top-start">
                 <span class="abbreviate" v-if="scope.row.bpName&&scope.row.bpCode">{{scope.row.bpCode}}-{{scope.row.bpName}}</span>
-                <span class="abbreviate" v-else></span>
+                <span class="abbreviate" v-if="!scope.row.bpName&&!scope.row.bpCode"></span>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -851,11 +851,11 @@
               </el-option>
             </el-select>
           </el-col>
-           <!-- <el-col :span="2">
+           <el-col :span="2">
              <template>
                <el-checkbox v-model="checked">various</el-checkbox>
              </template>
-           </el-col> -->
+           </el-col>
         </el-form-item>
         <el-form-item label="受款公司">
           <!-- 470 hyd -->
@@ -1207,8 +1207,6 @@ export default {
   },
   beforeMount(){this.copy('proNum',1); this.updateFlag = true;},
   mounted(){ 
-    console.log(this.row,'this.row');
-    console.log(this.checked)
     this.mustData.actOperator = this.$store.state.userName;
     let strArr = [];
     if(this.$route.query.tag === 'payVerification'){
@@ -1271,6 +1269,7 @@ export default {
     })
   },
   updated(){
+    //进度条
     if(this.$route.query.tag === 'payVerification'){
       this.nextStep();
       this.updateFlag = false;
@@ -1324,6 +1323,7 @@ export default {
           console.log(res, "打开SICS");
         });
     },
+    //进度条
     nextStep(){
       let oldStrArrCreInd=0;
       let drcArr = [...document.querySelectorAll(".drc")];
@@ -2467,17 +2467,17 @@ export default {
         this.dialogFormVisible2 = true;
       } else {
         if (tag == 2) {
+           console.log(this.checked,'hyd')
+           console.log(this.makeDocListEctype)
          if(this.makeDocListEctype.zheNum&&this.makeDocListEctype.yuanType.length>0){
-           console.log(this.checked)
             // 是操作页面,2为点击确定---------------------生成审批文档提交hyd
             // if(this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[1]||this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[2]||this.makeDocListEctype.cedentModel[1]==this.makeDocListEctype.cedentModel[2]){
             //   this.$message.error('分公司不能一样');
             //   return;
             // }
           if (this.makeDocListEctype.cedentModel &&this.makeDocListEctype.cedentModel.length) {
-            this.makeDocList.rmCedentName = this.makeDocListEctype.cedentModel.join(
-              "/"
-            );
+            console.log(this.makeDocListEctype.cedentModel.join("/" ));
+            this.makeDocList.rmCedentName = this.makeDocListEctype.cedentModel.join("/" );
           }
           if(this.makeDocListEctype.shoukuanMode != null){
             this.makeDocList = Object.assign({},this.bscBankList[this.makeDocListEctype.shoukuanMode],this.makeDocList)
