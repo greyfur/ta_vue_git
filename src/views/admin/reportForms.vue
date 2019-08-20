@@ -1,7 +1,7 @@
 <template>
   <div class="reportForms">
       <div class="area">
-        <span>选择报表：</span>
+        <span>选择报表类型：</span>
           <el-select clearable filterable v-model="reportType" placeholder="请选择">
             <el-option v-for="(item,index) in ReportFormArr" :key="'h'+index" :label="item.name" :value="item.type">
               <span>{{ item.name }}</span>
@@ -12,9 +12,9 @@
             value-format="timestamp"
             v-model="oYearMonth"
             type="month"
-            placeholder="选择年月">
+            placeholder="请选择">
           </el-date-picker>
-          <div class="do">操作： <p class="btn" @click="sure()">下载报表</p></div>
+          <div class="do">操作： <p class="btn" @click="sure()">下载</p></div>
       </div>
   </div>
 </template>
@@ -24,7 +24,7 @@
       return {
         oYearMonth:new Date().getTime(),
         ReportFormArr:[{
-          name:'Process统计报表',
+          name:'流程统计报表',
           type:'1'
         },{
           name:'未关闭流程统计报表',
@@ -33,10 +33,10 @@
           name:'悬停报表',
           type:'3'
         },{
-          name:'Process复核驳回报表',
+          name:'复核驳回报表',
           type:'4'
         },{
-          name:'Process对应账单清单报表',
+          name:'流程对应账单清单报表',
           type:'5'
         },{
           name:'账单流程汇总报表',
@@ -138,4 +138,3 @@
   line-height: 30px;
 }
 </style>
-
