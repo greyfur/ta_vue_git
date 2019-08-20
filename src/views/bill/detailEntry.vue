@@ -772,19 +772,29 @@ export default {
           res.data.processStatus === "已悬停"? (this.isHover = true):(this.isHover = false);
           this.SICSData = res.data.workSheetVOlist;
           // 获取详情的值
-          console.log(this.chooseRow,'this.chooseRow');
+      
+          this.chooseRow.cedentCodeName=[];
+          this.chooseRow.wsCedentCode&&this.chooseRow.wsCedentCode.split(';').map((item,index)=>{
+             this.chooseRow.cedentCodeName.push(item&& this.chooseRow.wsCedentName.split(';')[index]?item+'-'+ this.chooseRow.wsCedentName.split(';')[index]+';':item||this.chooseRow.wsCedentName.split(';')[index]);
+                return  this.chooseRow.cedentCodeName
+          })
+        this.chooseRow.cedentCodeName=this.chooseRow.cedentCodeName.join('');
+        this.chooseRow.brokerCodeName=[];
+          this.chooseRow.wsBrokerCode&&this.chooseRow.wsBrokerCode.split(';').map((item,index)=>{
+            console.log(this.chooseRow.wsBrokerName.split(';')[index])
+             this.chooseRow.brokerCodeName.push(item&& this.chooseRow.wsBrokerName.split(';')[index]?item+'-'+ this.chooseRow.wsBrokerName.split(';')[index]+';':item||this.chooseRow.wsBrokerName.split(';')[index]);
+                return  this.chooseRow.brokerCodeName
+          })
+        this.chooseRow.brokerCodeName=this.chooseRow.brokerCodeName.join('');
+           console.log(this.chooseRow,'wsBrokerCode wsBrokerName')
           console.log(this.listData,'222')
           this.listData.forEach(el => {
             if (el["c"] == "cedent") {
               if(this.chooseRow["wsCedentCode"]==undefined){return}
-              el["b"] = `${this.chooseRow["wsCedentCode"]}-${
-                this.chooseRow["wsCedentName"]
-              }`;
+              el["b"] = `${this.chooseRow.cedentCodeName}`;
             } else if (el["c"] == "broker") {
               if(this.chooseRow["wsBrokerCode"]==undefined){return}
-              el["b"] = `${this.chooseRow["wsBrokerCode"]}-${
-                this.chooseRow["wsBrokerName"]
-              }`;
+              el["b"] = `${this.chooseRow.brokerCodeName}`;
             } else if (
               el["c"] == "wsBusinessType" &&
               this.chooseRow["wsBusinessType"]
