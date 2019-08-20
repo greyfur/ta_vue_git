@@ -16,7 +16,7 @@
           <el-table-column label="文件名" align="center">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -68,6 +68,7 @@ export default {
       docViewRow:{},
       fileList:[],
       file:[],
+      suffixFlag:false,
     }
   },
   created() {
@@ -87,6 +88,7 @@ export default {
             if(el.docName){
               let suffix = el.docName.split('.');
               el['suffix'] = suffix[suffix.length-1];
+              el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
             }
           })
           this.tableData = arr;
@@ -95,7 +97,9 @@ export default {
     },
      docView(row) {
       if (row) {
-        if(row.suffix && row.suffix=='eml'){ return false; }
+        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
+        this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
+        if(row.suffix && this.suffixFlag){ return false; }
         this.docViewRow = row;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {

@@ -292,9 +292,8 @@
                         class="item"
                         effect="dark"
                         :content="scope.row.docName"
-                        placement="top-start"
-                      >
-                        <span :class="{'smallHand':scope.row.suffix!='eml'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                        placement="top-start">
+                        <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                       </el-tooltip>
                     </template>
                   </el-table-column>
@@ -1011,6 +1010,7 @@ export default {
   name: "detailCred",
   data() {
     return {
+      suffixFlag:false,
       StableClass: "tableClass",
       nameList: {},
       recepitList:[],
@@ -1402,7 +1402,9 @@ export default {
     },
     docView(row) {
       if (row) {
-        if(row.suffix && row.suffix=='eml'){ return false; }
+        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
+        this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
+        if(row.suffix && this.suffixFlag){ return false; }
         this.dialogFormVisibleA = true;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
@@ -1554,6 +1556,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
+                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
                 this.SgData = arr5;
@@ -1602,6 +1605,7 @@ export default {
                 if(el.docName){
                   let suffix = el.docName.split('.');
                   el['suffix'] = suffix[suffix.length-1];
+                  el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
                 }
               })
               this.SgData = arr5;
@@ -1632,6 +1636,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
+                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }  
                 })
                 this.SgData = arr5;

@@ -952,11 +952,8 @@ export default {
     },
     docView(row) {
       if (row) {
-        console.log(row.suffix,'row.suffix');
         let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
-        // if(row.suffix && row.suffix=='eml'){ return false; }
-        console.log(this.suffixFlag,'this.suffixFlag');
         if(row.suffix && this.suffixFlag){ return false; }
         this.dialogFormVisible1 = true;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
