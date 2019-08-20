@@ -381,7 +381,7 @@
           <el-select clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
             <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
           </el-select> -->
-          <input class="wsDate" style="width:196px;height:40px;border-radius:5px;outline:none;border:1px solid #DCDFE6;" placeholder="请选择账期" v-model="billSearch.wsPeriod" @click="zq1FlagFn()" />
+          <input class="wsDate" style="width:196px;height:40px;border-radius:5px;outline:none;border:1px solid #DCDFE6;" placeholder="请选择账期" v-model="billSearch.wsPeriod" @click.stop="zq1FlagFn()" />
               <div class="zq1" v-show="zq1Flag">
                   <p class="zqTitle">
                     <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('-')"><i class="iconfont iconGroup33"></i></span>

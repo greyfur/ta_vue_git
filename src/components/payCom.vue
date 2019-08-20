@@ -207,7 +207,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="80%" class="SwitchingMode">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="432" class="SwitchingMode">
       <el-form label-width="140px" v-show="title==='流程提交'">
         <el-form-item label="选择处理人"  v-show="title==='流程提交'">
           <el-select filterable v-model="assignee"  placeholder="请选择">

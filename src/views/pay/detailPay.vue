@@ -829,7 +829,7 @@
         <el-form-item label="分出公司">
           <el-col :span="7" style="margin-right:5px;">
             <el-select clearable filterable v-model="makeDocListEctype.cedentModel[0]" placeholder="请选择">
-              <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="item.codeName">
+              <el-option v-for="(item,index) in cedentList" :key="index+1" :label="item.codecode+' - '+item.codeName" :value="index">
                 <span style="float:left">{{ item.codecode }}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
               </el-option>
@@ -837,7 +837,7 @@
           </el-col>
           <el-col :span="7" style="margin-right:5px;">
             <el-select clearable filterable v-model="makeDocListEctype.cedentModel[1]" placeholder="请选择">
-              <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="item.codeName">
+              <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
                 <span style="float:left">{{ item.codecode }}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
               </el-option>
@@ -845,7 +845,7 @@
           </el-col>
           <el-col :span="7" style="margin-right:5px;">
             <el-select clearable filterable v-model="makeDocListEctype.cedentModel[2]" placeholder="请选择">
-              <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="item.codeName">
+              <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
                 <span style="float:left">{{ item.codecode }}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
               </el-option>
@@ -1234,6 +1234,7 @@ export default {
       this.brokerListHK = fcArr.concat(jArr);
       this.cedentList = fcArr;
       this.brokerListS = jArr;
+      console.log(this.cedentList)
       //获取币制
       this.rmCurrencyList = JSON.parse(sessionStorage.getItem('CurrencyList'));
       // 集团产再
@@ -1430,7 +1431,6 @@ export default {
       this.$http.post('api/othersDO/bscBankInfo/list',{}).then(res =>{
         if(res.status === 200 && res.data.rows){
           this.bscBankList = res.data.rows;
-          console.log(res.data.rows)
         }
       })
     },
@@ -2471,17 +2471,22 @@ export default {
         this.dialogFormVisible2 = true;
       } else {
         if (tag == 2) {
-           console.log(this.checked,'hyd')
-           console.log(this.makeDocListEctype)
          if(this.makeDocListEctype.zheNum&&this.makeDocListEctype.yuanType.length>0){
             // 是操作页面,2为点击确定---------------------生成审批文档提交hyd
-            // if(this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[1]||this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[2]||this.makeDocListEctype.cedentModel[1]==this.makeDocListEctype.cedentModel[2]){
-            //   this.$message.error('分公司不能一样');
-            //   return;
-            // }
+            console.log(this.makeDocListEctype.cedentModel[0])
+            console.log(this.makeDocListEctype.cedentModel[1])
+            console.log(this.makeDocListEctype.cedentModel[2])
+           
+            
+             if(this.makeDocListEctype.cedentModel[0]==undefined||this.makeDocListEctype.cedentModel[1]==undefined||this.makeDocListEctype.cedentModel[2]==undefined){
+              
           if (this.makeDocListEctype.cedentModel &&this.makeDocListEctype.cedentModel.length) {
-            console.log(this.makeDocListEctype.cedentModel.join("/" ));
-            this.makeDocList.rmCedentName = this.makeDocListEctype.cedentModel.join("/" );
+            if(this.checked){
+              console.log(this.cedentList)
+              this.makeDocList.rmCedentName =  this.makeDocList.rmCedentName = (this.makeDocListEctype.cedentModel[0]!==undefined?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+(this.makeDocListEctype.cedentModel[1]!==undefined?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+(this.makeDocListEctype.cedentModel[2]!==undefined?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'')+' various';
+            }else{
+              this.makeDocList.rmCedentName = (this.makeDocListEctype.cedentModel[0]!==undefined?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+(this.makeDocListEctype.cedentModel[1]!==undefined?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+(this.makeDocListEctype.cedentModel[2]!==undefined?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'');
+            }
           }
           if(this.makeDocListEctype.shoukuanMode != null){
             this.makeDocList = Object.assign({},this.bscBankList[this.makeDocListEctype.shoukuanMode],this.makeDocList)
@@ -2499,6 +2504,32 @@ export default {
             })
             this.makeDocList.primitiveAmount = arr.join(';');
           }
+          if(this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[1]!=undefined){
+            if(this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName==this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName){
+              this.$message.error('分公司不能一样');
+              return;
+            }
+          }
+           if(this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[2]!=undefined){
+            if(this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName==this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName){
+              this.$message.error('分公司不能一样');
+              return;
+            }
+          }
+           if(this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[2]!=undefined){
+            if(this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName==this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName){
+              this.$message.error('分公司不能一样');
+              return;
+            }
+          }
+        //   if(this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[2]){
+        //   this.$message.error('分公司不能一样');
+        //   return;
+        // }
+        // if(this.makeDocListEctype.cedentModel[1]==this.makeDocListEctype.cedentModel[2]){
+        //   this.$message.error('分公司不能一样');
+        //   return;
+        // }
           let param = Object.assign({},this.makeDocList,{
             processId:this.row.processId,
             actOperator:this.$store.state.userName,
@@ -2542,6 +2573,8 @@ export default {
          }else{
             this.$message.error('请输入原币和折币金额');
          }
+         return;
+        }
         } else{   // 是审批页面，
           let param = {
             processId:this.row.processId,
