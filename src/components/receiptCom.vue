@@ -936,13 +936,13 @@ export default {
       this.$http.post("api/receipt/finaCreat/list", params).then(res => {
         if (res.status === 200) {
           let newRows=res.data.rows.map((item,index)=>{
-              let codeName={};
               item.rmSettleCompanyCode=item.rmSettleCompanyCode!==null?item.rmSettleCompanyCode.split(';'):item.rmSettleCompanyCode;
               item.rmSettleCompanyName=item.rmSettleCompanyName!==null?item.rmSettleCompanyName.split(';'):item.rmSettleCompanyName;
               item.codeName=item.rmSettleCompanyCode&&item.rmSettleCompanyCode.map((items,indexs)=>{
-               items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items;
+               items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items||item.rmSettleCompanyName[indexs];
                 return items
               });
+               console.log(item.codeName,'www')
               item.codeName=item.codeName&&item.codeName.join('');
               console.log(item.codeName)
               return item;
