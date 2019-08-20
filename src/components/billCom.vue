@@ -174,7 +174,6 @@
             class="item"
             effect="dark"
             :content="scope.row.wsCedentCode&&scope.row.wsCedentName?scope.row.wsCedentCode+'-'+scope.row.wsCedentName:''"
-<<<<<<< HEAD
             placement="top-start"
           >
             <span
@@ -182,11 +181,6 @@
               v-if="scope.row.wsCedentCode&&scope.row.wsCedentName"
             >{{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}</span>
             <span class="abbreviate" v-if="!scope.row.wsCedentCode&&!scope.row.wsCedentName"></span>
-=======
-            placement="top-start">
-            <span class="abbreviate" v-if="scope.row.wsCedentCode&&scope.row.wsCedentName">{{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}</span>
-            <span class="abbreviate" v-else></span>
->>>>>>> 6b1ec7e80d1d5cfb410b39c9e7b08b7ef1dccc40
           </el-tooltip>
         </template>
       </el-table-column>
