@@ -294,7 +294,7 @@
     <div style="width:100%;display:flex;align-items: flex-end;justify-content: space-between;">
       <div></div>
       <div style="display:flex;align-items: flex-end;justify-content: space-between;">
-        <div style="padding-bottom: 5px;padding-right: 10px;"> 
+        <div style="padding-bottom: 5px;padding-right: 10px;" v-if="urlName === 'billEntry'"> 
           <span class='statePoint stateRed'></span><span>异常</span>
           <span class='statePoint stateGreen'></span><span>正常</span>
         </div>
@@ -308,8 +308,7 @@
           :total="mustData.total"
         ></el-pagination>
       </div>
-    </div>
-    
+    </div> 
     <!-- 弹窗 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" :width="title==='流程提交'?'432px':'782px'">
       <el-form label-position="right" label-width="120px" :model="billSearch" :rules="rules" ref="billSearch" class="SwitchingMode">

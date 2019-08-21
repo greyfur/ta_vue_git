@@ -119,7 +119,7 @@
     <div style="width:100%;display:flex;align-items: flex-end;justify-content: space-between;">
       <div></div>
       <div style="display:flex;align-items: flex-end;justify-content: space-between;">
-        <div style="padding-bottom: 5px;padding-right: 10px;"> 
+        <div style="padding-bottom: 5px;padding-right: 10px;" v-if="urlName === 'payOperation' || urlName === 'approvalDone'"> 
           <span class='statePoint stateRed'></span><span>异常</span>
           <span class='statePoint stateGreen'></span><span>正常</span>
         </div>
