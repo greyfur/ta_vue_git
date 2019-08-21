@@ -749,6 +749,9 @@ export default {
   },
   beforeMount(){ this.copy('proNum',1) },
   mounted(){
+    if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
+        this.$store.commit('ChangeFlod',true)
+      } else{ this.$store.commit('ChangeFlod',false) }
     this.maxHeight = `${document.body.clientHeight-200}px`;
     // 查询账单详情
     if (this.$route.query.tag !== "billSignBack") {

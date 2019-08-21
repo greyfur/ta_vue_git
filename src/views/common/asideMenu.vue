@@ -26,19 +26,22 @@
           text-color="#fff"
           @open="handleOpen"
           active-text-color="#fff">
-          <el-menu-item :index="99999" :key="99999" class="navFirst" v-if="$route.name==='detailEntry'||$route.name==='detailPay'|| $route.name==='detailCred'">
+          <el-menu-item class="navFirst" v-if="$route.name==='detailEntry'|| $route.name==='detailCred'||$route.name==='detailPay'">
            <template>
              <router-link
               :to="{name:$route.query.tag}"
               >
               <i class="iconfont iconleft-circle-o" style="color:#fff;"></i>
             </router-link>
-            <span>返回</span>
+             <router-link
+              :to="{name:$route.query.tag}"
+              >
+               <span style="color:#fff;">返回</span>
+            </router-link>
               <!-- <i style="color:#fff;" class="iconfont iconleft-circle-o" v-if="$route.name==='detailEntry'||$route.name==='detailPay'|| $route.name==='detailCred'"></i> -->
           </template>
           </el-menu-item>
           <el-submenu :index="el.name" v-for="(el,index) in urlArr" :key="index" class="navFirst">
-           
             <template slot="title">
               <i style="color:#fff;" :class="iconEmnu[el.name]"></i>
               <span>{{el.title}}</span>
@@ -186,10 +189,6 @@ import { mapState } from "vuex";
       }
     },
     mounted(){
-      if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
-        this.$store.commit('ChangeFlod',true)
-      } else{ this.$store.commit('ChangeFlod',false) }
-
       this.urlArr = computeNavbar(this.$store.state.deFineRout);
       if(computeName(this.$route.name,this.$store.state.deFineRout)){
         this.name = computeName(this.$route.name,this.$store.state.deFineRout);
@@ -222,9 +221,9 @@ import { mapState } from "vuex";
     watch:{
       $route(to,from){
         this.name = computeName(to.name,this.$store.state.deFineRout);
-        if(to.name === 'detailEntry' || to.name === 'detailCred' || to.name === 'detailPay'){
-          this.fold = true;
-        } else{ this.fold = false; }
+         if(this.$route.name == 'detailEntry' || this.$route.name == 'detailCred' || this.$route.name == 'detailPay'){
+        this.$store.commit('ChangeFlod',true)
+      } else{ this.$store.commit('ChangeFlod',false) }
       },
       '$store.state.deFineRout':function(n,o){
       }

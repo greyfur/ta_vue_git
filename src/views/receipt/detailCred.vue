@@ -1290,6 +1290,9 @@ export default {
   }, 
   beforeMount(){ this.copy('proNum',1) },
   mounted() {
+    if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
+        this.$store.commit('ChangeFlod',true)
+      } else{ this.$store.commit('ChangeFlod',false) }
     this.maxHeight = `${document.body.clientHeight-200}px`;
     setTimeout(() => {
       // 分出人+经济人all
