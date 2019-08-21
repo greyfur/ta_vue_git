@@ -910,6 +910,7 @@
         </el-form-item>
       </el-form>
       <el-table
+        height="300"
         :data="fileData"
         style="width: 100%"
         class="document"
@@ -947,6 +948,16 @@
           </template>
         </el-table-column>
       </el-table>
+       <div class="browseDoc" v-show="title==='附件'" style="width:100%;height:400px">
+        <iframe
+          src="../../static/Preview/index.html"
+          id="iframeId"
+          name="ifrmname"
+          style="width:100%;height:-webkit-fill-available;"
+          ref="mapFrame"
+          frameborder="0"
+        ></iframe>
+      </div>
       <el-table
         :data="TaxList"
         style="width: 100%"
@@ -978,8 +989,8 @@
         <el-table-column prop="remark" label="备注" align="center"></el-table-column>
       </el-table>
     </el-dialog>
-    <el-dialog title="文档预览" :visible.sync="dialogFormVisibleA" :close-on-click-modal="modal">
-      <div class="browseDoc">
+    <!-- <el-dialog title="文档预览" :visible.sync="dialogFormVisibleA" :close-on-click-modal="modal">
+      <div class="browseDoc" style="width:100%;height:400px">
         <iframe
           src="../../static/Preview/index.html"
           id="iframeId"
@@ -989,7 +1000,7 @@
           frameborder="0"
         ></iframe>
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 <script>
@@ -1390,7 +1401,7 @@ export default {
       })
     },
     docView(row) {
-      this.dialogFormVisibleA = true;
+      // this.dialogFormVisibleA = true;
       if (row) {
         let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })

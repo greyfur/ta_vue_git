@@ -376,8 +376,7 @@
               v-for="(item,index) in cedentList"
               :key="index"
               :label="item.codecode+' - '+item.codeName"
-              :value="index"
-            >
+              :value="index">
               <span style="float:left">{{ item.codecode }}</span>
               <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
             </el-option>
@@ -413,11 +412,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="Business Origin"
-          prop="businessOrigin"
-          v-show="title==='创建' || title==='编辑'"
-        >
+        <el-form-item label="Business Origin" prop="businessOrigin" v-show="title==='创建' || title==='编辑'">
           <el-select clearable v-model="formLabelAlign.businessOrigin" placeholder="请选择">
             <el-option
               v-for="item in businessOriginList"
@@ -440,7 +435,6 @@
         <!-- <el-form-item label="我司销账编号" v-show="title==='编辑' || title==='创建'">
           <el-input v-model="formLabelAlign.rmWrittenOffNum"></el-input>
         </el-form-item>-->
-       
         <!-- <el-form-item label="结算人员" v-show="title==='编辑' || title==='创建'">
           <el-input v-model="formLabelAlign.rmSettleUser"></el-input>
         </el-form-item>-->
@@ -504,52 +498,45 @@
         </el-form-item> hyd -->
       </el-form>
       <el-table
-            border
-            :data="fileData"
-            style="width: 100%;height:auto;"
-            class="document"
-            v-show="title==='编辑'"
-            :header-row-class-name="StableClass"
-          >
-            <el-table-column label="文件名" align="center">
-              <template slot-scope="scope">
-                <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                  <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-            <el-table-column prop="createdAt" label="时间" width="160" align="center"></el-table-column>
-            <el-table-column label="任务来源" width="140" align="center">
-              <template slot-scope="scope">
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  :content="scope.row.createdBy"
-                  placement="top"
-                >
-                  <span class="abbreviate">{{scope.row.createdBy}}</span>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" width="100" align="center">
-              <template slot-scope="scope">
-                <span class="blueColor"  @click.stop="detailRemove(scope.row)">删除</span>
-                <!-- <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button> -->
-              </template>
-            </el-table-column>
-          </el-table>
-       <div
-        slot="footer"
-        class="dialog-footer"
-      >
+        border
+        height="300"
+        :data="fileData"
+        style="width: 100%;"
+        class="document"
+        v-show="title==='编辑'"
+        :header-row-class-name="StableClass">
+        <el-table-column label="文件名" align="center">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
+              <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createdAt" label="时间" width="160" align="center"></el-table-column>
+        <el-table-column label="任务来源" width="140" align="center">
+          <template slot-scope="scope">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="scope.row.createdBy"
+              placement="top">
+              <span class="abbreviate">{{scope.row.createdBy}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="100" align="center">
+          <template slot-scope="scope">
+            <span class="blueColor"  @click.stop="detailRemove(scope.row)">删除</span>
+            <!-- <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button> -->
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="browseDoc" v-show="title=='编辑'" style="width:100%;height:400px">
+        <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
+      </div>
+       <div slot="footer" class="dialog-footer">
          <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-          <el-button
-            size="small"
-            type="primary"
-            plain
-            @click="confirm('formLabelAlign')"
-            style="padding:0 16px;"
-          >确 定</el-button>
+          <el-button size="small" type="primary" plain @click="confirm('formLabelAlign')" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="782px">
@@ -564,15 +551,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item>
-          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
-          <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
-        </el-form-item> hyd-->
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
          <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
       </div>
@@ -606,15 +586,7 @@
         <el-table-column prop="reason" label="操作原因" align="center"></el-table-column>
         <el-table-column prop="remark" label="操作备注" align="center"></el-table-column>
       </el-table>
-      <el-table
-
-        border
-        :data="fileData"
-        style="width: 100%"
-        class="document"
-        v-show="title==='附件'"
-        :header-row-class-name="StableClass"
-      >
+      <el-table border :data="fileData" height="300" style="width: 100%" class="document" v-show="title==='附件'" :header-row-class-name="StableClass">
         <el-table-column label="文件名" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -637,6 +609,9 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="browseDoc" v-show="title=='附件'" style="width:100%;height:400px">
+        <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
+      </div>
     </el-dialog>
     <el-dialog
       title="文档预览"
@@ -863,6 +838,7 @@ export default {
     }
   },
   created() {
+    sessionStorage.setItem("data", JSON.stringify({}));
     if (this.urlName == "taskClaim") {
       this.taskClaimFlag = true;
     }
@@ -963,7 +939,7 @@ export default {
       });
     },
     docView(row) {
-      this.dialogFormVisibleA = true;
+      // this.dialogFormVisibleA = true;
       if (row) {
         let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
