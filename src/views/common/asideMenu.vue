@@ -39,10 +39,10 @@
       </div>
     </div>
     <div :class="this.flod?'changeExtends':'changeExtend'">
-      <span @click.stop="changeExtend('伸')" style="margin-left:-3px;">
+      <span @click.stop="changeExtend('伸')" style="margin-left:-3px;" v-if="this.flod===false">
         <img src="@/assets/img/leftExtend@2x.png" alt="">  
       </span>
-      <span @click.stop="changeExtend('缩')">
+      <span @click.stop="changeExtend('缩')" v-else-if="this.flod===true">
          <img src="@/assets/img/rightExtend@2x.png" alt="">  
       </span>
     </div>
@@ -174,9 +174,9 @@ import { mapState } from "vuex";
       }
     },
     mounted(){
-      // if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
-      //   this.fold = true;
-      // } else{ this.fold = false; }
+      if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
+        this.$store.commit('ChangeFlod',true)
+      } else{ this.$store.commit('ChangeFlod',false) }
 
       this.urlArr = computeNavbar(this.$store.state.deFineRout);
       if(computeName(this.$route.name,this.$store.state.deFineRout)){
@@ -201,9 +201,9 @@ import { mapState } from "vuex";
       },
       changeExtend(str){
         if(str==='伸'){
-          this.$store.commit('ChangeFlod',false)
+          this.$store.commit('ChangeFlod',true)
         }else if(str==='缩'){
-           this.$store.commit('ChangeFlod',true)
+           this.$store.commit('ChangeFlod',false)
         }
       }
     },

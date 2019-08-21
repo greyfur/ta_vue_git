@@ -345,7 +345,7 @@
       </el-col>
     </el-row>
     <!-- 弹窗区域 -->
-    <el-dialog title="拆分" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
+    <el-dialog title="拆分" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" width="782px">
       <el-form label-width="120px">
         <el-form-item label="拆分数量">
           <el-input v-model="subProcess" style="width:200px" type="number"></el-input>
@@ -533,7 +533,7 @@
         <el-button size="small" type="primary" plain @click="dialogFormVisible3 = false" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible5" :close-on-click-modal="modal">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible5" :close-on-click-modal="modal" width="782px">
       <el-form label-position="right" label-width="140px">
         <el-form-item label="驳回原因类型" v-show="title==='添加意见'">
           <el-select v-model="opinion" placeholder="请选择" style="width:100%" @change="yijian">

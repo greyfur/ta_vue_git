@@ -1,10 +1,10 @@
 <template>
   <div class="detailCred">
-    <router-link :to="{name:$route.query.tag}" style="color:#333;position:fixed;top:20px;left:80px;z-index:100;">
+    <router-link :to="{name:$route.query.tag}" :class="this.$store.state.flod?'leftBack':'rightBack'">
       <i class="iconfont iconleft-circle-o"></i>
     </router-link>
     <!-- 核销完成 -->
-    <div class="btn" v-if="$route.query.tag === 'collectiongEnd'">
+    <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'collectiongEnd'">
       <el-button type="primary" plain @click="getSg">同步状态</el-button>
       <el-button type="primary" plain @click="makeReport">生成核销报告</el-button>
       <el-button type="primary" plain @click="mailSend(2,'附件')">附件</el-button>
@@ -12,7 +12,7 @@
       <el-button type="primary" plain @click="submite(6,'流程结束')">流程结束</el-button>
     </div>
     <!-- 操作 -->
-    <div class="btn" v-if="$route.query.tag === 'credOperation'">
+    <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'credOperation'">
       <el-button type="primary" :disabled="czState" plain @click="mailSend(1,'上传附件')">上传附件</el-button>
       <el-button type="primary" :disabled="czState" plain @click="mailSend(2,'附件')">附件</el-button>
       <el-button type="primary" :disabled="czState" plain @click="submite(2,'指派','操作','收款录入')">指派</el-button>
@@ -23,7 +23,7 @@
       <el-button type="primary" :disabled="czState" plain @click="submite(1,'流程提交','收款复核')">流程提交</el-button>
     </div>
     <!-- 复核 -->
-    <div class="btn" v-if="$route.query.tag === 'credReview'">
+    <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'credReview'">
       <el-button type="primary" plain @click="submite(2,'指派','复核','收款复核')">指派</el-button>
       <el-button type="primary" plain @click="getSg">同步状态</el-button>
       <el-button type="primary" plain @click="mailSend(2,'附件')">附件</el-button>
@@ -31,7 +31,7 @@
       <el-button type="primary" plain @click="submite(1,'复核通过','收款录入')">复核通过</el-button>
     </div>
     <!-- 核销 -->
-    <div class="btn" v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'">
+    <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'credVerification' || $route.query.tag === 'viewInvalidate'">
       <!-- 8.20号，hasRecheckFlag如果不为1，操作指过来，流程推动按钮不让用：挂起、流程提交。。。不为1情况下有恢复按钮 -->
       <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BpLedger</el-button>
       <el-button type="primary" :disabled="hxState" @click="tbState" plain>同步状态</el-button>
@@ -2398,6 +2398,19 @@ export default {
   padding: 0 16px;
   box-shadow:0px 0px 1px 0px rgba(155,155,155,1);
 }
+.btns {
+  width: 100%;
+  position: fixed;
+  left: 180px;
+  bottom: 0;
+  z-index: 999;
+  background:#FFFFFF ;
+  height: 89px;
+  line-height: 89px;
+  padding: 0 16px;
+  overflow: hidden;
+  box-shadow:0px 0px 1px 0px rgba(155,155,155,1);
+}
 .btn .el-button {
   margin-bottom: 10px;
   margin-left: 0;
@@ -2522,5 +2535,11 @@ li.detail-item {
 .smallHand {
   cursor: pointer;
   color: #409eff;
+}
+.leftBack{
+  position:fixed;top:65px;left:90px;z-index:100;
+}
+.rightBack{
+  position:fixed;top:65px;left:205px;z-index:100;
 }
 </style>
