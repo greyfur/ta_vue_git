@@ -65,12 +65,12 @@
                 </el-button>
               </p>
             </div>
+              <!-- :header-row-class-name="StableClass" -->
             <el-table
               height="315"
               v-show="searchFlag2"
               stripe
               border
-              :header-row-class-name="StableClass"
               :data="tableData"
               style="width: 100%;margin-top:10px;"
               class="document">
@@ -119,6 +119,7 @@
                 </template>
               </el-table-column>
             </el-table>
+            <!-- pagination hyd -->
           </div>
         </div>
       </el-col>
@@ -1847,8 +1848,12 @@ export default {
   border: 1px solid #d4d4d4;
   border-top: none;
 }
+.el-table{
+  background: #fff;
+}
 .left {
   width: 100%;
+  background: #F5F5F5;
   /* box-shadow:4px 0px 10px 0px rgba(169,169,169,0.5); */
   padding: 20px;
 }

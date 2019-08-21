@@ -1192,6 +1192,7 @@ export default {
           this.RWFlag = row.processId.indexOf('RW')>0;
           console.log(this.RWFlag);
           this.fileData = [];
+         this.billSearch.wsPeriod=row.wsPeriod;
           if (row.wsType) {
             this.ZDoptions.forEach((el, i) => {
               if (el.name == row.wsType) {
