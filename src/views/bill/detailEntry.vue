@@ -13,6 +13,7 @@
           <el-button size="small" plain @click="submit(7)">标记签回</el-button>
           <el-button size="small" @click="onSics()">账单回写</el-button>
           <el-button size="small" plain @click="submit(6,'签回提交')">流程结束</el-button>
+          <el-button size="small" @click="exportBill">导出账单</el-button>
         </div>
         <!-- 录入 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'billEntry'">
@@ -21,7 +22,7 @@
           <el-button :type="isHover?'info':''" size="small" @click="submit(5)" plain>{{isHover?'已悬停':'状态悬停'}}</el-button>
           <el-button @click="dialogFormVisible = true" :disabled="isHover" size="small" plain>拆分</el-button>
           <el-button size="small" @click="onSics()">账单回写</el-button>
-          <!-- <i style="margin-right:8px;" class="iconfont iconGroup77"></i> -->
+          <el-button size="small" @click="exportBill">导出账单</el-button>
           <el-button plain :disabled="isHover" size="small" @click="submit(6,'录入提交')">流程提交</el-button>
         </div>
         <!-- 复核 -->
@@ -30,6 +31,7 @@
           <el-button size="small" @click="submit(8)" plain>复核驳回</el-button>
           <el-button size="small" @click="submit(3)" plain>复核通过</el-button>
           <el-button size="small" @click="onSics()">账单回写</el-button>
+          <el-button size="small" @click="exportBill">导出账单</el-button>
         </div>
         <div class="left">
           <div :class="searchFlag1===true?'searchNew':''" >
@@ -155,6 +157,13 @@
       <el-col :span="24" style="padding:0 16px;padding-bottom:100px">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息</div>
+          <div>
+            <el-checkbox-group v-model="wsCheckList" @change="onWsCheck">
+              <el-checkbox label="C">Closed</el-checkbox>
+              <el-checkbox label="O">Open</el-checkbox>
+              <el-checkbox label="I">Innnn</el-checkbox>
+            </el-checkbox-group>
+          </div>
         </div>
         <el-table
           v-show="searchFlag3"
@@ -430,7 +439,6 @@
         <el-button size="small" type="primary" plain @click="send" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
-
     <el-dialog :title="title" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign">
         <el-form-item label="用户名">
@@ -596,6 +604,8 @@ export default {
   name: "detailEntry",
   data() { 
     return {
+      path2:null,
+      wsCheckList:[],
       maxHeight:null,
       wsId:null,
       checkRobortUser:null,
@@ -687,6 +697,11 @@ export default {
           a: "流程状态",
           b: "",
           c: "processStatus"
+        },
+        {
+          a: "账单收到日期",
+          b: "",
+          c: "wsReceiptDate"
         }
       ],
       YWoptionsObj: {
@@ -759,6 +774,38 @@ export default {
     this.getBillInfo();
   },
   methods: {
+    exportBill(){
+      // this.$http.post(`api/worksheet/wSEntry/download/`,{processId:this.chooseRow.processId,},{responseType: "blob"})
+      this.$http.post("api/worksheet/wSEntry/download",{processId:this.chooseRow.processId},{responseType: "blob"})
+        .then(res => {
+          console.log(res,'xiazai');
+          if (res.status === 200) {
+            this.path2 = this.getObjectURL(res.data);
+            if (res.data) {
+              var a = document.createElement("a");
+              if (typeof a.download === "undefined") {
+                window.location = this.path2;
+              } else {
+                a.href = this.path2;
+                let formatString = escape(res.headers['content-disposition'].split(';')[1].split('=')[1]);
+                a.download =  decodeURI(formatString);
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+              }
+            } 
+          }
+        });
+    },
+    onWsCheck(){
+      // console.log(this.wsCheckList,'wsCheckList');
+      this.$http.post("api/worksheet/wSCheck/getWorkSheetList", {processId: this.chooseRow.processId,wsStatus:this.wsCheckList})
+        .then(res => {
+          if(res.status == 200){
+            this.SICSData = res.data;
+          }  
+        });
+    },
     yijian(){if(this.opinion!='其它'){ this.textareaOpinion=null;}},
     getBillInfo(){
       this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
@@ -1549,15 +1596,10 @@ export default {
         });
       } else if (tag == 3) {
         // 下载
-        this.$http
-          .post(
-            "api/anyShare/fileOperation/downloadDocument",
-            Object.assign({}, row, { processId: this.chooseRow.processId }),
-            { responseType: "blob" }
-          )
+        this.$http.post("api/anyShare/fileOperation/downloadDocument",Object.assign({}, row, { processId: this.chooseRow.processId }),{ responseType: "blob" })
           .then(res => {
+            console.log(res,'下载');
             if (res.status === 200) {
-              // this.path = res.data;
               this.path = this.getObjectURL(res.data);
               if (res.data) {
                 var a = document.createElement("a");

@@ -40,13 +40,6 @@
       <el-button type="primary" :disabled="hxState" v-show="row.hasRecheckFlag==1" plain @click="submite(1,'流程提交','收款录入')">流程提交</el-button>
       <el-button type="primary" :disabled="hxState" v-show="row.hasRecheckFlag!=1" plain @click="onVerification('UNDELAY')">恢复至操作</el-button>
     </div>
-    <!-- 暂挂 -->
-    <!-- <div class="btn" v-if="$route.query.tag === 'viewInvalidate'">
-	<el-button type="primary" plain @click="mailSend(2,'附件查看')">附件查看</el-button>
-	<el-button type="primary" plain @click="submite(5,'状态恢复')">状态恢复</el-button>
-</div>
-    -->
-
     <!-- 详情 -->
     <div :class="searchFlag1===true?'searchNew':''" >
       <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
@@ -1397,11 +1390,11 @@ export default {
       })
     },
     docView(row) {
+      this.dialogFormVisibleA = true;
       if (row) {
         let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && this.suffixFlag){ return false; }
-        this.dialogFormVisibleA = true;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
             document.getElementById("iframeId").contentWindow.postMessage(
