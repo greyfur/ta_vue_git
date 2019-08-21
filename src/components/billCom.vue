@@ -310,7 +310,7 @@
       :total="mustData.total"
     ></el-pagination>
     <!-- 弹窗 -->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" width="782px">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" :width="title==='流程提交'?'432px':'782px'">
       <el-form label-position="right" label-width="120px" :model="billSearch" :rules="rules" ref="billSearch" class="SwitchingMode">
         <el-form-item label="流程编号" v-show="title==='查询'">
           <el-input v-model.trim="billSearch.processId" placeholder="请输入流程编号"></el-input>
@@ -481,15 +481,39 @@
       </el-table>
       <el-table :data="track" border style="width: 100%;height:auto;" v-show="title==='踪迹'" :header-row-class-name="StableClass">
         <el-table-column prop="processId" label="流程编号" width="220" align="center"></el-table-column>
-        <el-table-column prop="actName" label="操作名称" align="center"></el-table-column>
+        <el-table-column prop="actName" label="操作名称" align="center">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark"  :content="scope.row.actName" placement="top-start">
+              <span class="abbreviate">{{scope.row.actName}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column label="录入人员" width="85" align="center">
           <template slot-scope="scope">
             <span>{{nameList[scope.row.actOperator]}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="actTime" label="操作时间" align="center"></el-table-column>
-        <el-table-column prop="reason" label="操作原因" align="center"></el-table-column>
-        <el-table-column prop="remark" label="操作备注" align="center"></el-table-column>
+        <el-table-column prop="actTime" label="操作时间" align="center">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark"  :content="scope.row.actTime" placement="top-start">
+              <span class="abbreviate">{{scope.row.actTime}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column prop="reason" label="操作原因" align="center">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark"  :content="scope.row.reason" placement="top-start">
+              <span class="abbreviate">{{scope.row.reason}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column prop="remark" label="操作备注" align="center">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark"  :content="scope.row.remark" placement="top-start">
+              <span class="abbreviate">{{scope.row.remark}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         small
@@ -530,7 +554,7 @@
       </div>
     </el-dialog>
     <!-- 拆分 -->
-    <el-dialog title="拆分" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal" width="782px">
+    <el-dialog title="拆分" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal" width="432px">
       <el-form label-width="120px" :rules="rules">
         <el-form-item label="拆分数量" required>
           <el-input v-model="subProcess" style="width:200px" type="number" ></el-input>
@@ -540,7 +564,7 @@
           <el-input
             type="textarea"
             :rows="4"
-            style="width:400px"
+            style="width:200px"
             placeholder="请输入拆分理由"
             v-model="reason"
           ></el-input>
