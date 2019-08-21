@@ -24,10 +24,6 @@
             </el-col>
             <el-col :span="8" class="zq1Parent">
               <span class="slable">账期 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;</span>
-              <!-- <el-input v-model.trim="zq2" placeholder="请输入年份" class="wsPeriod"></el-input> -->
-              <!-- <el-select filterable clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
-                <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
-              </el-select> -->
               <input class="wsDate" style="width:224px;height:40px;border-radius:5px;outline:none;border:1px solid #DCDFE6;" placeholder="请选择账期" v-model="querySearch.wsPeriod" @click.stop="zq1FlagFn()" />
               <div class="zq1" v-show="zq1Flag">
                   <p class="zqTitle">
@@ -41,16 +37,13 @@
               </div>
             </el-col>
           </el-row>
-          <!-- v-show="urlName === 'billCheck' ||urlName === 'billSignBack'||urlName === 'billEntry'" -->
            <el-row :gutter="10" class="billRow"> 
-            <!-- v-show="urlName === 'billEntry'" -->
             <el-col :span="8">
               <span class="slable">流程状态 &nbsp;&nbsp;</span>
               <el-select clearable v-model="querySearch.processStatus" placeholder="请选择流程状态">
                 <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-col>
-             <!-- v-show="urlName === 'billCheck'" -->
             <el-col :span="8">
               <span class="slable">录入人查询</span>
               <!-- <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input> -->
@@ -143,6 +136,14 @@
       </el-button>
     </div>
     <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;text-align:center;margin:0 auto;">
+      <el-table-column label="状态" v-if="urlName === 'billEntry'" align="center" width="50">
+        <template slot-scope="scope" v-show="urlName === 'billEntry'">
+          <div style="display: flex;align-items: center;justify-content: center;" v-show="urlName === 'billEntry'">
+            <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
+            <!-- <span>{{scope.row.rejectedFlag == '1'?'异常':'正常'}}</span> -->
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="流程编号" width="155" align="center">
         <template slot-scope="scope">
           <span
@@ -249,16 +250,6 @@
         </template>
       </el-table-column>
       <el-table-column prop="processStatus" label="流程状态" align="center"></el-table-column>
-      <el-table-column label="状态" v-if="urlName === 'billEntry'" align="center">
-        <template slot-scope="scope" v-show="urlName === 'billEntry'">
-          <div style="display: flex;align-items: center;" v-show="urlName === 'billEntry'">
-            <span
-              :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"
-            ></span>
-            <span>{{scope.row.rejectedFlag == '1'?'异常':'正常'}}</span>
-          </div>
-        </template>
-      </el-table-column>
       <el-table-column fixed="right" label="操作" width="80" align="center">
         <template slot-scope="scope">
           <el-dropdown placement="top-start">
@@ -390,14 +381,13 @@
             <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="分出公司" prop="cedentModel" v-show="title === '手工创建' || title==='编辑'">
+        <el-form-item label="分出公司" :prop="billSearch.wsBusinessType=='C'?'':'cedentModel'" v-show="title === '手工创建' || title==='编辑'">
           <el-select clearable filterable v-model="billSearch.cedentModel" placeholder="请选择分出公司">
             <el-option
               v-for="(item,index) in cedentList"
               :key="index"
               :label="item.codecode+' - '+item.codeName"
-              :value="index"
-            >
+              :value="index">
               <span style="float:left">{{ item.codecode }}</span>
               <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
             </el-option>
@@ -409,14 +399,13 @@
                 v-for="(item,index) in brokerList"
                 :key="index"
                 :label="item.codecode+' - '+item.codeName"
-                :value="index"
-              >
+                :value="index">
                 <span style="float:left">{{ item.codecode }}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="账单收到日期" prop="wsReceiptDate" v-show="title === '手工创建' || title==='编辑'">
+          <el-form-item label="账单收到日期" :prop="billSearch.wsBusinessType=='C'?'':'wsReceiptDate'" v-show="title === '手工创建' || title==='编辑'">
             <el-date-picker
               value-format="timestamp"
               v-model="billSearch.wsReceiptDate"

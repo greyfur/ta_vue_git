@@ -526,6 +526,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="uwYear" label="业务年度" align="center"></el-table-column>
+            <el-table-column prop="note" label="NOTE" align="center"></el-table-column>
             <el-table-column prop="wsPeriod" label="账单期" align="center"></el-table-column>
             <el-table-column label="账单标题" align="center">
               <template slot-scope="scope">

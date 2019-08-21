@@ -37,6 +37,14 @@
       <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div>
     <el-table :data="tableData" border style="width: 100%" :height="changeClientHight" :header-row-class-name="StableClass">
+      <el-table-column label="状态" v-if="urlName === 'payOperation' || urlName === 'approvalDone'"  align="center">
+        <template slot-scope="scope" v-if="urlName === 'payOperation' || urlName === 'approvalDone'">
+          <div style="display: flex;align-items: center;justify-content: center;">
+            <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
+            <!-- <span>{{scope.row.rejectedFlag == '1'?'异常':'正常'}}</span> -->
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="流程编号" width="150" align="center">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
@@ -80,24 +88,16 @@
           <span>{{nameList[scope.row.closedBy]}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="processStatus" label="流程状态" width="110" align="center"></el-table-column>
-      <el-table-column label="状态" v-if="urlName === 'payOperation' || urlName === 'approvalDone'"  align="center">
-        <template slot-scope="scope" v-if="urlName === 'payOperation' || urlName === 'approvalDone'">
-          <div style="display: flex;align-items: center;">
-            <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
-            <span>{{scope.row.rejectedFlag == '1'?'异常':'正常'}}</span>
-          </div>
-        </template>
-      </el-table-column>
       <el-table-column label="是否紧急" v-if="urlName === 'payment'" align="center">
         <template slot-scope="scope" v-if="urlName === 'payment'">
-          <div style="display: flex;align-items: center;">
-            <span :class="scope.row.accountCloseFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
+          <div style="display: flex;align-items: center;justify-content: center;">
+            <!-- <span :class="scope.row.accountCloseFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span> -->
             <span>{{scope.row.accountCloseFlag == '1'?'紧急':'正常'}}</span>
           </div>
         </template>
       </el-table-column>
-       <el-table-column prop="businessOrigin" width="160" label="Business Origin" align="center"></el-table-column>
+      <el-table-column prop="processStatus" label="流程状态" width="110" align="center"></el-table-column>
+      <el-table-column prop="businessOrigin" width="160" label="Business Origin" align="center"></el-table-column>
       <el-table-column label="Base Company" width="160" prop="baseCompany" align="center"></el-table-column>
       <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80" align="center">
@@ -116,6 +116,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- <div>623628379</div> -->
     <el-pagination
       @size-change="handleSizeChange()"
       @current-change="handleCurrentChange"

@@ -563,6 +563,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
+            <el-table-column prop="note" label="NOTE" align="center"></el-table-column>
             <el-table-column prop="uwYear" label="业务年度" align="center" width="100"></el-table-column>
             <el-table-column prop="wsPeriod" label="账单期" align="center" width="100"></el-table-column>
              <el-table-column label="账单标题" align="center" width="100">
