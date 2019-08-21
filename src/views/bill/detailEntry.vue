@@ -1856,7 +1856,7 @@ export default {
   overflow: hidden;
   box-shadow:0px 0px 1px 0px rgba(155,155,155,1);
 }
-.btn .el-button {
+.btn .el-button,.btns .el-button {
   margin-bottom: 10px;
   margin-left: 0;
   margin-right: 10px;
@@ -1866,6 +1866,10 @@ export default {
 }
 .btn .el-button.is-plain:focus,
 .btn .el-button.is-plain:hover {
+   background-color: #1A6C98;
+}
+.btns .el-button.is-plain:focus,
+.btns .el-button.is-plain:hover {
    background-color: #1A6C98;
 }
 .detail-word {

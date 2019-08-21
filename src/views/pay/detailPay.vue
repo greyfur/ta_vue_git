@@ -2792,7 +2792,19 @@ export default {
   background-color: #005C8D;
   color: #fff;
 }
+.btns .el-button{
+  margin-bottom: 10px;
+  margin-left: 0;
+  margin-right: 10px;
+  border: 1px solid #005C8D;
+  background-color: #005C8D;
+  color: #fff;
+}
 .btn .info{
+  margin-right: 10px;
+  color: #fff;
+}
+.btns .info{
   margin-right: 10px;
   color: #fff;
 }
@@ -2801,6 +2813,12 @@ export default {
     background-color: #1A6C98 ;
     color: #fff;
     /* color: #2B3E50; */
+}
+.btns .el-button.is-plain:focus,
+.btns .el-button.is-plain:hover {
+   border: 1px solid #005C8D;
+    background-color: #1A6C98 ;
+    color: #fff;
 }
 .detail-word {
   background-color: #ecf5ff;

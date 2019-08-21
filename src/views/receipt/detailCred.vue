@@ -2433,6 +2433,14 @@ export default {
   background-color: #005C8D;
   color: #fff;
 }
+.btns .el-button {
+  margin-bottom: 10px;
+  margin-left: 0;
+  margin-right: 10px;
+  border: 1px solid #005c8d;
+  background-color: #005C8D;
+  color: #fff;
+}
 .detail-word {
   background-color: #ecf5ff;
   margin-bottom: 20px;
