@@ -690,6 +690,11 @@ export default {
           a: "流程状态",
           b: "",
           c: "processStatus"
+        },
+        {
+          a: "账单收到日期",
+          b: "",
+          c: "wsReceiptDate"
         }
       ],
       YWoptionsObj: {
