@@ -26,16 +26,17 @@
           text-color="#fff"
           @open="handleOpen"
           active-text-color="#fff">
-           <template v-if="$route.name==='detailEntry'||$route.name==='detailPay'|| $route.name==='detailCred'">
+          <el-menu-item :index="99999" :key="99999" class="navFirst" v-if="$route.name==='detailEntry'||$route.name==='detailPay'|| $route.name==='detailCred'">
+           <template>
              <router-link
               :to="{name:$route.query.tag}"
-              :class="this.$store.state.flod?'leftBack':'rightBack'"
-              style="width:64px;height:64px;display:inline-block;text-align:center;line-height:64px;"
               >
               <i class="iconfont iconleft-circle-o" style="color:#fff;"></i>
             </router-link>
+            <span>返回</span>
               <!-- <i style="color:#fff;" class="iconfont iconleft-circle-o" v-if="$route.name==='detailEntry'||$route.name==='detailPay'|| $route.name==='detailCred'"></i> -->
           </template>
+          </el-menu-item>
           <el-submenu :index="el.name" v-for="(el,index) in urlArr" :key="index" class="navFirst">
            
             <template slot="title">
