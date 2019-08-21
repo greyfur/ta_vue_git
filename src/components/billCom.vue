@@ -314,7 +314,7 @@
       :total="mustData.total"
     ></el-pagination>
     <!-- 弹窗 -->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" :width="title==='踪迹'?'80%':'50%'">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" width="782px">
       <el-form label-position="right" label-width="120px" :model="billSearch" :rules="rules" ref="billSearch" class="SwitchingMode">
         <el-form-item label="流程编号" v-show="title==='查询'">
           <el-input v-model.trim="billSearch.processId" placeholder="请输入流程编号"></el-input>
@@ -534,7 +534,7 @@
       </div>
     </el-dialog>
     <!-- 拆分 -->
-    <el-dialog title="拆分" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal">
+    <el-dialog title="拆分" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal" width="782px">
       <el-form label-width="120px" :rules="rules">
         <el-form-item label="拆分数量" required>
           <el-input v-model="subProcess" style="width:200px" type="number" ></el-input>

@@ -1,12 +1,12 @@
 <template>
   <div class="detailPay">
-    <router-link :to="{name:$route.query.tag}" style="color:#333;position:fixed;top:20px;left:80px;z-index:100;">
+    <router-link :to="{name:$route.query.tag}" :class="this.$store.state.flod?'leftBack':'rightBack'">
       <i class="iconfont iconleft-circle-o"></i>
     </router-link>
     <el-row>
       <el-col :span="11" style="padding:0 16px;">
         <!-- 核销 --> 
-        <div class="btn" v-if="$route.query.tag === 'payClose'">
+        <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payClose'">
           <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BpLedger</el-button>
           <el-button size="small" :disabled="hxState" @click="makeReport" plain>生成核销报告</el-button>
           <el-button size="small" :disabled="hxState" @click="getTaxInfo" plain>增值税信息获取</el-button>
@@ -16,7 +16,7 @@
           <el-button size="small" :disabled="hxState" plain @click="submite(1,'流程提交')">流程提交</el-button>
         </div>
         <!-- 财务支付/紧急付款/partial完结 -->
-        <div class="btn" v-if="$route.query.tag === 'payment' || $route.query.tag === 'partialDone' || $route.query.tag === 'instancyPay'">
+        <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payment' || $route.query.tag === 'partialDone' || $route.query.tag === 'instancyPay'">
           <el-button type="primary" v-if="$route.query.tag === 'partialDone'" @click="openBPSICS" plain>打开BpLedger</el-button>
           <!-- <el-button size="small" plain>附件上传</el-button> -->
           <el-button size="small" plain @click="tongbu" v-if="$route.query.tag === 'instancyPay'">同步状态</el-button>
@@ -25,7 +25,7 @@
           <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button>
         </div>
         <!-- 操作 -->
-        <div class="btn" v-if="$route.query.tag === 'payOperation'">
+        <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payOperation'">
           <el-button size="small" @click="openSICS" plain>打开SICS</el-button>
           <el-button size="small" plain @click="makeDoc('a')">生成审批文档</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(3,'置废','操作')">置废</el-button>
@@ -36,7 +36,7 @@
           <el-button size="small" :disabled="czState" plain @click="submite(1,'流程提交',0,'付款一级审批')">流程提交</el-button>
         </div> 
         <!-- 支票 -->
-        <div class="btn" v-if="$route.query.tag === 'approvalDone'">
+        <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'approvalDone'">
           <el-button size="small" @click="openSICS">打开SICS</el-button>
           <!-- <el-button size="small" plain @click="mailSend(1,'上传附件')">上传附件</el-button> -->
           <!-- <el-button size="small" plain @click="mailSend(2,'附件查看')">附件查看</el-button> -->
@@ -46,14 +46,14 @@
           <el-button size="small" plain @click="urgencyPay">紧急付款</el-button>
         </div> 
         <!-- 复核 -->
-        <div class="btn" v-if="$route.query.tag === 'payReview'">
+        <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payReview'">
           <el-button size="small" plain @click="submite(2,'指派','复核')">指派</el-button>
           <el-button size="small" plain @click="tongbu">同步状态</el-button>
           <el-button size="small" plain @click="submite(4,'复核驳回')">复核驳回</el-button>
           <el-button size="small" plain @click="submite(6,'复核通过')">复核通过</el-button>
         </div>
         <!-- 审批 -->
-        <div class="btn approvalDoneBtn" v-if="$route.query.tag === 'payVerification'">
+        <div :class="this.$store.state.flod?'btn approvalDoneBtn':'btns approvalDoneBtn'" v-if="$route.query.tag === 'payVerification'">
           <div class="btnChild">
             <el-button size="mini" plain class="approved" style="height: 32px; position:relative">
               <span class="approvedName" @click="submite(5,'审批通过')">审批通过</span>
@@ -2728,6 +2728,19 @@ export default {
   padding: 0 16px;
   box-shadow:0px 0px 1px 0px rgba(155,155,155,1);
 }
+.btns {
+  width: 100%;
+  position: fixed;
+  left: 180px;
+  bottom: 0;
+  z-index: 999;
+  background:#FFFFFF ;
+  height: 89px;
+  line-height: 89px;
+  padding: 0 16px;
+  overflow: hidden;
+  box-shadow:0px 0px 1px 0px rgba(155,155,155,1);
+}
 .btn .el-button{
   margin-bottom: 10px;
   margin-left: 0;
@@ -2937,5 +2950,10 @@ li.detail-item{
   background-color: #fff;
   z-index: 100000000;
 }
-
+.leftBack{
+  position:fixed;top:65px;left:90px;z-index:100;
+}
+.rightBack{
+  position:fixed;top:65px;left:205px;z-index:100;
+}
 </style>

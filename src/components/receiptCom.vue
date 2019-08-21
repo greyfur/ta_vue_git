@@ -360,7 +360,7 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="mustData.total"
     ></el-pagination>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" class="SwitchingMode">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" class="SwitchingMode" width="782px">
       <el-form
         :label-position="labelPosition"
         label-width="140px"
@@ -552,7 +552,7 @@
           >确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="432">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="782px">
       <el-form label-width="140px" v-show="title==='流程提交'">
         <el-form-item label="选择处理人">
           <el-select filterable clearable v-model="assignee" placeholder="请选择">
