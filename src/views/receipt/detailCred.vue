@@ -1,8 +1,8 @@
 <template>
   <div class="detailCred">
-    <router-link :to="{name:$route.query.tag}" :class="this.$store.state.flod?'leftBack':'rightBack'">
+    <!-- <router-link :to="{name:$route.query.tag}" :class="this.$store.state.flod?'leftBack':'rightBack'">
       <i class="iconfont iconleft-circle-o"></i>
-    </router-link>
+    </router-link> -->
     <!-- 核销完成 -->
     <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'collectiongEnd'">
       <el-button type="primary" plain @click="getSg">同步状态</el-button>

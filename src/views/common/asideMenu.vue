@@ -26,7 +26,18 @@
           text-color="#fff"
           @open="handleOpen"
           active-text-color="#fff">
+           <template v-if="$route.name==='detailEntry'||$route.name==='detailPay'|| $route.name==='detailCred'">
+             <router-link
+              :to="{name:$route.query.tag}"
+              :class="this.$store.state.flod?'leftBack':'rightBack'"
+              style="width:64px;height:64px;display:inline-block;text-align:center;line-height:64px;"
+              >
+              <i class="iconfont iconleft-circle-o" style="color:#fff;"></i>
+            </router-link>
+              <!-- <i style="color:#fff;" class="iconfont iconleft-circle-o" v-if="$route.name==='detailEntry'||$route.name==='detailPay'|| $route.name==='detailCred'"></i> -->
+          </template>
           <el-submenu :index="el.name" v-for="(el,index) in urlArr" :key="index" class="navFirst">
+           
             <template slot="title">
               <i style="color:#fff;" :class="iconEmnu[el.name]"></i>
               <span>{{el.title}}</span>

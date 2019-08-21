@@ -1,10 +1,10 @@
 <template> 
   <div class="detailEntry">
-    <router-link
+    <!-- <router-link
       :to="{name:$route.query.tag}"
       :class="this.$store.state.flod?'leftBack':'rightBack'">
       <i class="iconfont iconleft-circle-o" style="color:#000;"></i>
-    </router-link>
+    </router-link> -->
     <el-row>
       <el-col :span="8">
         <!-- 签回 -->
