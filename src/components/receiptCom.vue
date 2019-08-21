@@ -710,26 +710,26 @@ export default {
       hide: false,
       labelPosition: "right",
       formLabelAlign: {
-        rmSettleCompanyCode: null,
-        rmSettleCompanyName: null,
-        rmCurrency: null,
-        rmReceiptDate: null,
-        businessOrigin: null,
-        baseCompany: null,
-        rmAmount: null,
-        modifyBy: null,
-        rmWrittenOffNum: null,
-        rmOriSettleCompanyName: null,
-        rmOriCurrency: null,
-        rmOriAmount: null,
-        rmChargesCurrency: null,
-        rmChargesAmount: null,
-        rmSettleUser: null,
-        payerBankNumber: null,
-        payerBankName: null,
-        payerAccountNumber: null,
-        payerName: null,
-        processStatus: null
+        rmSettleCompanyCode: '',
+        rmSettleCompanyName: '',
+        rmCurrency: '',
+        rmReceiptDate: '',
+        businessOrigin: '',
+        baseCompany: '',
+        rmAmount: '',
+        modifyBy: '',
+        rmWrittenOffNum: '',
+        rmOriSettleCompanyName: '',
+        rmOriCurrency: '',
+        rmOriAmount: '',
+        rmChargesCurrency: '',
+        rmChargesAmount: '',
+        rmSettleUser: '',
+        payerBankNumber: '',
+        payerBankName: '',
+        payerAccountNumber: '',
+        payerName: '',
+        processStatus: ''
       },
       TJRoptions: [],
       track: [],
@@ -937,12 +937,12 @@ export default {
      changeWindow(){
       let that=this;
       document.body.onresize=function(e){
-          if(that.$route.name==='financialCreat'||that.$route.name==='taskClaim'){
-             that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
-          }else{
-            that.changeClientHight=document.body.clientHeight-278-document.querySelector('.el-table').offsetTop;
-          }
-          // that.changeClientHight=document.body.clientHeight-178-document.querySelector('.el-table').offsetTop;
+        if(that.$route.name==='financialCreat'||that.$route.name==='taskClaim'){
+            that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+        }else{
+          that.changeClientHight=document.body.clientHeight-278-document.querySelector('.el-table').offsetTop;
+        }
+        // that.changeClientHight=document.body.clientHeight-178-document.querySelector('.el-table').offsetTop;
       }
     },
     init(tag) {
@@ -1018,7 +1018,7 @@ export default {
     },
     reset() {
       for (let k in this.formLabelAlign) {
-        this.formLabelAlign[k] = null;
+        this.formLabelAlign[k] = '';
       }
       this.cedentModel = null;
     },
@@ -1396,11 +1396,14 @@ export default {
         case 6: //编辑
           this.$http.post("api/receipt/finaCreat/update",Object.assign({}, this.mustData, this.formLabelAlign, {actOperator: this.$store.state.userName}))
             .then(res => {
-              if (res.status === 200 && res.data.msg === "操作成功") {
+              if (res.status === 200 && res.data.code == 0) {
+                this.$message({ type: "success", message: res.data.msg });
                 this.dialogFormVisible = false;
                 this.init();
-              } else if (res.data.msg) {
+              } else if (res.data.code == 1) {
                 this.$message.error(res.data.msg);
+              } else{
+                this.$message({ type: "warning", message: res.data.msg });
               }
               this.$refs[formName].resetFields();
             });
