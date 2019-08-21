@@ -162,7 +162,7 @@
             <el-checkbox-group v-model="wsCheckList" @change="onWsCheck">
               <el-checkbox label="C">Closed</el-checkbox>
               <el-checkbox label="O">Open</el-checkbox>
-              <el-checkbox label="I">Innnn</el-checkbox>
+              <el-checkbox label="I">Inactive</el-checkbox>
             </el-checkbox-group>
           </div>
         </div>

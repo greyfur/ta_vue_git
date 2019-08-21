@@ -136,7 +136,7 @@
       </el-button>
     </div>
     <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;text-align:center;margin:0 auto;">
-      <el-table-column label="状态" v-if="urlName === 'billEntry'" align="center" width="50">
+      <el-table-column v-if="urlName === 'billEntry'" align="center" width="50">
         <template slot-scope="scope" v-show="urlName === 'billEntry'">
           <div style="display: flex;align-items: center;justify-content: center;" v-show="urlName === 'billEntry'">
             <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
@@ -291,15 +291,25 @@
       </el-table-column>
       <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
     </el-table>
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="mustData.pageNumber"
-      :page-sizes="[20, 50, 80, 100]"
-      :page-size="mustData.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="mustData.total"
-    ></el-pagination>
+    <div style="width:100%;display:flex;align-items: flex-end;justify-content: space-between;">
+      <div></div>
+      <div style="display:flex;align-items: flex-end;justify-content: space-between;">
+        <div style="padding-bottom: 5px;padding-right: 10px;"> 
+          <span class='statePoint stateRed'></span><span>异常</span>
+          <span class='statePoint stateGreen'></span><span>正常</span>
+        </div>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="mustData.pageNumber"
+          :page-sizes="[20, 50, 80, 100]"
+          :page-size="mustData.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="mustData.total"
+        ></el-pagination>
+      </div>
+    </div>
+    
     <!-- 弹窗 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" :width="title==='流程提交'?'432px':'782px'">
       <el-form label-position="right" label-width="120px" :model="billSearch" :rules="rules" ref="billSearch" class="SwitchingMode">

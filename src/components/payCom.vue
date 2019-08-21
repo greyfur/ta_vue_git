@@ -37,7 +37,7 @@
       <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div>
     <el-table :data="tableData" border style="width: 100%" :height="changeClientHight" :header-row-class-name="StableClass">
-      <el-table-column label="状态" v-if="urlName === 'payOperation' || urlName === 'approvalDone'"  align="center">
+      <el-table-column v-if="urlName === 'payOperation' || urlName === 'approvalDone'" width="50" align="center">
         <template slot-scope="scope" v-if="urlName === 'payOperation' || urlName === 'approvalDone'">
           <div style="display: flex;align-items: center;justify-content: center;">
             <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
@@ -116,16 +116,26 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- <div>623628379</div> -->
-    <el-pagination
-      @size-change="handleSizeChange()"
-      @current-change="handleCurrentChange"
-      :current-page="mustData.pageNumber"
-      :page-sizes="[20, 50, 80, 100]"
-      :page-size="mustData.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="mustData.total">      
-    </el-pagination>
+    <div style="width:100%;display:flex;align-items: flex-end;justify-content: space-between;">
+      <div></div>
+      <div style="display:flex;align-items: flex-end;justify-content: space-between;">
+        <div style="padding-bottom: 5px;padding-right: 10px;"> 
+          <span class='statePoint stateRed'></span><span>异常</span>
+          <span class='statePoint stateGreen'></span><span>正常</span>
+        </div>
+        <el-pagination
+          style="width: fit-content;"
+          @size-change="handleSizeChange()"
+          @current-change="handleCurrentChange"
+          :current-page="mustData.pageNumber"
+          :page-sizes="[20, 50, 80, 100]"
+          :page-size="mustData.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="mustData.total">      
+        </el-pagination>
+      </div>
+    </div>
+    
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign" class="SwitchingMode">
         <el-form-item label="结付公司">
