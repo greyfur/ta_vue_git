@@ -1291,6 +1291,9 @@ export default {
   }, 
   beforeMount(){ this.copy('proNum',1) },
   mounted() {
+    if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
+        this.$store.commit('ChangeFlod',true)
+      } else{ this.$store.commit('ChangeFlod',false) }
     this.maxHeight = `${document.body.clientHeight-200}px`;
     setTimeout(() => {
       // 分出人+经济人all
@@ -2424,6 +2427,14 @@ export default {
   box-shadow:0px 0px 1px 0px rgba(155,155,155,1);
 }
 .btn .el-button {
+  margin-bottom: 10px;
+  margin-left: 0;
+  margin-right: 10px;
+  border: 1px solid #005c8d;
+  background-color: #005C8D;
+  color: #fff;
+}
+.btns .el-button {
   margin-bottom: 10px;
   margin-left: 0;
   margin-right: 10px;
