@@ -576,15 +576,39 @@
       </el-collapse>
       <el-table :header-row-class-name="StableClass" :data="track" border style="width: 100%" v-show="title==='踪迹'">
         <el-table-column prop="processId" label="流程编号" width="140" align="center"></el-table-column>
-        <el-table-column prop="actName" label="操作名称" align="center"></el-table-column>
+        <el-table-column prop="actName" label="操作名称" align="center">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark"  :content="scope.row.actName" placement="top-start">
+              <span class="abbreviate">{{scope.row.actName}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column label="任务来源">
           <template slot-scope="scope">
             <span>{{nameList[scope.row.actOperator]}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="actTime" label="操作时间" align="center"></el-table-column>
-        <el-table-column prop="reason" label="操作原因" align="center"></el-table-column>
-        <el-table-column prop="remark" label="操作备注" align="center"></el-table-column>
+        <el-table-column prop="actTime" label="操作时间" align="center">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark"  :content="scope.row.actTime" placement="top-start">
+              <span class="abbreviate">{{scope.row.actTime}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column prop="reason" label="操作原因" align="center">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark"  :content="scope.row.reason" placement="top-start">
+              <span class="abbreviate">{{scope.row.reason}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column prop="remark" label="操作备注" align="center">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark"  :content="scope.row.remark" placement="top-start">
+              <span class="abbreviate">{{scope.row.remark}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
       </el-table>
       <el-table border :data="fileData" height="300" style="width: 100%" class="document" v-show="title==='附件'" :header-row-class-name="StableClass">
         <el-table-column label="文件名" align="center">
