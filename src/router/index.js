@@ -10,7 +10,8 @@ export const constantRouterMap = [
     name: 'indexPage',
     components:{
       default:() => import("@/components/indexPage"),
-      head:() => import("@/views/common/headNav"),
+      asideMenu:() => import("@/views/common/asideMenu"),
+      headNav:() => import("@/views/common/headNav"),
     },
   },
 ]

@@ -2379,7 +2379,7 @@ export default {
 .detailCred {
   padding: 20px 30px;
   width: 100%;
-  padding-left: 80px;
+  /* padding-left: 80px; */
   padding-bottom: 90px;
 }
 .credContent {

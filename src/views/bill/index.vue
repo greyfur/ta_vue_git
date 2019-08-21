@@ -44,7 +44,7 @@ import {computeSidebar} from '@/assets/js/util.js'
 </script>
 <style>
 .bill{
-  margin-left: 256px;
+  /* margin-left: 180px; */
   height: 652px;
 }
 .left-content{

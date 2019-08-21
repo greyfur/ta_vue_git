@@ -2749,7 +2749,7 @@ export default {
 } */
 .detailPay{
   width: 100%;
-  padding-left: 64px;
+  /* padding-left: 64px; */
   padding-bottom: 90px;
 }
 .credContent {
