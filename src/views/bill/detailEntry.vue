@@ -265,9 +265,12 @@
           </el-table-column> -->
           <el-table-column width="180" label="修改意见" align="center">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark"  :content="scope.row.rejectType&&scope.row.remark?scope.row.remark+'-'+scope.row.rejectType:''" placement="top-start">
-                <span class="abbreviate" v-if="scope.row.rejectType&&scope.row.remark">{{scope.row.rejectType}}-{{scope.row.remark}}</span>
-                <span class="abbreviate" v-else></span>
+              <!-- <el-tooltip class="item" effect="dark"  :content="scope.row.rejectType&&scope.row.remark?scope.row.remark+'-'+scope.row.rejectType:''" placement="top-start"> -->
+              <el-tooltip class="item" effect="dark"  :content="scope.row.remark+'-'+scope.row.rejectType" placement="top-start">
+                <span class="abbreviate">{{scope.row.rejectType}}-{{scope.row.remark}}</span>
+                <!-- <span class="abbreviate" v-if="scope.row.rejectType&&scope.row.remark">{{scope.row.rejectType}}-{{scope.row.remark}}</span>
+                <span class="abbreviate" v-else></span> -->
+                <!-- 8.21 v-else有问题  -->
               </el-tooltip>
             </template>
           </el-table-column>
@@ -818,6 +821,7 @@ export default {
           this.chooseRow = res.data;
           res.data.processStatus === "已悬停"? (this.isHover = true):(this.isHover = false);
           this.SICSData = res.data.workSheetVOlist;
+          console.log(this.SICSData,'this.SICSData');
           // 获取详情的值
       
           this.chooseRow.cedentCodeName=[];
@@ -1413,6 +1417,7 @@ export default {
             .then(res => {
               if (res.status === 200 && res.data.code == 0) {
                 this.getBillInfo();
+                // this.onSics();
                 this.dialogFormVisible5 = false;
                 this.$message({type: "success",message: res.data.msg});
               } else if (res.data.code == 1) {
