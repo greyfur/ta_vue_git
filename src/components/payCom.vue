@@ -364,7 +364,7 @@ export default {
         hide:false,
         labelPosition:'right',
         formLabelAlign:{
-          rmSettleCompanyCode:null,
+          rmSettleCompanyCode:'',
           rmSettleCompanyName:null,
           rmCurrency:null,
           rmReceiptDate:null,
@@ -942,10 +942,15 @@ export default {
             if(valid) {
               this.$http.post('api/pay/teskClaim/update',Object.assign({},this.mustData,this.formLabelAlign,{actOperator:this.$store.state.userName})).then(res =>{
                 // && res.data.msg === '操作成功'
-                if(res.status === 200 ){
+                if(res.status === 200 && res.data.code == 0){
+                  this.$message({ type: "success", message: res.data.msg });
                   this.dialogFormVisible = false;
                   this.init();
                   this.$refs[formName].resetFields();
+                } else if (res.data.code == 1) {
+                  this.$message.error(res.data.msg);
+                } else{
+                  this.$message({ type: "warning", message: res.data.msg });
                 }
               })
             }

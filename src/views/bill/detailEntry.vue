@@ -992,35 +992,29 @@ export default {
     },
     send() {
       if (this.title == "OCR上传") {
-        this.$http.post("api/anyShare/fileOperation/previewDocument",Object.assign({}, this.ocrRow, { processId: this.chooseRow.processId}),{ responseType: "blob" })
-          .then(res => {
-            if (res.status == 200) { 
-              let resFile = new FormData();
+        // this.$http.post("api/anyShare/fileOperation/previewDocument",Object.assign({}, this.ocrRow, { processId: this.chooseRow.processId}),{ responseType: "blob" })
+        //   .then(res => {
+        //     if (res.status == 200) { 
+        //       let resFile = new FormData();
               // 旧的
-              resFile.append("filePatn", res.data);
-              resFile.append("recognize_service", this.recognize_service);
-              this.$http.post("ocrApi/PrivatizingOcrTest/ocrDiscern.do", resFile, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
-              // 新的
               // resFile.append("filePatn", res.data);
-              // resFile.append("docCloudId", this.ocrRow.docCloudId);
-              // resFile.append("port", '8080');
-              // resFile.append("ocrUrl", 'PrivatizingOcrTest/ocrDiscern.do');
-              // resFile.append("ip", '172.30.19.200');
               // resFile.append("recognize_service", this.recognize_service);
-              // this.$http.post("api/ocrSystem/requestOCR", resFile, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
-                .then(res => {
-                  if (res.status === 200 && res.data) {
-                    this.$message({ type: "success", message: "提交成功" });
-                    this.dialogFormVisible2 = false;
-                  } else {
-                    if (res.data.errorMessage) {
-                      this.$message.error(res.data.errorMessage);
-                      this.dialogFormVisible2 = false;
-                    }
-                  }
-                });
+              // this.$http.post("ocrApi/PrivatizingOcrTest/ocrDiscern.do", resFile, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
+              // 新的
+        this.$http.post("api/ocrSystem/requestOCR", {docCloudId:this.ocrRow.docCloudId,actOperator:this.chooseRow.curOperator,recognize_service:this.recognize_service})
+          .then(res => {
+            if (res.status === 200 && res.data.code == 0) {
+              this.$message({ type: "success", message: res.data.msg });
+              this.dialogFormVisible2 = false;
+            } else {
+              if (res.data.msg) {
+                this.$message.error(res.data.msg);
+                this.dialogFormVisible2 = false;
+              }
             }
           });
+          //   }
+          // });
       } else if (this.title == "邮件通知") {
         let info = {},params = null;
         info = Object.assign({},{emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle });
