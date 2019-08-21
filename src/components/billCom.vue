@@ -319,7 +319,7 @@
           <el-input v-model.trim="billSearch.processName" placeholder="请输入流程名称"></el-input>
         </el-form-item>
         <el-form-item label="任务类型" prop="wsBusinessType" v-show="title==='手工创建' || title==='编辑'">
-          <el-select :disabled='RWFlag' clearable v-model="billSearch.wsBusinessType" placeholder="请选择任务类型">
+          <el-select :disabled='RWFlag' clearable v-model="billSearch.wsBusinessType" placeholder="请选择任务类型" @change="onWsBusinessType">
             <el-option v-for="item in YWoptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
@@ -424,8 +424,11 @@
               placeholder="选择日期"
             ></el-date-picker>
           </el-form-item>
-        <el-form-item label="原流程编号" v-show="title==='编辑' && billSearch.wsBusinessType=='C'">
-          <el-input v-model.trim="billSearch.preProcessId" placeholder="请输入原流程编号"></el-input>
+        <el-form-item label="原流程编号" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'">
+          <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
+        </el-form-item>
+        <el-form-item label="原流程编号" v-show="title==='手工创建'&& billSearch.wsBusinessType=='C'">
+          <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
         </el-form-item>
         <el-form-item label="附件上传" v-show="title==='编辑'">
           <el-upload
@@ -456,7 +459,7 @@
           <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
         </el-collapse-item>
       </el-collapse>
-      <el-table :data="fileData" style="width: 100%;height:auto;" :header-row-class-name="StableClass" class="document" border v-show="title=='编辑'">
+      <el-table :data="fileData" height="300" style="width: 100%;" :header-row-class-name="StableClass" class="document" border v-show="title=='编辑'">
         <el-table-column label="文件名" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -532,6 +535,16 @@
       >
         <el-button size="small" @click="dialogFormVisible = false" style="margin-right:5px;">取 消</el-button>
         <el-button size="small" type="primary" plain @click="confirm('billSearch')" style="padding:0 16px;">确 定</el-button>
+      </div>
+      <div class="browseDoc" v-show="title=='编辑'" style="width:100%;height:400px">
+        <iframe
+          src="../../static/Preview/index.html"
+          id="iframeId"
+          name="ifrmname"
+          style="width:100%;height:-webkit-fill-available;"
+          ref="mapFrame"
+          frameborder="0"
+        ></iframe>
       </div>
     </el-dialog>
     <el-dialog
@@ -737,7 +750,7 @@ export default {
         wsBrokerName:null,
       },
       billSearch: {
-        preProcessId:'',
+        parentProcessId:'',
         cedentModel: '',
         hasRecheckFlag:null,
         processId: '',
@@ -795,7 +808,7 @@ export default {
     };
   },
   created() {
-    // this.docView();
+    sessionStorage.setItem("data", JSON.stringify({}));
   },
   mounted() {
     window.onclick=()=>{
@@ -846,6 +859,11 @@ export default {
       this.init();
   },
   methods: {
+    onWsBusinessType(){
+      if(this.billSearch.wsBusinessType!='C'){
+        this.billSearch.parentProcessId = '';
+      }
+    },
     countYear(str){
       if(str==='-'){
         this.zq1Year--;
@@ -946,8 +964,7 @@ export default {
       }
     },
     docView(row) {
-      this.dialogFormVisible1 = true;
-      setTimeout(()=>{
+      // this.dialogFormVisible1 = true;
         if (row) {
         let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
@@ -972,9 +989,7 @@ export default {
       } else {
         document.getElementById("iframeId").contentWindow.postMessage({}, "*");
         document.getElementById("iframeId").contentWindow.location.reload(true);
-      }
-      },100)
-      
+      }      
     },
     handleSizeChange(val) {
       this.mustData.pageSize = val;
@@ -1106,7 +1121,7 @@ export default {
         case 2: // 编辑
           this.$refs[formName].validate(valid => {
             if (valid) {
-              if(this.billSearch.wsBusinessType=='C' && !this.billSearch.preProcessId){
+              if(this.billSearch.wsBusinessType=='C' && !this.billSearch.parentProcessId){
                 this.$message({ type: "error", message: '请输入原流程编号' });
                 return false;
               }

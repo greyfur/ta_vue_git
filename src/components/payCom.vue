@@ -277,7 +277,7 @@
         </el-table-column>
       </el-table>
      
-      <el-table :data="fileData" style="width: 100%;height:auto;" border class="document" v-show="title==='上传附件' || title==='附件'" :header-row-class-name="StableClass">
+      <el-table :data="fileData" height="300" style="width: 100%;height:auto;" border class="document" v-show="title==='上传附件' || title==='附件'" :header-row-class-name="StableClass">
         <el-table-column label="文件名" width="140" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -298,6 +298,9 @@
             <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column> -->
+        <div class="browseDoc" v-show="title=='附件' || title=='编辑'">
+          <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
+        </div>
       </el-table>
     </el-dialog>
  
@@ -345,9 +348,9 @@
     </el-dialog>
 
     <el-dialog title="文档预览" width="fit-content" :visible.sync="dialogFormVisibleA" :close-on-click-modal="modal">
-      <div class="browseDoc" v-show="title!='踪迹'">
+      <!-- <div class="browseDoc" v-show="title!='踪迹'">
         <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
-      </div>
+      </div> -->
       <div v-show="title=='踪迹'" style="width:1020px;height:100%;">
         <img :src="picture" style="width:100%;height:1005;">
       </div>
@@ -562,9 +565,9 @@ export default {
         processStatusList:[],
       };
     },
-  // created(){
-  //   this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
-  // },
+  created(){
+    sessionStorage.setItem("data", JSON.stringify({}));
+  },
   mounted(){
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
     if(this.urlName === 'payOperation'){
@@ -732,7 +735,7 @@ export default {
       })
     },
     docView(row) {
-      this.dialogFormVisibleA = true;
+      // this.dialogFormVisibleA = true;
       if(row){
         let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
