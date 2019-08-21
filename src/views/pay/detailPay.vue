@@ -159,7 +159,7 @@
           <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getRMSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
          <el-collapse-transition>
-        <el-table v-show="searchFlag2" height="300px" :data="RMData" style="width:100%" border :header-row-class-name="StableClass">
+        <el-table v-show="searchFlag2" :height="maxHeight" :data="RMData" style="width:100%" border :header-row-class-name="StableClass">
           <el-table-column label="支票号" width="160" align="center">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.rmId" placement="top-start">
@@ -252,7 +252,7 @@
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单</div>
           <p v-if="$route.query.tag === 'payOperation' || $route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
-        <el-table v-show="searchFlag3" height="300px" :data="SgData" style="width: 100%" border :header-row-class-name="StableClass">
+        <el-table v-show="searchFlag3" :height="maxHeight" :data="SgData" style="width: 100%" border :header-row-class-name="StableClass">
           <el-table-column type="expand" align="center">
             <template slot-scope="props">
               <el-table :data="props.row.worksheetDOList" style="width: 100%" border :header-row-class-name="StableClass">
@@ -472,7 +472,7 @@
           <p><i class="iconfont iconGroup26"></i></p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag4" height="300px" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
+          <el-table v-show="searchFlag4" :height="maxHeight" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column label="账单号" align="center">
               <template slot-scope="scope">
                 <el-tooltip
@@ -933,6 +933,7 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        maxHeight:null,
         suffixFlag:false,
         preApprove:false,
         approvedName:'审批通过',
@@ -1207,6 +1208,7 @@ export default {
   },
   beforeMount(){this.copy('proNum',1); this.updateFlag = true;},
   mounted(){ 
+    this.maxHeight = `${document.body.clientHeight-200}px`;
     this.mustData.actOperator = this.$store.state.userName;
     let strArr = [];
     if(this.$route.query.tag === 'payVerification'){

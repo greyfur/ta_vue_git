@@ -11,6 +11,7 @@
         <div class="btn" v-if="$route.query.tag === 'billSignBack'">
           <el-button size="small" @click="mailSend(1)" plain>邮件通知</el-button>
           <el-button size="small" plain @click="submit(7)">标记签回</el-button>
+          <el-button size="small" @click="onSics()">账单回写</el-button>
           <el-button size="small" plain @click="submit(6,'签回提交')">流程结束</el-button>
         </div>
         <!-- 录入 -->
@@ -160,9 +161,8 @@
           :data="SICSData"
           border
           width="100%"
-          height="300px"
-          :header-row-class-name="StableClass"
-        >
+          :height="maxHeight"
+          :header-row-class-name="StableClass">
           <el-table-column label="账单号" width="160" align="center">
             <template slot-scope="scope">
               <el-tooltip
@@ -326,7 +326,7 @@
                     <span class="blueColor" v-show="$route.query.tag == 'billCheck'" @click.stop="submit(2,'添加意见',scope.row.wsId)">添加意见</span>
                   </el-dropdown-item>
                   <el-dropdown-item> 
-                    <span class="blueColor" v-show="scope.row.wsStatus=='Closed' && $route.query.tag !== 'billCheck'" @click.stop="reverse(scope.row)">Reverse</span>
+                    <span class="blueColor" v-show="scope.row.wsStatus=='Closed' && $route.query.tag !== 'billCheck' && $route.query.tag !== 'billProcess'" @click.stop="reverse(scope.row)">Reverse</span>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -594,8 +594,9 @@
 import { Loading } from "element-ui";
 export default {
   name: "detailEntry",
-  data() {
+  data() { 
     return {
+      maxHeight:null,
       wsId:null,
       checkRobortUser:null,
       nameList:{},
@@ -743,9 +744,9 @@ export default {
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
     // 日期判断    Edate
   },
-  
   beforeMount(){ this.copy('proNum',1) },
   mounted(){
+    this.maxHeight = `${document.body.clientHeight-200}px`;
     // 查询账单详情
     if (this.$route.query.tag !== "billSignBack") {
       this.uploadType = 1;

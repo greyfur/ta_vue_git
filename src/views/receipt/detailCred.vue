@@ -84,7 +84,7 @@
         </div>
         <el-collapse-transition>
           <div v-show="searchFlag2">
-            <el-table :data="RMData" height="300px" style="width:100%" border :header-row-class-name="StableClass">
+            <el-table :data="RMData" :height="maxHeight" style="width:100%" border :header-row-class-name="StableClass">
               <el-table-column label="支票号" width="150" align="center">
                 <template slot-scope="scope">
                   <el-tooltip
@@ -208,7 +208,7 @@
           <p><i class="iconfont iconGroup26"></i></p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag3" height="300px" border :data="SgData" style="width: 100%" :header-row-class-name="StableClass">
+          <el-table v-show="searchFlag3" :height="maxHeight" border :data="SgData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column type="expand" align="center">
               <template slot-scope="props">
                 <el-table :data="props.row.worksheetDOList" style="width: 100%" border :header-row-class-name="StableClass">
@@ -520,7 +520,7 @@
           </p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag4" height="300px" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
+          <el-table v-show="searchFlag4" :height="maxHeight" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column label="账单号" align="center" width="160">
               <template slot-scope="scope">
                 <el-tooltip
@@ -1004,6 +1004,7 @@ export default {
   name: "detailCred",
   data() {
     return {
+      maxHeight:null,
       suffixFlag:false,
       StableClass: "tableClass",
       nameList: {},
@@ -1285,6 +1286,7 @@ export default {
   }, 
   beforeMount(){ this.copy('proNum',1) },
   mounted() {
+    this.maxHeight = `${document.body.clientHeight-200}px`;
     setTimeout(() => {
       // 分出人+经济人all
       let fcArr = JSON.parse(sessionStorage.getItem("CedentType"));

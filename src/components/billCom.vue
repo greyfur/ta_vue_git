@@ -139,7 +139,7 @@
         <i class="iconfont iconGroup37"></i>刷新
       </el-button>
       <el-button type="primary" plain @click="init2" class="borderBtn" v-show="urlName === 'sortOperation'">
-        <i class="iconfont iconGroup37"></i>更新邮箱
+        <i class="iconfont iconGroup37"></i>刷新邮件
       </el-button>
     </div>
     <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;text-align:center;margin:0 auto;">
@@ -372,11 +372,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="账期"
-          v-show="title==='手工创建' || title==='编辑' || title==='查询'"
-          class="zqForm"
-        >
+        <el-form-item label="账期" v-show="title==='手工创建' || title==='编辑' || title==='查询'" class="zqForm">
           <!-- <el-input v-model.trim="zq2"  placeholder="年份" class="wsPeriod" maxlength="4"></el-input>
           <el-select clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
             <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
@@ -398,19 +394,19 @@
             <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-          <el-form-item label="分出公司" prop="cedentModel" v-show="title === '手工创建' || title==='编辑'">
-            <el-select clearable filterable v-model="billSearch.cedentModel" placeholder="请选择分出公司">
-              <el-option
-                v-for="(item,index) in cedentList"
-                :key="index"
-                :label="item.codecode+' - '+item.codeName"
-                :value="index"
-              >
-                <span style="float:left">{{ item.codecode }}</span>
-                <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
+        <el-form-item label="分出公司" prop="cedentModel" v-show="title === '手工创建' || title==='编辑'">
+          <el-select clearable filterable v-model="billSearch.cedentModel" placeholder="请选择分出公司">
+            <el-option
+              v-for="(item,index) in cedentList"
+              :key="index"
+              :label="item.codecode+' - '+item.codeName"
+              :value="index"
+            >
+              <span style="float:left">{{ item.codecode }}</span>
+              <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
           <el-form-item label="经纪公司" v-show="title === '手工创建' || title==='编辑'">
             <el-select clearable filterable v-model="brokerModel" placeholder="请选择经纪公司">
               <el-option
@@ -432,6 +428,9 @@
               placeholder="选择日期"
             ></el-date-picker>
           </el-form-item>
+        <el-form-item label="原流程编号" v-show="title==='编辑' && billSearch.wsBusinessType=='C'">
+          <el-input v-model.trim="billSearch.preProcessId" placeholder="请输入原流程编号"></el-input>
+        </el-form-item>
         <el-form-item label="附件上传" v-show="title==='编辑'">
           <el-upload
             class="sort-upload"
@@ -718,6 +717,7 @@ export default {
         wsBrokerName:null,
       },
       billSearch: {
+        preProcessId:null,
         cedentModel: null,
         billSearch:null,
         hasRecheckFlag:null,
@@ -798,8 +798,7 @@ export default {
       this.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
     }
     this.changeWindow();
-    this.$http
-      .post("api/activiti/getAssigneeName", { roleName: "账单录入" })
+    this.$http.post("api/activiti/getAssigneeName", { roleName: "账单录入" })
       .then(res => {
         if (res.status === 200) {
           this.TJRoptions = res.data;
@@ -1094,7 +1093,10 @@ export default {
         case 2: // 编辑
           this.$refs[formName].validate(valid => {
             if (valid) {
-              console.log(valid,'valid');
+              if(this.billSearch.wsBusinessType=='C' && !this.billSearch.preProcessId){
+                this.$message({ type: "error", message: '请输入原流程编号' });
+                return false;
+              }
               let params1 = Object.assign({},this.billSearch, this.mustData, {processId: this.chooseRow.processId})
               delete params1["processStatus"];
                 this.$http.post("api/worksheet/wSEntry/update",params1)
