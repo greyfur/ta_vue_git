@@ -69,7 +69,7 @@ import {computeSidebar} from '@/assets/js/util.js'
 </script>
 <style>
 .receipt{
-  margin-left: 256px;
+  /* margin-left: 180px; */
   height: 100%;
 }
 .left-content{

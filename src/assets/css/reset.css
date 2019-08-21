@@ -225,3 +225,7 @@ body .el-table colgroup.gutter {
   color: #333;
   font-size: 14px;
 }
+.el-form-item__label{
+  padding: 0 8px 0 0;
+} 
+

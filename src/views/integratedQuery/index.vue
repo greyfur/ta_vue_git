@@ -43,7 +43,7 @@ import {computeSidebar} from '@/assets/js/util.js'
 </script>
 <style>
 .integratedQuery{
-  margin-left: 256px;
+  /* margin-left: 180px; */
   /* width: 100%; */
   height: 100%;
 }

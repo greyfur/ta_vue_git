@@ -81,9 +81,9 @@ import {computeSidebar} from '@/assets/js/util.js'
   }
 </script>
 <style>
-.pay{
-  margin-left: 256px;
-}
+/* .pay{
+  margin-left: 180px;
+} */
 .left-content{
  margin-left: 20px;
 }

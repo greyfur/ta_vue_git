@@ -10,12 +10,16 @@ const store = new Vuex.Store({
     reLoad:'',
     userName:'',
     nameList:{},
+    flod:false,
   },
   mutations:{
     MdeFineRout:(state,data) => {state.deFineRout = data;},
     MreLoad:(state,data) => {state.reLoad = data;},
     MuserName:(state,data) => {state.userName = data;},
     MnameList:(state,data) => {state.nameList = data;},
+    ChangeFlod:(state,data)=>{
+      state.flod=data
+    }
   },
   getters:{
     

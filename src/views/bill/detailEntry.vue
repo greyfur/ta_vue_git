@@ -2,8 +2,8 @@
   <div class="detailEntry">
     <router-link
       :to="{name:$route.query.tag}"
-      style="color:#333;position:fixed;top:20px;left:80px;z-index:100;">
-      <i class="iconfont iconleft-circle-o"></i>
+      :class="this.$store.state.flod?'leftBack':'rightBack'">
+      <i class="iconfont iconleft-circle-o" style="color:#000;"></i>
     </router-link>
     <el-row>
       <el-col :span="8">
@@ -14,7 +14,7 @@
           <el-button size="small" plain @click="submit(6,'签回提交')">流程结束</el-button>
         </div>
         <!-- 录入 -->
-        <div class="btn" v-if="$route.query.tag === 'billEntry'">
+        <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'billEntry'">
           <el-button size="small" :disabled="isHover" @click="submit(4)" plain>置废</el-button>
           <el-button size="small" :disabled="isHover" @click="submit(1,'录入指派')" plain>指派</el-button>
           <el-button :type="isHover?'info':''" size="small" @click="submit(5)" plain>{{isHover?'已悬停':'状态悬停'}}</el-button>
@@ -1796,7 +1796,7 @@ export default {
 .detailEntry {
   /* padding:0 30px; */
   width: 100%;
-  padding-left: 64px;
+  /* padding-left: 64px; */
   height: -webkit-fill-available;
   padding-bottom: 90px;
   /* display: flex; */
@@ -1811,6 +1811,20 @@ export default {
   height: 89px;
   line-height: 89px;
   padding: 0 16px;
+  box-shadow:0px 0px 1px 0px rgba(155,155,155,1);
+  overflow: hidden;
+}
+.btns {
+  width: 100%;
+  position: fixed;
+  left: 180px;
+  bottom: 0;
+  z-index: 999;
+  background:#FFFFFF ;
+  height: 89px;
+  line-height: 89px;
+  padding: 0 16px;
+  overflow: hidden;
   box-shadow:0px 0px 1px 0px rgba(155,155,155,1);
 }
 .btn .el-button {
@@ -1928,5 +1942,11 @@ li.detail-item {
 .smallHand {
   cursor: pointer;
   color: #409eff;
+}
+.leftBack{
+  position:fixed;top:65px;left:90px;z-index:100;
+}
+.rightBack{
+  position:fixed;top:65px;left:205px;z-index:100;
 }
 </style>

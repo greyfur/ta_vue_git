@@ -553,11 +553,19 @@
         <!-- <el-form-item label="拆分金额">
           <div class="inputWrap" id="idInputWrap"></div>
         </el-form-item>-->
-        <el-form-item>
+        <!-- <el-form-item>
           <el-button size="small" @click="dialogFormVisible3 = false">取消</el-button>
           <el-button type="primary" plain @click="split()">确定</el-button>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+        style="margin-top:10px;"
+      >
+        <el-button size="small" @click="dialogFormVisible3 = false">取消</el-button>
+        <el-button type="primary" plain @click="split()">确定</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>

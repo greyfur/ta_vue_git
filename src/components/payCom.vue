@@ -52,9 +52,9 @@
       </el-table-column> -->
       <el-table-column width="140" label="结付公司" align="center">
         <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark"  :content="scope.row.codeName&&scope.row.codeName?scope.row.codeName:''" placement="top-start">
-              <span class="abbreviate" v-if="scope.row.codeName&&scope.row.codeName">{{scope.row.codeName}}</span>
-              <span class="abbreviate" v-if="!scope.row.codeName&&!scope.row.codeName"></span>
+            <el-tooltip class="item" effect="dark"  :content="scope.row.codeNames&&scope.row.codeNames?scope.row.codeNames:''" placement="top-start">
+              <span class="abbreviate" v-if="scope.row.codeNames&&scope.row.codeNames">{{scope.row.codeNames}}</span>
+              <span class="abbreviate" v-if="!scope.row.codeNames&&!scope.row.codeNames"></span>
             </el-tooltip>
         </template>
       </el-table-column>
@@ -687,11 +687,11 @@ export default {
               item.rmSettleCompanyCode=item.rmSettleCompanyCode!==null?item.rmSettleCompanyCode.split(';'):item.rmSettleCompanyCode;
               item.rmSettleCompanyName=item.rmSettleCompanyName!==null?item.rmSettleCompanyName.split(';'):item.rmSettleCompanyName;
                 // console.log(item.rmSettleCompanyName[0])
-              item.codeName=item.rmSettleCompanyCode&&item.rmSettleCompanyCode.map((items,indexs)=>{
-              //  items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items||item.rmSettleCompanyName[indexs];
+              item.codeNames=item.rmSettleCompanyCode&&item.rmSettleCompanyCode.map((items,indexs)=>{
+               items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items||item.rmSettleCompanyName[indexs];
                 return items
               });
-              item.codeName=item.codeName&&item.codeName.join('');
+              item.codeNames=item.codeNames&&item.codeNames.join('');
               return item;
           })
           this.tableData = res.data.rows;

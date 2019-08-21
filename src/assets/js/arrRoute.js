@@ -6,7 +6,8 @@ let data = [
     name: 'detailEntry',
     components:{
       default:() => import("@/views/bill/detailEntry"),
-      head:() => import("@/views/common/headNav"),
+      asideMenu:() => import("@/views/common/asideMenu"),
+      headNav:() => import("@/views/common/headNav"),
     } ,
     // component: () => import("@/views/bill/detailEntry"),
   },
@@ -16,7 +17,8 @@ let data = [
     name: 'detailCred',
     components:{
       default:() => import("@/views/receipt/detailCred"),
-      head:() => import("@/views/common/headNav"),
+      asideMenu:() => import("@/views/common/asideMenu"),
+      headNav:() => import("@/views/common/headNav"),
     } ,
     // component: () => import("@/views/receipt/detailCred"), 
   },
@@ -26,7 +28,8 @@ let data = [
     name: 'detailPay',
     components:{
       default:() => import("@/views/pay/detailPay"),
-      head:() => import("@/views/common/headNav"),
+      asideMenu:() => import("@/views/common/asideMenu"),
+      headNav:() => import("@/views/common/headNav"),
     } ,
     // component: () => import("@/views/pay/detailPay"), 
   },
@@ -39,7 +42,8 @@ let data = [
     name: 'bill',
     components:{
       default:() => import("@/views/bill/index"),
-      head:() => import("@/views/common/headNav"),
+      asideMenu:() => import("@/views/common/asideMenu"),
+      headNav:() => import("@/views/common/headNav"),
     } ,
     redirect:'/sortOperation',
     children:[
@@ -83,7 +87,8 @@ let data = [
     name: 'receipt',
     components:{
       default:() => import("@/views/receipt/index"),
-      head:() => import("@/views/common/headNav"),
+      asideMenu:() => import("@/views/common/asideMenu"),
+      headNav:() => import("@/views/common/headNav"),
     },
     redirect:'/financialCreat',
     children:[
@@ -139,7 +144,8 @@ let data = [
     name: 'pay',
     components:{
       default:() => import("@/views/pay/index"),
-      head:() => import("@/views/common/headNav"),
+      asideMenu:() => import("@/views/common/asideMenu"),
+      headNav:() => import("@/views/common/headNav"),
     },
     redirect:'/taskCreation',
     children:[
@@ -213,7 +219,8 @@ let data = [
     name: 'integratedQuery',
     components:{
       default:() => import("@/views/integratedQuery/index"),
-      head:() => import("@/views/common/headNav"),
+      asideMenu:() => import("@/views/common/asideMenu"),
+      headNav:() => import("@/views/common/headNav"),
     },
     redirect:'/billProcess',
     children:[
@@ -266,7 +273,8 @@ let data = [
     name: 'admin',
     components:{
       default:() => import("@/views/admin/index"),
-      head:() => import("@/views/common/headNav"),
+      asideMenu:() => import("@/views/common/asideMenu"),
+      headNav:() => import("@/views/common/headNav"),
     } ,
     // redirect:'/closeAccount',
     children:[
