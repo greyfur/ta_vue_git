@@ -219,35 +219,35 @@
     </el-dialog>
 
     <el-dialog title="导出报表" width="50%" :visible.sync="dialogReport" :close-on-click-modal="modal">
-        <el-form   class="demo-form-inline" v-model="reportArr">
-          <el-form-item label="报表名称">
-            <el-select
-              clearable
-              filterable
-              v-model="reportArr.reportName"
-              placeholder="请选择报表名称"
-            >
-              <el-option
-                v-for="item in ReportFormArr"
-                :key="item"
-                :label="item"
-                :value="item"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="流程编号">
-            <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processId"></el-input>
-          </el-form-item>
-          <el-form-item label="流程状态">
-            <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
-              <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','REVERSED','已悬停']" :key="item" :label="item" :value="item"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-             <el-button size="small" @click="dialogReport = false">取 消</el-button>
-             <el-button size="small" type="primary" plain @click="reportClick" style="padding:0 16px;">确 定</el-button>
-          </el-form-item>
-        </el-form>
+      <el-form   class="demo-form-inline" v-model="reportArr">
+        <el-form-item label="报表名称">
+          <el-select
+            clearable
+            filterable
+            v-model="reportArr.reportName"
+            placeholder="请选择报表名称"
+          >
+            <el-option
+              v-for="item in ReportFormArr"
+              :key="item"
+              :label="item"
+              :value="item"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="流程编号">
+          <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processId"></el-input>
+        </el-form-item>
+        <el-form-item label="流程状态">
+          <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
+            <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','REVERSED','已悬停']" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+            <el-button size="small" @click="dialogReport = false">取 消</el-button>
+            <el-button size="small" type="primary" plain @click="reportClick" style="padding:0 16px;">确 定</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
   </div>
 </template>
@@ -562,8 +562,8 @@ export default {
       })
     },
     docView(row) {
+      this.dialogFormVisibleA = true;
       if(row){
-        this.dialogFormVisibleA = true;
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
         if(res.status == 200){
           document.getElementById('iframeId').contentWindow.postMessage({

@@ -268,11 +268,7 @@
             </span>
             <el-dropdown-menu slot="dropdown">
                <el-dropdown-item>
-              <span
-                v-show="urlName === 'sortOperation' || pendingFlag"
-                @click.stop="handleClick(2,scope.row)"
-                class="blueColor"
-              >编辑</span>
+              <span v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" class="blueColor">编辑</span>
             </el-dropdown-item>
              <el-dropdown-item>
               <span
@@ -598,7 +594,7 @@ export default {
         C: "修正账单"
       },
       zq1Flag:false,
-      zq1Day:null,
+      zq1Day:'',
       zq1Year:new Date().getFullYear(),
       zqList: [
         "Variable",
@@ -689,7 +685,7 @@ export default {
       dialogFormVisible: false,
       dialogFormVisible1: false,
       dialogFormVisible3:false,
-      splitId:null,
+      splitId:'',
       admFlag: false,
       querySearch:{
         wsPeriod:null,
@@ -709,25 +705,24 @@ export default {
         wsBrokerName:null,
       },
       billSearch: {
-        preProcessId:null,
-        cedentModel: null,
-        billSearch:null,
+        preProcessId:'',
+        cedentModel: '',
         hasRecheckFlag:null,
-        processId: null,
-        processStatus: null,
-        processName:null,
-        wsType: null,
-        wsPeriod: null,
-        wsBusinessType: null,
-        wsStatus:null,
-        wsCedentCode: null,
-        wsCedentName: null,
-        wsBrokerCode: null,
-        wsBrokerName: null,
-        wsReceiptDate: null,
-        businessOrigin: null,
-        baseCompany: null,
-        reportUnit: null,
+        processId: '',
+        processStatus: '',
+        processName:'',
+        wsType: '',
+        wsPeriod: '',
+        wsBusinessType: '',
+        wsStatus:'',
+        wsCedentCode: '',
+        wsCedentName: '',
+        wsBrokerCode: '',
+        wsBrokerName: '',
+        wsReceiptDate: '',
+        businessOrigin: '',
+        baseCompany: '',
+        reportUnit: '',
       },
       mustData: {
         actOperator: null,
@@ -742,13 +737,13 @@ export default {
       chooseRow: {},
       dialogState: 0,
       track: [],
-      setTime: null,
+      setTime: '',
       fileData: [],
       picture: "",
       cedentList: [],
       brokerList: [],
-      brokerModel: null,
-      cedentModel: null,
+      brokerModel: '',
+      cedentModel: '',
       ZJObj: {
         total: 50,
         pageNumber: 1, // 页数
@@ -919,7 +914,9 @@ export default {
       }
     },
     docView(row) {
-      if (row) {
+      this.dialogFormVisible1 = true;
+      setTimeout(()=>{
+        if (row) {
         let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && this.suffixFlag){ return false; }
@@ -944,7 +941,8 @@ export default {
         document.getElementById("iframeId").contentWindow.postMessage({}, "*");
         document.getElementById("iframeId").contentWindow.location.reload(true);
       }
-      this.dialogFormVisible1 = true;
+      },100)
+      
     },
     handleSizeChange(val) {
       this.mustData.pageSize = val;
@@ -992,21 +990,21 @@ export default {
       });
     },
     confirm(formName) {
-      if (this.billSearch.cedentModel != null) {
+      if (this.billSearch.cedentModel != null && this.billSearch.cedentModel != '') {
         let obj = this.cedentList[this.billSearch.cedentModel];
         this.billSearch.wsCedentCode = obj.codecode;
         this.billSearch.wsCedentName = obj.codeName;
       } else{
-        this.billSearch.wsCedentCode = null;
-        this.billSearch.wsCedentName = null;
+        this.billSearch.wsCedentCode = '';
+        this.billSearch.wsCedentName = '';
       }
-      if (this.brokerModel != null) {
+      if (this.brokerModel != null && this.brokerModel != '') {
         let obj = this.brokerList[this.brokerModel];
         this.billSearch.wsBrokerCode = obj.codecode;
         this.billSearch.wsBrokerName = obj.codeName;
       } else{
-        this.billSearch.wsBrokerCode = null;
-        this.billSearch.wsBrokerName = null;
+        this.billSearch.wsBrokerCode = '';
+        this.billSearch.wsBrokerName = '';
       }
       switch (this.dialogState) {
         case 0: // 创建
@@ -1060,16 +1058,7 @@ export default {
               params = Object.assign({}, this.mustData,this.querySearch, {curOperator: this.$store.state.userName});
             }
           }
-          // if (this.urlName == "sortOperation" || this.admFlag) {
-          //   params = Object.assign({}, this.mustData, this.billSearch);
-          // }  
-          // else {
-          //   params = Object.assign({}, this.mustData, this.billSearch, {
-          //     curOperator: this.$store.state.userName
-          //   });
-          // }
           delete params["actOperator"];
-          
           this.$http.post("api/worksheet/wSEntry/list", params).then(res => {
             if (res.status === 200) {
               if (!res.data.rows.length) {
@@ -1097,8 +1086,10 @@ export default {
                       this.$message({ type: "success", message: res.data.msg });
                       this.init();
                       this.dialogFormVisible = false;
-                    } else{
+                    } else if(res.data.code == 1){
                       this.$message({ type: "error", message: res.data.msg });
+                    } else{
+                      this.$message({ type: "warning", message: res.data.msg });
                     }
                   });
             }
@@ -1123,7 +1114,7 @@ export default {
               if (res.status === 200 && res.data.errorCode == 1) {
                 this.dialogFormVisible = false;
                 this.$message({ type: "success", message: "提交成功!" });
-                this.assignee = null;
+                this.assignee = '';
                 this.init();
               } else if (res.data.errorCode == 0) {
                 this.$message({
@@ -1140,8 +1131,8 @@ export default {
       }
     },
     reset() {
-      for (let k in this.billSearch) {
-        this.billSearch[k] = null;
+      for (let k in this.querySearch) {
+        this.querySearch[k] = null;
       }
       this.zq2 = null;
       this.zq1 = null;
@@ -1152,7 +1143,7 @@ export default {
       this.dialogState = tag;
       this.chooseRow = row;
       this.RWFlag = false;
-      this.assignee = null;
+      this.assignee = '';
       switch (tag) {
         case 0:
           this.reset();
@@ -1176,13 +1167,13 @@ export default {
               }
             });
           } else {
-            this.billSearch.wsType = null;
+            this.billSearch.wsType = '';
           }
           // 任务类型
           if (row.wsBusinessType) {
             this.billSearch.wsBusinessType = row.wsBusinessType;
           } else {
-            this.billSearch.wsBusinessType = null;
+            this.billSearch.wsBusinessType = '';
           }
           // 账单收到日期
           if (row.wsReceiptDate) {
@@ -1190,7 +1181,7 @@ export default {
               row.wsReceiptDate
             ).valueOf();
           } else {
-            this.billSearch.wsReceiptDate = null;
+            this.billSearch.wsReceiptDate = '';
           }
           //  分出人cedentModel  cedentList
           if (row.wsCedentCode) {
@@ -1200,7 +1191,7 @@ export default {
               }
             });
           } else {
-            this.billSearch.cedentModel = null;
+            this.billSearch.cedentModel = '';
           }
           // 经纪人brokerModel   brokerList
           if (row.wsBrokerCode) {
@@ -1210,7 +1201,7 @@ export default {
               }
             });
           } else {
-            this.brokerModel = null;
+            this.brokerModel = '';
           }
           // Business Origin
          if(row.businessOrigin){
@@ -1219,7 +1210,7 @@ export default {
                 this.billSearch.businessOrigin = el.code;
               }
             });
-          } else{ this.billSearch.businessOrigin = null; }
+          } else{ this.billSearch.businessOrigin = ''; }
 
           // Base Company
          if(row.baseCompany){
@@ -1228,7 +1219,7 @@ export default {
                 this.billSearch.baseCompany = el.code;
               }
             });
-          } else{ this.billSearch.baseCompany = null; }
+          } else{ this.billSearch.baseCompany = ''; }
 
           // Reporting Unit
          if(row.reportUnit){
@@ -1237,7 +1228,7 @@ export default {
                 this.billSearch.reportUnit = el.code;
               }
             });
-          } else{ this.billSearch.reportUnit = null; }
+          } else{ this.billSearch.reportUnit = ''; }
 
         // 流程名称
          if(row.processName){
@@ -1249,8 +1240,8 @@ export default {
             this.zq2 = arr[0];
             this.zq1 = arr[1];
           } else {
-            this.zq2 = null;
-            this.zq1 = null;
+            this.zq2 = '';
+            this.zq1 = '';
           }
           this.$http.get(`api/worksheet/wSEntry/edit/${row.processId}`,{}).then(res => {
               if (res.status === 200) {
@@ -1442,142 +1433,142 @@ export default {
 </script>
 
 <style scoped>
-.billCom {
-  padding-right: 30px;
-}
-.btn {
-  margin-bottom: 8px;
-  margin-top: 16px;
-}
-.el-pagination {
-  text-align: right;
-  margin-top: 20px;
-}
-.el-input .el-input__inner {
-  width: 220px;
-}
-.detail-ul {
-  margin-left: 10px;
-}
-.detail-ul li {
-  margin-bottom: 10px;
-}
-.detail-ul li .detail-content {
-  color: #999;
-}
-.sort-upload {
-  margin-bottom: 20px;
-}
-.el-collapse-item:last-child {
-  margin-bottom: 20px;
-}
-.el-select,
-.el-select-dropdown__list {
-  width: 194px;
-}
-.el-radio-group .el-radio {
-  margin-bottom: 10px;
-}
-.zqForm .el-form-item__content {
-  display: flex;
-  border: 1px solid #dcdfe6;
-  width: fit-content;
-}
-.wsPeriod {
-  width: 120px;
-}
-.billCom .el-input {
-  width: 196px;
-}
-.el-form-item:nth-child(8) .el-input:nth-child(1) {
-  width: 70px;
-}
-.browseDoc {
-  background-color: #ecf5ff;
-  width: 100%;
-  height: 100%;
-}
-.smallHand {
-  cursor: pointer;
-  color: #409eff;
-}
-.titleSearch {
-  width: 100%;
-  border-bottom: 1px solid #d9d9d9;
-  padding: 12px 16px;
-}
-.searchNew {
-  border-bottom: 1px solid #d9d9d9;
-}
-.searchNew .el-row .el-input {
-  width: 224px;
-  height: 32px;
-  border-radius: 2px;
-}
-.searchNew .el-row .slable {
-  color: #666;
-}
-.billRow {
-  padding: 17px 0;
-}
-.searchNew .el-col-24 {
-  margin-bottom: 12px;
-  text-align: right;
-}
-.zq1Parent{
-  position: relative;
-}
-.zq1{
-  width:280px;
-  height:288px;
-  background:rgba(255,255,255,1);
-  box-shadow:0px 2px 8px 0px rgba(0,0,0,0.15);
-  border-radius:4px;
-  margin-top: 20px;
-  position: absolute;
-  left: 0;
-  top: 24px;
-  z-index: 999;
-}
-.zq{
-    width: 280px;
-    height: 256px;
-    overflow-y: auto;
-    background: #FFFFFF;
+  .billCom {
+    padding-right: 30px;
+  }
+  .btn {
+    margin-bottom: 8px;
+    margin-top: 16px;
+  }
+  .el-pagination {
+    text-align: right;
+    margin-top: 20px;
+  }
+  .el-input .el-input__inner {
+    width: 220px;
+  }
+  .detail-ul {
+    margin-left: 10px;
+  }
+  .detail-ul li {
+    margin-bottom: 10px;
+  }
+  .detail-ul li .detail-content {
+    color: #999;
+  }
+  .sort-upload {
+    margin-bottom: 20px;
+  }
+  .el-collapse-item:last-child {
+    margin-bottom: 20px;
+  }
+  .el-select,
+  .el-select-dropdown__list {
+    width: 194px;
+  }
+  .el-radio-group .el-radio {
+    margin-bottom: 10px;
+  }
+  .zqForm .el-form-item__content {
     display: flex;
-    flex-wrap: wrap;
-    padding-left: 10px;
-    box-sizing: border-box;
-}
-.zq li{
-    width: 30%;
-    text-align: center;
+    border: 1px solid #dcdfe6;
+    width: fit-content;
+  }
+  .wsPeriod {
+    width: 120px;
+  }
+  .billCom .el-input {
+    width: 196px;
+  }
+  .el-form-item:nth-child(8) .el-input:nth-child(1) {
+    width: 70px;
+  }
+  .browseDoc {
+    background-color: #ecf5ff;
+    width: 100%;
+    height: 100%;
+  }
+  .smallHand {
     cursor: pointer;
-    margin: 5px 3px;
-    font-size: 14px;
+    color: #409eff;
+  }
+  .titleSearch {
+    width: 100%;
+    border-bottom: 1px solid #d9d9d9;
+    padding: 12px 16px;
+  }
+  .searchNew {
+    border-bottom: 1px solid #d9d9d9;
+  }
+  .searchNew .el-row .el-input {
+    width: 224px;
+    height: 32px;
     border-radius: 2px;
-    padding: 0 2px;
+  }
+  .searchNew .el-row .slable {
+    color: #666;
+  }
+  .billRow {
+    padding: 17px 0;
+  }
+  .searchNew .el-col-24 {
+    margin-bottom: 12px;
+    text-align: right;
+  }
+  .zq1Parent{
+    position: relative;
+  }
+  .zq1{
+    width:280px;
+    height:288px;
+    background:rgba(255,255,255,1);
+    box-shadow:0px 2px 8px 0px rgba(0,0,0,0.15);
+    border-radius:4px;
+    margin-top: 20px;
+    position: absolute;
+    left: 0;
+    top: 24px;
+    z-index: 999;
+  }
+  .zq{
+      width: 280px;
+      height: 256px;
+      overflow-y: auto;
+      background: #FFFFFF;
+      display: flex;
+      flex-wrap: wrap;
+      padding-left: 10px;
+      box-sizing: border-box;
+  }
+  .zq li{
+      width: 30%;
+      text-align: center;
+      cursor: pointer;
+      margin: 5px 3px;
+      font-size: 14px;
+      border-radius: 2px;
+      padding: 0 2px;
+      box-sizing: border-box;
+  }
+  .zq li.active{
+    background: #409eff;
+    color: #fff;
+  }
+  .zqTitle{
+    width: 280px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    flex-shrink: 0;
     box-sizing: border-box;
-}
-.zq li.active{
-  background: #409eff;
-  color: #fff;
-}
-.zqTitle{
-  width: 280px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5px 10px;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  border-bottom: 1px solid rgba(0,0,0,0.09);
-  font-size: 14px;
-  cursor: pointer;
-  margin-bottom: 5px;
-}
-.wsDate::-webkit-input-placeholder{
-  color: #ccc;
-}
+    border-bottom: 1px solid rgba(0,0,0,0.09);
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 5px;
+  }
+  .wsDate::-webkit-input-placeholder{
+    color: #ccc;
+  }
 </style>

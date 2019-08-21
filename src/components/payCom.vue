@@ -708,11 +708,11 @@ export default {
       })
     },
     docView(row) {
+      this.dialogFormVisibleA = true;
       if(row){
         let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && this.suffixFlag){ return false; }
-        this.dialogFormVisibleA = true;
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
         if(res.status == 200){
           document.getElementById('iframeId').contentWindow.postMessage({

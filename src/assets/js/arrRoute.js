@@ -143,12 +143,6 @@ let data = [
     },
     redirect:'/taskCreation',
     children:[
-      // {
-      //   title:'任务创建',
-      //   path: '/taskCreation',
-      //   name: 'taskCreation',
-      //   component: () => import("@/views/pay/taskCreation"),
-      // },
       {
         title:'操作',
         path: '/payOperation',
@@ -202,6 +196,12 @@ let data = [
         path: '/emailNotify',
         name: 'emailNotify',
         component: () => import("@/views/pay/emailNotify"),
+      },
+      {
+        title:'完结',
+        path: '/payEnd',
+        name: 'payEnd',
+        component: () => import("@/views/pay/payEnd"),
       },
     ]
   },

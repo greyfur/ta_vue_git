@@ -5,6 +5,11 @@
     </router-link>
     <el-row>
       <el-col :span="11" style="padding:0 16px;">
+        <!-- 完结 -->
+        <div class="btn" v-if="$route.query.tag === 'payClose'">
+          <el-button size="small" plain @click="submite(1,'流程结束')">流程结束</el-button>
+          <el-button size="small" @click="openSICS" plain>打开SICS</el-button>
+        </div>
         <!-- 核销 --> 
         <div class="btn" v-if="$route.query.tag === 'payClose'">
           <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BpLedger</el-button>
@@ -18,9 +23,7 @@
         <!-- 财务支付/紧急付款/partial完结 -->
         <div class="btn" v-if="$route.query.tag === 'payment' || $route.query.tag === 'partialDone' || $route.query.tag === 'instancyPay'">
           <el-button type="primary" v-if="$route.query.tag === 'partialDone'" @click="openBPSICS" plain>打开BpLedger</el-button>
-          <!-- <el-button size="small" plain>附件上传</el-button> -->
           <el-button size="small" plain @click="tongbu" v-if="$route.query.tag === 'instancyPay'">同步状态</el-button>
-          <!-- <el-button size="small" plain @click="mailSend(2,'附件查看')">附件查看</el-button> -->
           <el-button size="small" plain v-if="$route.query.tag === 'partialDone'">同步状态</el-button>
           <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button>
         </div>
@@ -1236,7 +1239,6 @@ export default {
       this.brokerListHK = fcArr.concat(jArr);
       this.cedentList = fcArr;
       this.brokerListS = jArr;
-      console.log(this.cedentList)
       //获取币制
       this.rmCurrencyList = JSON.parse(sessionStorage.getItem('CurrencyList'));
       // 集团产再
@@ -1689,7 +1691,26 @@ export default {
                   })
               }
             })
-          } else{
+          } else if(this.$route.query.tag === 'payEnd'){
+            this.$confirm('是否流程结束？', '提示', {     
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                  }).then(() => {
+                    this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
+                      ,{processId:this.row.processId, procInstId:this.row.processInstId, assignee:this.$store.state.userName, type:'CLOSE',actOperator:this.$store.state.userName})
+                      .then(res =>{
+                        if(res.status === 200 && res.data.errorCode == 1){
+                          this.dialogFormVisible3 = false;
+                          this.$router.push({name:this.$route.query.tag}); 
+                          this.assignee = null;
+                        } else if(res.data.errorMessage){
+                          this.$message.error(res.data.errorMessage);
+                        }
+                      })
+                  })
+          }
+          else{
             this.getName('付款录入');
             this.dialogFormVisible3 = true;
           }
@@ -1802,39 +1823,65 @@ export default {
           // this.dialogFormVisible3 = true;
         break;
         case 7:   // 付款支票页面---流程提交=审批完成，在这里查开关账
-        if(this.$route.query.tag === 'approvalDone'){
-          this.$http.post("api/sics/basis/checkAmount",{processId:this.row.processId}).then(res => {
-            if (res.status === 200 && res.data.code == 0) {
-              this.acountquery()
-              let type = '';
-              if(this.accountCloseFlag == '0'){
-                type = '付款复核';
-              } else if(this.accountCloseFlag == '1'){
-                type = '付款录入';
+          if(this.$route.query.tag === 'approvalDone'){
+            this.$http.post("api/sics/basis/checkAmount",{processId:this.row.processId}).then(res => {
+              if (res.status === 200 && res.data.code == 0) {
+                this.acountquery()
+                let type = '';
+                if(this.accountCloseFlag == '0'){
+                  type = '付款复核';
+                } else if(this.accountCloseFlag == '1'){
+                  type = '付款录入';
+                }
+                this.getName(type);
+                this.dialogFormVisible3 = true;
+              } else{
+                this.$message.error(res.data.msg);
+                return false;
               }
-              this.getName(type);
-              this.dialogFormVisible3 = true;
-            } else{
-              this.$message.error(res.data.msg);
-              return false;
+            })
+          } else{
+            this.acountquery()
+            let type = '';
+            if(this.accountCloseFlag == '0'){
+              type = '付款复核';
+            } else if(this.accountCloseFlag == '1'){
+              type = '付款录入';
             }
-          })
-        } else{
-          this.acountquery()
-          let type = '';
-          if(this.accountCloseFlag == '0'){
-            type = '付款复核';
-          } else if(this.accountCloseFlag == '1'){
-            type = '付款录入';
+            this.getName(type);
+            this.dialogFormVisible3 = true;
           }
-          this.getName(type);
-          this.dialogFormVisible3 = true;
-        }
         break;
         case 8:   // 财务支付/紧急付款/partial完结------流程提交
-          this.getName('付款录入');
-          this.specialName2 = specialName;
-          this.dialogFormVisible3 = true;
+          if(this.$route.query.tag === 'payment'){  // 8.21 说支付页面，流程提交选录入人，entryOperator
+            let type2 = null;
+            if(this.row.accountCloseFlag == '0'){   
+              type2 = 'COMPLETE';
+            } else if(this.row.accountCloseFlag == '1'){
+              type2 = 'CONDITIONALCOMPLETE';
+            }
+            this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
+              ,{processId:this.row.processId, 
+              procInstId:this.row.processInstId, 
+              assignee:this.row.entryOperator, 
+              type:type2,
+              actOperator:this.$store.state.userName,
+              accountCloseFlag:this.row.accountCloseFlag
+              })
+              .then(res =>{
+                if(res.status === 200 && res.data.errorCode == 1){
+                  this.$router.push({name:this.$route.query.tag}); 
+                  this.assignee = null;
+                } else if(res.data.errorCode == 0){
+                  this.$message({type: 'error', message:res.data.errorMessage }); 
+                }
+              })
+          } else{
+            this.getName('付款录入');
+            this.specialName2 = specialName;
+            this.dialogFormVisible3 = true;
+          }
+          
         break;
         case 9:   // 审批驳回
           this.dialogFormVisible3 = true;
@@ -1890,8 +1937,7 @@ export default {
             })
 
         break;
-        case 3:  // 置废 
-          
+        case 3:  // 置废  
         break;
         case 4: // 复核驳回 
           if(!this.opinion){
@@ -2445,17 +2491,16 @@ export default {
     makeDoc(tag,name){    // 生成审批文档
       if(tag == 'a'){  // 是操作页面，弹窗，S0,
           if(this.row.rmCurrency){
-            if(this.makeDocListEctype.yuanType && this.makeDocListEctype.yuanType.length){
-              this.makeDocListEctype.yuanType[0] = this.row.rmCurrency;
-            } else{ this.makeDocListEctype.yuanType.push(this.row.rmCurrency); }
+            this.makeDocListEctype.yuanType = [];
+            this.makeDocListEctype.yuanType.push(this.row.rmCurrency);
             this.makeDocListEctype.zheType = this.row.rmCurrency;
           }
           if(this.row.rmAmount){ 
-            if(this.makeDocListEctype.yuanNum && this.makeDocListEctype.yuanNum.length){
-              this.makeDocListEctype.yuanNum[0] = this.row.rmAmount;
-            } else{ this.makeDocListEctype.yuanNum.push(this.row.rmAmount); }
-            this.makeDocNum = 1;
+            this.makeDocListEctype.yuanNum = [];
+            this.makeDocListEctype.yuanNum.push(this.row.rmAmount);
           }
+          console.log(this.makeDocListEctype.yuanType,'this.makeDocListEctype.yuanType');
+          console.log(this.makeDocListEctype.yuanNum,'this.makeDocListEctype.yuanNum');
           this.makeDocListEctype.cedentModel = [];
           this.$http.post('api/pay/teskClaim/list',{
             curOperator:this.$store.state.userName,
@@ -2475,11 +2520,6 @@ export default {
         if (tag == 2) {
          if(this.makeDocListEctype.zheNum&&this.makeDocListEctype.yuanType.length>0){
             // 是操作页面,2为点击确定---------------------生成审批文档提交hyd
-            console.log(this.makeDocListEctype.cedentModel[0])
-            console.log(this.makeDocListEctype.cedentModel[1])
-            console.log(this.makeDocListEctype.cedentModel[2])
-           
-            
              if(this.makeDocListEctype.cedentModel[0]==undefined||this.makeDocListEctype.cedentModel[1]==undefined||this.makeDocListEctype.cedentModel[2]==undefined){
               
           if (this.makeDocListEctype.cedentModel &&this.makeDocListEctype.cedentModel.length) {

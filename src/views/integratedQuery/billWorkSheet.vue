@@ -578,8 +578,8 @@ export default {
       }
     },
     docView(row) {
+      this.dialogFormVisible1 = true;
       if(row){
-        this.dialogFormVisible1 = true;
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
         if(res.status == 200){
           document.getElementById('iframeId').contentWindow.postMessage({
