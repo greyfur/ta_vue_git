@@ -133,6 +133,13 @@ import { mapState } from "vuex";
       if(!sessionStorage.getItem('wsType')){
         this.$http.get('api/sics/basis/getWorkShetTypeList').then(res =>{
           if(res.status === 200){
+            if(res.data){
+                res.data.forEach((el,i)=> {
+                if(el.code=='NONE'){
+                  res.data.splice(i,1);
+                }
+              })
+            }
             sessionStorage.setItem('wsType',JSON.stringify(res.data));
           }
         })
