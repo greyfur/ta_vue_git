@@ -58,14 +58,14 @@
           </el-tooltip>
         </template>
       </el-table-column> -->
-      <el-table-column width="140" label="结付公司" align="center">
+      <!-- <el-table-column width="140" label="结付公司" align="center">
         <template slot-scope="scope">
             <el-tooltip class="item" effect="dark"  :content="scope.row.codeNames&&scope.row.codeNames?scope.row.codeNames:''" placement="top-start">
               <span class="abbreviate" v-if="scope.row.codeNames&&scope.row.codeNames">{{scope.row.codeNames}}</span>
               <span class="abbreviate" v-if="!scope.row.codeNames&&!scope.row.codeNames"></span>
             </el-tooltip>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="rmCurrency" label="币制" align="center"></el-table-column>
       <el-table-column label="汇款金额" width="120" align="right">
          <template slot-scope="scope">
@@ -327,7 +327,8 @@
           <el-input type="text" placeholder="请输入内容" v-model="mailTitle" style="width:100%"></el-input>
         </el-form-item>
         <el-form-item label="内容编辑" v-show="title==='邮件通知'" style="width:100%">
-          <el-input type="textarea" :rows="6" placeholder="请输入内容" v-model="emailContent"></el-input>
+          <!-- <el-input type="textarea" :rows="6" placeholder="请输入内容" v-model="emailContent"></el-input> -->
+          <div style="width:100%;height:fit-content" v-html="htmlContent"></div>
         </el-form-item>
         <el-form-item label="附件上传方式" v-show="title==='邮件通知'" style="width:100%">
           <el-tabs v-model="uploadType">
@@ -379,6 +380,10 @@ export default {
     },
   data() {
       return {
+        Ename:'',
+        Esignature:'',
+        Edate:'',
+        htmlContent:'',
         suffixFlag:false,
         emailFlag:false,
         chooseDocList:[],
@@ -580,6 +585,18 @@ export default {
     sessionStorage.setItem("data", JSON.stringify({}));
   },
   mounted(){
+    if(this.urlName=='emailNotify'){
+      let D = new Date();
+      if(D.getDay()==0){  // 周日
+        let day1 = D.setTime(D.getTime()+24*60*60*1000);
+        this.Edate = new Date(day1).getFullYear()+"-" + (new Date(day1).getMonth()+1) + "-" + new Date(day1).getDate();
+      } else if(D.getDay()==6){  // 周六
+        let day2 = D.setTime(D.getTime()+48*60*60*1000);
+        this.Edate = new Date(day2).getFullYear()+"-" + (new Date(day2).getMonth()+1) + "-" + new Date(day2).getDate();
+      } else{
+        this.Edate = D.getFullYear()+"-" + (D.getMonth()+1) + "-" + D.getDate();
+      }
+    }
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
     if(this.urlName === 'payOperation'){
       this.processStatusList = ['待处理','已悬停'];
@@ -639,8 +656,22 @@ export default {
       this.mailInfo = item.emailAddr
     },
     send() {
+      let val = '';
+      if(this.chooseRow.businessOrigin=="International"){  // 国际
+          val = `<div>Dear ${document.getElementById('Ename').value},<br/>
+          We are pleased to inform that we arranged a settlement of ${this.chooseRow.rmCurrency} ${this.chooseRow.rmAmount} with an estimated value date of ${this.Edate}.<br/>
+          Attached sheet for your transaction reference.<br/>
+          If however, you have any queries please let me know.<br/>  
+          <span style="margin-left:300px;">${document.getElementById('Esignature').value}</span></div>`
+        }else{
+          val = `<div>${document.getElementById('Ename').value}老师，您好！<br/>
+          我们预计将在${this.Edate}支付贵司金额为${this.chooseRow.rmCurrency}${this.chooseRow.rmAmount}的款项，详情请见清单。<br/>
+          如果有问题，请及时与我们联系。谢谢！<br/>
+          <span style="margin-left:300px;">${document.getElementById('Esignature').value}<span></div>   `
+        } 
       let info = {},params = null;
-      info = Object.assign({},{emailAddr:this.mailInfo, emailContent: this.emailContent, mailTitle: this.mailTitle });
+      // info = Object.assign({},{emailAddr:this.mailInfo, emailContent: this.emailContent, mailTitle: this.mailTitle });
+      info = Object.assign({},{emailAddr:this.mailInfo, emailContent: val, mailTitle: this.mailTitle,processId:this.chooseRow.processId });
       // 本地上传
       if (this.file.length) {
         var resFile = new FormData();
@@ -672,7 +703,8 @@ export default {
         //         });
         //     }
         //   });
-        this.$http.post("api/worksheet/wSEntry/sendEmail", {emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle, docCId:this.chooseDocList}).then(res => {
+        this.$http.post("api/worksheet/wSEntry/sendEmail", {emailAddr:this.mailInfo,emailContent: val, mailTitle: this.mailTitle, docCId:this.chooseDocList}).then(res => {
+        // this.$http.post("api/worksheet/wSEntry/sendEmail", {emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle, docCId:this.chooseDocList}).then(res => {
           if (res.status === 200 && res.data.code == 0) {
             this.$message({type: "success",message: res.data.msg});
             this.dialogFormVisible3 = false;
@@ -720,18 +752,19 @@ export default {
       this.$http.post('api/pay/teskClaim/list',params).then(res =>{
         if(res.status === 200 ) { 
           console.log(res,'res,付款');
-          let newRows=res.data.rows.map((item,index)=>{
-              item.rmSettleCompanyCode=item.rmSettleCompanyCode!==null?item.rmSettleCompanyCode.split(';'):item.rmSettleCompanyCode;
-              item.rmSettleCompanyName=item.rmSettleCompanyName!==null?item.rmSettleCompanyName.split(';'):item.rmSettleCompanyName;
-                // console.log(item.rmSettleCompanyName[0])
-              item.codeNames=item.rmSettleCompanyCode&&item.rmSettleCompanyCode.map((items,indexs)=>{
-               items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items||item.rmSettleCompanyName[indexs];
-                return items
-              });
-              item.codeNames=item.codeNames&&item.codeNames.join('');
-              return item;
-          })
+          // let newRows=res.data.rows.map((item,index)=>{
+          //     item.rmSettleCompanyCode=item.rmSettleCompanyCode!==null?item.rmSettleCompanyCode.split(';'):item.rmSettleCompanyCode;
+          //     item.rmSettleCompanyName=item.rmSettleCompanyName!==null?item.rmSettleCompanyName.split(';'):item.rmSettleCompanyName;
+          //       // console.log(item.rmSettleCompanyName[0])
+          //     item.codeNames=item.rmSettleCompanyCode&&item.rmSettleCompanyCode.map((items,indexs)=>{
+          //      items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items||item.rmSettleCompanyName[indexs];
+          //       return items
+          //     });
+          //     item.codeNames=item.codeNames&&item.codeNames.join('');
+          //     return item;
+          // })
           this.tableData = res.data.rows;
+          // this.tableData = newRows;
           console.log(this.tableData);
           this.mustData.total = res.data.total;
           if(res.data && res.data.rows && res.data.rows.length){
@@ -748,7 +781,7 @@ export default {
     docView(row) {
       // this.dialogFormVisibleA = true;
       if(row){
-        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
+        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && this.suffixFlag){ return false; }
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
@@ -852,7 +885,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
                 this.fileData = arr4;
@@ -880,6 +913,18 @@ export default {
           this.dialogFormVisible2 = true;
         break;
         case 13: //邮件通知 
+           if(this.chooseRow.businessOrigin=="International"){  // 国际
+            this.htmlContent = `<div>Dear <input class="mailTemplate" type="text" id="Ename"/>,<br/>
+            We are pleased to inform that we arranged a settlement of ${this.chooseRow.rmCurrency} ${this.chooseRow.rmAmount} with an estimated value date of ${this.Edate}.<br/>
+            Attached sheet for your transaction reference.<br/>
+            If however, you have any queries please let me know.<br/>  
+            <span style="margin-left:300px;"><input type="text" class="mailTemplate" id="Esignature" placeholder="please enter Personal signature"/></span></div>`
+          }else{
+            this.htmlContent = `<div><input class="mailTemplate" type="text" id="Ename"/>老师，您好！<br/>
+            我们预计将在${this.Edate}支付贵司金额为${this.chooseRow.rmCurrency}${this.chooseRow.rmAmount}的款项，详情请见清单。<br/>
+            如果有问题，请及时与我们联系。谢谢！<br/>
+            <span style="margin-left:300px;"><input type="text" class="mailTemplate" id="Esignature" placeholder="请输入个人签名"/><span></div>   `
+          } 
           this.$http.get("api/worksheet/wSEntry/getEmailContacts").then(res => {
           if (res.status === 200 && res.data.length) {
             this.tableData = this.chooseRow.bscDocumentVOlist;
@@ -907,10 +952,14 @@ export default {
                     if(el.docName){
                       let suffix = el.docName.split('.');
                       el['suffix'] = suffix[suffix.length-1];
-                      el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                      el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
                     }
                   })
                   this.fileData = arr5;
+                  if(this.fileData&&this.fileData.length){
+                    let num = this.fileData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
+                    setTimeout(()=>{ this.docView(this.fileData[+num]); },1500)
+                  }else{ sessionStorage.setItem('data',JSON.stringify({})); }
               }
             })
             this.title = '附件';

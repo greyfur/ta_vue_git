@@ -84,7 +84,7 @@ export default {
             if(el.docName){
               let suffix = el.docName.split('.');
               el['suffix'] = suffix[suffix.length-1];
-              el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+              el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
             }
           })
           this.tableData = arr;
@@ -93,7 +93,7 @@ export default {
     },
      docView(row) {
       if (row) {
-        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
+        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && this.suffixFlag){ return false; }
         this.docViewRow = row;

@@ -136,6 +136,7 @@
       </el-button>
     </div>
     <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;text-align:center;margin:0 auto;">
+      
       <el-table-column label="流程编号" width="170" align="center">
         <template slot-scope="scope">
           <span
@@ -956,7 +957,7 @@ export default {
     docView(row) {
       // this.dialogFormVisible1 = true;
         if (row) {
-        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
+        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && this.suffixFlag){ return false; }
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
@@ -1183,7 +1184,14 @@ export default {
       this.assignee = '';
       switch (tag) {
         case 0:
-          this.reset();
+          // this.reset();
+          for(let k in this.billSearch){
+            this.billSearch[k] = null;
+          }
+          this.zq2 = null;
+          this.zq1 = null;
+          this.brokerModel = null;
+          this.cedentModel = null;
           this.dialogFormVisible = true;
           this.title = "手工创建";
           break;
@@ -1282,20 +1290,25 @@ export default {
             this.zq1 = '';
           }
           this.$http.get(`api/worksheet/wSEntry/edit/${row.processId}`,{}).then(res => {
-              if (res.status === 200) {
-                // this.fileData = res.data.bscDocumentVOlist;
-                let arr3 = res.data.bscDocumentVOlist;
-                if(arr3===null)return;
-                arr3.forEach(el=>{
-                  if(el.docName){
-                    let suffix = el.docName.split('.');
-                    el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
-                  }
-                })
-                this.fileData = arr3;
-              }
-            });
+            if (res.status === 200) {
+              // this.fileData = res.data.bscDocumentVOlist;
+              let arr3 = res.data.bscDocumentVOlist;
+              if(arr3===null)return;
+              arr3.forEach(el=>{
+                if(el.docName){
+                  let suffix = el.docName.split('.');
+                  el['suffix'] = suffix[suffix.length-1];
+                  el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                }
+              })
+              this.fileData = arr3;
+              if(this.fileData&&this.fileData.length){
+                let num = this.fileData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
+                setTimeout(()=>{ this.docView(this.fileData[+num]); },1500)
+              }else{ sessionStorage.setItem('data',JSON.stringify({})); }
+              console.log(num,'num');
+            }
+          });
           this.dialogFormVisible = true;
           this.title = "编辑";
           break;
@@ -1389,7 +1402,7 @@ export default {
                         if(el.docName){
                           let suffix = el.docName.split('.');
                           el['suffix'] = suffix[suffix.length-1];
-                          el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                          el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
                         }
                       })
                       this.fileData = arr4;
@@ -1414,7 +1427,7 @@ export default {
               if(el.docName){
                 let suffix = el.docName.split('.');
                 el['suffix'] = suffix[suffix.length-1];
-                el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
               }
             })
             this.fileData = arr2;
@@ -1465,6 +1478,9 @@ export default {
         }
       });
       // window.open(routeData.href, '_blank');
+    },
+    uiopq(){
+      console.log(11112222)
     }
   }
 };

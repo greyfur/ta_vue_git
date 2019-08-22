@@ -181,6 +181,7 @@
           width="100%"
           :height="maxHeight"
           :header-row-class-name="StableClass">
+          <el-table-column type="index" width="50" align="center"></el-table-column>
           <el-table-column label="账单号" width="160" align="center">
             <template slot-scope="scope">
               <el-tooltip
@@ -230,7 +231,13 @@
             </template>
           </el-table-column>
           <el-table-column prop="uwYear" label="业务年度" align="center"></el-table-column>
-          <el-table-column prop="note" label="NOTE" align="center"></el-table-column>
+          <el-table-column label="NOTE" align="center">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.note" placement="top-start">
+                <span class="abbreviate">{{scope.row.note}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column prop="wsPeriod" label="账单期" width="120" align="center"></el-table-column>
           <el-table-column label="账单标题" align="center">
             <template slot-scope="scope">
@@ -870,7 +877,7 @@ export default {
               if(el.docName){
                 let suffix = el.docName.split('.');
                 el['suffix'] = suffix[suffix.length-1];
-                el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
               }
             })
           this.tableData = arr;
@@ -1035,7 +1042,7 @@ export default {
           // });
       } else if (this.title == "邮件通知") {
         let info = {},params = null;
-        info = Object.assign({},{emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle,processId:this.$route.query.num });
+        info = Object.assign({},{emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle,processId:this.chooseRow.processId });
         // 本地上传
         if (this.file.length) {
           var resFile = new FormData();
@@ -1527,7 +1534,7 @@ export default {
     },
     docView(row) {
       if (row) {
-        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
+        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && this.suffixFlag){ return false; }
         this.docViewRow = row;
@@ -1597,7 +1604,7 @@ export default {
                         if(el.docName){
                           let suffix = el.docName.split('.');
                           el['suffix'] = suffix[suffix.length-1];
-                          el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                          el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
                         }
                       })
                       this.tableData = arr;
@@ -1655,7 +1662,7 @@ export default {
             if(el.docName){
               let suffix = el.docName.split('.');
               el['suffix'] = suffix[suffix.length-1];
-              el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+              el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
             }
           })
           this.tableData = arr;

@@ -526,7 +526,13 @@
               </template>
             </el-table-column>
             <el-table-column prop="uwYear" label="业务年度" align="center"></el-table-column>
-            <el-table-column prop="note" label="NOTE" align="center"></el-table-column>
+            <el-table-column label="NOTE" align="center">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.note" placement="top-start">
+                  <span class="abbreviate">{{scope.row.note}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
             <el-table-column prop="wsPeriod" label="账单期" align="center"></el-table-column>
             <el-table-column label="账单标题" align="center">
               <template slot-scope="scope">
@@ -1657,7 +1663,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
                 this.fileData = arr5;
@@ -1741,13 +1747,20 @@ export default {
           this.specialName === '复核'?this.dialogFormVisibleFHRWZF = true:this.dialogFormVisible3 = true;
         break;
         case 3:  // 置废     支票、操作    assign:auto
-          this.$confirm('是否置废？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
+          this.$prompt('请输入置废原因', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              inputPattern: /[\u4e00-\u9fa5_a-zA-Z0-9]+/,
+              inputErrorMessage: '请输入正确内容'
+            }).then(({ value }) => {
             this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-            ,{processId:this.row.processId, procInstId:this.row.processInstId, assignee:this.$store.state.userName, type:'INACTIVE',actOperator:this.$store.state.userName})
+            ,{processId:this.row.processId,
+              procInstId:this.row.processInstId,
+              assignee:this.$store.state.userName,
+              type:'INACTIVE',
+              actOperator:this.$store.state.userName,
+              opinion:value,
+              })
             .then(res =>{
               if(res.status === 200 && res.data.errorCode == 1){
                 this.dialogFormVisible3 = false;
@@ -2199,7 +2212,7 @@ export default {
                   if(el.docName){ 
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
                 this.fileData = arr4;
@@ -2412,7 +2425,7 @@ export default {
     },
     docView(row) {
       if(row){
-        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
+        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && this.suffixFlag){ return false; }
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{

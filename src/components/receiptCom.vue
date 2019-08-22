@@ -965,7 +965,7 @@ export default {
     docView(row) {
       // this.dialogFormVisibleA = true;
       if (row) {
-        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'];
+        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && this.suffixFlag){ return false; }
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
@@ -1070,10 +1070,16 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
                 this.fileData = arr3;
+                if(this.fileData&&this.fileData.length){
+                  let num = this.fileData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
+                  setTimeout(()=>{ this.docView(this.fileData[+num]); },1500)
+                } else{
+                  sessionStorage.setItem('data',JSON.stringify({}));
+                }
                 this.title = "编辑";
                 this.dialogFormVisible = true;
               }
@@ -1164,10 +1170,14 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
                 this.fileData = arr4;
+                if(this.fileData&&this.fileData.length){
+                  let num = this.fileData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
+                  setTimeout(()=>{ this.docView(this.fileData[+num]); },1500)
+                }else{ sessionStorage.setItem('data',JSON.stringify({})); }
                 this.init();
               }
             });
@@ -1447,7 +1457,7 @@ export default {
                         if(el.docName){
                           let suffix = el.docName.split('.');
                           el['suffix'] = suffix[suffix.length-1];
-                          el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                          el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
                         }
                       })
                       this.fileData = arr5;
@@ -1487,7 +1497,7 @@ export default {
                       if(el.docName){
                         let suffix = el.docName.split('.');
                         el['suffix'] = suffix[suffix.length-1];
-                        el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                        el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
                       }
                     })
                     this.fileData = arr4;
