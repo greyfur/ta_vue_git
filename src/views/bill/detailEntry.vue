@@ -34,7 +34,7 @@
           <el-button size="small" @click="exportBill">导出账单</el-button>
         </div>
         <div class="left">
-          <div :class="searchFlag1===true?'searchNew':''" >
+          <div :class="searchFlag1===true?'searchNew searchNews':''" >
             <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
               <div>
                 <i style="margin-right:8px;" class="el-icon-arrow-down"></i>详情
@@ -49,14 +49,14 @@
                 </el-tooltip>
               </p>
             </div>
-            <ul class="detail-ul" v-show="searchFlag1" style="border:1px solid rgba(238,238,238,1);">
+            <ul class="detail-ul" v-show="searchFlag1">
               <li v-for="(item,i) in listData" :key="i" class="detail-item">
                 <span class="detail-name">{{item.a}} :</span>
                 <span class="detail-content">{{item.b}}</span>
               </li>
             </ul>
           </div>
-          <div :class="searchFlag2===true?'searchNew':''"  style="margin-top:16px;">
+          <div :class="searchFlag2===true?'searchNew searchNews':''"  style="margin-top:16px;">
             <div class="titleSearch detailSearch" @click.stop="searchFlag2 = !searchFlag2">
               <div>
                 <i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表
@@ -71,11 +71,11 @@
             <el-table
               height="315"
               v-show="searchFlag2"
-              stripe
               border
               :data="tableData"
               style="width: 100%;margin-top:10px;"
               class="document">
+              <!-- .slice((1-1)*3,3) -->
               <el-table-column label="文件名" align="center">
                 <template slot-scope="scope">
                   <el-tooltip class="item" effect="dark" placement="top">
@@ -118,6 +118,14 @@
                 </template>
               </el-table-column>
             </el-table>
+            <!-- <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page.sync="currentPage1"
+              :page-size="2"
+              layout="total, prev, pager, next"
+              :total="5">
+            </el-pagination> -->
             <!-- pagination hyd -->
           </div>
         </div>
@@ -870,6 +878,7 @@ export default {
               }
             })
           this.tableData = arr;
+          console.log(this.tableData,'hyd111')
           let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
           setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
         }
@@ -1038,6 +1047,8 @@ export default {
           // resFile.append("file", this.file[0]);
           for (let k in info) {resFile.append(k, info[k]);}
         }
+            console.log(this.$route.query.num)
+
         // docList 上传
         if (this.chooseDocList && this.chooseDocList.length) {
           // let row = this.tableData[this.chooseDocList];

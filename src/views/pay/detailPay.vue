@@ -1285,6 +1285,9 @@ export default {
   },
   updated(){
     //进度条
+    console.log(this.makeDocListEctype.cedentModel[0])
+    console.log(this.makeDocListEctype.cedentModel[1])
+    console.log(this.makeDocListEctype.cedentModel[2])
     if(this.$route.query.tag === 'payVerification'){
       this.nextStep();
       this.updateFlag = false;
@@ -2535,16 +2538,18 @@ export default {
         this.dialogFormVisible2 = true;
       } else {
         if (tag == 2) {
-         if(this.makeDocListEctype.zheNum&&this.makeDocListEctype.yuanType.length>0){
+          console.log(this.makeDocListEctype.zheNum,this.makeDocListEctype.yuanType.length)
+          console.log(!this.makeDocListEctype.zheNum,this.makeDocListEctype.yuanType.length)
+         if(this.makeDocListEctype.zheNum!=null&&this.makeDocListEctype.yuanType.length>0){
             // 是操作页面,2为点击确定---------------------生成审批文档提交hyd
-             if(this.makeDocListEctype.cedentModel[0]==undefined||this.makeDocListEctype.cedentModel[1]==undefined||this.makeDocListEctype.cedentModel[2]==undefined){
+             if((this.makeDocListEctype.cedentModel[0]==undefined||(this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null))||(this.makeDocListEctype.cedentModel[1]==undefined||(this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null))||(this.makeDocListEctype.cedentModel[2]==undefined||(this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==undefined))){
               
           if (this.makeDocListEctype.cedentModel &&this.makeDocListEctype.cedentModel.length) {
             if(this.checked){
               console.log(this.cedentList)
-              this.makeDocList.rmCedentName =  this.makeDocList.rmCedentName = (this.makeDocListEctype.cedentModel[0]!==undefined?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+(this.makeDocListEctype.cedentModel[1]!==undefined?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+(this.makeDocListEctype.cedentModel[2]!==undefined?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'')+' various';
+              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'')+' various';
             }else{
-              this.makeDocList.rmCedentName = (this.makeDocListEctype.cedentModel[0]!==undefined?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+(this.makeDocListEctype.cedentModel[1]!==undefined?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+(this.makeDocListEctype.cedentModel[2]!==undefined?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'');
+              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'');
             }
           }
           if(this.makeDocListEctype.shoukuanMode != null){
@@ -2563,32 +2568,34 @@ export default {
             })
             this.makeDocList.primitiveAmount = arr.join(';');
           }
-          if(this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[1]!=undefined){
+          if((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)&&(this.makeDocListEctype.cedentModel[1]!=undefined&&this.makeDocListEctype.cedentModel[1]!==null)){
+             console.log(666)
             if(this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName==this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName){
               this.$message.error('分公司不能一样');
               return;
             }
           }
-           if(this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[2]!=undefined){
+           if((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)&&(this.makeDocListEctype.cedentModel[2]!=undefined&&this.makeDocListEctype.cedentModel[2]!==null)){
+             console.log(777)
             if(this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName==this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName){
               this.$message.error('分公司不能一样');
               return;
             }
           }
-           if(this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[2]!=undefined){
+           if((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)&&(this.makeDocListEctype.cedentModel[2]!=undefined&&this.makeDocListEctype.cedentModel[2]!==null)){
+             console.log(888)
             if(this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName==this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName){
               this.$message.error('分公司不能一样');
               return;
             }
           }
-        //   if(this.makeDocListEctype.cedentModel[0]==this.makeDocListEctype.cedentModel[2]){
-        //   this.$message.error('分公司不能一样');
-        //   return;
-        // }
-        // if(this.makeDocListEctype.cedentModel[1]==this.makeDocListEctype.cedentModel[2]){
-        //   this.$message.error('分公司不能一样');
-        //   return;
-        // }
+           if((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)&&(this.makeDocListEctype.cedentModel[1]!=undefined&&this.makeDocListEctype.cedentModel[1]!==null)&&(this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)){
+             console.log(999)
+            if(this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName==this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName||this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName==this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName||this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName==this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName){
+              this.$message.error('分公司不能一样');
+              return;
+            }
+          }
           let param = Object.assign({},this.makeDocList,{
             processId:this.row.processId,
             actOperator:this.$store.state.userName,
@@ -2629,11 +2636,12 @@ export default {
                 this.$message.error(res.data.msg);
               }
           })
-         }else{
-            this.$message.error('请输入原币和折币金额');
          }
          return;
         }
+        else{
+            this.$message.error('请输入原币和折币金额');
+         }
         } else{   // 是审批页面，
           let param = {
             processId:this.row.processId,
