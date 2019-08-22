@@ -101,12 +101,7 @@
       </el-table-column>
       <el-table-column width="120" label="汇款人名称" align="center">
          <template slot-scope="scope">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="scope.row.payerName"
-            placement="top-start"
-          >
+          <el-tooltip class="item" effect="dark" :content="scope.row.payerName" placement="top-start">
             <span class="abbreviate">{{scope.row.payerName}}</span>
           </el-tooltip>
         </template>
@@ -382,9 +377,9 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="汇款人名称">
+        <!-- <el-form-item label="汇款人名称">
           <el-input v-model="formLabelAlign.rmSettleCompanyName"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="到账日期">
           <el-date-picker
             value-format="timestamp"
@@ -910,7 +905,7 @@ export default {
       this.init();
   },
   methods: {
-     changeWindow(){
+    changeWindow(){
       let that=this;
       document.body.onresize=function(e){
         if(that.$route.name==='financialCreat'||that.$route.name==='taskClaim'){
@@ -1026,6 +1021,9 @@ export default {
           break;
         case 6: //编辑
           this.formLabelAlign = this.chooseRow;
+          this.formLabelAlign.rmSettleCompanyCode = null;
+          this.formLabelAlign.rmSettleCompanyName = null;
+          // rmSettleCompanyName
           if (this.chooseRow.businessOrigin) {
             let arr = this.businessOriginList.filter(el => {
               return el.name == this.chooseRow.businessOrigin;
