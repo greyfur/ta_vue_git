@@ -1480,7 +1480,7 @@ export default {
       // window.open(routeData.href, '_blank');
     },
     uiopq(){
-      console.log('git 测试2222')
+      console.log('git 测试666')
     }
   }
 };
