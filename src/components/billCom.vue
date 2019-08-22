@@ -143,7 +143,7 @@
       </el-button>
     </div>
     <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;text-align:center;margin:0 auto;">
-      <el-table-column label="流程编号" width="155" align="center">
+      <el-table-column label="流程编号" width="170" align="center">
         <template slot-scope="scope">
           <span
             :class="{'smallHand':urlName !== 'sortOperation'}"
@@ -483,7 +483,7 @@
         </el-table-column>
       </el-table>
       <el-table :data="track" border style="width: 100%;height:auto;" v-show="title==='踪迹'" :header-row-class-name="StableClass">
-        <el-table-column prop="processId" label="流程编号" width="220" align="center"></el-table-column>
+        <el-table-column prop="processId" label="流程编号" width="230" align="center"></el-table-column>
         <el-table-column prop="actName" label="操作名称" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark"  :content="scope.row.actName" placement="top-start">

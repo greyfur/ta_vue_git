@@ -341,7 +341,6 @@ import { mapState } from "vuex";
     cursor: pointer;
   }
   .el-submenu:nth-child(1) .el-submenu__title{
-   
-    box-shadow:0px 2px 4px 0px inset rgba(0,0,0,0.5);
+    box-shadow:0  2px 0 inset rgba(0,0,0,0.5);
   }
 </style>

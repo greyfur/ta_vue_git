@@ -49,7 +49,7 @@
                 </el-tooltip>
               </p>
             </div>
-            <ul class="detail-ul" v-show="searchFlag1">
+            <ul class="detail-ul" v-show="searchFlag1" style="border:1px solid rgba(238,238,238,1);">
               <li v-for="(item,i) in listData" :key="i" class="detail-item">
                 <span class="detail-name">{{item.a}} :</span>
                 <span class="detail-content">{{item.b}}</span>

@@ -3,7 +3,7 @@
         <img src="@/assets/img/navLeft@2x.png" style="width:197px;" alt="error">
         <div class="logOut">
             <span style="color:#999;">
-                <i class="el-icon-user-solid" style="color:#FFFFFF;"></i><span style="color:#FFFFFF;margin-right:4px;">{{UName}}</span>
+                <i class="el-icon-user-solid" style="color:#FFFFFF;margin-right:4px;"></i><span style="color:#FFFFFF;">{{UName}}</span>
             </span>
             <span class="logOutWord" @click="logOut" style="color:#fff;">
                 <i class="el-icon-switch-button" style="margin-right:4px;color:#fff;"></i>退出
