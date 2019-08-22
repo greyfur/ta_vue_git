@@ -158,6 +158,13 @@
       <el-col :span="24" style="padding:0 16px;padding-bottom:100px">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息</div>
+          <div>
+            <el-checkbox-group v-model="wsCheckList" @change="onWsCheck">
+              <el-checkbox label="C">Closed</el-checkbox>
+              <el-checkbox label="O">Open</el-checkbox>
+              <el-checkbox label="I">Inactive</el-checkbox>
+            </el-checkbox-group>
+          </div>
         </div>
         <el-table
           v-show="searchFlag3"
@@ -215,6 +222,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="uwYear" label="业务年度" align="center"></el-table-column>
+          <el-table-column prop="note" label="NOTE" align="center"></el-table-column>
           <el-table-column prop="wsPeriod" label="账单期" width="120" align="center"></el-table-column>
           <el-table-column label="账单标题" align="center">
             <template slot-scope="scope">
@@ -257,9 +265,12 @@
           </el-table-column> -->
           <el-table-column width="180" label="修改意见" align="center">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark"  :content="scope.row.rejectType&&scope.row.remark?scope.row.remark+'-'+scope.row.rejectType:''" placement="top-start">
-                <span class="abbreviate" v-if="scope.row.rejectType&&scope.row.remark">{{scope.row.rejectType}}-{{scope.row.remark}}</span>
-                <span class="abbreviate" v-else></span>
+              <!-- <el-tooltip class="item" effect="dark"  :content="scope.row.rejectType&&scope.row.remark?scope.row.remark+'-'+scope.row.rejectType:''" placement="top-start"> -->
+              <el-tooltip class="item" effect="dark"  :content="scope.row.remark+'-'+scope.row.rejectType" placement="top-start">
+                <span class="abbreviate">{{scope.row.rejectType}}-{{scope.row.remark}}</span>
+                <!-- <span class="abbreviate" v-if="scope.row.rejectType&&scope.row.remark">{{scope.row.rejectType}}-{{scope.row.remark}}</span>
+                <span class="abbreviate" v-else></span> -->
+                <!-- 8.21 v-else有问题  -->
               </el-tooltip>
             </template>
           </el-table-column>
@@ -599,6 +610,7 @@ export default {
   name: "detailEntry",
   data() { 
     return {
+      wsCheckList:[],
       maxHeight:null,
       wsId:null,
       checkRobortUser:null,
@@ -770,6 +782,15 @@ export default {
     this.getBillInfo();
   },
   methods: {
+    onWsCheck(){
+      // console.log(this.wsCheckList,'wsCheckList');
+      this.$http.post("api/worksheet/wSCheck/getWorkSheetList", {processId: this.chooseRow.processId,wsStatus:this.wsCheckList})
+        .then(res => {
+          if(res.status == 200){
+            this.SICSData = res.data;
+          }  
+        });
+    },
     exportBill(){
       // this.$http.post(`api/worksheet/wSEntry/download/`,{processId:this.chooseRow.processId,},{responseType: "blob"})
       this.$http.post("api/worksheet/wSEntry/download",{processId:this.chooseRow.processId},{responseType: "blob"})
@@ -800,6 +821,7 @@ export default {
           this.chooseRow = res.data;
           res.data.processStatus === "已悬停"? (this.isHover = true):(this.isHover = false);
           this.SICSData = res.data.workSheetVOlist;
+          console.log(this.SICSData,'this.SICSData');
           // 获取详情的值
       
           this.chooseRow.cedentCodeName=[];
@@ -1395,6 +1417,7 @@ export default {
             .then(res => {
               if (res.status === 200 && res.data.code == 0) {
                 this.getBillInfo();
+                // this.onSics();
                 this.dialogFormVisible5 = false;
                 this.$message({type: "success",message: res.data.msg});
               } else if (res.data.code == 1) {
