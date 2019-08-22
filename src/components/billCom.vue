@@ -136,6 +136,14 @@
       </el-button>
     </div>
     <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;text-align:center;margin:0 auto;">
+      <el-table-column v-if="urlName === 'billEntry'" align="center" width="50">
+        <template slot-scope="scope" v-show="urlName === 'billEntry'">
+          <div style="display: flex;align-items: center;justify-content: center;" v-show="urlName === 'billEntry'">
+            <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
+            <!-- <span>{{scope.row.rejectedFlag == '1'?'异常':'正常'}}</span> -->
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="流程编号" width="170" align="center">
         <template slot-scope="scope">
           <span

@@ -58,14 +58,14 @@
           </el-tooltip>
         </template>
       </el-table-column> -->
-      <el-table-column width="140" label="结付公司" align="center">
+      <!-- <el-table-column width="140" label="结付公司" align="center">
         <template slot-scope="scope">
             <el-tooltip class="item" effect="dark"  :content="scope.row.codeNames&&scope.row.codeNames?scope.row.codeNames:''" placement="top-start">
               <span class="abbreviate" v-if="scope.row.codeNames&&scope.row.codeNames">{{scope.row.codeNames}}</span>
               <span class="abbreviate" v-if="!scope.row.codeNames&&!scope.row.codeNames"></span>
             </el-tooltip>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="rmCurrency" label="币制" align="center"></el-table-column>
       <el-table-column label="汇款金额" width="120" align="right">
          <template slot-scope="scope">
@@ -720,18 +720,19 @@ export default {
       this.$http.post('api/pay/teskClaim/list',params).then(res =>{
         if(res.status === 200 ) { 
           console.log(res,'res,付款');
-          let newRows=res.data.rows.map((item,index)=>{
-              item.rmSettleCompanyCode=item.rmSettleCompanyCode!==null?item.rmSettleCompanyCode.split(';'):item.rmSettleCompanyCode;
-              item.rmSettleCompanyName=item.rmSettleCompanyName!==null?item.rmSettleCompanyName.split(';'):item.rmSettleCompanyName;
-                // console.log(item.rmSettleCompanyName[0])
-              item.codeNames=item.rmSettleCompanyCode&&item.rmSettleCompanyCode.map((items,indexs)=>{
-               items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items||item.rmSettleCompanyName[indexs];
-                return items
-              });
-              item.codeNames=item.codeNames&&item.codeNames.join('');
-              return item;
-          })
+          // let newRows=res.data.rows.map((item,index)=>{
+          //     item.rmSettleCompanyCode=item.rmSettleCompanyCode!==null?item.rmSettleCompanyCode.split(';'):item.rmSettleCompanyCode;
+          //     item.rmSettleCompanyName=item.rmSettleCompanyName!==null?item.rmSettleCompanyName.split(';'):item.rmSettleCompanyName;
+          //       // console.log(item.rmSettleCompanyName[0])
+          //     item.codeNames=item.rmSettleCompanyCode&&item.rmSettleCompanyCode.map((items,indexs)=>{
+          //      items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items||item.rmSettleCompanyName[indexs];
+          //       return items
+          //     });
+          //     item.codeNames=item.codeNames&&item.codeNames.join('');
+          //     return item;
+          // })
           this.tableData = res.data.rows;
+          // this.tableData = newRows;
           console.log(this.tableData);
           this.mustData.total = res.data.total;
           if(res.data && res.data.rows && res.data.rows.length){
