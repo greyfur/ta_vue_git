@@ -722,14 +722,14 @@ export default {
       this.assignee = null;
       switch(tag){
         case 0: 
-          this.reset();
-          // for(let k in this.billSearch){
-          //   this.billSearch[k] = null;
-          // }
-          // this.zq2 = null;
-          // this.zq1 = null;
-          // this.brokerModel = null;
-          // this.cedentModel = null;
+          // this.reset();
+          for(let k in this.billSearch){
+            this.billSearch[k] = null;
+          }
+          this.zq2 = null;
+          this.zq1 = null;
+          this.brokerModel = null;
+          this.cedentModel = null;
           this.dialogFormVisible = true;
           this.title = '手工创建';
           break;
