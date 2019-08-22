@@ -10,11 +10,11 @@
         <el-row :gutter="10" class="billRow" class-name="transition-box">
           <el-col :span="8">
             <span class="slable">流程编号</span>
-            <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processId"></el-input>
+            <el-input placeholder="请输入流程编号" v-model.trim="searchList.processId"></el-input>
           </el-col>
           <el-col :span="8">
             <span class="slable">结付公司</span>
-            <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
+            <el-select clearable filterable v-model="searchList.cedentModel" placeholder="请选择结付公司">
               <el-option
                 v-for="(item,index) in cedentList"
                 :key="index"
@@ -26,28 +26,32 @@
             </el-select>
           </el-col>
           <el-col :span="8">
-            <span class="slable">汇款人名称</span>
-            <el-input placeholder="请输入汇款人名称" v-model.trim="formLabelAlign.rmSettleCompanyName"></el-input>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10" class="billRow">
-          <el-col :span="8">
             <span class="slable">到账日期</span>
             <el-date-picker
               value-format="timestamp"
-              v-model="formLabelAlign.rmReceiptDate"
+              v-model="searchList.rmReceiptDate"
               type="date"
               placeholder="选择日期"
             ></el-date-picker>
           </el-col>
-          <el-col :span="8" v-show="processStatusList.length">
+          <!-- <el-col :span="8">
+            <span class="slable">汇款人名称</span>
+            <el-input placeholder="请输入汇款人名称" v-model.trim="formLabelAlign.rmSettleCompanyName"></el-input>
+          </el-col> -->
+        </el-row>
+        <el-row :gutter="10" class="billRow">
+          <el-col :span="16" v-show="processStatusList.length">
             <span class="slable">流程状态</span>
-            <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
+            <el-select clearable v-model="searchList.processStatus" placeholder="请选择">
               <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-col>
+          <el-col :span="8">
+            <el-button type="primary" plain @click="handleClick(4)"><i class="iconfont iconGroup42"></i>查询</el-button>
+            <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
+          </el-col>
         </el-row>
-        <el-row>
+        <!-- <el-row>
           <el-col :span="24">
             <el-button type="primary" plain @click="handleClick(4)">
               <i class="iconfont iconGroup42"></i>查询
@@ -56,7 +60,7 @@
               <i class="iconfont iconGroup39"></i>重置
             </el-button>
           </el-col>
-        </el-row>
+        </el-row> -->
       </div>
       </el-collapse-transition>
     </div>
@@ -99,13 +103,13 @@
             </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column width="120" label="汇款人名称" align="center">
+      <!-- <el-table-column width="120" label="汇款人名称" align="center">
          <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.payerName" placement="top-start">
             <span class="abbreviate">{{scope.row.payerName}}</span>
           </el-tooltip>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="rmCurrency" width="55" label="币制" align="center"></el-table-column>
       <el-table-column label="汇款金额"  width="100" align="right">
         <template slot-scope="scope">
@@ -219,18 +223,17 @@
             </el-tooltip>
         </template>
         </el-table-column>
-      <el-table-column width="120" label="汇款人名称" align="center">
+      <!-- <el-table-column width="120" label="汇款人名称" align="center">
          <template slot-scope="scope">
           <el-tooltip
             class="item"
             effect="dark"
             :content="scope.row.payerName"
-            placement="top-start"
-          >
+            placement="top-start">
             <span class="abbreviate">{{scope.row.payerName}}</span>
           </el-tooltip>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="rmCurrency" width="55" label="币制" align="center"></el-table-column>
       <el-table-column label="汇款金额" width="100" align="right">
         <template slot-scope="scope">
@@ -679,6 +682,14 @@ export default {
       currentPage3: 5,
       hide: false,
       labelPosition: "right",
+      searchList:{
+        processId:null,
+        cedentModel:null,
+        rmReceiptDate:null,
+        processStatus:null,
+        rmSettleCompanyCode:null,
+        rmSettleCompanyName:null,
+      },
       formLabelAlign: {
         rmSettleCompanyCode: '',
         rmSettleCompanyName: '',
@@ -732,11 +743,11 @@ export default {
           b: "",
           c: "rmSettleCompanyCode"
         },
-        {
-          a: "汇款人名称",
-          b: "",
-          c: "payerName"
-        },
+        // {
+        //   a: "汇款人名称",
+        //   b: "",
+        //   c: "payerName"
+        // },
         {
           a: "币制",
           b: "",
@@ -988,10 +999,9 @@ export default {
       }
     },
     reset() {
-      for (let k in this.formLabelAlign) {
-        this.formLabelAlign[k] = '';
+      for (let k in this.searchList) {
+        this.searchList[k] = null;
       }
-      this.cedentModel = null;
     },
     handleClick(tag, row) {
       this.chooseRow = Object.assign({}, row);
@@ -999,12 +1009,11 @@ export default {
       this.tag = tag;
       this.assignee = null;
       switch (tag) {
-        case 1: //创建
-          this.reset();
-          // for(let k in this.formLabelAlign){
-          //   this.formLabelAlign[k] = null;
-          // }
-          // this.cedentModel = null;
+        case 1: //创建      searchList
+          for (let k in this.formLabelAlign) {
+            this.formLabelAlign[k] = '';
+          }
+          this.cedentModel = null;
           this.title = "创建";
           this.dialogFormVisible = true;
           break;
@@ -1320,6 +1329,11 @@ export default {
         this.formLabelAlign.rmSettleCompanyCode = obj.codecode;
         this.formLabelAlign.rmSettleCompanyName = obj.codeName;
       }
+      if (this.searchList.cedentModel != null) {
+        let obj = this.cedentList[this.searchList.cedentModel];
+        this.searchList.rmSettleCompanyCode = obj.codecode;
+        this.searchList.rmSettleCompanyName = obj.codeName;
+      }
       switch (this.tag) {
         case 1: //创建
           this.$refs[formName].validate(valid => {
@@ -1350,17 +1364,17 @@ export default {
           break; 
         case 4: //查询
           let params = null;
-          if(!this.formLabelAlign.processStatus){
+          if(!this.searchList.processStatus){
             if(this.admFlag || this.urlName === 'financialCreat' || this.urlName === 'taskClaim'){ 
-                params = Object.assign({},this.mustData,this.formLabelAlign,{processStatus:this.processStatusList.join(',')});
+                params = Object.assign({},this.mustData,this.searchList,{processStatus:this.processStatusList.join(',')});
               } else{
-                params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName,processStatus:this.processStatusList.join(',')});
+                params = Object.assign({},this.mustData,this.searchList,{curOperator:this.$store.state.userName,processStatus:this.processStatusList.join(',')});
               }
           } else{
             if(this.admFlag || this.urlName === 'financialCreat' || this.urlName === 'taskClaim'){ 
-              params = Object.assign({},this.mustData,this.formLabelAlign);
+              params = Object.assign({},this.mustData,this.searchList);
             } else{
-              params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
+              params = Object.assign({},this.mustData,this.searchList,{curOperator:this.$store.state.userName});
             }
           }
           delete params.actOperator;
@@ -1372,7 +1386,6 @@ export default {
               } else {
                 this.tableData = res.data.rows;
                 this.mustData.total = res.data.total;
-                this.dialogFormVisible = false;
               }
             }
           });
