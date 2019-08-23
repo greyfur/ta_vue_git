@@ -1140,6 +1140,12 @@ export default {
               }
               let params1 = Object.assign({},this.billSearch, this.mustData, {processId: this.chooseRow.processId})
               delete params1["processStatus"];
+               for(let k in params1){
+                 if(!params1[k] && params1[k]!=0){
+                   params1[k] = '';
+                 }
+               }
+                params1['hasRecheckFlag']=null;
                 this.$http.post("api/worksheet/wSEntry/update",params1)
                   .then(res => {
                     if (res.status === 200 && res.data.code == 0) {
@@ -1149,6 +1155,8 @@ export default {
                     } else if(res.data.code == 1){
                       this.$message({ type: "error", message: res.data.msg });
                     } else{
+                      this.init();
+                      this.dialogFormVisible = false;
                       this.$message({ type: "warning", message: res.data.msg });
                     }
                   });

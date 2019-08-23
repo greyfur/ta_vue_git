@@ -1903,6 +1903,11 @@ export default {
             } else if(this.row.accountCloseFlag == '1'){
               type2 = 'CONDITIONALCOMPLETE';
             }
+            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
             this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
               ,{processId:this.row.processId, 
               procInstId:this.row.processInstId, 
@@ -1919,6 +1924,7 @@ export default {
                   this.$message({type: 'error', message:res.data.errorMessage }); 
                 }
               })
+            })
           } else{
             this.getName('付款录入');
             this.specialName2 = specialName;
@@ -2112,6 +2118,11 @@ export default {
             this.$message.error('请选择任务处理人');
             return false;
           }
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
           this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
             ,{processId:this.row.processId, 
             procInstId:this.row.processInstId, 
@@ -2129,6 +2140,7 @@ export default {
                 this.$message({type: 'error', message:res.data.errorMessage }); 
               }
             })
+        })
         break;
         case 9:   // 审批驳回
           if(!this.opinion){

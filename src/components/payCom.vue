@@ -219,7 +219,7 @@
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="432" class="SwitchingMode">
       <el-form label-width="140px" v-show="title==='流程提交'">
-        <el-form-item label="选择处理人"  v-show="title==='流程提交'">
+        <el-form-item label="选择处理人"  v-show="title==='流程提交' && urlName != 'emailNotify'">
           <el-select filterable v-model="assignee"  placeholder="请选择">
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
@@ -908,9 +908,32 @@ export default {
             }
           })
         break;
-        case 12: //流程提交
+        case 12: //流程提交  //  8.23 胖虎说邮件流程提交，不用指下一个人，直接只给entryOperator
           this.title = '流程提交';
-          this.dialogFormVisible2 = true;
+          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
+              ,{processId:this.chooseRow.processId, 
+              procInstId:this.chooseRow.processInstId, 
+              assignee:this.chooseRow.entryOperator, 
+              type:'PAYING',
+              actOperator:this.$store.state.userName,
+              // hasNoticedFlag:this.chooseRow.hasNoticedFlag
+              }).then(res =>{
+              if(res.status === 200 && res.data.errorCode == 1){
+                this.dialogFormVisible2 = false;
+                this.$message({type: 'success', message: '提交成功!'});  
+                this.assignee = null;
+                this.init();
+              } else if(res.data.errorCode == 0){
+                this.$message({type: 'error', message:res.data.errorMessage }); 
+              }
+            })
+          })
+          // this.dialogFormVisible2 = true;
         break;
         case 13: //邮件通知 
            if(this.chooseRow.businessOrigin=="International"){  // 国际

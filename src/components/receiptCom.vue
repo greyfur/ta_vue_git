@@ -114,13 +114,13 @@
             </el-tooltip>
         </template>
       </el-table-column>
-      <!-- <el-table-column width="120" label="汇款人名称" align="center">
+      <el-table-column width="120" label="汇款人名称" align="center">
          <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.payerName" placement="top-start">
             <span class="abbreviate">{{scope.row.payerName}}</span>
           </el-tooltip>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制" align="center"></el-table-column>
       <el-table-column label="汇款金额"  width="100" align="right">
         <template slot-scope="scope">
@@ -1403,7 +1403,13 @@ export default {
           });
           break;
         case 6: //编辑
-          this.$http.post("api/receipt/finaCreat/update",Object.assign({}, this.mustData, this.formLabelAlign, {actOperator: this.$store.state.userName}))
+        let params1 = Object.assign({}, this.mustData, this.formLabelAlign, {actOperator: this.$store.state.userName});
+        for(let k in params1){
+            if(!params1[k] && params1[k]!=0){
+              params1[k] = '';
+            }
+          }
+          this.$http.post("api/receipt/finaCreat/update",params1)
             .then(res => {
               if (res.status === 200 && res.data.code == 0) {
                 this.$message({ type: "success", message: res.data.msg });
@@ -1413,6 +1419,8 @@ export default {
                 this.$message.error(res.data.msg);
               } else{
                 this.$message({ type: "warning", message: res.data.msg });
+                this.dialogFormVisible = false;
+                this.init();
               }
               this.$refs[formName].resetFields();
             });
