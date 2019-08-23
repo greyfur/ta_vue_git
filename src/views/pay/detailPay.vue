@@ -1285,9 +1285,6 @@ export default {
   },
   updated(){
     //进度条
-    console.log(this.makeDocListEctype.cedentModel[0])
-    console.log(this.makeDocListEctype.cedentModel[1])
-    console.log(this.makeDocListEctype.cedentModel[2])
     if(this.$route.query.tag === 'payVerification'){
       this.nextStep();
       this.updateFlag = false;

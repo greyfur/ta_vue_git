@@ -164,11 +164,11 @@
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column> hyd-->
-      <el-table-column width="110" label="录入人员" align="center">
+      <!-- <el-table-column width="110" label="录入人员" align="center">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.registBy]}}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <!-- <el-table-column v-if="urlName==='credReview'||urlName==='credVerification'||urlName==='viewInvalidate'||urlName==='collectiongEnd'" label="复核人员'" width="110">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.closedBy]}}</span>
