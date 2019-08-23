@@ -94,7 +94,8 @@
       </el-row>
       <el-row><el-col :span="24">
         <el-button type="primary" plain @click="handleClick(1)"><i class="iconfont iconGroup42"></i>查询</el-button>
-        <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
+        <el-button type="primary" plain @click="reset" class="borderBtn"><i class="iconfont iconGroup39" ></i>重置</el-button>
+        <el-button type="primary" plain @click="reportClick()" class="borderBtn">导出报表</el-button>
       </el-col></el-row>
       </div>
        </el-collapse-transition>
@@ -103,7 +104,6 @@
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91"></i>手工创建</el-button>
       <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37"></i>刷新</el-button>
       <!-- <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button> -->
-      <el-button type="info" plain size="small" @click="reportClick()" class="borderBtn">导出报表</el-button>
     </div> 
     <el-table :header-row-class-name="StableClass" :data="tableData" border style="width: 100%"  :height="changeClientHight">
       <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>

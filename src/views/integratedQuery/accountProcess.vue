@@ -51,8 +51,9 @@
         <el-row :gutter="10" class="billRow">
           <el-col :span="24">
             <el-button type="primary" plain @click="handleClick(4)"><i class="iconfont iconGroup42"></i>查询</el-button>
-            <el-button type="primary" plain @click="mySubmit"><i class="iconfont iconGroup42"></i>我提交的</el-button>
-            <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
+            <el-button type="primary" plain @click="mySubmit" class="borderBtn"><i class="iconfont iconGroup42"></i>我提交的</el-button>
+            <el-button type="primary" plain @click="reset" class="borderBtn"><i class="iconfont iconGroup39"></i>重置</el-button>
+            <el-button type="primary" plain @click="reportClick()" class="borderBtn">导出报表</el-button>
           </el-col>
         </el-row>
       </div>
@@ -61,7 +62,7 @@
     <div class="btn">
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
       <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37"></i>刷新</el-button>
-       <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button>
+      <!-- <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button> -->
     </div>
     <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">
       <el-table-column label="流程编号" width="145" align="center">
@@ -222,7 +223,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="导出报表" width="50%" :visible.sync="dialogReport" :close-on-click-modal="modal">
+    <!-- <el-dialog title="导出报表" width="50%" :visible.sync="dialogReport" :close-on-click-modal="modal">
       <el-form   class="demo-form-inline" v-model="reportArr">
         <el-form-item label="报表名称">
           <el-select
@@ -252,7 +253,7 @@
             <el-button size="small" type="primary" plain @click="reportClick" style="padding:0 16px;">确 定</el-button>
         </el-form-item>
       </el-form>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -596,17 +597,24 @@ export default {
         this.cedentModel = null;
     },
   reportClick(){
-      this.dialogReport=false;
-      if(this.reportArr.reportName===null){
-        this.$message.error('报表名称为必填项')
-        return
-      }
-      this.$http.post(`api/integeratedQuery/download`,{
-            reportName:this.reportArr.reportName,
-            wsType:this.formLabelAlign.wsType,
-            processId:this.formLabelAlign.processId,
-            processStatus:this.formLabelAlign.processStatus,
-            actOperator:this.mustData.actOperator
+      // this.dialogReport=false;
+      // if(this.reportArr.reportName===null){
+      //   this.$message.error('报表名称为必填项')
+      //   return
+      // }
+       this.$http.post(`api/integeratedQuery/download`,{
+            processType:this.mustData.processType,
+            reportName: '账单流程',
+            processId:this.billSearch.processId,
+            wsType:this.billSearch.wsType,
+            processStatus:this.billSearch.processStatus,
+            registBy:this.billSearch.registBy,
+            registAt:this.billSearch.registAt,
+            cedentModel:this.cedentModel,
+            brokerModel:this.brokerModel,
+            wsSignbackFlag:this.billSearch.wsSignbackFlag,
+            wsHasSignback:this.billSearch.wsHasSignback,
+            actOperator:this.mustData.actOperator,
           }, { responseType: "blob" }).then(res=>{
             if(res.status===200){
               this.path = this.getObjectURL(res.data);
@@ -617,7 +625,6 @@ export default {
                   } else {
                     a.href = this.path;
                     let formatString = escape(res.headers['content-disposition'].split(';')[1].split('=')[1]);
-                    console.log(formatString)
                     a.download =  decodeURI(formatString);
                     //  a.download = new Date().getTime();
                     // a.download = this.reportArr.reportName;
