@@ -15,7 +15,6 @@
           <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BpLedger</el-button>
           <el-button size="small" :disabled="hxState" @click="makeReport" plain>生成核销报告</el-button>
           <el-button size="small" :disabled="hxState" @click="getTaxInfo" plain>增值税信息获取</el-button>
-          <!-- <el-button size="small" :disabled="hxState" @click="mailSend(2,'附件查看')" plain>附件查看</el-button> -->
           <el-button size="small" :disabled="hxState" @click="tongbu" plain>同步状态</el-button>
           <el-button size="small" :type="hxState?'info':''" @click="gangUp('核销')" plain>{{!hxState?'挂起':'悬停'}}</el-button>
           <el-button size="small" :disabled="hxState" plain @click="submite(1,'流程提交')">流程提交</el-button>
@@ -32,8 +31,6 @@
           <el-button size="small" @click="openSICS" plain>打开SICS</el-button>
           <el-button size="small" plain @click="makeDoc('a')">生成审批文档</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(3,'置废','操作')">置废</el-button>
-          <!-- <el-button size="small" :disabled="czState" @click="mailSend(1,'上传附件')" plain>上传附件</el-button> -->
-          <!-- <el-button size="small" :disabled="czState" @click="mailSend(2,'附件查看')" plain>附件查看</el-button> -->
           <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'挂起':'悬停'}}</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(2,'指派','操作')">指派</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(1,'流程提交',0,'付款一级审批')">流程提交</el-button>
@@ -41,8 +38,6 @@
         <!-- 支票 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'approvalDone'">
           <el-button size="small" @click="openSICS">打开SICS</el-button>
-          <!-- <el-button size="small" plain @click="mailSend(1,'上传附件')">上传附件</el-button> -->
-          <!-- <el-button size="small" plain @click="mailSend(2,'附件查看')">附件查看</el-button> -->
           <el-button size="small" plain @click="submite(2,'指派','支票')">指派</el-button>
           <el-button size="small" plain @click="submite(7,'流程提交',0,'审批完成')">流程提交</el-button>
           <el-button size="small" plain @click="onRemitCreat">支票创建</el-button>
@@ -102,35 +97,35 @@
           </ul>
         </div>
         <div :class="searchFlag2===true?'searchNew':''"  style="border-bottom:none;margin-top:16px;">
-            <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
-              <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
-                <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification'">
-                  <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
-                </p>         
-              </div>
-              <el-table :data="fileData" border style="width:100%;height:410px;" class="document" :header-row-class-name="StableClass">
-                <el-table-column label="文件名" width="200" align="center">
-                  <template slot-scope="scope">
-                    <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                      <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="createdAt" label="时间" width="160" align="center"></el-table-column>
-                <el-table-column label="任务来源" width="140" align="center">
-                  <template slot-scope="scope">
-                    <el-tooltip class="item" effect="dark" :content="nameList[scope.row.createdBy]" placement="top">
-                      <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
-                <el-table-column label="操作" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" align="center">
-                  <template slot-scope="scope">
-                    <span class="blueColor" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" @click.stop="detailRemove(scope.row)">删除</span>
-                  </template>
-                </el-table-column>
-              </el-table>
+          <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
+          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
+            <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification' && row.processStatus!='已置废' && row.processStatus!='已悬停'">
+              <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
+            </p>         
           </div>
+          <el-table :data="fileData" border style="width:100%;height:410px;" class="document" :header-row-class-name="StableClass">
+            <el-table-column label="文件名" width="200" align="center">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
+                  <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column prop="createdAt" label="时间" width="160" align="center"></el-table-column>
+            <el-table-column label="任务来源" width="140" align="center">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="nameList[scope.row.createdBy]" placement="top">
+                  <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" align="center">
+              <template slot-scope="scope">
+                <span class="blueColor" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" @click.stop="detailRemove(scope.row)">删除</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
       </el-col>
       <el-col :span="13">
         <div class="right">
@@ -943,6 +938,7 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        approvalName:null,
         maxHeight:null,
         suffixFlag:false,
         preApprove:false,
@@ -1218,6 +1214,7 @@ export default {
   },
   beforeMount(){this.copy('proNum',1); this.updateFlag = true;},
   mounted(){ 
+    this.approvalName = sessionStorage.getItem('userCName');
     if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
         this.$store.commit('ChangeFlod',true)
       } else{ this.$store.commit('ChangeFlod',false) }
@@ -1285,9 +1282,6 @@ export default {
   },
   updated(){
     //进度条
-    console.log(this.makeDocListEctype.cedentModel[0])
-    console.log(this.makeDocListEctype.cedentModel[1])
-    console.log(this.makeDocListEctype.cedentModel[2])
     if(this.$route.query.tag === 'payVerification'){
       this.nextStep();
       this.updateFlag = false;
@@ -1780,30 +1774,41 @@ export default {
             this.$http.post('api/pay/activitiForPay/getNextStep',{processId:this.row.processId, approvalLevel:this.row.approvalLevel}).then(res =>{
               if(res.status == 200){
                 if(res.data){
-                  // this.getName('付款录入');
                   this.$confirm('是否审批通过', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     confirmButtonClass:'confirmBtn',
                     type: 'warning'
                   }).then(() => {
-                    this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-                    ,{processId:this.row.processId, 
-                      procInstId:this.row.processInstId, 
-                      assignee:this.row.entryOperator, 
-                      type:this.$route.query.name,
-                      actOperator:this.$store.state.userName,
-                      approvalLevel:this.row.approvalLevel,
-                      })
-                    .then(res =>{
-                      if(res.status === 200 && res.data.errorCode == 1){
-                        this.dialogFormVisible3 = false;
-                        this.$router.push({name:this.$route.query.tag}); 
-                        this.assignee = null;
-                      } else if(res.data.errorCode == 0){
-                        this.$message({type: 'error', message:res.data.errorMessage }); 
+                      let paramQ = {
+                        processId:this.row.processId,
+                        actOperator:this.$store.state.userName,
+                        operatorLevel:this.row.approvalLevel+1,
+                        approvalName:this.approvalName,
+                        proxyName:this.proxyMan==null?this.proxyMan:this.TJRoptions[this.proxyMan]['name'],
+                        proxyEName:this.proxyMan==null?this.proxyMan:this.TJRoptions[this.proxyMan]['username'],
                       }
-                    })
+                      this.$http.post('api/docOperation/addSignature',paramQ).then(res =>{
+                          if(res.data.code == 0){
+                              this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
+                                ,{processId:this.row.processId, 
+                                  procInstId:this.row.processInstId, 
+                                  assignee:this.row.entryOperator, 
+                                  type:this.$route.query.name,
+                                  actOperator:this.$store.state.userName,
+                                  approvalLevel:this.row.approvalLevel,
+                                  })
+                                .then(res =>{
+                                  if(res.status === 200 && res.data.errorCode == 1){
+                                    this.dialogFormVisible3 = false;
+                                    this.$router.push({name:this.$route.query.tag}); 
+                                    this.assignee = null;
+                                  } else if(res.data.errorCode == 0){
+                                    this.$message({type: 'error', message:res.data.errorMessage }); 
+                                  }
+                                })
+                          }
+                      })
                   })
                 } else{   
                   this.preApprove = false;
@@ -1992,7 +1997,7 @@ export default {
             processId:this.row.processId,
             actOperator:this.$store.state.userName,
             operatorLevel:this.row.approvalLevel+1,
-            approvalName:sessionStorage.getItem('userCName'),
+            approvalName:this.approvalName,
             proxyName:this.proxyMan==null?this.proxyMan:this.TJRoptions[this.proxyMan]['name'],
             proxyEName:this.proxyMan==null?this.proxyMan:this.TJRoptions[this.proxyMan]['username'],
           }
