@@ -1185,8 +1185,12 @@ export default {
   created(){
     sessionStorage.setItem('data',JSON.stringify({}));
     this.row = JSON.parse(this.$route.query.row);
-    // 查询单条数据，根据processId
-    
+    if(this.row){
+      this.listData.forEach(el=>{
+        el['b'] = this.row[el['c']];
+        if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
+      })
+    }
     if(this.$route.query.tag === 'payVerification'){
       this.makeDocEcho();
     }
@@ -1203,6 +1207,7 @@ export default {
     this.maxHeight = `${document.body.clientHeight-200}px`;
     this.mustData.actOperator = this.$store.state.userName;
     let strArr = [];
+    this.refreshDetailData();
     if(this.$route.query.tag === 'payVerification'){
       this.$http.post("api/pay/activitiForPay/getAllLevel", {processId: this.row.processId})
       .then(res => {
@@ -1255,7 +1260,6 @@ export default {
     }
     this.dataBaseSG();
     this.mailSend(2,'',1);
-    this.refreshDetailData();
   },
   updated(){
     //进度条
@@ -1277,7 +1281,7 @@ export default {
           if(res.status == 200 && res.data.rows[0]){
             this.row = res.data.rows[0];
             this.listData.forEach(el=>{
-              el['b'] = res.data.rows[0][el['c']];
+              el['b'] = this.row[el['c']];
               if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
             })
             if(this.$route.query.tag === 'payOperation' && res.data.rows[0].processStatus == '已悬停'){

@@ -1329,14 +1329,15 @@ export default {
     } else {
       this.queryRM();
     } 
+    this.WritebackProcess();
     // 详情
-    this.listData.forEach(el => {
-      el["b"] = this.row[el["c"]];
-      if (el["a"] == "结算人员") {
-        el["b"] = this.nameList[this.row[el["c"]]];
-      }
-      if(el['a']=='结付公司'){ el["b"]=this.row[el['c']] }
-    });
+    // this.listData.forEach(el => {
+    //   el["b"] = this.row[el["c"]];
+    //   if (el["a"] == "结算人员") {
+    //     el["b"] = this.nameList[this.row[el["c"]]];
+    //   }
+    //   if(el['a']=='结付公司'){ el["b"]=this.row[el['c']] }
+    // });
   },
   methods: {
     WritebackProcess(){   // processStatus: "待处理,已悬停"
