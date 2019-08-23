@@ -183,6 +183,7 @@
           <span>{{nameList[scope.row.registBy]}}</span>
         </template>
       </el-table-column>
+      <!-- <el-table-column label="录入人" prop="registBy" width="110" align="center"></el-table-column> -->
       <el-table-column label="录入时间" width="120" align="center">
           <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.registAt" placement="top-start">

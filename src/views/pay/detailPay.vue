@@ -5,8 +5,8 @@
     </router-link>  -->
     <el-row>
       <el-col :span="11" style="padding:0 16px;">
-        <!-- 完结 -->
-        <div class="btn" v-if="$route.query.tag === 'payClose'">
+         <!-- 完结 -->
+        <div class="btn" v-if="$route.query.tag === 'payEnd'">
           <el-button size="small" plain @click="submite(1,'流程结束')">流程结束</el-button>
           <el-button size="small" @click="openSICS" plain>打开SICS</el-button>
         </div>
@@ -23,7 +23,7 @@
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payment' || $route.query.tag === 'partialDone' || $route.query.tag === 'instancyPay'">
           <el-button type="primary" v-if="$route.query.tag === 'partialDone'" @click="openBPSICS" plain>打开BpLedger</el-button>
           <el-button size="small" plain @click="tongbu" v-if="$route.query.tag === 'instancyPay'">同步状态</el-button>
-          <el-button size="small" plain v-if="$route.query.tag === 'partialDone'">同步状态</el-button>
+          <el-button size="small" @click="tongbu" plain v-if="$route.query.tag === 'partialDone'">同步状态</el-button>
           <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button>
         </div>
         <!-- 操作 -->
@@ -938,12 +938,12 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        blockRefresh:null,
         approvalName:null,
         maxHeight:null,
         suffixFlag:false,
         preApprove:false,
         approvedName:'审批通过',
-        updateFlag:false,
         proxyFlag:false,
         proxyMan:null,
         StableClass: "tableClass",
@@ -1186,25 +1186,7 @@ export default {
     sessionStorage.setItem('data',JSON.stringify({}));
     this.row = JSON.parse(this.$route.query.row);
     // 查询单条数据，根据processId
-    let param = {
-      actOperator: this.$store.state.userName,
-      pageNumber: 1,
-      pageSize: 20,
-      processId: this.row.processId,
-      processType: "付款",
-    }
-    if(this.$route.query.tag === 'payOperation' || this.$route.query.tag === 'payClose'){
-      this.$http.post('api/pay/teskClaim/list',param).then(res =>{
-        if(res.status == 200 ){
-          if(this.$route.query.tag === 'payOperation' && res.data.rows[0].processStatus == '已悬停'){
-            this.czState = true;
-          } else{ this.czState = false; }
-          if(this.$route.query.tag === 'payClose' && res.data.rows[0].processStatus == '已悬停'){
-            this.hxState = true;
-          } else{ this.hxState = false; }
-        }
-      })
-    }
+    
     if(this.$route.query.tag === 'payVerification'){
       this.makeDocEcho();
     }
@@ -1212,7 +1194,7 @@ export default {
     this.formLabelAlign.dueDate = new Date().getTime();
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
-  beforeMount(){this.copy('proNum',1); this.updateFlag = true;},
+  beforeMount(){this.copy('proNum',1);},
   mounted(){ 
     this.approvalName = sessionStorage.getItem('userCName');
     if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
@@ -1260,7 +1242,6 @@ export default {
         
       }
     },1000)
-
     this.mustData.processStatus = this.$route.query.row.processStatus;
     if(this.$route.query.tag === 'payOperation' && this.row.processStatus == '已悬停'){
       this.czState = true;
@@ -1274,20 +1255,42 @@ export default {
     }
     this.dataBaseSG();
     this.mailSend(2,'',1);
-    this.listData.forEach(el=>{
-      el['b'] = this.row[el['c']];
-      if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
-      if(el['a']=='结付公司'){ el["b"]=this.row[el['c']] + '-' + this.row[el['d']];}
-    })
+    this.refreshDetailData();
   },
   updated(){
     //进度条
     if(this.$route.query.tag === 'payVerification'){
       this.nextStep();
-      this.updateFlag = false;
     }
   },
   methods: {
+    refreshDetailData(){
+      let param = {
+        actOperator: this.$store.state.userName,
+        pageNumber: 1,
+        pageSize: 20,
+        processId: this.row.processId,
+        processType: "付款",
+      }
+      if(this.$route.query.tag === 'payOperation' || this.$route.query.tag === 'payClose'){
+        this.$http.post('api/pay/teskClaim/list',param).then(res =>{
+          if(res.status == 200 && res.data.rows[0]){
+            this.row = res.data.rows[0];
+            this.listData.forEach(el=>{
+              el['b'] = res.data.rows[0][el['c']];
+              if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
+            })
+            if(this.$route.query.tag === 'payOperation' && res.data.rows[0].processStatus == '已悬停'){
+              this.czState = true;
+            } else{ this.czState = false; }
+            if(this.$route.query.tag === 'payClose' && res.data.rows[0].processStatus == '已悬停'){
+              this.hxState = true;
+            } else{ this.hxState = false; }
+          }
+        })
+      }
+
+    },
     proxyApprove(){  // 代理审批
        this.$http.post('api/pay/activitiForPay/getNextStep',{processId:this.row.processId, approvalLevel:this.row.approvalLevel}).then(res =>{
           if(res.status == 200 && res.data){  // 到最后一个节点了-------只展示是否选择下一处理人
@@ -1515,6 +1518,7 @@ export default {
             // this.SgData = res.data.worksheetsgDOlist;
             this.RMData = res.data.remitDOlist;
             this.WSData = res.data.workSheetDOlsit
+            this.refreshDetailData();
           }
         })
       } else{ this.$message.error('无账单，无法更新信息'); }
@@ -1525,6 +1529,7 @@ export default {
         if(res.status === 200){ 
           this.SgData = res.data.worksheetsgDOlist;
           // this.RMData = res.data.remitDOlist;
+          this.refreshDetailData();
         }
       })
     },
@@ -2296,6 +2301,7 @@ export default {
               this.$message({message: '创建成功',type: 'success'});
               // this.queryRM();
               this.dataBaseSG();
+              this.refreshDetailData();
             } else if(res.data.errorCode == 0 && res.data.errorMessage){
               this.$message.error(res.data.errorMessage);
             }
@@ -2312,6 +2318,7 @@ export default {
           this.SgData = res.data.worksheetsgDOlist;
           this.RMData = res.data.remitDOlist;
           this.WSData = res.data.workSheetDOlsit;
+          this.refreshDetailData();
           // this.dataBaseSG();
         }
       })
@@ -2527,18 +2534,18 @@ export default {
           console.log(this.makeDocListEctype.yuanType,'this.makeDocListEctype.yuanType');
           console.log(this.makeDocListEctype.yuanNum,'this.makeDocListEctype.yuanNum');
           this.makeDocListEctype.cedentModel = [];
-          this.$http.post('api/pay/teskClaim/list',{
-            curOperator:this.$store.state.userName,
-            processId:this.row.processId,
-            pageNumber:1, 
-            pageSize:20,
-            processType:'付款',
-            processStatus:'待处理'
-            }).then(res =>{
-            if(res.status === 200 && res.data.rows){
-            //   此处填写生成审批文档 回显
-            }
-          })
+          // this.$http.post('api/pay/teskClaim/list',{
+          //   curOperator:this.$store.state.userName,
+          //   processId:this.row.processId,
+          //   pageNumber:1, 
+          //   pageSize:20,
+          //   processType:'付款',
+          //   processStatus:'待处理'
+          //   }).then(res =>{
+          //   if(res.status === 200 && res.data.rows){
+          //   //   此处填写生成审批文档 回显
+          //   }
+          // })
        
         this.dialogFormVisible2 = true;
       } else {
@@ -2618,21 +2625,7 @@ export default {
                     if(res.status === 200 && res.data.rows && res.data.rows.length){
                       this.docView(res.data.rows[0]); 
                       this.mailSend(2);
-                         this.$http.post('api/pay/teskClaim/list',
-                         {pageNumber:1,  
-                          pageSize:20,  
-                          processType:'付款',
-                          processId:this.row.processId
-                          }
-                          ).then(res =>{
-                            // res.data.rows[0]
-                            if(res.data.rows[0]){
-                            this.listData.forEach(el=>{
-                              el['b'] = res.data.rows[0][el['c']];
-                              if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
-                            })
-                            }
-                         })
+                      this.refreshDetailData();
                     }
                   })
                 this.dialogFormVisible2 = false; 

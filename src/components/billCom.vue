@@ -135,8 +135,7 @@
         <i class="iconfont iconGroup37"></i>刷新邮件
       </el-button>
     </div>
-    <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;text-align:center;margin:0 auto;">
-      
+    <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;text-align:center;margin:0 auto;">  
       <el-table-column label="流程编号" width="170" align="center">
         <template slot-scope="scope">
           <span
@@ -163,10 +162,7 @@
             effect="dark"
             :content="scope.row.wsCedentCode&&scope.row.wsCedentName?scope.row.wsCedentCode+'-'+scope.row.wsCedentName:''"
             placement="top-start">
-            <span
-              class="abbreviate"
-              v-if="scope.row.wsCedentCode&&scope.row.wsCedentName"
-            >{{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}</span>
+            <span class="abbreviate" v-if="scope.row.wsCedentCode&&scope.row.wsCedentName">{{scope.row.wsCedentCode}}-{{scope.row.wsCedentName}}</span>
             <span class="abbreviate" v-if="!scope.row.wsCedentCode&&!scope.row.wsCedentName"></span>
           </el-tooltip>
         </template>
@@ -351,8 +347,7 @@
             clearable
             filterable
             v-model="billSearch.reportUnit"
-            placeholder="请选择Reporting Unit"
-          >
+            placeholder="请选择Reporting Unit">
             <el-option
               v-for="item in ReportUnitList"
               :key="item.code"
@@ -362,10 +357,6 @@
           </el-select>
         </el-form-item>
         <el-form-item label="账期" v-show="title==='手工创建' || title==='编辑' || title==='查询'" class="zqForm">
-          <!-- <el-input v-model.trim="zq2"  placeholder="年份" class="wsPeriod" maxlength="4"></el-input>
-          <el-select clearable v-model="zq1" placeholder="请选择账期" class="wsPeriod">
-            <el-option v-for="item in zqList" :key="item" :label="item" :value="item"></el-option>
-          </el-select> -->
           <input class="wsDate" style="width:196px;height:40px;border-radius:5px;outline:none;border:1px solid #DCDFE6;" placeholder="请选择账期" v-model="billSearch.wsPeriod" @click.stop="zq1FlagFn()" />
               <div class="zq1" v-show="zq1Flag">
                   <p class="zqTitle">
@@ -407,19 +398,34 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="账单收到日期" :prop="billSearch.wsBusinessType=='C'?'':'wsReceiptDate'" v-show="title === '手工创建' || title==='编辑'">
-            <el-date-picker
-              value-format="timestamp"
-              v-model="billSearch.wsReceiptDate"
-              type="date"
-              placeholder="选择日期"
-            ></el-date-picker>
-          </el-form-item>
-        <el-form-item label="原流程编号" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'">
+        <el-form-item label="账单收到日期" :prop="billSearch.wsBusinessType=='C'?'':'wsReceiptDate'" v-show="title === '手工创建' || title==='编辑'">
+          <el-date-picker value-format="timestamp" v-model="billSearch.wsReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="原流程编号" :prop="title==='编辑'&& billSearch.wsBusinessType=='C'?'parentProcessId':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'">
           <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
         </el-form-item>
         <el-form-item label="原流程编号" v-show="title==='手工创建'&& billSearch.wsBusinessType=='C'">
           <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
+        </el-form-item>
+
+        <el-form-item label="收到邮件更正期" v-show="title==='手工创建'&& billSearch.wsBusinessType!='T' && billSearch.wsBusinessType!='F' && billSearch.wsBusinessType">
+          <el-date-picker value-format="timestamp" v-model="billSearch.correctMailDate" type="date" placeholder="选择日期"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="收到邮件更正期" :prop="title==='编辑'&&billSearch.wsBusinessType!='T'&&billSearch.wsBusinessType!='F'&&billSearch.wsBusinessType?'correctMailDate':''" v-show="title==='编辑'&&billSearch.wsBusinessType!='T'&&billSearch.wsBusinessType!='F'&&billSearch.wsBusinessType">
+          <el-date-picker value-format="timestamp" v-model="billSearch.correctMailDate" type="date" placeholder="选择日期"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="更正原因" v-show="title==='手工创建'&& billSearch.wsBusinessType!='T' && billSearch.wsBusinessType!='F' && billSearch.wsBusinessType">
+          <el-input v-model.trim="billSearch.correctMailReason" placeholder="请输入更正原因"></el-input>
+        </el-form-item>
+        <el-form-item label="更正原因" :prop="title==='编辑'&&billSearch.wsBusinessType!='T'&&billSearch.wsBusinessType!='F'&&billSearch.wsBusinessType?'correctMailReason':''" v-show="title==='编辑'&&billSearch.wsBusinessType!='T'&&billSearch.wsBusinessType!='F'&&billSearch.wsBusinessType">
+          <el-input v-model.trim="billSearch.correctMailReason" placeholder="请输入更正原因"></el-input>
+        </el-form-item>
+
+        <el-form-item label="母合同编号" :prop="title==='编辑'&& billSearch.wsBusinessType=='O'?'occId':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='O'">
+          <el-input v-model.trim="billSearch.occId" placeholder="请输入母合同编号"></el-input>
+        </el-form-item>
+        <el-form-item label="母合同编号" v-show="title==='手工创建'&& billSearch.wsBusinessType=='O'">
+          <el-input v-model.trim="billSearch.occId" placeholder="请输入母合同编号"></el-input>
         </el-form-item>
         <el-form-item label="附件上传" v-show="title==='编辑'">
           <el-upload
@@ -429,8 +435,7 @@
             :before-upload="beforeAvatarUpload"
             :auto-upload="true"
             :http-request="upload"
-            :file-list="fileList"
-          >
+            :file-list="fileList">
             <el-button type="primary" plain>上传</el-button>
           </el-upload>
         </el-form-item>
@@ -741,6 +746,9 @@ export default {
         wsBrokerName:null,
       },
       billSearch: {
+        occId:'',
+        correctMailDate:'',
+        correctMailReason:'',
         parentProcessId:'',
         cedentModel: '',
         hasRecheckFlag:null,
@@ -794,6 +802,13 @@ export default {
         reason: [{ required: true, message: '请输入拆分理由', trigger: 'blur' }],
         cedentModel:[{ required: true, message: "请选择分出公司", trigger: "blur" }],
         wsReceiptDate:[{ type: 'date', required: true, message: '请选择账单收到期', trigger: 'blur' }],
+        correctMailDate:[{ type: 'date', required: true, message: '请选择收到邮件更正期', trigger: 'blur' }],
+        occId: [{ required: true, message: '请输入母合同编号', trigger: 'blur' }],
+        parentProcessId: [{ required: true, message: '请输入原流程编号', trigger: 'blur' }],
+        correctMailReason: [{ required: true, message: '请输入更正原因', trigger: 'blur' }],
+        
+
+
       },
       pendingFlag: false
     };
@@ -853,6 +868,13 @@ export default {
     onWsBusinessType(){
       if(this.billSearch.wsBusinessType!='C'){
         this.billSearch.parentProcessId = '';
+      }
+      if(this.billSearch.wsBusinessType!='O'){
+        this.billSearch.occId = '';
+      }
+      if(this.billSearch.wsBusinessType=='O' || this.billSearch.wsBusinessType=='C'){
+        this.billSearch.correctMailReason = '';
+        this.billSearch.correctMailDate = '';
       }
     },
     countYear(str){
@@ -943,7 +965,7 @@ export default {
       }
       this.subProcessFlag = false;
     },
-     changeWindow(){
+    changeWindow(){
       let that=this;
       document.body.onresize=function(e){
           if(that.$route.name==='sortOperation'||that.$route.name==='billEntry'){
@@ -1203,7 +1225,6 @@ export default {
         case 2:
           // 账单类型
           this.RWFlag = row.processId.indexOf('RW')>0;
-          console.log(this.RWFlag);
           this.fileData = [];
          this.billSearch.wsPeriod=row.wsPeriod;
           if (row.wsType) {
@@ -1306,7 +1327,6 @@ export default {
                 let num = this.fileData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
                 setTimeout(()=>{ this.docView(this.fileData[+num]); },1500)
               }else{ sessionStorage.setItem('data',JSON.stringify({})); }
-              console.log(num,'num');
             }
           });
           this.dialogFormVisible = true;

@@ -27,10 +27,6 @@
         </el-row>
         <el-row :gutter="10" class="billRow">
           <el-col :span="8">
-            <span class="slable">汇款人名称</span>
-            <el-input v-model="formLabelAlign.rmSettleCompanyName"></el-input>
-          </el-col>
-          <el-col :span="8">
             <span class="slable">到账日期</span>
               <el-date-picker value-format="timestamp" v-model="formLabelAlign.rmReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
           </el-col>
@@ -40,12 +36,25 @@
               <el-option v-for="item in [{'l':'收款','v':['收款']},{'l':'付款','v':['付款']},{'l':'全部','v':['付款','收款']}]" :key="item.l" :label="item.l" :value="item.v"></el-option>
             </el-select>
           </el-col>
+          <!-- 8.28 TA-747要求加操作人，操作日期字段查询，胖虎提供的字段 -->
+          <el-col :span="8">
+            <span class="slable">操作人</span>
+            <el-input v-model="formLabelAlign.createdBy"></el-input>
+          </el-col>
         </el-row>
-        <el-row><el-col :span="24">
-          <el-button type="primary" plain @click="handleClick(4)"><i class="iconfont iconGroup42"></i>查询</el-button>
-          <el-button type="primary" plain @click="mySubmit"><i class="iconfont iconGroup42"></i>我提交的</el-button>
-          <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
-        </el-col></el-row>
+        <el-row :gutter="10" class="billRow">
+          <el-col :span="8">
+            <span class="slable">操作时间</span>
+            <el-date-picker value-format="timestamp" v-model="formLabelAlign.createdAt" type="date" placeholder="选择日期"></el-date-picker>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10" class="billRow">
+          <el-col :span="24">
+            <el-button type="primary" plain @click="handleClick(4)"><i class="iconfont iconGroup42"></i>查询</el-button>
+            <el-button type="primary" plain @click="mySubmit"><i class="iconfont iconGroup42"></i>我提交的</el-button>
+            <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
+          </el-col>
+        </el-row>
       </div>
        </el-collapse-transition>
     </div>
@@ -71,12 +80,7 @@
       <el-table-column prop="rmCurrency" label="币制" width="60" align="center"></el-table-column>
       <el-table-column prop="rmAmount" label="汇款金额" width="130" align="right">
         <template slot-scope="scope">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="Number(scope.row.rmAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
-            placement="top-start"
-          >
+          <el-tooltip class="item" effect="dark" :content="Number(scope.row.rmAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')" placement="top-start">
             <span class="abbreviate">{{Number(scope.row.rmAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
           </el-tooltip>
         </template>
@@ -280,6 +284,8 @@ export default {
         hide:false,
         labelPosition:'right',
         formLabelAlign:{
+          createdBy:null,
+          createdAt:null,
           processType:null,
           rmSettleCompanyCode:null,
           rmSettleCompanyName:null,

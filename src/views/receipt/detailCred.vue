@@ -1328,7 +1328,7 @@ export default {
       this.dataBaseSG();
     } else {
       this.queryRM();
-    }
+    } 
     // 详情
     this.listData.forEach(el => {
       el["b"] = this.row[el["c"]];
@@ -1614,6 +1614,7 @@ export default {
                 }
               })
               this.SgData = arr5;
+              this.WritebackProcess();
             this.$message({message: '操作成功',type: 'success'}); 
           } else{ this.$message.error("失败"); }
         });
@@ -1644,6 +1645,7 @@ export default {
                   }  
                 })
                 this.SgData = arr5;
+                this.WritebackProcess()
               }
               // 8.20 完结同步状态，判断支票Settled的状态，触发接口(所有数据里只要有一个不是Settled，就调接口)
               if(this.$route.query.tag === 'collectiongEnd' && res.data.remitDOlist && res.data.remitDOlist.length){

@@ -719,7 +719,7 @@ export default {
           a: "账单收到日期",
           b: "",
           c: "wsReceiptDate"
-        }
+        },
       ],
       YWoptionsObj: {
         T: "合约账单",
@@ -849,8 +849,44 @@ export default {
                 return  this.chooseRow.brokerCodeName
           })
         this.chooseRow.brokerCodeName=this.chooseRow.brokerCodeName.join('');
-           console.log(this.chooseRow,'wsBrokerCode wsBrokerName')
-          console.log(this.listData,'222')
+        console.log(this.chooseRow,'this.chooseRow');
+          if(this.chooseRow["wsBusinessType"]=='O'){
+            this.listData = [...this.listData,
+              {
+                a: "更正原因",
+                b: "",
+                c: "correctMailReason"
+              },
+              {
+                a: "收到邮件更正期",
+                b: "",
+                c: "correctMailDate"
+              },
+              {
+                a: "母合同编号",
+                b: "",
+                c: "occId"
+              }
+            ]
+          } else if(this.chooseRow["wsBusinessType"]=='C'){
+            this.listData = [...this.listData,
+              {
+                a: "更正原因",
+                b: "",
+                c: "correctMailReason"
+              },
+              {
+                a: "收到邮件更正期",
+                b: "",
+                c: "correctMailDate"
+              },
+              {
+                a: "原合同编号",
+                b: "",
+                c: "parentProcessId"
+              }
+            ]
+          }
           this.listData.forEach(el => {
             if (el["c"] == "cedent") {
               if(this.chooseRow["wsCedentCode"]==undefined){return}
@@ -868,6 +904,7 @@ export default {
             }
               // if(el['a']=='任务来源'){ el["b"] = this.nameList[this.chooseRow[el["c"]]]; }
             });
+
             let arr = res.data.bscDocumentVOlist;
             if(arr===null){return;}
             arr.forEach(el=>{
@@ -878,7 +915,6 @@ export default {
               }
             })
           this.tableData = arr;
-          console.log(this.tableData,'hyd111')
           let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
           setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
         }
@@ -972,14 +1008,15 @@ export default {
         url = "/worksheet/wSCheck/reviewSicsReturn";
       }
       this.$http.post(`api${url}`, {
-          actOperator: this.$store.state.userName,
-          processId: this.chooseRow.processId,
-          docId: this.docViewRow ? this.docViewRow.docId : ""
-        }).then(res => {
-          if (res.status === 200 && res.data) {
-            this.SICSData = res.data;
-          }
-        });
+        actOperator: this.$store.state.userName,
+        processId: this.chooseRow.processId,
+        docId: this.docViewRow ? this.docViewRow.docId : ""
+      }).then(res => {
+        if (res.status === 200 && res.data) {
+          this.SICSData = res.data;
+          this.getBillInfo();
+        }
+      });
     },
     mailSend(tag) {  
       if (tag == 1) { // 邮件通知
