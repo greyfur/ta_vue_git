@@ -102,7 +102,8 @@
     <div class="btn">
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91"></i>手工创建</el-button>
       <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37"></i>刷新</el-button>
-      <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button>
+      <!-- <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button> -->
+      <el-button type="info" plain size="small" @click="reportClick()" class="borderBtn">导出报表</el-button>
     </div> 
     <el-table :header-row-class-name="StableClass" :data="tableData" border style="width: 100%"  :height="changeClientHight">
       <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
@@ -246,7 +247,7 @@
     </el-dialog>
 
     <!-- el-dialog导出报表 -->
-     <el-dialog title="导出报表" width="50%" :visible.sync="dialogReport" :close-on-click-modal="modal">
+     <!-- <el-dialog title="导出报表" width="50%" :visible.sync="dialogReport" :close-on-click-modal="modal">
         <el-form   class="demo-form-inline" v-model="reportArr">
           <el-form-item label="报表名称">
             <el-select
@@ -281,7 +282,7 @@
              <el-button size="small" type="primary" plain @click="reportClick" style="padding:0 16px;">确 定</el-button>
           </el-form-item>
         </el-form>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -574,18 +575,24 @@ export default {
       })
     },
     reportClick(){
-      this.dialogReport=false;
-      if(this.reportArr.reportName===null){
-        this.$message.error('报表名称为必填项')
-        return
-      }
+      // this.dialogReport=false;
+      // if(this.reportArr.reportName===null){
+      //   this.$message.error('报表名称为必填项')
+      //   return
+      // }
       this.$http.post(`api/integeratedQuery/download`,{
             processType:this.mustData.processType,
-            reportName:this.reportArr.reportName,
-            wsType:this.billSearch.wsType,
+            reportName: '账单流程',
             processId:this.billSearch.processId,
+            wsType:this.billSearch.wsType,
             processStatus:this.billSearch.processStatus,
-            actOperator:this.mustData.actOperator
+            registBy:this.billSearch.registBy,
+            registAt:this.billSearch.registAt,
+            cedentModel:this.cedentModel,
+            brokerModel:this.brokerModel,
+            wsSignbackFlag:this.billSearch.wsSignbackFlag,
+            wsHasSignback:this.billSearch.wsHasSignback,
+            actOperator:this.mustData.actOperator,
           }, { responseType: "blob" }).then(res=>{
             if(res.status===200){
               this.path = this.getObjectURL(res.data);
