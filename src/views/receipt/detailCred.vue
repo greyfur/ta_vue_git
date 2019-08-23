@@ -942,11 +942,7 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column
-          label="操作"
-          width="100"
-          v-show="$route.query.tag !== 'credVerification' && $route.query.tag !== 'viewInvalidate' && $route.query.tag !== 'collectiongEnd'"
-          align="center">
+        <el-table-column label="操作" width="100" v-show="$route.query.tag !== 'credVerification' && $route.query.tag !== 'collectiongEnd'" align="center">
           <template slot-scope="scope">
             <span class="blueColor" v-show="$route.query.tag !== 'credVerification' && $route.query.tag !== 'viewInvalidate' && $route.query.tag !== 'collectiongEnd'"
             @click.stop="detailRemove(scope.row)">删除</span>
@@ -1332,7 +1328,7 @@ export default {
       this.dataBaseSG();
     } else {
       this.queryRM();
-    }
+    } 
     // 详情
     this.listData.forEach(el => {
       el["b"] = this.row[el["c"]];
@@ -1618,6 +1614,7 @@ export default {
                 }
               })
               this.SgData = arr5;
+              this.WritebackProcess();
             this.$message({message: '操作成功',type: 'success'}); 
           } else{ this.$message.error("失败"); }
         });
@@ -1634,6 +1631,7 @@ export default {
             rmIds: rmIds
           }).then(res => {
             if (res.status === 200) {
+              this.$message({ type: "success", message:'同步成功'});
               // this.SgData = res.data.worksheetsgDOlist;
               this.RMData = res.data.remitDOlist;
               this.WSData = res.data.workSheetDOlsit;
@@ -1647,9 +1645,10 @@ export default {
                   }  
                 })
                 this.SgData = arr5;
+                this.WritebackProcess()
               }
               // 8.20 完结同步状态，判断支票Settled的状态，触发接口(所有数据里只要有一个不是Settled，就调接口)
-              if(res.data.remitDOlist && res.data.remitDOlist.length){
+              if(this.$route.query.tag === 'collectiongEnd' && res.data.remitDOlist && res.data.remitDOlist.length){
                 let closeFlag = res.data.remitDOlist.every(el=>{ return el.setlmntInd=='Settled'; })
                 if(!closeFlag){
                   this.$http.post("api/receipt/activitiForReceipt/commonActivitiForReceipt",

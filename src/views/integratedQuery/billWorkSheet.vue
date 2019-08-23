@@ -94,7 +94,12 @@
       <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37"></i>刷新</el-button>
     </div> 
     <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">
-      <el-table-column label="账单号" align="center">
+          <el-table-column label="流程编号" width="160" align="center">
+            <template slot-scope="scope">
+              <span class="smallHand" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
+            </template>
+          </el-table-column> 
+          <el-table-column label="账单号" align="center">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
                 <span class="abbreviate">{{scope.row.wsId}}</span>
@@ -876,9 +881,6 @@ export default {
       },500)
     },
     goDetail(row){
-      if(this.urlName === 'sortOperation'){
-        return;
-      }
       // let routeData = this.$router.resolve({
       this.$router.push({
           name: 'detailEntry',
@@ -897,5 +899,9 @@ export default {
 <style scoped>
 .nowrap{
   flex-wrap: nowrap;
+}
+.smallHand {
+  cursor: pointer;
+  color: #409eff;
 }
 </style>
