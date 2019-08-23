@@ -4,7 +4,7 @@
       <i class="iconfont iconleft-circle-o"></i>
     </router-link>  -->
     <el-row>
-      <el-col :span="11" style="padding:0 16px;">
+      <el-col :span="11" style="padding:0 16px;height:687px;">
          <!-- 完结 -->
         <div class="btn" v-if="$route.query.tag === 'payEnd'">
           <el-button size="small" plain @click="submite(1,'流程结束')">流程结束</el-button>
@@ -97,34 +97,42 @@
           </ul>
         </div>
         <div :class="searchFlag2===true?'searchNew':''"  style="border-bottom:none;margin-top:16px;">
-          <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
-          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
-            <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification' && row.processStatus!='已置废' && row.processStatus!='已悬停'">
-              <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
-            </p>         
-          </div>
-          <el-table :data="fileData" border style="width:100%;height:410px;" class="document" :header-row-class-name="StableClass">
-            <el-table-column label="文件名" width="200" align="center">
-              <template slot-scope="scope">
-                <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                  <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-            <el-table-column prop="createdAt" label="时间" width="160" align="center"></el-table-column>
-            <el-table-column label="任务来源" width="140" align="center">
-              <template slot-scope="scope">
-                <el-tooltip class="item" effect="dark" :content="nameList[scope.row.createdBy]" placement="top">
-                  <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" align="center">
-              <template slot-scope="scope">
-                <span class="blueColor" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" @click.stop="detailRemove(scope.row)">删除</span>
-              </template>
-            </el-table-column>
-          </el-table>
+              <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
+              <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
+                <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification' && row.processStatus!='已置废' && row.processStatus!='已悬停'">
+                  <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
+                </p>         
+              </div>
+              <el-table :data="fileData.slice((currentPage-1)*3,currentPage*3)" border style="width:100%;height:392px;" class="document" :header-row-class-name="StableClass">
+                <el-table-column label="文件名" width="200" align="center">
+                  <template slot-scope="scope">
+                    <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
+                      <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="createdAt" label="时间" width="160" align="center"></el-table-column>
+                <el-table-column label="任务来源" width="140" align="center">
+                  <template slot-scope="scope">
+                    <el-tooltip class="item" effect="dark" :content="nameList[scope.row.createdBy]" placement="top">
+                      <span class="abbreviate">{{nameList[scope.row.createdBy]}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" align="center">
+                  <template slot-scope="scope">
+                    <span class="blueColor" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" @click.stop="detailRemove(scope.row)">删除</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+                <el-pagination
+                background
+                layout="prev, pager, next"
+                :page-size="3"
+                :current-page="currentPage"
+                @current-change="handleCurrentChange"
+                :total="fileData.length">
+              </el-pagination>
         </div>
       </el-col>
       <el-col :span="13">
@@ -938,6 +946,7 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        currentPage:1,
         blockRefresh:null,
         approvalName:null,
         maxHeight:null,
@@ -2685,7 +2694,10 @@ export default {
           }
         })
     },
-
+   handleCurrentChange(val) {
+      this.currentPage = val;
+      console.log(`当前页: ${val}`);
+    },
   },
    watch:{
     title:function(n,o){

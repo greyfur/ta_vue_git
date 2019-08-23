@@ -5,8 +5,8 @@
       :class="this.$store.state.flod?'leftBack':'rightBack'">
       <i class="iconfont iconleft-circle-o" style="color:#000;"></i>
     </router-link> -->
-    <el-row>
-      <el-col :span="8">
+    <el-row style="margin-bottom:10px;">
+      <el-col :span="8" style="height:630px;">
         <!-- 签回 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'billSignBack'">
           <el-button size="small" @click="mailSend(1)" plain>邮件通知</el-button>
@@ -56,7 +56,7 @@
               </li>
             </ul>
           </div>
-          <div :class="searchFlag2===true?'searchNew searchNews':''"  style="margin-top:16px;">
+          <div :class="searchFlag2===true?'searchNew searchNews':''"  style="margin-top:33px;">
             <div class="titleSearch detailSearch" @click.stop="searchFlag2 = !searchFlag2">
               <div>
                 <i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表
@@ -69,10 +69,9 @@
             </div>
               <!-- :header-row-class-name="StableClass" -->
             <el-table
-              height="315"
               v-show="searchFlag2"
               border
-              :data="tableData"
+              :data="tableData.slice((currentPage-1)*3,currentPage*3)"
               style="width: 100%;margin-top:10px;"
               class="document">
               <!-- .slice((1-1)*3,3) -->
@@ -118,7 +117,16 @@
                 </template>
               </el-table-column>
             </el-table>
+            <el-pagination
+              background
+              layout="prev, pager, next"
+              :page-size="3"
+              :current-page="currentPage"
+              @current-change="handleCurrentChange"
+              :total="tableData.length">
+            </el-pagination>
             <!-- <el-pagination
+              style="height:40px;"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               :current-page.sync="currentPage1"
@@ -130,7 +138,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="16">
+      <el-col :span="16" style="height:630px;">
         <div class="right">
           <div class="titleSearch detailSearch">
             <div>
@@ -743,6 +751,7 @@ export default {
       dialogState: "",
       currentPage3: 5,
       currentPage4: 2,
+      currentPage:1,
       hide: false,
       radio: null,
       options: [],
@@ -1790,6 +1799,10 @@ export default {
         }
       }
       this.subProcessFlag = false;
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      console.log(`当前页: ${val}`);
     }
   },
   // watch:{
@@ -1956,7 +1969,7 @@ export default {
 .browseDoc {
   background-color: #ecf5ff;
   width: 100%;
-  height: 626px;
+  height: 556px;
   border: 1px solid #d4d4d4;
   border-top: none;
 }
@@ -1967,13 +1980,15 @@ export default {
   width: 100%;
   background: #F5F5F5;
   /* box-shadow:4px 0px 10px 0px rgba(169,169,169,0.5); */
-  padding: 20px;
+  /* padding: 20px; */
+  padding-right: 10px;
 }
 .right {
   width: 100%;
   height: 100%;
   /* padding: 20px; */
-  background-color: #eeeeee;
+  /* background-color: #eeeeee; */
+  background: #fff;
 }
 .fy2 {
   text-align: right;
@@ -2017,6 +2032,7 @@ li.detail-item {
   width: 100%;
 }
 .detailSearch {
+  border: 1px solid rgba(238, 238, 238, 1);
   display: flex;
   align-items: center;
   justify-content: space-between;
