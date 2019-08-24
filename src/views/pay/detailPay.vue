@@ -986,8 +986,7 @@ export default {
           {
             a:'结付公司',
             b:'',
-            c:'rmSettleCompanyCode',
-            d:'rmSettleCompanyName'
+            c:'checkoutPayment',
           },
           {
             a:'币制',
@@ -1195,6 +1194,12 @@ export default {
     sessionStorage.setItem('data',JSON.stringify({}));
     this.row = JSON.parse(this.$route.query.row);
     if(this.row){
+      // let payStr = '';
+      // let n = null, c = null;
+      // if(this.row.rmSettleCompanyName){n=this.row.rmSettleCompanyName.split(';')} else{ n = []; }
+      // if(this.row.rmSettleCompanyCode){c=this.row.rmSettleCompanyCode.split(';')} else{ c = []; }
+      // if( n && n.length && n.length>0){ n.forEach((el,i)=>{ payStr+=`${el}-${c[i]};` })}
+      // this.row['checkoutPayment'] = payStr;
       this.listData.forEach(el=>{
         el['b'] = this.row[el['c']];
         if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
@@ -1216,7 +1221,7 @@ export default {
     this.maxHeight = `${document.body.clientHeight-200}px`;
     this.mustData.actOperator = this.$store.state.userName;
     let strArr = [];
-    this.refreshDetailData();
+    // this.refreshDetailData();
     if(this.$route.query.tag === 'payVerification'){
       this.$http.post("api/pay/activitiForPay/getAllLevel", {processId: this.row.processId})
       .then(res => {
@@ -1269,6 +1274,7 @@ export default {
     }
     this.dataBaseSG();
     this.mailSend(2,'',1);
+    
   },
   updated(){
     //进度条
@@ -1285,10 +1291,15 @@ export default {
         processId: this.row.processId,
         processType: "付款",
       }
-      if(this.$route.query.tag === 'payOperation' || this.$route.query.tag === 'payClose'){
         this.$http.post('api/pay/teskClaim/list',param).then(res =>{
           if(res.status == 200 && res.data.rows[0]){
             this.row = res.data.rows[0];
+            let payStr = '';
+            let n = null, c = null;
+            if(this.row.rmSettleCompanyName){n=this.row.rmSettleCompanyName.split(';')} else{ n = []; }
+            if(this.row.rmSettleCompanyCode){c=this.row.rmSettleCompanyCode.split(';')} else{ c = []; }
+            if( n && n.length && n.length>0){ n.forEach((el,i)=>{ payStr+=`${el}-${c[i]};` })}
+            this.row['checkoutPayment'] = payStr;
             this.listData.forEach(el=>{
               el['b'] = this.row[el['c']];
               if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
@@ -1301,8 +1312,6 @@ export default {
             } else{ this.hxState = false; }
           }
         })
-      }
-
     },
     proxyApprove(){  // 代理审批
        this.$http.post('api/pay/activitiForPay/getNextStep',{processId:this.row.processId, approvalLevel:this.row.approvalLevel}).then(res =>{
@@ -1527,11 +1536,12 @@ export default {
           rmIds += `${el.rmId},`
         })
         this.$http.post('api/sics/basis/getPayRemitFromSics',{actOperator:this.mustData.actOperator,rmIds:rmIds,processId:this.row.processId}).then(res =>{
-          if(res.status === 200){
+          if(res.status == 200){
+            this.refreshDetailData();
             // this.SgData = res.data.worksheetsgDOlist;
             this.RMData = res.data.remitDOlist;
             this.WSData = res.data.workSheetDOlsit
-            this.refreshDetailData();
+            
           }
         })
       } else{ this.$message.error('无账单，无法更新信息'); }
@@ -2013,7 +2023,7 @@ export default {
           })
         break;
         case 5:  // 审批通过
-          if(!this.assignee){
+          if(!this.assignee && !this.preApprove){
             this.$message.error('请选择审批人');
             return false;
           }
@@ -2025,12 +2035,13 @@ export default {
             proxyName:this.proxyMan==null?this.proxyMan:this.TJRoptions[this.proxyMan]['name'],
             proxyEName:this.proxyMan==null?this.proxyMan:this.TJRoptions[this.proxyMan]['username'],
           }
+          let assignee1 = !this.preApprove?this.assignee:this.row.entryOperator
           this.$http.post('api/docOperation/addSignature',param).then(res =>{
               if(res.data.code == 0){
                 this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
                   ,{processId:this.row.processId, 
                     procInstId:this.row.processInstId, 
-                    assignee:this.assignee, 
+                    assignee:assignee1, 
                     type:this.$route.query.name,
                     actOperator:this.$store.state.userName,
                     approvalLevel:this.row.approvalLevel,

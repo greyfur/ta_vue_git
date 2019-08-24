@@ -234,17 +234,13 @@
             </el-tooltip>
         </template>
         </el-table-column>
-      <!-- <el-table-column width="120" label="汇款人名称" align="center">
+      <el-table-column width="120" label="汇款人名称" align="center">
          <template slot-scope="scope">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="scope.row.payerName"
-            placement="top-start">
+          <el-tooltip class="item" effect="dark" :content="scope.row.payerName" placement="top-start">
             <span class="abbreviate">{{scope.row.payerName}}</span>
           </el-tooltip>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column prop="rmCurrency" width="55" label="币制" align="center"></el-table-column>
       <el-table-column label="汇款金额" width="100" align="right">
         <template slot-scope="scope">
@@ -1548,7 +1544,8 @@ export default {
         query: {
           tag: this.urlName,
           name: this.goDetailName,
-          row: JSON.stringify(row)
+          row: JSON.stringify(row),
+          processStatusCom:this.processStatusCom
         }
       });
       // window.open(routeData.href, '_blank');

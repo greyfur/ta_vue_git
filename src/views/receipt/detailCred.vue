@@ -1033,6 +1033,8 @@ export default {
           a: "结付公司",
           b: "",
           c: "codeName",
+          d: "rmSettleCompanyName",
+          e: "rmSettleCompanyCode",
         },
         {
           a: "汇款人名称",
@@ -1329,15 +1331,16 @@ export default {
     } else {
       this.queryRM();
     } 
-    this.WritebackProcess();
+    console.log(this.row,'this.row');
+    console.log(this.row.codeName,'this.row.codeName');
     // 详情
-    // this.listData.forEach(el => {
-    //   el["b"] = this.row[el["c"]];
-    //   if (el["a"] == "结算人员") {
-    //     el["b"] = this.nameList[this.row[el["c"]]];
-    //   }
-    //   if(el['a']=='结付公司'){ el["b"]=this.row[el['c']] }
-    // });
+    this.listData.forEach(el => {
+      el["b"] = this.row[el["c"]];
+      if (el["a"] == "结算人员") {
+        el["b"] = this.nameList[this.row[el["c"]]];
+      }
+      if(el['a']=='结付公司'){ el["b"]=this.row[el['c']] }
+    });
   },
   methods: {
     WritebackProcess(){   // processStatus: "待处理,已悬停"
@@ -1345,7 +1348,6 @@ export default {
         pageNumber: 1,
         pageSize: 20,
         processId: this.row.processId,
-        processStatus: "待处理,已悬停",
         processType: "收款",
       }).then(res => {
         if (res.status === 200) {
@@ -1355,7 +1357,10 @@ export default {
             if (el["a"] == "结算人员") {
               el["b"] = this.nameList[this.row[el["c"]]];
             }
-            if(el['a']=='结付公司'){ el["b"]=this.row[el['c']] + '-' + this.row[el['d']];}
+          // d: "rmSettleCompanyName",
+          // e: "rmSettleCompanyCode",
+          // 此处和初始化不一样
+            if(el['a']=='结付公司'){ el["b"]=this.row[el['e']] + '-' + this.row[el['d']];}
           });
         }
       })
@@ -1605,6 +1610,7 @@ export default {
           if (res.status === 200) {
             this.RMData = res.data.remitDOlist;
             this.WSData = res.data.workSheetDOlsit;
+            this.WritebackProcess();
             // this.SgData = res.data.worksheetsgDOlist;
             let arr5 = res.data.worksheetsgDOlist;
               arr5.forEach(el=>{
@@ -1615,7 +1621,6 @@ export default {
                 }
               })
               this.SgData = arr5;
-              this.WritebackProcess();
             this.$message({message: '操作成功',type: 'success'}); 
           } else{ this.$message.error("失败"); }
         });
@@ -1632,6 +1637,7 @@ export default {
             rmIds: rmIds
           }).then(res => {
             if (res.status === 200) {
+              this.WritebackProcess();
               this.$message({ type: "success", message:'同步成功'});
               // this.SgData = res.data.worksheetsgDOlist;
               this.RMData = res.data.remitDOlist;
@@ -1646,7 +1652,6 @@ export default {
                   }  
                 })
                 this.SgData = arr5;
-                this.WritebackProcess()
               }
               // 8.20 完结同步状态，判断支票Settled的状态，触发接口(所有数据里只要有一个不是Settled，就调接口)
               if(this.$route.query.tag === 'collectiongEnd' && res.data.remitDOlist && res.data.remitDOlist.length){

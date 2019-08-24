@@ -50,23 +50,14 @@
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
-      <!-- <el-table-column width="180" label="结付公司" align="center">
-          <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark"  :content="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode?scope.row.rmSettleCompanyCode+'-'+scope.row.rmSettleCompanyName:''" placement="top-start">
-            <span class="abbreviate" v-if="scope.row.rmSettleCompanyName&&scope.row.rmSettleCompanyCode">{{scope.row.rmSettleCompanyCode}}-{{scope.row.rmSettleCompanyName}}</span>
-            <span class="abbreviate" v-if="!scope.row.rmSettleCompanyName&&!scope.row.rmSettleCompanyCode"></span>
+      <el-table-column prop="rmCurrency" label="币制" align="center"></el-table-column>
+      <el-table-column label="结付公司" width="120" align="right">
+         <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.checkoutPayment" placement="top-start">
+            <span class="abbreviate">{{scope.row.checkoutPayment}}</span>
           </el-tooltip>
         </template>
-      </el-table-column> -->
-      <!-- <el-table-column width="140" label="结付公司" align="center">
-        <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark"  :content="scope.row.codeNames&&scope.row.codeNames?scope.row.codeNames:''" placement="top-start">
-              <span class="abbreviate" v-if="scope.row.codeNames&&scope.row.codeNames">{{scope.row.codeNames}}</span>
-              <span class="abbreviate" v-if="!scope.row.codeNames&&!scope.row.codeNames"></span>
-            </el-tooltip>
-        </template>
-      </el-table-column> -->
-      <el-table-column prop="rmCurrency" label="币制" align="center"></el-table-column>
+      </el-table-column>
       <el-table-column label="汇款金额" width="120" align="right">
          <template slot-scope="scope">
           <el-tooltip
@@ -96,7 +87,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="processStatus" label="流程状态" width="110" align="center"></el-table-column>
+      <el-table-column prop="processStatus" label="流程状态" align="center"></el-table-column>
       <el-table-column prop="businessOrigin" width="160" label="Business Origin" align="center"></el-table-column>
       <el-table-column label="Base Company" width="160" prop="baseCompany" align="center"></el-table-column>
       <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
@@ -451,119 +442,6 @@ export default {
         file:[],
         fileData:[],
         StableClass:'tableClass',
-        listData:[
-          {
-            a:'流程编号',
-            b:'',
-            c:'processId'
-          },
-          {
-            a:'结付公司',
-            b:'',
-            c:'rmSettleCompanyCode',
-          },
-          {
-            a:'汇款人名称',
-            b:'',
-            c:'payerName',
-          },
-          {
-            a:'币制',
-            b:'',
-            c:'rmCurrency',
-          },
-          {
-            a:'到账日期',
-            b:'',
-            c:'rmReceiptDate',
-          },
-          {
-            a:'Business Origin',
-            b:'',
-            c:'businessOrigin'
-          },
-          {
-            a:'汇款金额',
-            b:'',
-            c:'rmAmount',
-          },
-          {
-            a:'Base Company',
-            b:'',
-            c:'baseCompany',
-          },
-          {
-            a:'任务来源',
-            b:'',
-            c:'modifiedBy'
-          },
-          {
-            a:'我司销账编号',
-            b:'',
-            c:'rmWrittenOffNum',
-          },
-
-          {
-            a:'原收款公司名称',
-            b:'',
-            c:'rmOriSettleCompanyName',
-          },
-          {
-            a:'原收款币制',
-            b:'',
-            c:'rmOriCurrency',
-          },
-          {
-            a:'原收款金额',
-            b:'',
-            c:'rmOriAmount',
-          },
-          {
-            a:'手续费币制',
-            b:'',
-            c:'rmChargesCurrency',
-          },
-          {
-            a:'手续费金额',
-            b:'',
-            c:'rmChargesAmount',
-          },
-          {
-            a:'付款人开户行号',
-            b:'',
-            c:'payerBankNumber',
-          },
-          {
-            a:'结算人员',
-            b:'',
-            c:'rmSettleUser',
-          },
-          {
-            a:'付款人开户行名',
-            b:'',
-            c:'payerBankName',
-          },
-          {
-            a:'付款人账号',
-            b:'',
-            c:'payerAccountNumber',
-          },
-          {
-            a:'付款人名称',
-            b:'',
-            c:'payerName',
-          },
-          {
-            a:'创建日期',
-            b:'',
-            c:'createdAt',
-          },
-          {
-            a:'备注',
-            b:'',
-            c:'remark',
-          },
-        ],
         chooseRow:{},
         cedentModel:null,
         cedentList:[],
@@ -751,20 +629,20 @@ export default {
       delete params['actOperator'];
       this.$http.post('api/pay/teskClaim/list',params).then(res =>{
         if(res.status === 200 ) { 
-          console.log(res,'res,付款');
-          // let newRows=res.data.rows.map((item,index)=>{
-          //     item.rmSettleCompanyCode=item.rmSettleCompanyCode!==null?item.rmSettleCompanyCode.split(';'):item.rmSettleCompanyCode;
-          //     item.rmSettleCompanyName=item.rmSettleCompanyName!==null?item.rmSettleCompanyName.split(';'):item.rmSettleCompanyName;
-          //       // console.log(item.rmSettleCompanyName[0])
-          //     item.codeNames=item.rmSettleCompanyCode&&item.rmSettleCompanyCode.map((items,indexs)=>{
-          //      items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items||item.rmSettleCompanyName[indexs];
-          //       return items
-          //     });
-          //     item.codeNames=item.codeNames&&item.codeNames.join('');
-          //     return item;
-          // })
+          // 回显结付公司
+          // c:'rmSettleCompanyCode',
+          //   d:'rmSettleCompanyName'
+          if(res.data.rows&&res.data.rows.length){
+            let payStr = '';
+            res.data.rows.forEach(el=>{
+              let n = null, c = null;
+              if(el.rmSettleCompanyName){n=el.rmSettleCompanyName.split(';')} else{ n = []; }
+              if(el.rmSettleCompanyCode){c=el.rmSettleCompanyCode.split(';')} else{ c = []; }
+              if( n && n.length && n.length>0){ n.forEach((el,i)=>{ payStr+=`${el}-${c[i]};` })}
+              el['checkoutPayment'] = payStr;
+            })
+          }
           this.tableData = res.data.rows;
-          // this.tableData = newRows;
           console.log(this.tableData);
           this.mustData.total = res.data.total;
           if(res.data && res.data.rows && res.data.rows.length){
@@ -910,7 +788,7 @@ export default {
         break;
         case 12: //流程提交  //  8.23 胖虎说邮件流程提交，不用指下一个人，直接只给entryOperator
           this.title = '流程提交';
-          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          this.$confirm('是否流程提交?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
