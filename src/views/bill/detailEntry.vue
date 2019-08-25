@@ -1365,10 +1365,11 @@ export default {
                 }
               )
               .then(res => {
-                if (res.status === 200 && res.data.errorCode == 1) {
+                if (res.status === 200 && res.data.code == 0) {
+                  this.$message({ type: "success", message: res.data.msg});
                   this.dialogFormVisible = false;
                   this.$router.push({ name: this.$route.query.tag });
-                }
+                } else{ this.$message({ type: "error", message: res.data.msg}); }
               });
           });
           break;
@@ -1388,14 +1389,9 @@ export default {
               if (res.status === 200 && res.data.errorCode == 1) {
                 this.$router.push({ name: this.$route.query.tag });
               } else if (res.data.errorCode == 0) {
-                this.$message({
-                  type: "error",
-                  message: res.data.errorMessage
-                });
+                this.$message({ type: "error", message: res.data.errorMessage});
               }
             })
-                  
-              
           });
           break;
       }

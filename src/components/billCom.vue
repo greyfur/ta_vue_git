@@ -609,6 +609,7 @@ export default {
   },
   data() {
     return {
+      dRProcessId:null,
       suffixFlag:false,
       RWFlag:false,
       nameList:{},
@@ -979,6 +980,7 @@ export default {
     docView(row) {
       // this.dialogFormVisible1 = true;
         if (row) {
+        this.dRProcessId = row.processId;
         let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && this.suffixFlag){ return false; }
@@ -1410,17 +1412,14 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        this.$http
-          .post("api/anyShare/fileOperation/deleteFilesForPage", {
+        this.$http.post("api/anyShare/fileOperation/deleteFilesForPage", {
             docPath: row.docPath,
             docName: row.docName,
             processId: this.chooseRow.processId,
             actOperator: this.$store.state.userName
-          })
-          .then(res => {
+          }).then(res => {
             if (res.status === 200 && res.data.errorCode == 1) {
-              this.$http
-                .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
+              this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
                 .then(res => {
                   if (res.status === 200) {
                     // this.fileData = res.data.bscDocumentVOlist;
@@ -1438,6 +1437,10 @@ export default {
                     
                   }
                 });
+                if(this.dRProcessId == row.processId){ 
+                  this.docView();
+                  sessionStorage.setItem('data',JSON.stringify({}));
+                }
             }
           });
       });

@@ -87,7 +87,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="processStatus" label="流程状态" align="center"></el-table-column>
+      <el-table-column prop="processStatus" label="流程状态" width="160" align="center"></el-table-column>
       <el-table-column prop="businessOrigin" width="160" label="Business Origin" align="center"></el-table-column>
       <el-table-column label="Base Company" width="160" prop="baseCompany" align="center"></el-table-column>
       <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
@@ -278,12 +278,12 @@
           </template>
         </el-table-column>
       </el-table>
-     
+
       <el-table :data="fileData" height="300" style="width: 100%;height:auto;" border class="document" v-show="title==='上传附件' || title==='附件'" :header-row-class-name="StableClass">
-        <el-table-column label="文件名" width="140" align="center">
+        <el-table-column label="文件名" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-              <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+              <span :class="{'smallHand':!scope.row.suffixFlag && urlName!='emailNotify'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -443,7 +443,7 @@ export default {
         fileData:[],
         StableClass:'tableClass',
         chooseRow:{},
-        cedentModel:null,
+        cedentModel:'',
         cedentList:[],
         picture:'',
         singlePId:'',
@@ -533,7 +533,7 @@ export default {
     elSelect(item){
       this.mailInfo = item.emailAddr
     },
-    send() {
+    send(){
       let val = '';
       if(this.chooseRow.businessOrigin=="International"){  // 国际
           val = `<div>Dear ${document.getElementById('Ename').value},<br/>
@@ -607,7 +607,7 @@ export default {
           });
       }
     },
-     changeWindow(){
+    changeWindow(){
       let that=this;
       document.body.onresize=function(e){
           if(that.$route.name==='payOperation'||that.$route.name==='payVerification'||that.$route.name==='approvalDone'){
@@ -638,7 +638,7 @@ export default {
               let n = null, c = null;
               if(el.rmSettleCompanyName){n=el.rmSettleCompanyName.split(';')} else{ n = []; }
               if(el.rmSettleCompanyCode){c=el.rmSettleCompanyCode.split(';')} else{ c = []; }
-              if( n && n.length && n.length>0){ n.forEach((el,i)=>{ payStr+=`${el}-${c[i]};` })}
+              if( n && n.length && n.length>0){ n.forEach((el,i)=>{ payStr+=`${c[i]}-${el};` })}
               el['checkoutPayment'] = payStr;
             })
           }
@@ -828,7 +828,7 @@ export default {
           } 
           this.$http.get("api/worksheet/wSEntry/getEmailContacts").then(res => {
           if (res.status === 200 && res.data.length) {
-            this.tableData = this.chooseRow.bscDocumentVOlist;
+            this.fileData = this.chooseRow.bscDocumentVOlist;
             this.dialogFormVisible3 = true;
             this.title = "邮件通知";
             this.mailOption = res.data;
@@ -872,10 +872,13 @@ export default {
 
     },
     confirm(formName){
-      if(this.cedentModel != null){
+      if(this.cedentModel){
         let obj = this.cedentList[this.cedentModel];
         this.formLabelAlign.rmSettleCompanyCode = obj.codecode;
         this.formLabelAlign.rmSettleCompanyName = obj.codeName;
+      } else{
+        this.formLabelAlign.rmSettleCompanyCode = '';
+        this.formLabelAlign.rmSettleCompanyName = '';
       }
       switch(this.tag){
         case 1: //创建
@@ -938,6 +941,8 @@ export default {
                 } else if (res.data.code == 1) {
                   this.$message.error(res.data.msg);
                 } else{
+                  this.dialogFormVisible = false;
+                  this.init();
                   this.$message({ type: "warning", message: res.data.msg });
                 }
               })

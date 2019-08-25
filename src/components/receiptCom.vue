@@ -5,7 +5,7 @@
       <div class="titleSearch" @click="searchFlag = !searchFlag">
         <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询
       </div>
-      <el-collapse-transition>
+      <el-collapse-transition> 
       <div v-show="searchFlag">
         <el-row :gutter="10" class="billRow" class-name="transition-box">
           <el-col :span="8">
@@ -218,6 +218,14 @@
       </el-table-column>
     </el-table>
     <el-table :height="changeClientHight" v-show="urlName!='taskClaim' && urlName!='financialCreat'" :header-row-class-name="StableClass" :data="tableData" border  style="width: 100%">
+      <el-table-column v-if="urlName === 'credOperation'" width="50" align="center">
+        <template slot-scope="scope" v-if="urlName === 'credOperation'">
+          <div style="display: flex;align-items: center;justify-content: center;">
+            <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
+            <!-- <span>{{scope.row.rejectedFlag == '1'?'异常':'正常'}}</span> -->
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="流程编号" width="145" align="center">
         <template slot-scope="scope">
           <span
@@ -356,7 +364,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
+    <!-- <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="mustData.pageNumber"
@@ -364,17 +372,27 @@
       :page-size="mustData.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="mustData.total"
-    ></el-pagination>
+    ></el-pagination> -->
+    <div style="width:100%;display:flex;align-items: flex-end;justify-content: space-between;">
+      <div></div>
+      <div style="display:flex;align-items: flex-end;justify-content: space-between;">
+        <div style="padding-bottom: 5px;padding-right: 10px;" v-if="urlName === 'credOperation'"> 
+          <span class='statePoint stateRed'></span><span>异常</span>
+          <span class='statePoint stateGreen'></span><span>正常</span>
+        </div>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="mustData.pageNumber"
+          :page-sizes="[20, 50, 80, 100]"
+          :page-size="mustData.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="mustData.total">
+        </el-pagination>
+      </div>
+    </div>
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" class="SwitchingMode" width="782px">
-      <el-form
-        :label-position="labelPosition"
-        label-width="140px"
-        :model="formLabelAlign"
-        :rules="rules"
-        ref="formLabelAlign"
-        class="SwitchingMode"
-        style="text-align:right"
-      >
+      <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign" class="SwitchingMode" style="text-align:right">
         <el-form-item label="结付公司">
           <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
             <el-option
@@ -398,8 +416,7 @@
             placeholder="选择日期"
           ></el-date-picker>
         </el-form-item>
-       
-          <el-form-item label="汇款金额" v-show="title==='编辑' || title==='创建'">
+        <el-form-item label="汇款金额" v-show="title==='编辑' || title==='创建'">
           <!-- dir="rtl" foucs 右到左-->
           <input
             type="text"
@@ -542,7 +559,7 @@
       </div>
        <div slot="footer" class="dialog-footer">
          <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-          <el-button size="small" type="primary" plain @click="confirm('formLabelAlign')" style="padding:0 16px;">确 定</el-button>
+        <el-button size="small" type="primary" plain @click="confirm('formLabelAlign')" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="782px">
@@ -558,7 +575,7 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer" v-if="title!='踪迹'">
          <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
       </div>
@@ -677,6 +694,7 @@ export default {
   },
   data() {
     return {
+      dRProcessId:null,
       suffixFlag:false,
       nameList:{},
       searchFlag: false,
@@ -699,6 +717,7 @@ export default {
         rmSettleCompanyName:null,
       },
       formLabelAlign: {
+        processId:'',
         rmSettleCompanyCode: '',
         rmSettleCompanyName: '',
         rmCurrency: '',
@@ -979,6 +998,7 @@ export default {
     docView(row) {
       // this.dialogFormVisibleA = true;
       if (row) {
+        this.dRProcessId = row.processId;
         let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && this.suffixFlag){ return false; }
@@ -1037,9 +1057,10 @@ export default {
           // this.dialogFormVisible = true;
           break;
         case 6: //编辑
-          this.formLabelAlign = this.chooseRow;
-          this.formLabelAlign.rmSettleCompanyCode = null;
-          this.formLabelAlign.rmSettleCompanyName = null;
+          for(let k in this.formLabelAlign){ this.formLabelAlign[k] = this.chooseRow[k]; };
+          // this.formLabelAlign = this.chooseRow;
+          this.formLabelAlign.rmSettleCompanyCode = '';
+          this.formLabelAlign.rmSettleCompanyName = '';
           // rmSettleCompanyName
           if (this.chooseRow.businessOrigin) {
             let arr = this.businessOriginList.filter(el => {
@@ -1399,12 +1420,14 @@ export default {
           });
           break;
         case 6: //编辑
-        let params1 = Object.assign({}, this.mustData, this.formLabelAlign, {actOperator: this.$store.state.userName});
-        for(let k in params1){
-            if(!params1[k] && params1[k]!=0){
-              params1[k] = '';
+          console.log(params1);
+          let params1 = Object.assign({}, this.mustData, this.formLabelAlign, {actOperator: this.$store.state.userName});
+          for(let k in params1){
+              if(!params1[k] && params1[k]!=0){
+                params1[k] = '';
+              }
             }
-          }
+          if(!params1.rmAmount){ params1.rmAmount = 0; }
           this.$http.post("api/receipt/finaCreat/update",params1)
             .then(res => {
               if (res.status === 200 && res.data.code == 0) {
@@ -1508,8 +1531,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        this.$http
-          .post("api/anyShare/fileOperation/deleteFilesForPage", {
+        this.$http.post("api/anyShare/fileOperation/deleteFilesForPage", {
             docPath: row.docPath,
             docName: row.docName,
             processId: row.processId,
@@ -1530,6 +1552,10 @@ export default {
                     this.fileData = arr4;
                   }
                 });
+                if(this.dRProcessId == row.processId){ 
+                  this.docView();
+                  sessionStorage.setItem('data',JSON.stringify({}));
+                }
             } else{ this.$message.error(res.data.errorMessage); }
           });
       });

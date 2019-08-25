@@ -21,7 +21,7 @@
           <el-col :span="8">
             <span class="slable">流程状态</span>
             <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择">
-              <el-option v-for="item in ['已创建','待处理','已删除','已悬停','已置废','已完结','待邮件通知','待补录','待支付','待核销','待复核','待一级审批','待二级审批','待三级审批','待四级审批','待五级审批','审批完成']" :key="item" :label="item" :value="item"></el-option>
+              <el-option v-for="item in ['已创建','待处理','已删除','已悬停','已置废','已关闭','已完结','待邮件通知','待补录','待支付','待核销','待复核','待一级审批','待二级审批','待三级审批','待四级审批','待五级审批','审批完成']" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-col>
         </el-row>
@@ -105,7 +105,7 @@
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item><el-button v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" type="text" size="small">编辑</el-button></el-dropdown-item> -->
               <el-dropdown-item><span class="blueColor" @click.stop="handleClick(11,scope.row)">踪迹</span></el-dropdown-item>
-              <el-dropdown-item><span class="blueColor" v-if="scope.row.processStatus=='已完结'" @click.stop="reverse(scope.row)">已完结</span></el-dropdown-item>
+              <el-dropdown-item><span class="blueColor" v-if="scope.row.processStatus=='已关闭'" @click.stop="reverse(scope.row)">reverse</span></el-dropdown-item>
               <!-- <el-dropdown-item><el-button v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(12,scope.row)" type="text" size="small">流程提交</el-button></el-dropdown-item>
               <el-dropdown-item><el-button v-show="urlName === 'emailNotify'" @click.stop="handleClick(15,scope.row)" type="text" size="small">附件查看</el-button></el-dropdown-item>
@@ -778,7 +778,7 @@ export default {
 
     },
     getZJData(id){
-      this.$http.post('api/othersDO/bscProcessAction/list',Object.assign({},{processId:id},this.ZJObj)).then(res =>{
+      this.$http.post('api/othersDO/bscProcessAction/list',Object.assign({},{processId:id,pageNumber:1,pageSize:5000},this.ZJObj)).then(res =>{
         if(res.status === 200 ) {
           this.track = res.data.rows;
           this.ZJObj.total=res.data.total;
