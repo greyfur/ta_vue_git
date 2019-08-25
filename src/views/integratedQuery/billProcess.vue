@@ -179,21 +179,16 @@
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="录入人" width="110" align="center">
+      <!-- <el-table-column label="录入人" width="110" align="center">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.registBy]}}</span>
         </template>
-      </el-table-column>
-      <!-- <el-table-column label="录入人" prop="registBy" width="110" align="center"></el-table-column> -->
-      <el-table-column label="录入时间" width="120" align="center">
-          <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" :content="scope.row.registAt" placement="top-start">
-            <span class="abbreviate">{{scope.row.registAt}}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
+      </el-table-column> -->
+      <el-table-column label="录入人" prop="registBy" width="110" align="center"></el-table-column>
+      <el-table-column label="录入时间" prop="inputAt" width="160" align="center"></el-table-column>
       <el-table-column prop="closedBy" label="复核人" width="130" align="center"></el-table-column>
-      <el-table-column prop="closedAt" label="复核时间" width="160" align="center"></el-table-column>
+      <el-table-column prop="registAt" label="提交复核时间" width="160" align="center"></el-table-column>
+      <el-table-column prop="closedAt" label="复核完成时间" width="160" align="center"></el-table-column>
       <el-table-column prop="processStatus" label="流程状态" align="center"></el-table-column>
       <el-table-column prop="businessOrigin" label="Business Origin" width="130" align="center"></el-table-column>
       <el-table-column prop="baseCompany" label="Base Company" width="130" align="center"></el-table-column>

@@ -78,6 +78,11 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column label="录入人" prop="registBy" width="110" align="center"></el-table-column>
+      <el-table-column label="录入时间" prop="inputAt" width="160" align="center"></el-table-column>
+      <el-table-column prop="closedBy" label="复核人" width="130" align="center"></el-table-column>
+      <el-table-column prop="registAt" label="提交复核时间" width="160" align="center"></el-table-column>
+      <el-table-column prop="closedAt" label="复核完成时间" width="160" align="center"></el-table-column>
       <el-table-column prop="rmCurrency" label="币制" width="60" align="center"></el-table-column>
       <el-table-column prop="rmAmount" label="汇款金额" width="130" align="right">
         <template slot-scope="scope">
