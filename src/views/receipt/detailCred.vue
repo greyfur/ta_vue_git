@@ -3,9 +3,10 @@
     <!-- <router-link :to="{name:$route.query.tag}" :class="this.$store.state.flod?'leftBack':'rightBack'">
       <i class="iconfont iconleft-circle-o"></i>
     </router-link> -->
-    <!-- 核销完成 -->
+    <!-- 完结 -->
     <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'collectiongEnd'">
-      <el-button type="primary" plain @click="getSg">同步状态</el-button>
+      <!-- <el-button type="primary" plain @click="getSg">同步状态</el-button> -->
+      <el-button type="primary" plain @click="tbState">同步状态</el-button>
       <el-button type="primary" plain @click="makeReport">生成核销报告</el-button>
       <el-button type="primary" plain @click="mailSend(2,'附件')">附件</el-button>
       <el-button type="primary" plain @click="getTaxInfo">增值税信息获取</el-button>
@@ -25,7 +26,8 @@
     <!-- 复核 -->
     <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'credReview'">
       <el-button type="primary" plain @click="submite(2,'指派','复核','收款复核')">指派</el-button>
-      <el-button type="primary" plain @click="getSg('收款复核')">同步状态</el-button>
+      <el-button type="primary" plain @click="tbState">同步状态</el-button>
+      <!-- <el-button type="primary" plain @click="getSg('收款复核')">同步状态</el-button> -->
       <el-button type="primary" plain @click="mailSend(2,'附件')">附件</el-button>
       <el-button type="primary" plain @click="submite(4,'复核驳回')">复核驳回</el-button>
       <el-button type="primary" plain @click="submite(1,'复核通过','收款录入')">复核通过</el-button>
@@ -65,15 +67,15 @@
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag2 = !searchFlag2">
           <div><i style="margin-right:8px;" :class="searchFlag2===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>支票信息</div>
-          <p>
+          <!-- <p>    8.26 改
             <el-button size="mini" @click.stop="getSg" v-if="$route.query.tag !== 'credVerification' && $route.query.tag !== 'credReview' && $route.query.tag !== 'collectiongEnd'">
               <i style="margin-right:8px;" class="iconfont iconGroup77"></i>支票回写
             </el-button>
-          </p>
+          </p> -->
         </div>
         <el-collapse-transition>
           <div v-show="searchFlag2">
-            <el-table :data="RMData" :height="maxHeight" style="width:100%" border :header-row-class-name="StableClass">
+            <el-table :data="RMData" style="width:100%" border :header-row-class-name="StableClass">
               <el-table-column label="支票号" width="150" align="center">
                 <template slot-scope="scope">
                   <el-tooltip
@@ -1523,7 +1525,7 @@ export default {
           if (res.status === 200) {
             this.RMData = res.data.remitDOlist;
             this.WSData = res.data.workSheetDOlsit;
-            // this.SgData = res.data.worksheetsgDOlist;
+            this.SgData = res.data.worksheetsgDOlist;
             let arr5 = res.data.worksheetsgDOlist;
                 arr5.forEach(el=>{
                   if(el.docName){
@@ -1533,7 +1535,7 @@ export default {
                   }
                 })
                 this.SgData = arr5;
-            this.$message({message: '操作成功',type: 'success'});
+            // this.$message({message: '操作成功',type: 'success'});
           } else { this.$message({message: '操作失败',type: 'error'}); }
         });
     },
@@ -1549,8 +1551,7 @@ export default {
     getTaxInfo() {
       // 增值税信息获取
       this.title = "增值税信息获取";
-      this.$http
-        .post("api/vat/message/save", { processId: this.row.processId })
+      this.$http.post("api/vat/message/save", { processId: this.row.processId })
         .then(res => {
           if (res.status === 200 && res.data) {
             this.TaxList = res.data;
@@ -1561,7 +1562,12 @@ export default {
         });
     },
     tbState() {
-      this.$http.post("api/sics/basis/receiptSynchronize", {
+       // 8.26 wtd 原来三个页面 都听不状态全部一样，现在3个同步状态全部改为receiptSynchronize
+      let url = '';
+      if(this.$route.query.tag === 'credReview'){
+        url = 'api/sics/basis/getPayRemitFromSicsByRemids'
+      } else{ url = 'api/sics/basis/receiptSynchronize' }
+      this.$http.post(url, {
           actOperator: this.mustData.actOperator,
           processId: this.row.processId
         }).then(res => {
@@ -1569,7 +1575,7 @@ export default {
             this.RMData = res.data.remitDOlist;
             this.WSData = res.data.workSheetDOlsit;
             this.WritebackProcess();
-            // this.SgData = res.data.worksheetsgDOlist;
+            this.SgData = res.data.worksheetsgDOlist;
             let arr5 = res.data.worksheetsgDOlist;
               arr5.forEach(el=>{
                 if(el.docName){
@@ -1584,10 +1590,11 @@ export default {
         });
     },
     getSg(tag) {
-      // 8.25 wtd改
+      // 8.26 wtd 原来三个页面 都听不状态全部一样，现在把这个废弃掉
+      // 8.25 wtd改  复核调新的接口
       let url = '';
-      if(tag && tag=='收款复核'){
-        url = 'api//sics/basis/getPayRemitFromSicsByRemids'
+      if(this.$route.query.tag === 'credReview'){
+        url = 'api/sics/basis/getPayRemitFromSicsByRemids'
       } else{ url = 'api/sics/basis/getPayRemitFromSics' }
       this.searchFlag2 = !this.searchFlag2;
       if (this.RMData && this.RMData.length) {
@@ -1601,7 +1608,7 @@ export default {
             if (res.status === 200) {
               this.WritebackProcess();
               this.$message({ type: "success", message:'操作成功'});
-              // this.SgData = res.data.worksheetsgDOlist;
+              this.SgData = res.data.worksheetsgDOlist;
               this.RMData = res.data.remitDOlist;
               this.WSData = res.data.workSheetDOlsit;
               let arr5 = res.data.worksheetsgDOlist;

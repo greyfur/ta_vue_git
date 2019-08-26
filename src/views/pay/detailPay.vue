@@ -166,7 +166,9 @@
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag2 = !searchFlag2">
           <div><i style="margin-right:8px;"  :class="searchFlag2===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>支票信息</div>
-          <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getRMSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
+          <!-- 8.26 wtd 付款所有的SICS回写都调getWSAndSGfromSisc接口  同步状态也调这个-->
+          <!-- <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getRMSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p> -->
+          <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
         </div>
          <el-collapse-transition>
         <el-table v-show="searchFlag2" :data="RMData" style="width:100%" border :header-row-class-name="StableClass">
@@ -481,7 +483,7 @@
       </el-col>
     </el-row>
     <!-- 账单信息 -->
-    <el-row v-if="$route.query.tag === 'payClose' || $route.query.tag === 'partialDone'">
+    <el-row v-if="$route.query.tag === 'payClose' || $route.query.tag === 'partialDone' || $route.query.tag === 'payment' || $route.query.tag === 'payEnd'">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag4 = !searchFlag4">
           <div>
@@ -493,12 +495,7 @@
           <el-table v-show="searchFlag4" :height="maxHeight" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column label="账单号" align="center">
               <template slot-scope="scope">
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  :content="scope.row.wsId"
-                  placement="top-start"
-                >
+                <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
                   <span class="abbreviate">{{scope.row.wsId}}</span>
                 </el-tooltip>
               </template>
@@ -522,8 +519,7 @@
                   class="item"
                   effect="dark"
                   :content="scope.row.businessId"
-                  placement="top-start"
-                >
+                  placement="top-start">
                   <span class="abbreviate">{{scope.row.businessId}}</span>
                 </el-tooltip>
               </template>
@@ -1475,12 +1471,13 @@ export default {
     },
     tongbu(){
       this.getSGSg();
-      // 8.26 wtd 复核 同步状态的时候，支票接口改为getPayRemitFromSicsByRemids
-      if(this.$route.query.tag === 'payReview'){  // 复核页面用🖤的接口
-        this.getRMSg('getPayRemitFromSicsByRemids');
-      } else{
-        this.getRMSg();
-      }
+      // 8.26 -下午 wtd 同步状态只调sg的
+      // 8.26 -上午 wtd 复核 同步状态的时候，支票接口改为getPayRemitFromSicsByRemids
+      // if(this.$route.query.tag === 'payReview'){  // 复核页面用🖤的接口
+      //   this.getRMSg('getPayRemitFromSicsByRemids');
+      // } else{
+      //   this.getRMSg();
+      // }
     },
     getBscBankInfo(){
       this.$http.post('api/othersDO/bscBankInfo/list',{}).then(res =>{
@@ -1578,7 +1575,8 @@ export default {
       this.$http.post('api/sics/basis/getWSAndSGfromSics',{actOperator:this.mustData.actOperator,processId:this.row.processId}).then(res =>{
         if(res.status === 200){ 
           this.SgData = res.data.worksheetsgDOlist;
-          // this.RMData = res.data.remitDOlist;
+          this.RMData = res.data.remitDOlist;
+          this.WSData = res.data.workSheetDOlsit;
           this.refreshDetailData();
         }
       })
