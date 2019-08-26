@@ -33,6 +33,7 @@
         <!-- 操作 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payOperation'">
           <el-button size="small" :disabled="czState" @click="openSICS" plain>打开SICS</el-button>
+          <el-button size="small" @click="tongbu" plain>同步状态</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeDoc('a')">生成审批文档</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(3,'置废','操作')">置废</el-button>
           <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'挂起':'悬停'}}</el-button>
@@ -42,6 +43,7 @@
         <!-- 支票 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'approvalDone'">
           <el-button size="small" @click="openSICS">打开SICS</el-button>
+          <el-button size="small" @click="tongbu" plain>同步状态</el-button>
           <el-button size="small" plain @click="submite(2,'指派','支票')">指派</el-button>
           <el-button size="small" plain @click="onRemitCreat">支票创建</el-button>
           <el-button size="small" plain @click="urgencyPay">紧急付款</el-button>
@@ -70,6 +72,7 @@
             </el-button>
             <el-button size="small" plain @click="submite(9,'审批驳回')">审批驳回</el-button>
             <el-button size="small" plain @click="submite(2,'指派','审批')">指派</el-button>
+            <el-button size="small" @click="tongbu" plain>同步状态</el-button>
              <!-- <el-button size="small" plain @click="submite(5,'审批通过')">审批通过</el-button> -->
           </div>
         </div>
@@ -184,7 +187,7 @@
           <div><i style="margin-right:8px;"  :class="searchFlag2===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>支票信息</div>
           <!-- 8.26 wtd 付款所有的SICS回写都调getWSAndSGfromSisc接口  同步状态也调这个-->
           <!-- <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getRMSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p> -->
-          <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
+          <!-- <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p> -->
         </div>
          <el-collapse-transition>
         <el-table v-show="searchFlag2" :data="RMData" style="width:100%" border :header-row-class-name="StableClass">
@@ -285,8 +288,8 @@
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>结算清单</div>
-          <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
-          <p v-if="$route.query.tag === 'payOperation' && !czState "><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p>
+          <!-- <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p> -->
+          <!-- <p v-if="$route.query.tag === 'payOperation' && !czState "><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p> -->
         </div>
         <el-table v-show="searchFlag3" :height="maxHeight" :data="SgData" style="width: 100%" border :header-row-class-name="StableClass">
           <el-table-column type="expand" align="center">
@@ -1340,7 +1343,7 @@ export default {
             this.title = '审批通过';
             this.flag = 5;
             console.log(this.row.approvalLevel,'this.row.approvalLevel,最后节点');
-            this.getName(this.emnuGetName[this.row.approvalLevel-1]);
+            this.getName('付款录入');
             this.dialogFormVisible3 = true;
           } else{
             this.title = '审批通过';
@@ -1348,7 +1351,7 @@ export default {
             this.proxyFlag = true;
             this.flag = 5;
             console.log(this.row.approvalLevel,'this.row.approvalLevel,非最后节点');
-            this.getName(this.emnuGetName[this.row.approvalLevel-1]);
+            this.getName(this.emnuGetName[this.row.approvalLevel]);
             this.dialogFormVisible3 = true;
             
           }
@@ -1569,7 +1572,7 @@ export default {
       } else{ url = 'api/sics/basis/getPayRemitFromSics' };
       
       this.searchFlag2 = !this.searchFlag2;
-      if(this.RMData){
+      // if(this.RMData){
         let rmIds = '';
         this.RMData.forEach(el=>{
           rmIds += `${el.rmId},`
@@ -1583,7 +1586,7 @@ export default {
             
           }
         })
-      } else{ this.$message.error('无账单，无法更新信息'); }
+      // } else{ this.$message.error('无账单，无法更新信息'); }
       
     },
     getSGSg(){
@@ -1859,35 +1862,35 @@ export default {
                         proxyEName:this.proxyMan==null?this.proxyMan:this.TJRoptions[this.proxyMan]['username'],
                       }
                       this.$http.post('api/docOperation/addSignature',paramQ).then(res =>{
-                          if(res.data.code == 0){
-                              this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-                                ,{processId:this.row.processId, 
-                                  procInstId:this.row.processInstId, 
-                                  assignee:this.row.entryOperator, 
-                                  type:this.$route.query.name,
-                                  actOperator:this.$store.state.userName,
-                                  approvalLevel:this.row.approvalLevel,
-                                  })
-                                .then(res =>{
-                                  if(res.status === 200 && res.data.errorCode == 1){
-                                    this.$message({type: 'success', message:res.data.errorMessage });
-                                    this.dialogFormVisible3 = false;
-                                    this.$router.push({name:this.$route.query.tag}); 
-                                    this.assignee = null;
-                                    this.$nextTick(()=>{
-                                      console.log(111)
-                                      this.nextStep();
-                                    })
-                                  } else if(res.data.errorCode == 0){
-                                    this.$message({type: 'error', message:res.data.errorMessage }); 
-                                  }
+                        if(res.data.code == 0){
+                            this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
+                              ,{processId:this.row.processId, 
+                                procInstId:this.row.processInstId, 
+                                assignee:this.row.entryOperator, 
+                                type:this.$route.query.name,
+                                actOperator:this.$store.state.userName,
+                                approvalLevel:this.row.approvalLevel,
                                 })
-                          }
+                              .then(res =>{
+                                if(res.status === 200 && res.data.errorCode == 1){
+                                  // this.$message({type: 'success', message:res.data.errorMessage });
+                                  this.dialogFormVisible3 = false;
+                                  this.$router.push({name:this.$route.query.tag}); 
+                                  this.assignee = null;
+                                  this.$nextTick(()=>{
+                                    console.log(111)
+                                    this.nextStep();
+                                  })
+                                } else if(res.data.errorCode == 0){
+                                  this.$message({type: 'error', message:res.data.errorMessage }); 
+                                }
+                            })
+                        }
                       })
                   })
                 } else{   
                   this.preApprove = false;
-                  this.getName(this.emnuGetName[this.row.approvalLevel-1]);
+                  this.getName(this.emnuGetName[this.row.approvalLevel]);
                   this.dialogFormVisible3 = true;
                 }
               }

@@ -594,14 +594,20 @@
           </el-select>
         </el-form-item>
         <el-form-item label="指派任务处理人" v-show="title==='指派' && $route.query.tag !== 'billCheck'">
-          <el-select v-model="assignee"  placeholder="请选择"> 
+          <el-select v-model="assignee"  placeholder="请选择" v-show="!checkRobortUser"> 
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName"></el-option>
+          </el-select>
+          <el-select v-model="assignee"  placeholder="请选择" v-show="checkRobortUser==1"> 
+            <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item> 
          <!-- 复核指派 -->
         <el-form-item label="指派任务处理人" v-show="title==='指派' && $route.query.tag === 'billCheck'">
-          <el-select v-model="assignee"  placeholder="请选择"> 
+          <el-select v-model="assignee"  placeholder="请选择" v-show="!checkRobortUser"> 
             <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName || item.username == chooseRow.entryOperator"></el-option>
+          </el-select>
+          <el-select v-model="assignee"  placeholder="请选择" v-show="checkRobortUser==1"> 
+            <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="选择处理人" v-show="title==='流程提交' && $route.query.tag === 'billEntry' && checkRobortUser!=1">
@@ -801,10 +807,10 @@ export default {
       this.uploadType = 1;
     }
     this.chooseRow = JSON.parse(this.$route.query.row);
-    this.$http.get(`api/worksheet/wSEntry/checkRobortUser`,{params:{processId:this.chooseRow.processId}}).then(res => {
-      this.checkRobortUser = res.data;
-      // 0 需要屏蔽自己，1不需要
-    })
+    // this.$http.get(`api/worksheet/wSEntry/checkRobortUser`,{params:{processId:this.chooseRow.processId}}).then(res => {
+    //   this.checkRobortUser = res.data;
+    //   // 0 需要屏蔽自己，1不需要
+    // })
     this.getBillInfo();
   },
   methods: {
@@ -1152,6 +1158,9 @@ export default {
       this.assignee = null;
       switch (tag) {
         case 1: // 指派  ==== 两种
+          this.$http.get(`api/worksheet/wSEntry/checkRobortUser`,{params:{processId:this.chooseRow.processId}}).then(res => {
+            this.checkRobortUser = res.data; // 0 需要屏蔽自己，1不需要
+          })
           this.dialogFormVisible5 = true;
           this.title = "指派";
           if (name === "录入指派") {
@@ -1317,6 +1326,9 @@ export default {
 
           break;
         case 6: // 流程提交 ===== 2种
+          this.$http.get(`api/worksheet/wSEntry/checkRobortUser`,{params:{processId:this.chooseRow.processId}}).then(res => {
+            this.checkRobortUser = res.data; // 0 需要屏蔽自己，1不需要
+          })
           if (name === "录入提交") {
             if (this.SICSData == null || !this.SICSData.length) {
               this.$message({ type: "error", message: "无账单信息，无法提交" });

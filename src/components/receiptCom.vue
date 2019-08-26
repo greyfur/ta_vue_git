@@ -15,11 +15,7 @@
           <el-col :span="8">
             <span class="slable">结付公司</span>
             <el-select clearable filterable v-model="searchList.cedentModel" placeholder="请选择结付公司">
-              <el-option
-                v-for="(item,index) in cedentList"
-                :key="index"
-                :label="item.codecode+' - '+item.codeName"
-                :value="index">
+              <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
                 <span style="float:left">{{ item.codecode }}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
               </el-option>
@@ -109,12 +105,11 @@
       @row-click="goDetail">
       <el-table-column type="selection" width="55" align="center"></el-table-column>
       <el-table-column prop="processId" label="流程编号" width="130" align="center"></el-table-column>
-      <el-table-column width="140" label="结付公司" align="center">
-        <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark"  :content="scope.row.codeName&&scope.row.codeName?scope.row.codeName:''" placement="top-start">
-              <span class="abbreviate" v-if="scope.row.codeName&&scope.row.codeName">{{scope.row.codeName}}</span>
-              <span class="abbreviate" v-if="!scope.row.codeName&&!scope.row.codeName"></span>
-            </el-tooltip>
+      <el-table-column label="结付公司" width="120" align="right">
+         <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.checkoutPayment" placement="top-start">
+            <span class="abbreviate">{{scope.row.checkoutPayment}}</span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column width="120" label="汇款人名称" align="center">
@@ -237,14 +232,13 @@
           >{{scope.row.processId}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="140" label="结付公司" align="center"> 
-        <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark"  :content="scope.row.codeName&&scope.row.codeName?scope.row.codeName:''" placement="top-start">
-              <span class="abbreviate" v-if="scope.row.codeName&&scope.row.codeName">{{scope.row.codeName}}</span>
-              <span class="abbreviate" v-if="!scope.row.codeName&&!scope.row.codeName"></span>
-            </el-tooltip>
+      <el-table-column label="结付公司" width="120" align="right">
+         <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.checkoutPayment" placement="top-start">
+            <span class="abbreviate">{{scope.row.checkoutPayment}}</span>
+          </el-tooltip>
         </template>
-        </el-table-column>
+      </el-table-column>
       <el-table-column width="120" label="汇款人名称" align="center">
          <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.payerName" placement="top-start">
@@ -971,18 +965,17 @@ export default {
       }
       this.$http.post("api/receipt/finaCreat/list", params).then(res => {
         if (res.status === 200) {
-          console.log(res,'res,收款');
-          let newRows=res.data.rows.map((item,index)=>{
-              item.rmSettleCompanyCode=item.rmSettleCompanyCode!==null?item.rmSettleCompanyCode.split(';'):item.rmSettleCompanyCode;
-              item.rmSettleCompanyName=item.rmSettleCompanyName!==null?item.rmSettleCompanyName.split(';'):item.rmSettleCompanyName;
-              item.codeName=item.rmSettleCompanyCode&&item.rmSettleCompanyCode.map((items,indexs)=>{
-               items= items!==null&&item.rmSettleCompanyName[indexs]!==undefined?items+'-'+ item.rmSettleCompanyName[indexs]+';':items||item.rmSettleCompanyName[indexs];
-                return items
-              });
-              item.codeName=item.codeName&&item.codeName.join('');
-              return item;
-          })
-          this.tableData = newRows;
+          if(res.data.rows&&res.data.rows.length){
+            let payStr = '';
+            res.data.rows.forEach(el=>{
+              let n = null, c = null;
+              if(el.rmSettleCompanyName){n=el.rmSettleCompanyName.split(';')} else{ n = []; }
+              if(el.rmSettleCompanyCode){c=el.rmSettleCompanyCode.split(';')} else{ c = []; }
+              if( n && n.length && n.length>0){ n.forEach((el,i)=>{ payStr+=`${c[i]}-${el};` })}
+              el['checkoutPayment'] = payStr;
+            })
+          }
+          this.tableData = res.data.rows;
           this.mustData.total = res.data.total;
           if (res.data && res.data.rows && res.data.rows.length) {
             if (
