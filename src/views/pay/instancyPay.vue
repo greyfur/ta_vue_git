@@ -2,8 +2,9 @@
   <div class="instancyPay">
     <el-row :gutter="10">
       <el-col :span="10">
-        <div style="display:flex;align-items: center;justify-content: space-between;padding: 12px 16px;">
-          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
+        <div style="display:flex;align-items: center;justify-content: space-between;padding: 12px 0;">
+          <!-- <i style="margin-right:8px;" class="el-icon-arrow-down"></i> 8.26去掉icon-->
+          <div>附件列表</div>
           <p>
             <el-button size="small">
               <el-upload action="" :before-upload="beforeAvatarUpload" :auto-upload="true" :http-request="upload" :file-list="fileList">
@@ -35,9 +36,10 @@
           </el-table-column>
         </el-table>
       </el-col>
-      <el-col :span="14" style="padding-right:20px;">
-        <div class="titleSearch detailSearch">
-          <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览</div>
+      <el-col :span="14">
+        <div class="titleSearch detailSearch" style="padding:12px 0;">
+          <!-- <i style="margin-right:8px;" class="el-icon-arrow-down"></i> 8.26去掉icon-->
+          <div>文档预览</div>
         </div>
         <div class="browseDoc">
           <iframe src="../../../static/Preview/index.html" id="iframeId" name="ifrmname" ref="mapFrame" style="width:100%;height:100%" frameborder="0"></iframe>

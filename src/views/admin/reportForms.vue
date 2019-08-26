@@ -14,7 +14,26 @@
             type="month"
             placeholder="请选择">
           </el-date-picker>
-          <div class="do">操作： <p class="btn" @click="sure()">下载</p></div>
+          <div class="do">操作： <p class="btn" @click="sure('one')">下载</p></div>
+      </div>
+       <div class="area">
+        <span>选择报表类型：</span>
+          <el-select clearable filterable v-model="reportTypes" placeholder="请选择">
+            <el-option v-for="(item,index) in ReportFormArrs" :key="'h'+index" :label="item.name" :value="item.type">
+              <span>{{ item.name }}</span>
+            </el-option>
+          </el-select>
+          <span class="slable">录入时间段：</span>
+          <el-date-picker
+            style="width:220px;margin-bottom:-10px;"
+            value-format="timestamp"
+            v-model="startDate"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        <div class="do">操作： <p class="btn" @click="sure('two')">下载</p></div>
       </div>
   </div>
 </template>
@@ -23,6 +42,7 @@
     data() {
       return {
         oYearMonth:new Date().getTime(),
+        startDate:null,
         ReportFormArr:[{
           name:'流程统计报表',
           type:'1'
@@ -42,27 +62,26 @@
           name:'账单流程汇总报表',
           type:'7'
         }],
-        reportType:null
+        ReportFormArrs:[{
+          name:'结算Process汇总报表',
+          type:'结算'
+        },{
+          name:'Partial流程报表',
+          type:'Partial'
+        },{
+          name:'暂挂待销报表',
+          type:'暂挂待销'
+        },{
+          name:'紧急付款报表',
+          type:'紧急付款'
+        }],
+        reportType:null,
+        reportTypes:null
       };
     },
     methods:{
-      sure(){
-        console.log(this.reportType)
-        // if(this.reportType===null||this.oYearMonth===null){
-        //   this.$message.error('请选择年月和报表类型')
-        // }else{
-          // this.$http({
-          //   url:`api/reportform`,
-          //   method:'POST',
-          //   headers:{
-          //     responseType: "blob"
-          //   },
-          //   data:{
-          //     reportType:this.reportType,
-          //   }
-          // }).then(res=>{
-          //   console.log(res)
-          // })
+      sure(str){
+        if(str==='one'){
           this.$http.post(`api/reportform`,{
             reportType:this.reportType,
             wsUwYear:this.oYearMonth
@@ -86,6 +105,30 @@
                 }
             }
           })
+        }else if(str==='two'){
+          this.$http.post(`api/reportform/settlement`,{
+            reportType:this.reportTypes,
+            startDate:this.startDate[0],
+            endDate:this.startDate[1]
+          }, { responseType: "blob" }).then(res=>{
+            if(res.status===200){
+              this.path = this.getObjectURL(res.data);
+              if (res.data) {
+                  var a = document.createElement("a");
+                  if (typeof a.download === "undefined") {
+                    window.location = this.path;
+                  } else {
+                    a.href = this.path;
+                    let formatString = escape(res.headers['content-disposition'].split(';')[1].split('=')[1]);
+                    a.download =  decodeURI(formatString);
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                  }
+                }
+            }
+          })
+        }
         // }
       },
       getObjectURL(file) {
@@ -116,6 +159,7 @@
   background: #fafafa;
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
 }
 .area span{
   margin: 0 20px;

@@ -91,7 +91,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
+      <el-table-column prop="createdAt" label="创建时间" width="160" align="center"></el-table-column>
       <el-table-column label="任务来源" width="130" align="center">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>

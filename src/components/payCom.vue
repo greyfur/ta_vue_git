@@ -90,7 +90,7 @@
       <el-table-column prop="processStatus" label="流程状态" width="160" align="center"></el-table-column>
       <el-table-column prop="businessOrigin" width="160" label="Business Origin" align="center"></el-table-column>
       <el-table-column label="Base Company" width="160" prop="baseCompany" align="center"></el-table-column>
-      <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
+      <el-table-column prop="createdAt" label="创建时间" width="160" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80" align="center">
         <template slot-scope="scope">
           <el-dropdown placement="top-start">
@@ -534,15 +534,15 @@ export default {
     },
     send(){
       let val = '';
-      if(this.chooseRow.businessOrigin=="International"){  // 国际
+      if(this.chooseRow.businessOrigin=="International"){  // 国际 hyd
           val = `<div>Dear ${document.getElementById('Ename').value},<br/>
-          We are pleased to inform that we arranged a settlement of ${this.chooseRow.rmCurrency} ${this.chooseRow.rmAmount} with an estimated value date of ${this.Edate}.<br/>
+          We are pleased to inform that we arranged a settlement of ${document.getElementById('Ename1').value} ${document.getElementById('Ename2').value} with an estimated value date of ${document.getElementById('Ename3').value}.<br/>
           Attached sheet for your transaction reference.<br/>
           If however, you have any queries please let me know.<br/>  
           <span style="margin-left:300px;">${document.getElementById('Esignature').value}</span></div>`
         }else{
           val = `<div>${document.getElementById('Ename').value}老师，您好！<br/>
-          我们预计将在${this.Edate}支付贵司金额为${this.chooseRow.rmCurrency}${this.chooseRow.rmAmount}的款项，详情请见清单。<br/>
+          我们预计将在${document.getElementById('Ename1').value}支付贵司金额为${document.getElementById('Ename2').value}${document.getElementById('Ename3').value}的款项，详情请见清单。<br/>
           如果有问题，请及时与我们联系。谢谢！<br/>
           <span style="margin-left:300px;">${document.getElementById('Esignature').value}<span></div>   `
         } 
@@ -818,13 +818,13 @@ export default {
         case 13: //邮件通知 
            if(this.chooseRow.businessOrigin=="International"){  // 国际
             this.htmlContent = `<div>Dear <input class="mailTemplate" type="text" id="Ename"/>,<br/>
-            We are pleased to inform that we arranged a settlement of ${this.chooseRow.rmCurrency} ${this.chooseRow.rmAmount} with an estimated value date of ${this.Edate}.<br/>
+            We are pleased to inform that we arranged a settlement of <input class="mailTemplate" type="text" value="${this.chooseRow.rmCurrency}" id="Ename1"/> <input class="mailTemplate" type="text" value="${this.chooseRow.rmAmount}" id="Ename2"/> with an estimated value date of <input class="mailTemplate" type="text" value="${this.Edate}" id="Ename3"/>.<br/>
             Attached sheet for your transaction reference.<br/>
             If however, you have any queries please let me know.<br/>  
             <span style="margin-left:300px;"><input type="text" class="mailTemplate" id="Esignature" placeholder="please enter Personal signature"/></span></div>`
           }else{
             this.htmlContent = `<div><input class="mailTemplate" type="text" id="Ename"/>老师，您好！<br/>
-            我们预计将在${this.Edate}支付贵司金额为${this.chooseRow.rmCurrency}${this.chooseRow.rmAmount}的款项，详情请见清单。<br/>
+            我们预计将在<input class="mailTemplate" type="text" value="${this.Edate}" id="Ename1"/>支付贵司金额为<input class="mailTemplate" type="text" value="${this.chooseRow.rmCurrency}" id="Ename2"/><input class="mailTemplate" type="text" value="${this.chooseRow.rmAmount}" id="Ename3"/>的款项，详情请见清单。<br/>
             如果有问题，请及时与我们联系。谢谢！<br/>
             <span style="margin-left:300px;"><input type="text" class="mailTemplate" id="Esignature" placeholder="请输入个人签名"/><span></div>   `
           } 
