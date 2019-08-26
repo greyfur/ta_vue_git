@@ -96,7 +96,7 @@
           <el-dropdown placement="top-start">
             <span class="el-dropdown-link"><i class="iconfont iconcaozuoliebiao"></i></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><span v-show="pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" class="blueColor">编辑</span></el-dropdown-item>
+              <el-dropdown-item><span v-show="scope.row.pendingFlag || urlName === 'taskCreation' || urlName === 'approvalDone'" @click.stop="handleClick(6,scope.row)" class="blueColor">编辑</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName !== 'payOperation'" @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName === 'taskCreation'" @click.stop="handleClick(10,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
               <el-dropdown-item><span v-show="urlName === 'emailNotify'" @click.stop="handleClick(12,scope.row)" class="blueColor">流程提交</span></el-dropdown-item>
@@ -419,7 +419,6 @@ export default {
           payerName:null,
           processStatus:null,
         },
-        pendingFlag:false,
         TJRoptions:[],
         TJRoptionsA:[],
         track:[],
@@ -646,8 +645,11 @@ export default {
           console.log(this.tableData);
           this.mustData.total = res.data.total;
           if(res.data && res.data.rows && res.data.rows.length){
-            if(res.data.rows[0].processStatus === '待处理' && this.urlName === 'payOperation'){
-              this.pendingFlag = true;
+            // if(res.data.rows[0].processStatus === '待处理' && this.urlName === 'payOperation'){
+            if(this.urlName === 'payOperation' && res.data.rows && res.data.rows.length){
+              res.data.rows.forEach(el=>{
+                el.processStatus === '待处理'?el['pendingFlag']=true:el['pendingFlag']=false;
+              })
             }
           }
           if(tag == 0){
@@ -659,9 +661,9 @@ export default {
     docView(row) {
       // this.dialogFormVisibleA = true;
       if(row){
-        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'];
+        let arrr = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
-        if(row.suffix && this.suffixFlag){ return false; }
+        if(row.suffix && !this.suffixFlag){ return false; }
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
         if(res.status == 200){
           document.getElementById('iframeId').contentWindow.postMessage({
@@ -763,7 +765,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                    el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
                 this.fileData = arr4;
@@ -803,7 +805,7 @@ export default {
               }).then(res =>{
               if(res.status === 200 && res.data.errorCode == 1){
                 this.dialogFormVisible2 = false;
-                this.$message({type: 'success', message: '提交成功!'});  
+                this.$message({type: 'success', message: res.data.errorMessage});  
                 this.assignee = null;
                 this.init();
               } else if(res.data.errorCode == 0){
@@ -853,7 +855,7 @@ export default {
                     if(el.docName){
                       let suffix = el.docName.split('.');
                       el['suffix'] = suffix[suffix.length-1];
-                      el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                      el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
                     }
                   })
                   this.fileData = arr5;

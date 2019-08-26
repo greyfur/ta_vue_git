@@ -110,7 +110,7 @@
             <el-table-column label="文件名" width="200" align="center">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                  <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                  <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -298,7 +298,7 @@
                 <el-table-column label="附件名称" align="center">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
-                      <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                      <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -326,7 +326,7 @@
                 <el-table-column label="附件名称" align="center">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
-                      <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                      <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -1413,6 +1413,7 @@ export default {
               })
             .then(res =>{
               if(res.status === 200 && res.data.errorCode == 1){
+                this.$message({type: 'success', message:res.data.errorMessage }); 
                 this.$router.push({name:this.$route.query.tag}); 
               } else if(res.data.errorCode == 0){
                 this.$message({type: 'error', message:res.data.errorMessage }); 
@@ -1708,7 +1709,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                    el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
                 this.fileData = arr5;
@@ -1849,6 +1850,7 @@ export default {
                                   })
                                 .then(res =>{
                                   if(res.status === 200 && res.data.errorCode == 1){
+                                    this.$message({type: 'success', message:res.data.errorMessage });
                                     this.dialogFormVisible3 = false;
                                     this.$router.push({name:this.$route.query.tag}); 
                                     this.assignee = null;
@@ -2073,6 +2075,7 @@ export default {
                     approvalLevel:this.row.approvalLevel,
                     }).then(res =>{
                     if(res.status === 200 && res.data.errorCode == 1){
+                      this.$message({type: 'success', message:res.data.errorMessage });
                       this.dialogFormVisible3 = false;
                       this.$router.push({name:this.$route.query.tag}); 
                       this.assignee = null;
@@ -2287,7 +2290,7 @@ export default {
                   if(el.docName){ 
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                    el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
                 this.fileData = arr4;
@@ -2501,9 +2504,9 @@ export default {
     },
     docView(row) {
       if(row){
-        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'];
+        let arrr = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
-        if(row.suffix && this.suffixFlag){ return false; }
+        if(row.suffix && !this.suffixFlag){ return false; }
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
         if(res.status == 200){
           document.getElementById('iframeId').contentWindow.postMessage({
