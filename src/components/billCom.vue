@@ -278,7 +278,7 @@
           </el-dropdown>
         </template>
       </el-table-column>
-      <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
+      <el-table-column prop="createdAt" label="创建时间" width="160" align="center"></el-table-column>
     </el-table>
     <div style="width:100%;display:flex;align-items: flex-end;justify-content: space-between;">
       <div></div>

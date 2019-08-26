@@ -1,5 +1,6 @@
 <template>
   <div class="detailPay">
+    <h3></h3>
    <!-- <router-link :to="{name:$route.query.tag}" :class="this.$store.state.flod?'leftBack':'rightBack'">
       <i class="iconfont iconleft-circle-o"></i>
     </router-link>  -->
@@ -957,6 +958,7 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        // hydNum:0,
         yuanTypeFlag:false,
         currentPage:1,
         blockRefresh:null,
@@ -1280,12 +1282,11 @@ export default {
     }
     this.dataBaseSG();
     this.mailSend(2,'',1);
-    
+    let that=this;
   },
   updated(){
-    //进度条
+    // 进度条
     if(this.$route.query.tag === 'payVerification'){
-      console.log(11111)
       this.nextStep();
     }
   },
@@ -1373,6 +1374,8 @@ export default {
       let oldStrArrCreInd=0;
       let drcArr = [...document.querySelectorAll(".drc")];
       let statusArr = [...document.querySelectorAll(".status")];
+      console.log(statusArr)
+      // this.hydNum=this.row.approvalLevel;
       oldStrArrCreInd = this.row.approvalLevel;
         this.$http
       .post("api/pay/activitiForPay/getAllLevel", {
@@ -1381,13 +1384,15 @@ export default {
         this.saveLevel = res.data;
         for(var i=0;i<res.data;i++){
             oldStrArrCreInd--;
+            // console.log(this.hydNum--)
             if(drcArr[oldStrArrCreInd]==undefined){
               return
             }else{
-              drcArr[oldStrArrCreInd].className = "drc success";
-              statusArr[oldStrArrCreInd].className = "status success";
-              statusArr[oldStrArrCreInd].innerHTML = "✔";
-              drcArr[oldStrArrCreInd].innerHTML = `${oldStrArrCreInd +1}级审批完成`;
+                drcArr[oldStrArrCreInd].className = "drc success";
+                statusArr[oldStrArrCreInd].className = "status success";
+                statusArr[oldStrArrCreInd].innerHTML = "✔";
+                drcArr[oldStrArrCreInd].innerHTML = `${oldStrArrCreInd +1}级审批完成`;
+                console.log(drcArr[oldStrArrCreInd].innerHTML)
             } 
         }
       })
@@ -1853,6 +1858,10 @@ export default {
                                     this.dialogFormVisible3 = false;
                                     this.$router.push({name:this.$route.query.tag}); 
                                     this.assignee = null;
+                                    this.$nextTick(()=>{
+                                      console.log(111)
+                                      this.nextStep();
+                                    })
                                   } else if(res.data.errorCode == 0){
                                     this.$message({type: 'error', message:res.data.errorMessage }); 
                                   }
@@ -2537,7 +2546,8 @@ export default {
         return url;
     },
     selectChange(){
-      this.makeDocListEctype.yuanType.length==1?this.yuanTypeFlag=false:this.yuanTypeFlag=false;
+      this.makeDocListEctype.yuanType.length==1?this.yuanTypeFlag=true:this.yuanTypeFlag=false;
+      this.makeDocListEctype.zheType=this.makeDocListEctype.yuanType[0];//只有一个的时候默认为这个 8.26
       if(this.makeDocListEctype.yuanType.length){
         this.zheTypeChange();
       } else{ this.makeDocListEctype.zheNum = null; }
