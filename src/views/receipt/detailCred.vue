@@ -1567,9 +1567,12 @@ export default {
       if(this.$route.query.tag === 'credReview'){
         url = 'api/sics/basis/getPayRemitFromSicsByRemids'
       } else{ url = 'api/sics/basis/receiptSynchronize' }
+      let rmIds = "";
+        this.RMData.forEach(el => {rmIds += `${el.rmId},`;});
       this.$http.post(url, {
           actOperator: this.mustData.actOperator,
-          processId: this.row.processId
+          processId: this.row.processId,
+          rmIds:rmIds
         }).then(res => {
           if (res.status === 200) {
             this.RMData = res.data.remitDOlist;

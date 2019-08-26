@@ -1554,13 +1554,10 @@ export default {
       if(urlTag=='getPayRemitFromSicsByRemids'){
         url = 'api/sics/basis/getPayRemitFromSicsByRemids'
       } else{ url = 'api/sics/basis/getPayRemitFromSics' };
-      
       this.searchFlag2 = !this.searchFlag2;
       // if(this.RMData){
         let rmIds = '';
-        this.RMData.forEach(el=>{
-          rmIds += `${el.rmId},`
-        })
+        this.RMData.forEach(el=>{rmIds += `${el.rmId},`})
         this.$http.post(url,{actOperator:this.mustData.actOperator,rmIds:rmIds,processId:this.row.processId}).then(res =>{
           if(res.status == 200){
             this.refreshDetailData();
