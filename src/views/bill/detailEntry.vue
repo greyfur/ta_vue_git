@@ -154,14 +154,7 @@
             </p>
           </div>
           <div class="browseDoc">
-            <iframe
-              src="../../../static/Preview/index.html"
-              id="iframeId"
-              name="ifrmname"
-              ref="mapFrame"
-              style="width:100%;height:100%"
-              frameborder="0"
-            ></iframe>
+            <iframe src="../../../static/Preview/index.html" id="iframeId" name="ifrmname" ref="mapFrame" style="width:100%;height:100%" frameborder="0"></iframe>
           </div>
         </div>
       </el-col>
