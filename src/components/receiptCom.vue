@@ -34,7 +34,14 @@
               placeholder="选择日期"
             ></el-date-picker>
           </el-col>
-          <el-col :span="8" v-show="urlName === 'taskClaim'">
+         
+          <!-- <el-col :span="8">
+            <span class="slable">汇款人名称</span>
+            <el-input placeholder="请输入汇款人名称" v-model.trim="formLabelAlign.rmSettleCompanyName"></el-input>
+          </el-col> -->
+        </el-row>
+        <el-row :gutter="10" class="billRow">
+           <el-col :span="8" v-show="urlName === 'taskClaim'">
             <span class="slable">币制查询</span>
             <el-select clearable v-model="formLabelAlign.rmCurrency" placeholder="请选择">
                 <el-option
@@ -45,10 +52,6 @@
                 ></el-option>
             </el-select>
           </el-col>
-          <!-- <el-col :span="8">
-            <span class="slable">汇款人名称</span>
-            <el-input placeholder="请输入汇款人名称" v-model.trim="formLabelAlign.rmSettleCompanyName"></el-input>
-          </el-col> -->
         </el-row>
         <el-row :gutter="10" class="billRow">
           <el-col :span="16" v-show="processStatusList.length">
