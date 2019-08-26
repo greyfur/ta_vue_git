@@ -145,13 +145,25 @@
               <i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览
             </div>
             <p>
-              <el-button size="small" :disabled="isHover">
-                <i style="margin-right:8px;" class="iconfont iconGroup26"></i>
-                <a href="../../../static/Preview/index.html" target="_blank">全屏</a>
-              </el-button>
-              
-              <el-button class="rotate" size="mini" @click="rotateMua" style="">顺时针旋转</el-button>
-              <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button>
+              <el-dropdown placement="top-start">
+                <span class="el-dropdown-link"><i class="iconfont iconcaozuoliebiao"></i></span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>
+                    <!-- <el-button size="mini" :disabled="isHover">
+                    <i style="margin-right:8px;font-size:8px;" class="iconfont iconGroup26"></i> -->
+                   <a href="../../../static/Preview/index.html" target="_blank"><span>全屏</span></a>
+                  <!-- </el-button> -->
+                  </el-dropdown-item>
+                  <el-dropdown-item>
+                    <span @click="rotateMua">顺时针旋转</span>
+                    <!-- <el-button class="rotate" size="mini" @click="rotateMua" style="">顺时针旋转</el-button> -->
+                  </el-dropdown-item>
+                  <el-dropdown-item> 
+                    <span @click="rotateMuas">逆时针旋转</span>
+                    <!-- <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button> -->
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </p>
           </div>
           <div class="browseDoc">
