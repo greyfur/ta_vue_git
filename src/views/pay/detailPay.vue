@@ -917,7 +917,7 @@
             </div>
           </el-form-item>
         </el-form-item>
-        <el-form-item label="折币币制/金额" required>
+        <el-form-item label="折币币制/金额" required v-show="!yuanTypeFlag">
           <el-col :span="10">
             <el-form-item>
               <el-select filterable v-model="makeDocListEctype.zheType" placeholder="请选择" class="curAmount" @change="zheTypeChange">
@@ -957,6 +957,7 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        yuanTypeFlag:false,
         currentPage:1,
         blockRefresh:null,
         approvalName:null,
@@ -2519,6 +2520,7 @@ export default {
         return url;
     },
     selectChange(){
+      this.makeDocListEctype.yuanType.length==1?this.yuanTypeFlag=true:this.yuanTypeFlag=false;
       if(this.makeDocListEctype.yuanType.length){
         this.zheTypeChange();
       } else{ this.makeDocListEctype.zheNum = null; }
@@ -2566,31 +2568,18 @@ export default {
     },
     makeDoc(tag,name){    // 生成审批文档
       if(tag == 'a'){  // 是操作页面，弹窗，S0,
-          if(this.row.rmCurrency){
-            this.makeDocListEctype.yuanType = [];
-            this.makeDocListEctype.yuanType.push(this.row.rmCurrency);
-            this.makeDocListEctype.zheType = this.row.rmCurrency;
-          }
-          if(this.row.rmAmount){ 
-            this.makeDocListEctype.yuanNum = [];
-            this.makeDocListEctype.yuanNum.push(this.row.rmAmount);
-          }
-          console.log(this.makeDocListEctype.yuanType,'this.makeDocListEctype.yuanType');
-          console.log(this.makeDocListEctype.yuanNum,'this.makeDocListEctype.yuanNum');
-          this.makeDocListEctype.cedentModel = [];
-          // this.$http.post('api/pay/teskClaim/list',{
-          //   curOperator:this.$store.state.userName,
-          //   processId:this.row.processId,
-          //   pageNumber:1, 
-          //   pageSize:20,
-          //   processType:'付款',
-          //   processStatus:'待处理'
-          //   }).then(res =>{
-          //   if(res.status === 200 && res.data.rows){
-          //   //   此处填写生成审批文档 回显
-          //   }
-          // })
-       
+        if(this.row.rmCurrency){
+          this.makeDocListEctype.yuanType = [];
+          this.makeDocListEctype.yuanType.push(this.row.rmCurrency);
+          this.makeDocListEctype.zheType = this.row.rmCurrency;
+        }
+        if(this.row.rmAmount){ 
+          this.makeDocListEctype.yuanNum = [];
+          this.makeDocListEctype.yuanNum.push(this.row.rmAmount);
+        }
+        console.log(this.makeDocListEctype.yuanType,'this.makeDocListEctype.yuanType');
+        console.log(this.makeDocListEctype.yuanNum,'this.makeDocListEctype.yuanNum');
+        this.makeDocListEctype.cedentModel = [];
         this.dialogFormVisible2 = true;
       } else {
         if (tag == 2) {
