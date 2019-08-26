@@ -1285,6 +1285,7 @@ export default {
   updated(){
     //进度条
     if(this.$route.query.tag === 'payVerification'){
+      console.log(11111)
       this.nextStep();
     }
   },
@@ -2520,7 +2521,7 @@ export default {
         return url;
     },
     selectChange(){
-      this.makeDocListEctype.yuanType.length==1?this.yuanTypeFlag=true:this.yuanTypeFlag=false;
+      this.makeDocListEctype.yuanType.length==1?this.yuanTypeFlag=false:this.yuanTypeFlag=false;
       if(this.makeDocListEctype.yuanType.length){
         this.zheTypeChange();
       } else{ this.makeDocListEctype.zheNum = null; }
@@ -2614,28 +2615,24 @@ export default {
             this.makeDocList.primitiveAmount = arr.join(';');
           }
           if((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)&&(this.makeDocListEctype.cedentModel[1]!=undefined&&this.makeDocListEctype.cedentModel[1]!==null)){
-             console.log(666)
             if(this.cedentList[this.makeDocListEctype.cedentModel[0]].codecode==this.cedentList[this.makeDocListEctype.cedentModel[1]].codecode){
               this.$message.error('分公司不能一样');
               return;
             }
           }
            if((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)&&(this.makeDocListEctype.cedentModel[2]!=undefined&&this.makeDocListEctype.cedentModel[2]!==null)){
-             console.log(777)
             if(this.cedentList[this.makeDocListEctype.cedentModel[1]].codecode==this.cedentList[this.makeDocListEctype.cedentModel[2]].codecode){
               this.$message.error('分公司不能一样');
               return;
             }
           }
            if((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)&&(this.makeDocListEctype.cedentModel[2]!=undefined&&this.makeDocListEctype.cedentModel[2]!==null)){
-             console.log(888)
             if(this.cedentList[this.makeDocListEctype.cedentModel[0]].codecode==this.cedentList[this.makeDocListEctype.cedentModel[2]].codecode){
               this.$message.error('分公司不能一样');
               return;
             }
           }
            if((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)&&(this.makeDocListEctype.cedentModel[1]!=undefined&&this.makeDocListEctype.cedentModel[1]!==null)&&(this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)){
-             console.log(999)
             if(this.cedentList[this.makeDocListEctype.cedentModel[0]].codecode==this.cedentList[this.makeDocListEctype.cedentModel[1]].codecode||this.cedentList[this.makeDocListEctype.cedentModel[0]].codecode==this.cedentList[this.makeDocListEctype.cedentModel[2]].codecode||this.cedentList[this.makeDocListEctype.cedentModel[2]].codecode==this.cedentList[this.makeDocListEctype.cedentModel[1]].codecode){
               this.$message.error('分公司不能一样');
               return;

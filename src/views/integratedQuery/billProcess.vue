@@ -106,7 +106,7 @@
       <!-- <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button> -->
     </div> 
     <el-table :header-row-class-name="StableClass" :data="tableData" border style="width: 100%"  :height="changeClientHight">
-      <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
+      <el-table-column prop="createdAt" label="创建时间" width="160" align="center"></el-table-column>
       <el-table-column label="流程编号" width="130" align="center">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName !== 'sortOperation'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
