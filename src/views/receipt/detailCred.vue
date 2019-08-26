@@ -11,9 +11,9 @@
       <el-button type="primary" plain @click="getTaxInfo">增值税信息获取</el-button>
       <el-button type="primary" plain @click="submite(6,'流程结束')">流程结束</el-button>
     </div>
-    <!-- 操作 -->
+    <!-- 操作 -->       <!-- 8.26 上传附件和附件合并，只有操作有上传功能 --> 
     <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'credOperation'">
-      <el-button type="primary" :disabled="czState" plain @click="mailSend(1,'上传附件')">上传附件</el-button>
+      <!-- <el-button type="primary" :disabled="czState" plain @click="mailSend(1,'上传附件')">上传附件</el-button> -->
       <el-button type="primary" :disabled="czState" plain @click="mailSend(2,'附件')">附件</el-button>
       <el-button type="primary" :disabled="czState" plain @click="submite(2,'指派','操作','收款录入')">指派</el-button>
       <el-button type="primary" :disabled="czState" plain @click="submite(3,'置废')">置废</el-button>
@@ -283,7 +283,7 @@
                         effect="dark"
                         :content="scope.row.docName"
                         placement="top-start">
-                        <span :class="{'smallHand':!scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                        <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                       </el-tooltip>
                     </template>
                   </el-table-column>
@@ -884,31 +884,17 @@
     </el-dialog>
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal">
       <el-form label-width="120px">
-        <el-form-item label="选择附件" v-show="title ==='上传附件'">
-          <el-upload
-            class="upload-demo"
-            action=""
-            :before-upload="beforeAvatarUpload"
-            :auto-upload="true"
-            :http-request="upload"
-            :file-list="fileList"
-          >
+        <el-form-item label="选择附件" v-show="title ==='附件' && $route.query.tag === 'credOperation'">
+          <el-upload class="upload-demo" action="" :before-upload="beforeAvatarUpload" :auto-upload="true" :http-request="upload" :file-list="fileList">
             <el-button plain type="primary">上传</el-button>
           </el-upload>
         </el-form-item>
       </el-form>
-      <el-table
-        height="300"
-        :data="fileData"
-        style="width: 100%"
-        class="document"
-        v-show="title==='附件'"
-        :header-row-class-name="StableClass"
-      >
+      <el-table height="300" :data="fileData" style="width: 100%" class="document" v-show="title==='附件'" :header-row-class-name="StableClass">
         <el-table-column label="文件名" align="center">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-              <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+            <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
+              <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -1392,9 +1378,9 @@ export default {
     docView(row) {
       // this.dialogFormVisibleA = true;
       if (row) {
-        let arrr = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'];
+        let arrr = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
-        if(row.suffix && this.suffixFlag){ return false; }
+        if(row.suffix && !this.suffixFlag){ return false; }
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
             document.getElementById("iframeId").contentWindow.postMessage(
@@ -1543,7 +1529,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                    el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
                 this.SgData = arr5;
@@ -1556,7 +1542,7 @@ export default {
         .then(res => {
           if (res.status === 200 && res.data) {
             this.$message({ message: "生成核销报告成功", type: "success" });
-            this.mailSend(2);
+            this.mailSend();
           }
         });
     },
@@ -1578,8 +1564,7 @@ export default {
       this.$http.post("api/sics/basis/receiptSynchronize", {
           actOperator: this.mustData.actOperator,
           processId: this.row.processId
-        })
-        .then(res => {
+        }).then(res => {
           if (res.status === 200) {
             this.RMData = res.data.remitDOlist;
             this.WSData = res.data.workSheetDOlsit;
@@ -1590,7 +1575,7 @@ export default {
                 if(el.docName){
                   let suffix = el.docName.split('.');
                   el['suffix'] = suffix[suffix.length-1];
-                  el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                  el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
                 }
               })
               this.SgData = arr5;
@@ -1625,7 +1610,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['eml','JPG','jpg','png','PNG','JPEG','jpeg','msg'].some(el=>{ return el==suffix[suffix.length-1]; })
+                    el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }  
                 })
                 this.SgData = arr5;
@@ -1954,12 +1939,13 @@ export default {
               }
             })
           } else if (this.$route.query.tag === "credReview") {
+            // 8.26 wtd 说复核通过再加上校验，核销流程提交去掉校验
             // 8.25 改为不校验getReceiptReviewMessage
-            // this.$http.post("api/sics/basis/getReceiptReviewMessage", {
-            //     modifiedBy: this.$store.state.userName,
-            //     processId: this.row.processId
-            //   }).then(res => {
-            //     if (res.status === 200 && res.data.code == 0) {
+            this.$http.post("api/sics/basis/getReceiptReviewMessage", {
+                modifiedBy: this.$store.state.userName,
+                processId: this.row.processId
+              }).then(res => {
+                if (res.status === 200 && res.data.code == 0) {
                   // 7.15 复核通过改为不选人
                   this.$confirm("确认复核通过？", "提示", {
                     confirmButtonText: "确定",
@@ -1986,28 +1972,24 @@ export default {
                         }
                       });
                         });
-                      // } else if (res.data.code == 1 && res.data.msg) {
-                      //   this.$message.error(res.data.msg);
-                      // }
-              // });
+                      } else if (res.data.code == 1 && res.data.msg) {
+                        this.$message.error(res.data.msg);
+                      }
+              });
             } else if (this.$route.query.tag === "credVerification" || this.$route.query.tag === "viewInvalidate") {
               this.$confirm("是否核销通过？", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 type: "warning"
               }).then(() => {
-                this.$http
-                  .post(
-                    "api/receipt/activitiForReceipt/commonActivitiForReceipt",
+                this.$http.post("api/receipt/activitiForReceipt/commonActivitiForReceipt",
                     {
                       processId: this.row.processId,
                       procInstId: this.row.processInstId,
                       assignee: this.$store.state.userName,
                       type: this.$route.query.name,
                       actOperator: this.$store.state.userName
-                    }
-                  )
-                  .then(res => {
+                    }).then(res => {
                     if (res.status === 200 && res.data.errorCode == 1) {
                       if (res.data.errorMessage) {
                         this.$message({
@@ -2034,9 +2016,7 @@ export default {
         case 2: // 指派
           this.getName(gname);
           this.specialName = specialName;
-          specialName == "复核"
-            ? (this.dialogFormVisibleFHRWZF = true)
-            : (this.dialogFormVisible3 = true);
+          specialName == "复核"? (this.dialogFormVisibleFHRWZF = true):(this.dialogFormVisible3 = true);
           break;
         case 3: // 置废
           // this.$confirm("是否置废？", "提示", {
@@ -2080,8 +2060,7 @@ export default {
             cancelButtonText: "取消",
             type: "warning"
           }).then(() => {
-            this.$http
-              .post("api/receipt/activitiForReceipt/commonActivitiForReceipt", {
+            this.$http.post("api/receipt/activitiForReceipt/commonActivitiForReceipt", {
                 processId: this.row.processId,
                 procInstId: this.row.processInstId,
                 assignee: this.$store.state.userName,
@@ -2128,7 +2107,9 @@ export default {
       }
     },
     onVerification(type1){
-      this.$confirm("是否恢复至操作？", "提示", {
+      let tip = '';
+      type1=='UNDELAY'?tip='是否恢复至操作?':tip='是否暂挂待销?'
+      this.$confirm(tip, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -2324,8 +2305,8 @@ export default {
           this.fileList = [];
           this.file = [];
           if (res.status === 200 && res.data.errorCode == 1) {
-            this.dialogFormVisible2 = false;
             this.$message({ message: "上传成功", type: "success" });
+            this.mailSend();
           } else if (res.data.errorCode && res.data.errorCode == 0) {
             this.$message.error(res.data.errorMessage);
           }
@@ -2336,21 +2317,27 @@ export default {
         this.title = name;
         this.dialogFormVisible2 = true;
       }
-      if (tag == 2) {
+      // if (tag == 2) {
         //附件查看改为附件 hyd   1为附件上传
-        this.$http
-          .post("api/worksheet/sortOperation/listDocument", {
+        this.$http.post("api/worksheet/sortOperation/listDocument", {
             actOperator: this.$store.state.userName,
             processId: this.row.processId,
             pageNumber: 1,
             pageSize: 100
-          })
-          .then(res => {
+          }).then(res => {
             if (res.status === 200) {
-              this.fileData = res.data.rows;
+              let arr5 = res.data.rows;
+                arr5.forEach(el=>{
+                  if(el.docName){
+                    let suffix = el.docName.split('.');
+                    el['suffix'] = suffix[suffix.length-1];
+                    el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
+                  }
+                })
+              this.fileData = arr5;
             }
           });
-      }
+      // }
     },
     detailRemove(row) {
       this.$confirm("是否删除？", "提示", {
