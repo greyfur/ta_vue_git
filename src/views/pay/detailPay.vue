@@ -99,7 +99,23 @@
             <li v-for="(item,i) in listData" :key="i" class="detail-item">
               <span class="detail-name">{{item.a}} : </span><span class="detail-content" v-if="typeof item.b=='number'">{{ Number(item.b).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
               <span class="detail-content" v-else-if="item.b=='null-null'"></span>
-             <span class="detail-content" v-else>{{item.b}}</span>
+              <span class="detail-content abbreviate" v-else-if="item.a==='结付公司'" style="width:200px !important;">
+                  <!-- :title="item.b"标题 -->
+                <!-- <el-popover
+                  placement="top-start"
+                  width="288"
+                  trigger="hover"
+                  :content="item.b">
+                  <el-button slot="reference">{{item.b}}</el-button>
+                </el-popover> -->
+                  <el-tooltip class="item" effect="dark" :content="item.b" placement="top-start">
+                    <span>{{item.b}}</span>
+                  </el-tooltip>
+                  <!-- <el-tooltip content="Top center" placement="top">
+                    <el-button>Dark</el-button>
+                  </el-tooltip> -->
+              </span>
+              <span class="detail-content" v-else>{{item.b}}</span>
             </li>
           </ul>
         </div>
