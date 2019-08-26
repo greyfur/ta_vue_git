@@ -1002,7 +1002,7 @@ export default {
         {
           a: "结付公司",
           b: "",
-          c: "codeName",
+          c: "checkoutPayment",
           d: "rmSettleCompanyName",
           e: "rmSettleCompanyCode",
         },
