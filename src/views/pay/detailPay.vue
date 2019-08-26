@@ -100,7 +100,7 @@
             </li>
           </ul>
         </div>
-        <div :class="searchFlag2===true?'searchNew':''"  style="border-bottom:none;margin-top:16px;">
+        <div :class="searchFlag2===true?'searchNew':''"  :style="$route.query.tag==='payVerification'?'border-bottom:none;margin-top:0;':'border-bottom:none;margin-top:16px;'">
           <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
             <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification' && row.processStatus!='已置废' && row.processStatus!='已悬停'">
@@ -139,7 +139,7 @@
           </el-pagination>
         </div>
       </el-col>
-      <el-col :span="13">
+      <el-col :span="13" style="height:687px;">
         <div class="right">
           <div class="titleSearch detailSearch">
             <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览</div>
