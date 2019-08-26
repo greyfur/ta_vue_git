@@ -1306,7 +1306,7 @@ export default {
         this.rmWriteBack();
       }
     }, 1000);
-    if (this.$route.query.tag == "credVerification" || this.$route.query.tag == "viewInvalidate") {
+    if (this.$route.query.tag == "credVerification" || this.$route.query.tag == "viewInvalidate" || this.$route.query.tag == "collectiongEnd") {
       this.dataBaseSG();
     } else {
       this.queryRM();
@@ -1607,9 +1607,7 @@ export default {
       this.searchFlag2 = !this.searchFlag2;
       if (this.RMData && this.RMData.length) {
         let rmIds = "";
-        this.RMData.forEach(el => {
-          rmIds += `${el.rmId},`;
-        });
+        this.RMData.forEach(el => {rmIds += `${el.rmId},`;});
         this.$http.post(url, {
             actOperator: this.mustData.actOperator,
             processId: this.row.processId,
