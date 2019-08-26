@@ -43,7 +43,7 @@
         <el-row :gutter="10" class="billRow">
            <el-col :span="8" v-show="urlName === 'taskClaim'">
             <span class="slable">币制查询</span>
-            <el-select clearable v-model="formLabelAlign.rmCurrency" placeholder="请选择">
+            <el-select clearable filterable v-model="formLabelAlign.rmCurrency" placeholder="请选择">
                 <el-option
                   v-for="item in rmCurrencyList"
                   :key="item.alpha"
@@ -195,7 +195,7 @@
       <el-table-column prop="processStatus" width="95" label="流程状态" align="center"></el-table-column>
       <el-table-column label="Base Company" prop="baseCompany" width="130" align="center"></el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin" align="center"></el-table-column>
-      <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
+      <el-table-column prop="createdAt" label="创建时间" width="160" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80" align="center">
         <template slot-scope="scope">
           <el-dropdown placement="top-start">
@@ -323,7 +323,7 @@
       </el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin" align="center"></el-table-column>
       <el-table-column label="Base Company" width="130" prop="baseCompany" align="center"></el-table-column>
-      <el-table-column prop="createdAt" label="创建时间" width="100" align="center"></el-table-column>
+      <el-table-column prop="createdAt" label="创建时间" width="160" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100" align="center">
         <template slot-scope="scope">
           <!-- <el-dropdown>

@@ -28,8 +28,8 @@ export default {
         this.processStatus += `待${this.emnuRole[el]}级审批,`
       }
     })
-    console.log(sessionStorage.getItem('roleIdList'));
-    console.log(this.processStatus);
+    // console.log(sessionStorage.getItem('roleIdList'));
+    // console.log(this.processStatus);
   },
 }
 </script>
