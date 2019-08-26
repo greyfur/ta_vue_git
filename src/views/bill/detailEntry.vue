@@ -145,13 +145,12 @@
               <i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览
             </div>
             <p>
+              <el-button class="rotate" size="mini" @click="rotateMua" style="">顺时针旋转</el-button>
+              <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button>
               <el-button size="small" :disabled="isHover">
                 <i style="margin-right:8px;" class="iconfont iconGroup26"></i>
                 <a href="../../../static/Preview/index.html" target="_blank">全屏</a>
               </el-button>
-              
-              <el-button class="rotate" size="mini" @click="rotateMua" style="">顺时针旋转</el-button>
-              <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button>
             </p>
           </div>
           <div class="browseDoc">

@@ -2107,7 +2107,9 @@ export default {
       }
     },
     onVerification(type1){
-      this.$confirm("是否恢复至操作？", "提示", {
+      let tip = '';
+      type1=='UNDELAY'?tip='是否恢复至操作?':tip='是否暂挂待销?'
+      this.$confirm(tip, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
