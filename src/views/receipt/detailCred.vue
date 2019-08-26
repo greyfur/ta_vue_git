@@ -67,11 +67,11 @@
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag2 = !searchFlag2">
           <div><i style="margin-right:8px;" :class="searchFlag2===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>支票信息</div>
-          <p>
+          <!-- <p>    8.26 改
             <el-button size="mini" @click.stop="getSg" v-if="$route.query.tag !== 'credVerification' && $route.query.tag !== 'credReview' && $route.query.tag !== 'collectiongEnd'">
               <i style="margin-right:8px;" class="iconfont iconGroup77"></i>支票回写
             </el-button>
-          </p>
+          </p> -->
         </div>
         <el-collapse-transition>
           <div v-show="searchFlag2">
@@ -1563,7 +1563,11 @@ export default {
     },
     tbState() {
        // 8.26 wtd 原来三个页面 都听不状态全部一样，现在3个同步状态全部改为receiptSynchronize
-      this.$http.post("api/sics/basis/receiptSynchronize", {
+      let url = '';
+      if(this.$route.query.tag === 'credReview'){
+        url = 'api/sics/basis/getPayRemitFromSicsByRemids'
+      } else{ url = 'api/sics/basis/receiptSynchronize' }
+      this.$http.post(url, {
           actOperator: this.mustData.actOperator,
           processId: this.row.processId
         }).then(res => {
@@ -1586,10 +1590,10 @@ export default {
         });
     },
     getSg(tag) {
-      // 8.26 wtd 原来三个页面 都听不状态全部一样，现在3个同步状态全部改为receiptSynchronize
-      // 8.25 wtd改    完结、复核
+      // 8.26 wtd 原来三个页面 都听不状态全部一样，现在把这个废弃掉
+      // 8.25 wtd改  复核调新的接口
       let url = '';
-      if(tag && tag=='收款复核'){
+      if(this.$route.query.tag === 'credReview'){
         url = 'api/sics/basis/getPayRemitFromSicsByRemids'
       } else{ url = 'api/sics/basis/getPayRemitFromSics' }
       this.searchFlag2 = !this.searchFlag2;
