@@ -67,11 +67,13 @@
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag2 = !searchFlag2">
           <div><i style="margin-right:8px;" :class="searchFlag2===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>支票信息</div>
-          <!-- <p>    8.26 改
-            <el-button size="mini" @click.stop="getSg" v-if="$route.query.tag !== 'credVerification' && $route.query.tag !== 'credReview' && $route.query.tag !== 'collectiongEnd'">
+          <!-- 8.27 改 -->
+          <p>    
+            <!-- <el-button size="mini" @click.stop="getSg" v-if="$route.query.tag !== 'credVerification' && $route.query.tag !== 'credReview' && $route.query.tag !== 'collectiongEnd'"> -->
+            <el-button size="mini" @click.stop="getSg" v-if="$route.query.tag == 'credOperation'">
               <i style="margin-right:8px;" class="iconfont iconGroup77"></i>支票回写
             </el-button>
-          </p> -->
+          </p>
         </div>
         <el-collapse-transition>
           <div v-show="searchFlag2">
@@ -507,7 +509,7 @@
           <p><i class="iconfont iconGroup26"></i></p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag4" :height="maxHeight" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
+          <el-table v-show="searchFlag4" height="400" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column label="账单号" align="center" width="160">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">

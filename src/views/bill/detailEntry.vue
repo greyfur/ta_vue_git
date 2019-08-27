@@ -189,7 +189,7 @@
           :data="SICSData"
           border
           width="100%"
-          :height="maxHeight"
+          height="400"
           :header-row-class-name="StableClass">
           <el-table-column type="index" width="50" align="center"></el-table-column>
           <el-table-column label="账单号" width="160" align="center">

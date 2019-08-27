@@ -511,7 +511,7 @@
           <p><i class="iconfont iconGroup26"></i></p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag4" :height="maxHeight" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
+          <el-table v-show="searchFlag4" height="400" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column label="账单号" align="center">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
@@ -526,8 +526,7 @@
                   class="item"
                   effect="dark"
                   :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
-                  placement="top-start"
-                >
+                  placement="top-start">
                   <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
                 </el-tooltip>
               </template>
@@ -682,7 +681,7 @@
         </el-form-item>
         <el-form-item label="选择代理人" v-show="title==='审批通过' && proxyFlag">
           <el-select filterable v-model="proxyMan"  placeholder="请选择">
-            <el-option v-for="(item,i) in TJRoptions" :key="item.userId" :label="item.name" :value="i" :disabled="item.username == $store.state.userName"></el-option>
+            <el-option v-for="(item,i) in proxyList" :key="item.userId" :label="item.name" :value="i" :disabled="item.username == $store.state.userName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="title === '指派'?'选择指派人':'选择处理人'" v-show="title === '指派' || putIn=='b'">
@@ -973,6 +972,7 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        proxyList:[],
         // hydNum:0,
         yuanTypeFlag:false,
         currentPage:1,
@@ -1341,16 +1341,20 @@ export default {
             this.proxyFlag = true;
             this.title = '审批通过';
             this.flag = 5;
-            console.log(this.row.approvalLevel,'this.row.approvalLevel,最后节点');
-            this.getName('付款录入');
+            // 8.27 代理审批人—平级，审批人—entryOperator
+            // 获取代理人
+            this.getName(this.emnuGetName[this.row.approvalLevel-1],'代理');
             this.dialogFormVisible3 = true;
-          } else{
+          } else{  // 非最后节点
             this.title = '审批通过';
             this.preApprove = false;
             this.proxyFlag = true;
             this.flag = 5;
-            console.log(this.row.approvalLevel,'this.row.approvalLevel,非最后节点');
+            // 8.27 代理审批人—平级，审批人—需要查
+            // 获取审批人
             this.getName(this.emnuGetName[this.row.approvalLevel]);
+            // 获取代理人
+            this.getName(this.emnuGetName[this.row.approvalLevel-1],'代理');
             this.dialogFormVisible3 = true;
             
           }
@@ -1596,10 +1600,12 @@ export default {
         }
       })
     },
-    getName(name) {
+    getName(name,tag) {
       this.$http.post('api/activiti/getAssigneeName',{roleName:name}).then(res =>{
         if(res.status === 200){
-          this.TJRoptions = res.data;
+          if(tag && tag=='代理'){
+            this.proxyList = res.data;
+          } else{ this.TJRoptions = res.data; }
         }
       })
     },
@@ -1866,8 +1872,7 @@ export default {
                                 type:this.$route.query.name,
                                 actOperator:this.$store.state.userName,
                                 approvalLevel:this.row.approvalLevel,
-                                })
-                              .then(res =>{
+                                }).then(res =>{
                                 if(res.status === 200 && res.data.errorCode == 1){
                                   // this.$message({type: 'success', message:res.data.errorMessage });
                                   this.dialogFormVisible3 = false;
