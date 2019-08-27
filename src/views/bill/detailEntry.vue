@@ -1507,9 +1507,7 @@ export default {
             this.$message.error("请填写悬停原因");
             return false;
           }
-          this.$http
-            .post(
-              "api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
+          this.$http.post("api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
               {
                 processId: this.chooseRow.processId,
                 procInstId: this.chooseRow.processInstId,
@@ -1517,9 +1515,7 @@ export default {
                 pendingReason: this.pendingReason,
                 actOperator: this.chooseRow.curOperator,
                 type: "PENDING"
-              }
-            )
-            .then(res => {
+              }).then(res => {
               if (res.status === 200 && res.data.errorCode == 1) {
                 this.isHover = !this.isHover;
                 this.dialogFormVisible5 = false;

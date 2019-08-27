@@ -19,7 +19,7 @@
           <el-button size="small" :disabled="hxState" @click="makeReport" plain>生成核销报告</el-button>
           <el-button size="small" :disabled="hxState" @click="getTaxInfo" plain>增值税信息获取</el-button>
           <el-button size="small" :disabled="hxState" @click="getSGSg" plain>同步状态</el-button>
-          <el-button size="small" :type="hxState?'info':''" @click="gangUp('核销')" plain>{{!hxState?'挂起':'悬停'}}</el-button>
+          <el-button size="small" :type="hxState?'info':''" @click="gangUp('核销')" plain>{{!hxState?'悬停':'已悬停'}}</el-button>
           <el-button size="small" :disabled="hxState" plain @click="submite(1,'流程提交')">流程提交</el-button>
         </div>
         <!-- partial -->
@@ -41,7 +41,7 @@
           <el-button size="small" @click="getSGSg" plain>同步状态</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeDoc('a')">生成审批文档</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(3,'置废','操作')">置废</el-button>
-          <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'挂起':'悬停'}}</el-button>
+          <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'悬停':'已悬停'}}</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(2,'指派','操作')">指派</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(1,'流程提交',0,'付款一级审批')">流程提交</el-button>
         </div> 
@@ -1658,25 +1658,6 @@ export default {
           this.dialogFormVisible3 = true;
           this.flag = 13;
           this.xtname = name;
-          // this.$confirm('是否状态挂起？', '提示', {
-          //   confirmButtonText: '确定',
-          //   cancelButtonText: '取消',
-          //   type: 'warning'
-          //   }).then(() => {
-          //     this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-          //     ,{processId:this.row.processId, 
-          //     procInstId:this.row.processInstId, 
-          //     assignee:this.$store.state.userName, 
-          //     type:'PENDING',
-          //     actOperator:this.$store.state.userName})
-          //     .then(res =>{
-          //     if(res.status === 200 && res.data.errorCode == 1){
-          //       this.czState = !this.czState;
-          //     } else if(res.data.errorMessage){
-          //       this.$message.error(res.data.errorMessage);
-          //     }
-          //   })
-          // })
         } else{  // 恢复
             this.$confirm('是否恢复？', '提示', {
             confirmButtonText: '确定',
@@ -1705,26 +1686,6 @@ export default {
           this.dialogFormVisible3 = true;
           this.flag = 13;
           this.xtname = name;
-          // this.$confirm('是否状态挂起？', '提示', {
-          //   confirmButtonText: '确定',
-          //   cancelButtonText: '取消',
-          //   type: 'warning'
-          //   }).then(() => {
-          //     this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-          //     ,{processId:this.row.processId, 
-          //     procInstId:this.row.processInstId, 
-          //     assignee:this.$store.state.userName, 
-          //     type:'PENDING',
-          //     hasRecheckFlag:'1',
-          //     actOperator:this.$store.state.userName})
-          //     .then(res =>{
-          //     if(res.status === 200 && res.data.errorCode == 1){
-          //       this.hxState = !this.hxState;
-          //     } else if(res.data.errorMessage){
-          //       this.$message.error(res.data.errorMessage);
-          //     }
-          //   })
-          // })
         } else{  // 恢复
             this.$confirm('是否恢复？', '提示', {
             confirmButtonText: '确定',

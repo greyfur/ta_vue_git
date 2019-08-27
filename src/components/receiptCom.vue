@@ -30,11 +30,6 @@
               placeholder="选择日期"
             ></el-date-picker>
           </el-col>
-         
-          <!-- <el-col :span="8">
-            <span class="slable">汇款人名称</span>
-            <el-input placeholder="请输入汇款人名称" v-model.trim="formLabelAlign.rmSettleCompanyName"></el-input>
-          </el-col> -->
         </el-row>
         <el-row :gutter="10" class="billRow">
            <el-col :span="8" v-show="urlName === 'taskClaim'">
@@ -61,16 +56,6 @@
             <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
           </el-col>
         </el-row>
-        <!-- <el-row>
-          <el-col :span="24">
-            <el-button type="primary" plain @click="handleClick(4)">
-              <i class="iconfont iconGroup42"></i>查询
-            </el-button>
-            <el-button type="primary" plain @click="reset">
-              <i class="iconfont iconGroup39"></i>重置
-            </el-button>
-          </el-col>
-        </el-row> -->
       </div>
       </el-collapse-transition>
     </div>
