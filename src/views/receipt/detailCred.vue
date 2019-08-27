@@ -177,7 +177,7 @@
               <el-table-column prop="valueDate" label="起息日" width="100" align="center"></el-table-column>
               <el-table-column prop="dueDate" label="到期日" width="100" align="center"></el-table-column>
               <el-table-column width="260" label="结付公司" align="center">
-                  <template slot-scope="scope">
+                <template slot-scope="scope">
                   <el-tooltip class="item" effect="dark"  :content="scope.row.partnerName&&scope.row.partnerCode?scope.row.partnerCode+'-'+scope.row.partnerName:''" placement="top-start">
                     <span class="abbreviate" v-if="scope.row.partnerName&&scope.row.partnerCode">{{scope.row.partnerCode}}-{{scope.row.partnerName}}</span>
                     <span class="abbreviate" v-if="!scope.row.partnerName&&!scope.row.partnerCode"></span>
@@ -1567,9 +1567,12 @@ export default {
       if(this.$route.query.tag === 'credReview'){
         url = 'api/sics/basis/getPayRemitFromSicsByRemids'
       } else{ url = 'api/sics/basis/receiptSynchronize' }
+      let rmIds = "";
+        this.RMData.forEach(el => {rmIds += `${el.rmId},`;});
       this.$http.post(url, {
           actOperator: this.mustData.actOperator,
-          processId: this.row.processId
+          processId: this.row.processId,
+          rmIds:rmIds
         }).then(res => {
           if (res.status === 200) {
             this.RMData = res.data.remitDOlist;
