@@ -935,7 +935,7 @@
           </el-form-item>
         </el-form-item>
         <!-- <el-form-item label="折币币制/金额" required v-show="!yuanTypeFlag"> -->
-        <el-form-item label="折币币制/金额" >
+        <el-form-item label="折币币制/金额" required>
           <el-col :span="10">
             <el-form-item>
               <el-select filterable v-model="makeDocListEctype.zheType" placeholder="请选择" class="curAmount" @change="zheTypeChange">
