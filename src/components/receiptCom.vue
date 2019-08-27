@@ -51,7 +51,9 @@
               <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-col>
-          <el-col :span="8">
+        </el-row>
+        <el-row :gutter="10" class="billRow">
+          <el-col :span="24">
             <el-button type="primary" plain @click="handleClick(4)"><i class="iconfont iconGroup42"></i>查询</el-button>
             <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
           </el-col>
@@ -325,18 +327,10 @@
             </span>
             <el-dropdown-menu slot="dropdown">
                <el-dropdown-item>
-                <span
-                  v-show="pendingFlag || urlName === 'financialCreat'"
-                  @click.stop="handleClick(6,scope.row)"
-                  class="blueColor"
-                >编辑</span>
+                <span v-show="scope.row.pendingFlag || urlName === 'financialCreat'" @click.stop="handleClick(6,scope.row)" class="blueColor">编辑</span>
               </el-dropdown-item>
               <el-dropdown-item>
-                <span
-                  v-show="urlName === 'financialCreat'"
-                  @click.stop="handleClick(7,scope.row)"
-                  class="blueColor"
-                >删除</span>
+                <span v-show="urlName === 'financialCreat'" @click.stop="handleClick(7,scope.row)" class="blueColor">删除</span>
               </el-dropdown-item>
               <el-dropdown-item>
                 <span v-show="urlName !== 'financialCreat'" @click.stop="handleClick(11,scope.row)" class="blueColor">踪迹</span>
@@ -886,9 +880,10 @@ export default {
       this.processStatusList = ["待处理", "已悬停"];
     } else if (this.urlName === "credVerification") {
       this.processStatusList = ["待核销", "已悬停"];
-    } else if (this.urlName === "collectiongEnd") {
-      this.processStatusList = ["已完结", "REVERSED"];
-    }
+    } 
+    // else if (this.urlName === "collectiongEnd") {
+    //   this.processStatusList = ["已完结", "REVERSED"];
+    // }
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
   },
   mounted() {
@@ -959,16 +954,15 @@ export default {
               el['checkoutPayment'] = payStr;
             })
           }
-          this.tableData = res.data.rows;
           this.mustData.total = res.data.total;
           if (res.data && res.data.rows && res.data.rows.length) {
-            if (
-              res.data.rows[0].processStatus === "待处理" &&
-              this.urlName === "credOperation"
-            ) {
-              this.pendingFlag = true;
+            if(this.urlName === 'credOperation' || this.urlName === 'credVerification'){
+              res.data.rows.forEach(el=>{
+                el.processStatus === '待处理'?el['pendingFlag']=true:el['pendingFlag']=false;
+              })
             }
           }
+          this.tableData = res.data.rows;
           if (tag == 0) {
             this.$message({ type: "success", message: "刷新成功!" });
           }

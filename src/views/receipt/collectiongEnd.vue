@@ -1,6 +1,6 @@
 <template>
   <div class="collectiongEnd">
-    <receipt-com goDetailName='collectiongEnd' processStatusCom='已完结,REVERSED' urlName='collectiongEnd'></receipt-com>
+    <receipt-com goDetailName='collectiongEnd' processStatusCom='已完结' urlName='collectiongEnd'></receipt-com>
   </div>
 </template>
 <script>

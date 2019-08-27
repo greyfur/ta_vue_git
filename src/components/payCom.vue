@@ -5,27 +5,27 @@
       <el-collapse-transition> 
       <div v-show="searchFlag">
         <el-row :gutter="10" class="billRow" class-name="transition-box">
-        <el-col :span="8">
-          <span class="slable">流程编号</span>
-          <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processId"></el-input>
-        </el-col>
-        <el-col :span="8">
-          <span class="slable">结付公司</span>
-            <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
-              <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
-                <span style="float:left">{{ item.codecode }}</span>
-                <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-              </el-option>
+          <el-col :span="8">
+            <span class="slable">流程编号</span>
+            <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processId"></el-input>
+          </el-col>
+          <el-col :span="8">
+            <span class="slable">结付公司</span>
+              <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
+                <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
+                  <span style="float:left">{{ item.codecode }}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+                </el-option>
+              </el-select>
+          </el-col>
+          <el-col :span="8" v-show="processStatusList.length">
+            <span class="slable">流程状态</span>
+            <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择流程状态">
+              <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-        </el-col>
-        <el-col :span="8" v-show="processStatusList.length">
-          <span class="slable">流程状态</span>
-          <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择流程状态">
-            <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-col>
+          </el-col>
         </el-row>
-        <el-row><el-col :span="24">
+        <el-row class="billRow"><el-col :span="24">
           <el-button type="primary" plain @click="handleClick(4)"><i class="iconfont iconGroup42"></i>查询</el-button>
           <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
         </el-col></el-row>
@@ -645,8 +645,7 @@ export default {
           this.tableData = res.data.rows;
           this.mustData.total = res.data.total;
           if(res.data && res.data.rows && res.data.rows.length){
-            // if(res.data.rows[0].processStatus === '待处理' && this.urlName === 'payOperation'){
-            if(this.urlName === 'payOperation' && res.data.rows && res.data.rows.length){
+            if(this.urlName === 'payOperation' || this.urlName === 'payClose'){
               res.data.rows.forEach(el=>{
                 el.processStatus === '待处理'?el['pendingFlag']=true:el['pendingFlag']=false;
               })

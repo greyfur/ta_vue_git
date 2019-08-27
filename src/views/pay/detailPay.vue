@@ -1888,6 +1888,8 @@ export default {
                                   this.$message({type: 'error', message:res.data.errorMessage }); 
                                 }
                             })
+                        } else{
+                          this.$message({type: 'error', message:res.data.msg });
                         }
                       })
                   })

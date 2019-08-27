@@ -247,37 +247,37 @@
               <i class="iconfont iconcaozuoliebiao"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-               <el-dropdown-item>
-              <span v-show="urlName === 'sortOperation' || pendingFlag" @click.stop="handleClick(2,scope.row)" class="blueColor">编辑</span>
-            </el-dropdown-item>
-             <el-dropdown-item>
-              <span
-                v-show="urlName === 'sortOperation'"
-                @click.stop="splits(scope.row.processId)"
-                class="blueColor"
-              >拆分</span>
-            </el-dropdown-item>
-            <el-dropdown-item>
-              <span
-                v-show="urlName === 'sortOperation'"
-                @click.stop="handleClick(3,scope.row)"
-                class="blueColor"
-              >分配</span>
-            </el-dropdown-item>
+              <el-dropdown-item>
+                <span v-show="scope.row.pendingFlag || urlName === 'sortOperation'" @click.stop="handleClick(2,scope.row)" class="blueColor">编辑</span>
+              </el-dropdown-item>
               <el-dropdown-item>
                 <span
                   v-show="urlName === 'sortOperation'"
-                  @click.stop="handleClick(4,scope.row)"
+                  @click.stop="splits(scope.row.processId)"
                   class="blueColor"
-                >删除</span>
+                >拆分</span>
               </el-dropdown-item>
               <el-dropdown-item>
-                <span  v-show="urlName !== 'sortOperation'" @click.stop="handleClick(5,scope.row)" class="blueColor">踪迹</span>
+                <span
+                  v-show="urlName === 'sortOperation'"
+                  @click.stop="handleClick(3,scope.row)"
+                  class="blueColor"
+                >分配</span>
               </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </template>
-      </el-table-column>
+                <el-dropdown-item>
+                  <span
+                    v-show="urlName === 'sortOperation'"
+                    @click.stop="handleClick(4,scope.row)"
+                    class="blueColor"
+                  >删除</span>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <span  v-show="urlName !== 'sortOperation'" @click.stop="handleClick(5,scope.row)" class="blueColor">踪迹</span>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </template>
+        </el-table-column>
       <el-table-column prop="createdAt" label="创建时间" width="160" align="center"></el-table-column>
     </el-table>
     <div style="width:100%;display:flex;align-items: flex-end;justify-content: space-between;">
@@ -746,7 +746,7 @@ export default {
         occId:'',
         correctMailDate:'',
         correctMailReason:'',
-        parentProcessId:'',
+        parentProcessId:null,
         cedentModel: '',
         hasRecheckFlag:null,
         processId: '',
@@ -803,11 +803,7 @@ export default {
         occId: [{ required: true, message: '请输入母合同编号', trigger: 'blur' }],
         parentProcessId: [{ required: true, message: '请输入原流程编号', trigger: 'blur' }],
         correctMailReason: [{ required: true, message: '请输入更正原因', trigger: 'blur' }],
-        
-
-
       },
-      pendingFlag: false
     };
   },
   created() {
@@ -1037,12 +1033,15 @@ export default {
       delete params["actOperator"];
       this.$http.post("api/worksheet/wSEntry/list", params).then(res => {
         if (res.status === 200) {
-          this.tableData = res.data.rows;
           this.mustData.total = res.data.total;
           if (res.data && res.data.rows && res.data.rows.length) {
-            if (res.data.rows[0].processStatus === "待处理" && this.urlName === "billEntry") {
-              this.pendingFlag = true;
+              if(this.urlName === 'billEntry' && res.data.rows && res.data.rows.length){
+              res.data.rows.forEach(el=>{
+                el.processStatus === '待处理'?el['pendingFlag']=true:el['pendingFlag']=false;
+              })
             }
+          this.tableData = res.data.rows;
+          console.log(this.tableData,'this.tableData');
           }
         }
       });
@@ -1144,6 +1143,7 @@ export default {
                  }
                }
                 params1['hasRecheckFlag']=null;
+                params1['parentProcessId']=null;
                 this.$http.post("api/worksheet/wSEntry/update",params1)
                   .then(res => {
                     if (res.status === 200 && res.data.code == 0) {

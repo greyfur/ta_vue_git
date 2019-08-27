@@ -177,7 +177,7 @@
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息</div>
           <div>
-            <el-checkbox-group v-model="wsCheckList" @change="onWsCheck">
+            <el-checkbox-group v-model="wsCheckList" @change="onWsCheck" :disabled="isHover">
               <el-checkbox label="C">Closed</el-checkbox>
               <el-checkbox label="O">Open</el-checkbox>
               <el-checkbox label="I">Inactive</el-checkbox>
@@ -1384,7 +1384,8 @@ export default {
                 if (res.status === 200 && res.data.code == 0) {
                   this.$message({ type: "success", message: res.data.msg});
                   this.dialogFormVisible = false;
-                  this.$router.push({ name: this.$route.query.tag });
+                  // 改第二次，胖虎说标记签回之后留在本页面，不跳转
+                  // this.$router.push({ name: this.$route.query.tag });
                 } else{ this.$message({ type: "error", message: res.data.msg}); }
               });
           });
