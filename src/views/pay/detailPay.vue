@@ -935,7 +935,21 @@
           </el-form-item>
         </el-form-item>
         <!-- <el-form-item label="折币币制/金额" required v-show="!yuanTypeFlag"> -->
-        <el-form-item label="折币币制/金额" required>
+        <el-form-item label="折币币制/金额" required v-if="makeDocListEctype.yuanType.length>1">
+          <el-col :span="10">
+            <el-form-item>
+              <el-select filterable v-model="makeDocListEctype.zheType" placeholder="请选择" class="curAmount" @change="zheTypeChange">
+                <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item>
+              <el-input v-model="makeDocListEctype.zheNum" class="curAmount"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="折币币制/金额" v-else>
           <el-col :span="10">
             <el-form-item>
               <el-select filterable v-model="makeDocListEctype.zheType" placeholder="请选择" class="curAmount" @change="zheTypeChange">
