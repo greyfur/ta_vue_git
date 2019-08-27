@@ -1451,17 +1451,6 @@ export default {
           statusArr[this.row.approvalLevel].className = "status pending";
         }
     },
-    // nextStep(){ //进度条2
-    //   console.log(this.$refs.drc)
-    //   console.log(this.$refs.status)
-    //   console.log(this.row.approvalLevel)
-    //   this.$refs.drc[this.row.approvalLevel-1].className="drc success";
-    //   this.$refs.status[this.row.approvalLevel-1].className = "status success";
-    //   this.$refs.drc[this.row.approvalLevel-1].innerHTML = "✔";
-    //   this.$refs.status[this.row.approvalLevel-1].innerHTML = `${this.row.approvalLevel}级审批完成`;
-    //   this.$refs.drc[this.row.approvalLevel].className="drc wait";
-    //   this.$refs.status[this.row.approvalLevel].className = "status pending";
-    // },
     urgencyPay(){
       this.$confirm('是否紧急付款？', '提示', {
         confirmButtonText: '确定',
@@ -1855,7 +1844,6 @@ export default {
           this.dialogFormVisible3 = true;
         break;
         case 5:  // 审批通过 --------------
-          // this.nextStep();进度条2
           this.proxyFlag = false;
             this.$http.post('api/pay/activitiForPay/getNextStep',{processId:this.row.processId, approvalLevel:this.row.approvalLevel}).then(res =>{
               if(res.status == 200){
