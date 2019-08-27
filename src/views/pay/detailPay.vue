@@ -19,7 +19,7 @@
           <el-button size="small" :disabled="hxState" @click="makeReport" plain>生成核销报告</el-button>
           <el-button size="small" :disabled="hxState" @click="getTaxInfo" plain>增值税信息获取</el-button>
           <el-button size="small" :disabled="hxState" @click="getSGSg" plain>同步状态</el-button>
-          <el-button size="small" :type="hxState?'info':''" @click="gangUp('核销')" plain>{{!hxState?'挂起':'悬停'}}</el-button>
+          <el-button size="small" :type="hxState?'info':''" @click="gangUp('核销')" plain>{{!hxState?'悬停':'已悬停'}}</el-button>
           <el-button size="small" :disabled="hxState" plain @click="submite(1,'流程提交')">流程提交</el-button>
         </div>
         <!-- partial -->
@@ -32,8 +32,8 @@
         <!-- 支付 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payment'">
           <el-button size="small" plain @click="getSGSg">同步状态</el-button>
-          <!-- <el-button size="small" plain @click="">指派</el-button> -->
-          <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button>
+          <el-button size="small" plain @click="submite(10,'指派')">指派</el-button>
+          <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button> 
         </div>
         <!-- 操作 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payOperation'">
@@ -41,7 +41,7 @@
           <el-button size="small" @click="getSGSg" plain>同步状态</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeDoc('a')">生成审批文档</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(3,'置废','操作')">置废</el-button>
-          <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'挂起':'悬停'}}</el-button>
+          <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'悬停':'已悬停'}}</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(2,'指派','操作')">指派</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(1,'流程提交',0,'付款一级审批')">流程提交</el-button>
         </div> 
@@ -756,6 +756,20 @@
       </el-form>
     </el-dialog>
 
+    <el-dialog title="指派" :visible.sync="dialogFormVisiblePayment" :close-on-click-modal="modal">
+      <el-form :label-position="labelPosition" label-width="160px">
+        <el-form-item label="选择指派人">
+          <el-select filterable v-model="assignee"  placeholder="请选择">
+            <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username" :disabled="item.username == $store.state.userName || item.username == row.entryOperator"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="small" @click="dialogFormVisiblePayment = false">取消</el-button>
+          <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
     <el-dialog title="支票创建" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="180px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
         <el-form-item label="Process ID">
@@ -1084,6 +1098,7 @@ export default {
         dialogFormVisible2:false,
         dialogFormVisibleA:false,
         dialogFormVisibleFHRWZF:false,
+        dialogFormVisiblePayment:false,
         title:'',
         currentPage3: 5,
         currentPage4: 2,
@@ -1651,25 +1666,6 @@ export default {
           this.dialogFormVisible3 = true;
           this.flag = 13;
           this.xtname = name;
-          // this.$confirm('是否状态挂起？', '提示', {
-          //   confirmButtonText: '确定',
-          //   cancelButtonText: '取消',
-          //   type: 'warning'
-          //   }).then(() => {
-          //     this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-          //     ,{processId:this.row.processId, 
-          //     procInstId:this.row.processInstId, 
-          //     assignee:this.$store.state.userName, 
-          //     type:'PENDING',
-          //     actOperator:this.$store.state.userName})
-          //     .then(res =>{
-          //     if(res.status === 200 && res.data.errorCode == 1){
-          //       this.czState = !this.czState;
-          //     } else if(res.data.errorMessage){
-          //       this.$message.error(res.data.errorMessage);
-          //     }
-          //   })
-          // })
         } else{  // 恢复
             this.$confirm('是否恢复？', '提示', {
             confirmButtonText: '确定',
@@ -1698,26 +1694,6 @@ export default {
           this.dialogFormVisible3 = true;
           this.flag = 13;
           this.xtname = name;
-          // this.$confirm('是否状态挂起？', '提示', {
-          //   confirmButtonText: '确定',
-          //   cancelButtonText: '取消',
-          //   type: 'warning'
-          //   }).then(() => {
-          //     this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-          //     ,{processId:this.row.processId, 
-          //     procInstId:this.row.processInstId, 
-          //     assignee:this.$store.state.userName, 
-          //     type:'PENDING',
-          //     hasRecheckFlag:'1',
-          //     actOperator:this.$store.state.userName})
-          //     .then(res =>{
-          //     if(res.status === 200 && res.data.errorCode == 1){
-          //       this.hxState = !this.hxState;
-          //     } else if(res.data.errorMessage){
-          //       this.$message.error(res.data.errorMessage);
-          //     }
-          //   })
-          // })
         } else{  // 恢复
             this.$confirm('是否恢复？', '提示', {
             confirmButtonText: '确定',
@@ -1917,6 +1893,8 @@ export default {
                                   this.$message({type: 'error', message:res.data.errorMessage }); 
                                 }
                             })
+                        } else{
+                          this.$message({type: 'error', message:res.data.msg });
                         }
                       })
                   })
@@ -1992,45 +1970,50 @@ export default {
             this.dialogFormVisible3 = true;
           }
         break;
-        case 8:   // 财务支付/紧急付款/partial完结------流程提交
-          if(this.$route.query.tag === 'payment'){  // 8.21 说支付页面，流程提交选录入人，entryOperator
-            let type2 = null;
-            if(this.row.accountCloseFlag == '0'){   
-              type2 = 'COMPLETE';
-            } else if(this.row.accountCloseFlag == '1'){
-              type2 = 'CONDITIONALCOMPLETE';
-            }
-            this.$confirm('是否流程提交？', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-            this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-              ,{processId:this.row.processId, 
-              procInstId:this.row.processInstId, 
-              assignee:this.row.entryOperator, 
-              type:type2,
-              actOperator:this.$store.state.userName,
-              accountCloseFlag:this.row.accountCloseFlag
-              })
-              .then(res =>{
-                if(res.status === 200 && res.data.errorCode == 1){
-                  this.$router.push({name:this.$route.query.tag}); 
-                  this.assignee = null;
-                } else if(res.data.errorCode == 0){
-                  this.$message({type: 'error', message:res.data.errorMessage }); 
-                }
-              })
-            })
-          } else{
+        case 8:   // partial---流程提交
+          // if(this.$route.query.tag === 'payment'){  // 8.21 说支付页面，流程提交选录入人，entryOperator
+          //   let type2 = null;
+          //   if(this.row.accountCloseFlag == '0'){   
+          //     type2 = 'COMPLETE';
+          //   } else if(this.row.accountCloseFlag == '1'){
+          //     type2 = 'CONDITIONALCOMPLETE';
+          //   }
+          //   this.$confirm('是否流程提交？', '提示', {
+          //     confirmButtonText: '确定',
+          //     cancelButtonText: '取消',
+          //     type: 'warning'
+          //   }).then(() => {
+          //   this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
+          //     ,{processId:this.row.processId, 
+          //     procInstId:this.row.processInstId, 
+          //     assignee:this.row.entryOperator, 
+          //     type:type2,
+          //     actOperator:this.$store.state.userName,
+          //     accountCloseFlag:this.row.accountCloseFlag
+          //     })
+          //     .then(res =>{
+          //       if(res.status === 200 && res.data.errorCode == 1){
+          //         this.$router.push({name:this.$route.query.tag}); 
+          //         this.assignee = null;
+          //       } else if(res.data.errorCode == 0){
+          //         this.$message({type: 'error', message:res.data.errorMessage }); 
+          //       }
+          //     })
+          //   })
+          // } else{
+            // 8.27 胖虎说 支付的提交 又要选人了，支付页面的  提交, 角色传  ''付款录入''
             this.getName('付款录入');
             this.specialName2 = specialName;
             this.dialogFormVisible3 = true;
-          }
+          // }
           
         break;
         case 9:   // 审批驳回
           this.dialogFormVisible3 = true;
+        break;
+        case 10:   // 支付指派 8.26 改 胖虎原话：邮件通知的提交,支付页面的指派,角色都传'收款出纳'，支付页面的提交, 角色传''付款录入''
+          this.getName('收款出纳');
+          this.dialogFormVisiblePayment = true;
         break;
       }
       
@@ -2072,16 +2055,15 @@ export default {
              params.taskName = this.emnuTaskName[this.row.approvalLevel];
           }
           this.$http.post('api/activiti/setAssignee',params).then(res =>{
-              if(res.status === 200 && res.data.errorCode == 1){
-                this.dialogFormVisible3 = false;
-                this.dialogFormVisibleFHRWZF = false;
-                this.$router.push({name:this.$route.query.tag});
-                this.assignee = null;
-              } else if(res.data.errorCode == 0 && res.data.errorMessage){
-                this.$message.error(res.data.errorMessage);
-              }
-            })
-
+            if(res.status === 200 && res.data.errorCode == 1){
+              this.dialogFormVisible3 = false;
+              this.dialogFormVisibleFHRWZF = false;
+              this.$router.push({name:this.$route.query.tag});
+              this.assignee = null;
+            } else if(res.data.errorCode == 0 && res.data.errorMessage){
+              this.$message.error(res.data.errorMessage);
+            }
+          })
         break;
         case 3:  // 置废  
         break;
@@ -2215,29 +2197,28 @@ export default {
             this.$message.error('请选择任务处理人');
             return false;
           }
-        this.$confirm('是否流程提交?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-            ,{processId:this.row.processId, 
-            procInstId:this.row.processInstId, 
-            assignee:this.assignee, 
-            type:type1,
-            actOperator:this.$store.state.userName,
-            accountCloseFlag:this.row.accountCloseFlag
-            })
-            .then(res =>{
-              if(res.status === 200 && res.data.errorCode == 1){
-                this.dialogFormVisible3 = false;
-                this.$router.push({name:this.$route.query.tag}); 
-                this.assignee = null;
-              } else if(res.data.errorCode == 0){
-                this.$message({type: 'error', message:res.data.errorMessage }); 
-              }
-            })
-        })
+          // this.$confirm('是否流程提交?', '提示', {
+          //   confirmButtonText: '确定',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
+            this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
+              ,{processId:this.row.processId, 
+              procInstId:this.row.processInstId, 
+              assignee:this.assignee, 
+              type:type1,
+              actOperator:this.$store.state.userName,
+              accountCloseFlag:this.row.accountCloseFlag
+              }).then(res =>{
+                if(res.status === 200 && res.data.errorCode == 1){
+                  this.dialogFormVisible3 = false;
+                  this.$router.push({name:this.$route.query.tag}); 
+                  this.assignee = null;
+                } else if(res.data.errorCode == 0){
+                  this.$message({type: 'error', message:res.data.errorMessage }); 
+                }
+              })
+          // })
         break;
         case 9:   // 审批驳回
           if(!this.opinion){
@@ -2265,6 +2246,24 @@ export default {
               } else if(res.data.errorCode == 0){
                 this.$message({type: 'error', message:res.data.errorMessage }); 
               }
+          })
+        break;
+        case 10: // 支付指派 8.26 改
+          let params2 = {processId:this.row.processId, 
+            procInstId:this.row.processInstId, 
+            assignee:this.assignee, 
+            taskName:'待支付',
+            actOperator:this.$store.state.userName,
+            processInstanceKey:'taProcess03'
+          }
+          this.$http.post('api/activiti/setAssignee',params2).then(res =>{
+            if(res.status === 200 && res.data.errorCode == 1){
+              this.dialogFormVisiblePayment = false;
+              this.$router.push({name:this.$route.query.tag});
+              this.assignee = null;
+            } else if(res.data.errorCode == 0 && res.data.errorMessage){
+              this.$message.error(res.data.errorMessage);
+            }
           })
         break;
         case 13:  // 悬停
@@ -2307,6 +2306,7 @@ export default {
             })
           }
         break;
+        
       }
     },
     edit(){
