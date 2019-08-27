@@ -7,11 +7,11 @@
         <el-row :gutter="10" class="billRow" class-name="transition-box">
           <el-col :span="8">
             <span class="slable">流程编号</span>
-            <el-input placeholder="请输入流程编号" v-model.trim="formLabelAlign.processId"></el-input>
+            <el-input placeholder="请输入流程编号" v-model.trim="searchList.processId"></el-input>
           </el-col>
           <el-col :span="8">
             <span class="slable">结付公司</span>
-              <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
+              <el-select clearable filterable v-model="searchList.cedentModel" placeholder="请选择结付公司">
                 <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
                   <span style="float:left">{{ item.codecode }}</span>
                   <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
@@ -20,7 +20,7 @@
           </el-col>
           <el-col :span="8" v-show="processStatusList.length">
             <span class="slable">流程状态</span>
-            <el-select clearable v-model="formLabelAlign.processStatus" placeholder="请选择流程状态">
+            <el-select clearable v-model="searchList.processStatus" placeholder="请选择流程状态">
               <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-col>
@@ -399,6 +399,11 @@ export default {
         currentPage3: 5,
         hide:false,
         labelPosition:'right',
+        searchList:{
+          processId:null,
+          cedentModel:null,
+          processStatus:null,
+        },
         formLabelAlign:{
           rmSettleCompanyCode:'',
           rmSettleCompanyName:null,
@@ -611,12 +616,12 @@ export default {
     changeWindow(){
       let that=this;
       document.body.onresize=function(e){
-          if(that.$route.name==='payOperation'||that.$route.name==='payVerification'||that.$route.name==='approvalDone'){
-             that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
-          }else{
+        if(that.$route.name==='payOperation'||that.$route.name==='payVerification'||that.$route.name==='approvalDone'){
             that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
-          }
-          // that.changeClientHight=document.body.clientHeight-178-document.querySelector('.el-table').offsetTop;
+        }else{
+          that.changeClientHight=document.body.clientHeight-100-document.querySelector('.el-table').offsetTop;
+        }
+        // that.changeClientHight=document.body.clientHeight-178-document.querySelector('.el-table').offsetTop;
       }
     },
     init(tag){
@@ -631,8 +636,6 @@ export default {
       this.$http.post('api/pay/teskClaim/list',params).then(res =>{
         if(res.status === 200 ) { 
           // 回显结付公司
-          // c:'rmSettleCompanyCode',
-          //   d:'rmSettleCompanyName'
           if(res.data.rows&&res.data.rows.length){
             res.data.rows.forEach(el=>{
               let n = null, c = null;let payStr = '';
@@ -642,7 +645,6 @@ export default {
               el['checkoutPayment'] = payStr;
             })
           }
-          this.tableData = res.data.rows;
           this.mustData.total = res.data.total;
           if(res.data && res.data.rows && res.data.rows.length){
             if(this.urlName === 'payOperation' || this.urlName === 'payClose'){
@@ -651,6 +653,7 @@ export default {
               })
             }
           }
+          this.tableData = res.data.rows;
           if(tag == 0){
             this.$message({type: 'success', message: '刷新成功!'}); 
           }
@@ -683,10 +686,10 @@ export default {
       }
     },
     reset(){
-      for(let k in this.formLabelAlign){
-          this.formLabelAlign[k] = null;
+      for(let k in this.searchList){
+          this.searchList[k] = null;
         }
-        this.cedentModel = null;
+        this.searchList = null;
     },
     handleClick(tag,row){
       this.chooseRow = Object.assign({},row);
@@ -694,11 +697,10 @@ export default {
       this.assignee = null;
       switch(tag){
         case 1: //创建
-          this.reset();
-          // for(let k in this.formLabelAlign){
-          //   this.formLabelAlign[k] = null;
-          // }
-          // this.cedentModel = null;
+          for(let k in this.formLabelAlign){
+            this.formLabelAlign[k] = null;
+          }
+          this.cedentModel = null;
           this.title = '创建';
           this.dialogFormVisible = true;
           break;
@@ -706,7 +708,6 @@ export default {
         break;
         case 4: //查询
           this.title = '查询';
-          // this.dialogFormVisible = true;
           this.confirm();
           break;
         case 6: //编辑
@@ -909,30 +910,40 @@ export default {
         case 3: //刷新
         break;
         case 4: //查询
+          let fenye = {
+            pageNumber:1,  
+            pageSize:100,
+            processType:'付款',
+          }
           let params = null;          
-          if(!this.formLabelAlign.processStatus){
+          if(!this.searchList.processStatus){
             if(!this.admFlag){ 
-              params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName,processStatus:this.processStatusList.join(',')});
+              params = Object.assign({},fenye,this.searchList,{curOperator:this.$store.state.userName,processStatus:this.processStatusList.join(',')});
             } else{
-              params = Object.assign({},this.mustData,this.formLabelAlign,{processStatus:this.processStatusList.join(',')});
+              params = Object.assign({},fenye,this.searchList,{processStatus:this.processStatusList.join(',')});
             }
           } else{
             if(!this.admFlag){ 
-              params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
+              params = Object.assign({},fenye,this.searchList,{curOperator:this.$store.state.userName});
             } else{
-              params = Object.assign({},this.mustData,this.formLabelAlign);
+              params = Object.assign({},fenye,this.searchList);
             }
           }
-          delete params['actOperator'];
-          delete params.modifiedBy;
           this.$http.post('api/pay/teskClaim/list',params).then(res =>{
             if(res.status === 200){
               if(!res.data.rows.length){
                 this.$message({type: 'warning', message: '未查询出数据'}); 
               } else{
-                this.tableData = res.data.rows;
                 this.mustData.total = res.data.total;
-                this.dialogFormVisible = false;
+                // 回显结付公司
+                res.data.rows.forEach(el=>{
+                  let n = null, c = null;let payStr = '';
+                  if(el.rmSettleCompanyName){n=el.rmSettleCompanyName.split(';')} else{ n = []; }
+                  if(el.rmSettleCompanyCode){c=el.rmSettleCompanyCode.split(';')} else{ c = []; }
+                  if( n && n.length && n.length>0){ n.forEach((el,i)=>{ payStr+=`${c[i]}-${el};` })}
+                  el['checkoutPayment'] = payStr;
+                })
+              this.tableData = res.data.rows;
               }
             }
           })

@@ -175,7 +175,7 @@
         </template>
       </el-table-column> -->
       <el-table-column prop="processStatus" width="95" label="流程状态" align="center"></el-table-column>
-      <el-table-column label="Base Company" prop="baseCompany" width="130" align="center"></el-table-column>
+      <el-table-column label="收款人" prop="baseCompany" width="130" align="center"></el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin" align="center"></el-table-column>
       <el-table-column prop="createdAt" label="创建时间" width="160" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80" align="center">
@@ -303,7 +303,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin" align="center"></el-table-column>
-      <el-table-column label="Base Company" width="130" prop="baseCompany" align="center"></el-table-column>
+      <el-table-column label="收款人" width="130" prop="baseCompany" align="center"></el-table-column>
       <el-table-column prop="createdAt" label="创建时间" width="160" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100" align="center">
         <template slot-scope="scope">
@@ -880,7 +880,7 @@ export default {
       this.processStatusList = ["待处理", "已悬停"];
     } else if (this.urlName === "credVerification") {
       this.processStatusList = ["待核销", "已悬停"];
-    } 
+    }  else{ this.processStatusList = Array.of(this.processStatusCom); }
     // else if (this.urlName === "collectiongEnd") {
     //   this.processStatusList = ["已完结", "REVERSED"];
     // }
@@ -1028,7 +1028,6 @@ export default {
         case 4: //查询
           this.title = "查询";
           this.confirm();
-          // this.dialogFormVisible = true;
           break;
         case 6: //编辑
           for(let k in this.formLabelAlign){ this.formLabelAlign[k] = this.chooseRow[k]; };
