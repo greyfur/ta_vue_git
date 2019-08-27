@@ -16,6 +16,7 @@
     <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'credOperation'">
       <!-- <el-button type="primary" :disabled="czState" plain @click="mailSend(1,'上传附件')">上传附件</el-button> -->
       <el-button type="primary" :disabled="czState" plain @click="mailSend(2,'附件')">附件</el-button>
+      <el-button type="primary" plain :disabled="czState" @click="tbState">同步状态</el-button>
       <el-button type="primary" :disabled="czState" plain @click="submite(2,'指派','操作','收款录入')">指派</el-button>
       <el-button type="primary" :disabled="czState" plain @click="submite(3,'置废')">置废</el-button>
       <el-button :type="czState?'info':'primary'" @click="gangUp('操作')" plain>{{!czState?'挂起':'悬停'}}</el-button>
@@ -68,12 +69,11 @@
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag2 = !searchFlag2">
           <div><i style="margin-right:8px;" :class="searchFlag2===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>支票信息</div>
           <!-- 8.27 改 -->
-          <p>    
-            <!-- <el-button size="mini" @click.stop="getSg" v-if="$route.query.tag !== 'credVerification' && $route.query.tag !== 'credReview' && $route.query.tag !== 'collectiongEnd'"> -->
-            <el-button size="mini" @click.stop="getSg" v-if="$route.query.tag == 'credOperation'">
+          <!-- <p>    
+            <el-button size="mini" @click.stop="getSg" v-if="$route.query.tag !== 'credVerification' && $route.query.tag !== 'credReview' && $route.query.tag !== 'collectiongEnd'">
               <i style="margin-right:8px;" class="iconfont iconGroup77"></i>支票回写
             </el-button>
-          </p>
+          </p> -->
         </div>
         <el-collapse-transition>
           <div v-show="searchFlag2">
@@ -1472,45 +1472,37 @@ export default {
         });
         return false;
       }
-      this.$http
-        .post("api/sics/liveDesktop/openBpLedger", {
+      this.$http.post("api/sics/liveDesktop/openBpLedger", {
           modifiedBy: this.mustData.actOperator,
           bpId: this.row.rmSettleCompanyCode
-        })
-        .then(res => {
+        }).then(res => {
           this.$message({message:res.data,type: 'warning'});
           console.log(res, "打开SICS");
         });
     },
     openReverse() {
-      this.$http
-        .post("api/pay/teskClaim/reversePayProcess", {
+      this.$http.post("api/pay/teskClaim/reversePayProcess", {
           actOperator: this.$store.state.userName,
           processId: this.row.processId
-        })
-        .then(res => {
+        }).then(res => {
           this.$message({message:res.data,type: 'warning'});
           console.log(res, "打开SICS");
         });
     },
     openSICS(row, id) {
       if (id == "rmId") {
-        this.$http
-          .post("api/sics/liveDesktop/openRemittance", {
+        this.$http.post("api/sics/liveDesktop/openRemittance", {
             modifiedBy: this.$store.state.userName,
             remitId: row.rmId
-          })
-          .then(res => {
+          }).then(res => {
             this.$message({message:res.data,type: 'warning'});
             console.log(res, "打开SICS");
           });
       } else {
-        this.$http
-          .post("api/sics/liveDesktop/openWorksheet", {
+        this.$http.post("api/sics/liveDesktop/openWorksheet", {
             modifiedBy: this.$store.state.userName,
             worksheetId: row[id]
-          })
-          .then(res => {
+          }).then(res => {
             this.$message({message:res.data,type: 'warning'});
             console.log(res, "打开SICS");
             // if(res.status === 200 && res.data.rows){
@@ -1565,36 +1557,43 @@ export default {
     },
     tbState() {
        // 8.26 wtd 原来三个页面 都听不状态全部一样，现在3个同步状态全部改为receiptSynchronize
-      let url = '';
-      if(this.$route.query.tag === 'credReview'){
-        url = 'api/sics/basis/getPayRemitFromSicsByRemids'
-      } else{ url = 'api/sics/basis/receiptSynchronize' }
-      let rmIds = "";
-        this.RMData.forEach(el => {rmIds += `${el.rmId},`;});
-      this.$http.post(url, {
-          actOperator: this.mustData.actOperator,
-          processId: this.row.processId,
-          rmIds:rmIds
-        }).then(res => {
-          if (res.status === 200) {
-            this.RMData = res.data.remitDOlist;
-            this.WSData = res.data.workSheetDOlsit;
-            this.WritebackProcess();
-            this.SgData = res.data.worksheetsgDOlist;
-            let arr5 = res.data.worksheetsgDOlist;
-              arr5.forEach(el=>{
-                if(el.docName){
-                  let suffix = el.docName.split('.');
-                  el['suffix'] = suffix[suffix.length-1];
-                  el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
-                }
-              })
-              this.SgData = arr5;
-            this.$message({message: '操作成功',type: 'success'}); 
-          } else{ this.$message.error("失败"); }
-        });
+       // 8.27 wtd 原话：收付款所有回写接口改为getMessageFromSics，入参processId actOperator
+      //  8.27 翻译一下：操作&复核，只显示支票列表，用原来的，其他页面是三个页面都展示用getMessageFromSics
+      let rmIds = '',url = '',params = null;
+      this.RMData.forEach(el => {rmIds += `${el.rmId},`;});
+      if(this.$route.query.tag === 'credReview' || this.$route.query.tag === 'credOperation'){ // 一个支票列表
+        this.$route.query.tag === 'credReview'?url='api/sics/basis/getPayRemitFromSicsByRemids':url='api/sics/basis/getPayRemitFromSics'
+        if (this.RMData && this.RMData.length) { 
+          params = { actOperator: this.$store.state.userName,processId: this.row.processId,rmIds: rmIds }
+         } else{ this.$message.error("无账单，无法更新信息"); return false; }
+      } else{ // 三个列表
+        url = 'api/sics/basis/getMessageFromSics';
+        params = { actOperator: this.$store.state.userName,processId: this.row.processId, }
+      } 
+      this.$http.post(url,params).then(res => {
+        if (res.status === 200 && res.data.code!=1) {
+          if(res.data.code == 0){ this.$message({message: res.data.msg,type: 'success'});  }
+          if(res.data.code == 2){ this.$message({message: res.data.msg,type: 'warning'});  }
+          this.RMData = res.data.data.remitDOlist;
+          this.WSData = res.data.data.workSheetDOlsit;
+          this.WritebackProcess();
+          this.SgData = res.data.data.worksheetsgDOlist;
+          let arr5 = res.data.data.worksheetsgDOlist;
+          if(arr5!=null && arr5.length){
+            arr5.forEach(el=>{
+              if(el.docName){
+                let suffix = el.docName.split('.');
+                el['suffix'] = suffix[suffix.length-1];
+                el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
+              }
+            })
+            this.SgData = arr5;
+          }
+        } else{ this.$message.error(res.data.msg); }
+      });
     },
     getSg(tag) {
+      // 8.27 wtd 原话：收付款所有回写接口改为getMessageFromSics，入参processId actOperator
       // 8.26 wtd 原来三个页面 都听不状态全部一样，现在把这个废弃掉
       // 8.25 wtd改  复核调新的接口
       let url = '';
@@ -1605,8 +1604,8 @@ export default {
       if (this.RMData && this.RMData.length) {
         let rmIds = "";
         this.RMData.forEach(el => {rmIds += `${el.rmId},`;});
-        this.$http.post(url, {
-            actOperator: this.mustData.actOperator,
+        this.$http.post('api/sics/basis/getMessageFromSics', {
+            actOperator: this.$store.state.userName,
             processId: this.row.processId,
             rmIds: rmIds
           }).then(res => {
