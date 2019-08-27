@@ -65,7 +65,7 @@
         <div :class="this.$store.state.flod?'btn approvalDoneBtn':'btns approvalDoneBtn'" v-if="$route.query.tag === 'payVerification'">
           <div class="btnChild">
             <el-button size="mini" plain class="approved" style="height: 32px; position:relative">
-              <span class="approvedName" @click="submite(5,'审批通过')">审批通过</span>
+              <span class="approvedName" @click="submite(5,'审批通过')">审批通过111</span>
               <el-dropdown size="mini" style="padding-left:10px" placement="top-end">
                 <span class="el-dropdown-link"><i class="el-icon-arrow-down el-icon--right" style="color:#fff"></i></span>
                 <el-dropdown-menu slot="dropdown" style="border-color:#005C8D">
@@ -86,7 +86,7 @@
         <ul class="step" v-if="$route.query.tag === 'payVerification'">
           <li v-for="(item,index) in strArr" :key="item+index">
             <span class="status" ref="status">{{index+1}}</span>
-            <span class="drc">{{item.wait}}</span>
+            <span class="drc" ref="drc">{{item.wait}}</span>
           </li>
         </ul>
 
@@ -1336,7 +1336,7 @@ export default {
     let that=this;
   },
   updated(){
-    // 进度条
+    // 进度条1
     if(this.$route.query.tag === 'payVerification'){
       this.nextStep();
     }
@@ -1421,13 +1421,11 @@ export default {
           console.log(res, "打开SICS");
         });
     },
-    //进度条
+    //进度条111
     nextStep(){
       let oldStrArrCreInd=0;
       let drcArr = [...document.querySelectorAll(".drc")];
       let statusArr = [...document.querySelectorAll(".status")];
-      console.log(statusArr)
-      // this.hydNum=this.row.approvalLevel;
       oldStrArrCreInd = this.row.approvalLevel;
         this.$http.post("api/pay/activitiForPay/getAllLevel", {
         processId: this.row.processId
@@ -1435,7 +1433,6 @@ export default {
         this.saveLevel = res.data;
         for(var i=0;i<res.data;i++){
             oldStrArrCreInd--;
-            // console.log(this.hydNum--)
             if(drcArr[oldStrArrCreInd]==undefined){
               return
             }else{
@@ -1880,10 +1877,6 @@ export default {
                                   this.dialogFormVisible3 = false;
                                   this.$router.push({name:this.$route.query.tag}); 
                                   this.assignee = null;
-                                  this.$nextTick(()=>{
-                                    console.log(111)
-                                    this.nextStep();
-                                  })
                                 } else if(res.data.errorCode == 0){
                                   this.$message({type: 'error', message:res.data.errorMessage }); 
                                 }
@@ -2123,8 +2116,6 @@ export default {
                 this.$message.error(res.data.msg);
               }
             })
-
-          
         break;
         case 6:  // 复核通过
           // if(!this.assignee){
@@ -2792,7 +2783,7 @@ export default {
       console.log(`当前页: ${val}`);
     },
   },
-   watch:{
+   watch:{//watch111
     title:function(n,o){
       // b不可以选自己，n可以，0开账，1关账，关账支票可选自己
       // title === '流程提交' || title==='审批通过' title === '复核通过'
@@ -2849,6 +2840,11 @@ export default {
         
       }
     },
+    'row.approvalLevel':{
+      handler:function(o,n){
+        console.log(o,n)
+      }
+    }
   }
  
 }

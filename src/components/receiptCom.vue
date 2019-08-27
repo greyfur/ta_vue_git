@@ -1035,6 +1035,7 @@ export default {
           this.formLabelAlign.rmSettleCompanyCode = '';
           this.formLabelAlign.rmSettleCompanyName = '';
           // rmSettleCompanyName
+          console.log(this.formLabelAlign.businessOrigin)
           if (this.chooseRow.businessOrigin) {
             let arr = this.businessOriginList.filter(el => {
               return el.name == this.chooseRow.businessOrigin;
@@ -1401,7 +1402,8 @@ export default {
               }
             }
           if(!params1.rmAmount){ params1.rmAmount = 0; }
-          this.$http.post("api/receipt/finaCreat/update",params1)
+          if(this.formLabelAlign.businessOrigin&&this.formLabelAlign.baseCompany){
+             this.$http.post("api/receipt/finaCreat/update",params1)
             .then(res => {
               if (res.status === 200 && res.data.code == 0) {
                 this.$message({ type: "success", message: res.data.msg });
@@ -1416,6 +1418,11 @@ export default {
               }
               this.$refs[formName].resetFields();
             });
+          }else{
+            this.$message.error('businessOrigin、baseCompany为必填项')
+          }
+          console.log(this.formLabelAlign.businessOrigin,'hyd')
+         
           break;
         case 7: //删除
           break;
