@@ -238,7 +238,7 @@
           <span>{{nameList[scope.row.closedBy]}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="processStatus" label="流程状态" align="center"></el-table-column>
+      <el-table-column prop="processStatus" v-if="urlName!='billSignBack'" label="流程状态" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" width="80" align="center">
         <template slot-scope="scope">
           <el-dropdown placement="top-start">

@@ -5,87 +5,95 @@
        <el-collapse-transition>
       <div v-show="searchFlag">
         <el-row :gutter="10" class="billRow" class-name="transition-box">
-        <el-col :span="8">
-          <span class="slable">流程编号 &nbsp;&nbsp;</span>
-          <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
-        </el-col>
-        <el-col :span="8">
-          <span class="slable">流程状态 &nbsp;&nbsp;</span>
-          <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
-            <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','已悬停']" :key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="8">
-          <span class="slable">账单类型</span>
-          <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
-            <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
-          </el-select>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10" class="billRow">
-         <el-col :span="8">
-          <span class="slable">录入人查询</span>
-          <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人查询">
-              <el-option
-                v-for="(item,index) in nameList"
-                :key="item"
-                :value="index"
-                :label="item"
-              >
-                <span style="float:left">{{item}}</span>
-                <span style="float:right;color: #8492a6; font-size: 13px">{{index}}</span>
-              </el-option>
+          <el-col :span="8">
+            <span class="slable">流程编号 &nbsp;&nbsp;</span>
+            <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
+          </el-col>
+          <el-col :span="8">
+            <span class="slable">流程状态 &nbsp;&nbsp;</span>
+            <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
+              <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','已悬停']" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-        </el-col>
-        <el-col :span="8">
-          <span class="slable">分出公司 &nbsp;&nbsp;</span>
-           <el-select clearable filterable v-model="cedentModel" placeholder="请选择分出公司">
-              <el-option
-                v-for="(item,index) in cedentList"
-                :key="index"
-                :label="item.codecode+' - '+item.codeName"
-                :value="index"
-              >
-                <span style="float:left">{{ item.codecode }}</span>
-                <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-              </el-option>
+          </el-col>
+          <el-col :span="8">
+            <span class="slable">账单类型</span>
+            <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
+              <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
             </el-select>
-        </el-col>
-        <el-col :span="8">
-          <span class="slable">经纪公司</span>
-           <el-select clearable filterable v-model="brokerModel" placeholder="请选择经纪公司">
-              <el-option
-                v-for="(item,index) in brokerList"
-                :key="index"
-                :label="item.codecode+' - '+item.codeName"
-                :value="index"
-              >
-                <span style="float:left">{{ item.codecode }}</span>
-                <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-              </el-option>
-            </el-select>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10" class="billRow" class-name="transition-box">
-      <el-col :span="9" class="nowrap">
-          <span class="slable">录入时间段</span>
-           <el-date-picker
-              style="width:224px"
-              value-format="timestamp"
-              v-model="billSearch.registAt"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
-            </el-date-picker>
-         </el-col>
-      </el-row>
-      <el-row :gutter="10" class="billRow">  
-           <el-col :span="24">
-          <el-button type="primary" plain @click="handleClick(1)"><i class="iconfont iconGroup42"></i>查询</el-button>
-          <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
-        </el-col>
-      </el-row>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10" class="billRow">
+          <el-col :span="8">
+            <span class="slable">录入人查询</span>
+            <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人查询">
+                <el-option
+                  v-for="(item,index) in nameList"
+                  :key="item"
+                  :value="index"
+                  :label="item"
+                >
+                  <span style="float:left">{{item}}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{index}}</span>
+                </el-option>
+              </el-select>
+          </el-col>
+          <el-col :span="8">
+            <span class="slable">分出公司 &nbsp;&nbsp;</span>
+            <el-select clearable filterable v-model="cedentModel" placeholder="请选择分出公司">
+                <el-option
+                  v-for="(item,index) in cedentList"
+                  :key="index"
+                  :label="item.codecode+' - '+item.codeName"
+                  :value="index"
+                >
+                  <span style="float:left">{{ item.codecode }}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+                </el-option>
+              </el-select>
+          </el-col>
+          <el-col :span="8">
+            <span class="slable">经纪公司</span>
+            <el-select clearable filterable v-model="brokerModel" placeholder="请选择经纪公司">
+                <el-option
+                  v-for="(item,index) in brokerList"
+                  :key="index"
+                  :label="item.codecode+' - '+item.codeName"
+                  :value="index"
+                >
+                  <span style="float:left">{{ item.codecode }}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+                </el-option>
+              </el-select>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10" class="billRow" class-name="transition-box">
+          <el-col :span="8" class="nowrap">
+            <span class="slable">录入时间段</span>
+            <el-date-picker
+                style="width:224px"
+                value-format="timestamp"
+                v-model="billSearch.registAt"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+              </el-date-picker>
+          </el-col>
+          <el-col :span="8">
+            <span class="slable">业务编号&nbsp;&nbsp;&nbsp;</span>
+            <el-input placeholder="请输入业务编号" v-model.trim="billSearch.businessId"></el-input>
+          </el-col>
+          <el-col :span="8">
+            <span class="slable">账单号 &nbsp;&nbsp;&nbsp;</span>
+            <el-input placeholder="请输入流程编号" v-model.trim="billSearch.wsId"></el-input>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10" class="billRow">  
+            <el-col :span="24">
+            <el-button type="primary" plain @click="handleClick(1)"><i class="iconfont iconGroup42"></i>查询</el-button>
+            <el-button type="primary" plain @click="reset"><i class="iconfont iconGroup39"></i>重置</el-button>
+          </el-col>
+        </el-row>
       </div>
        </el-collapse-transition>
     </div>
@@ -503,7 +511,9 @@ export default {
           baseCompany:null,
           reportUnit:null,
           registBy:null,
-          registAt:null
+          registAt:null,
+          businessId:null,
+          wsId:null,
         },
         mustData:{
           actOperator:null,

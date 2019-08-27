@@ -292,7 +292,7 @@ export default {
         formLabelAlign:{
           createdBy:null,
           createdAt:null,
-          processType:null,
+          processType:['付款','收款'],
           rmSettleCompanyCode:null,
           rmSettleCompanyName:null,
           rmCurrency:null,
