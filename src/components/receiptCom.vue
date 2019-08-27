@@ -966,9 +966,8 @@ export default {
       this.$http.post("api/receipt/finaCreat/list", params).then(res => {
         if (res.status === 200) {
           if(res.data.rows&&res.data.rows.length){
-            let payStr = '';
             res.data.rows.forEach(el=>{
-              let n = null, c = null;
+              let n = null, c = null;let payStr = '';
               if(el.rmSettleCompanyName){n=el.rmSettleCompanyName.split(';')} else{ n = []; }
               if(el.rmSettleCompanyCode){c=el.rmSettleCompanyCode.split(';')} else{ c = []; }
               if( n && n.length && n.length>0){ n.forEach((el,i)=>{ payStr+=`${c[i]}-${el};` })}

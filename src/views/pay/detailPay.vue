@@ -1316,8 +1316,7 @@ export default {
       this.$http.post('api/pay/teskClaim/list',param).then(res =>{
         if(res.status == 200 && res.data.rows[0]){
           this.row = res.data.rows[0];
-          let payStr = '';
-          let n = null, c = null;
+          let n = null, c = null;let payStr = '';
           if(this.row.rmSettleCompanyName){n=this.row.rmSettleCompanyName.split(';')} else{ n = []; }
           if(this.row.rmSettleCompanyCode){c=this.row.rmSettleCompanyCode.split(';')} else{ c = []; }
           if( n && n.length && n.length>0){ n.forEach((el,i)=>{ payStr+=`${c[i]}-${el};` })}
