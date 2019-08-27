@@ -189,7 +189,7 @@
           :data="SICSData"
           border
           width="100%"
-          :height="maxHeight"
+          height="400"
           :header-row-class-name="StableClass">
           <el-table-column type="index" width="50" align="center"></el-table-column>
           <el-table-column label="账单号" width="160" align="center">
@@ -1005,8 +1005,7 @@ export default {
     handleSelectionChange(val) {},
     getName(name) {
       // 获取流程提交指派人
-      this.$http
-        .post("api/activiti/getAssigneeName", { roleName: name })
+      this.$http.post("api/activiti/getAssigneeName", { roleName: name })
         .then(res => {
           if (res.status === 200) {
             this.TJRoptions = res.data;

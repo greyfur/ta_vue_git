@@ -9,7 +9,7 @@
          <!-- 完结 -->
         <div class="btn" v-if="$route.query.tag === 'payEnd'">
           <el-button size="small" @click="openSICS" plain>打开SICS</el-button>
-          <el-button size="small" @click="tongbu" plain>同步状态</el-button>
+          <el-button size="small" @click="getSGSg" plain>同步状态</el-button>
           <el-button size="small" @click="makeReport" plain>生成核销报告</el-button>
           <el-button size="small" plain @click="submite(1,'流程结束')">流程结束</el-button>
         </div>
@@ -18,22 +18,27 @@
           <el-button type="primary" :disabled="hxState" @click="openBPSICS" plain>打开BpLedger</el-button>
           <el-button size="small" :disabled="hxState" @click="makeReport" plain>生成核销报告</el-button>
           <el-button size="small" :disabled="hxState" @click="getTaxInfo" plain>增值税信息获取</el-button>
-          <el-button size="small" :disabled="hxState" @click="tongbu" plain>同步状态</el-button>
+          <el-button size="small" :disabled="hxState" @click="getSGSg" plain>同步状态</el-button>
           <el-button size="small" :type="hxState?'info':''" @click="gangUp('核销')" plain>{{!hxState?'挂起':'悬停'}}</el-button>
           <el-button size="small" :disabled="hxState" plain @click="submite(1,'流程提交')">流程提交</el-button>
         </div>
-        <!-- 财务支付/紧急付款/partial完结 -->
-        <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payment' || $route.query.tag === 'partialDone' || $route.query.tag === 'instancyPay'">
-          <el-button type="primary" v-if="$route.query.tag === 'partialDone'" @click="openBPSICS" plain>打开BpLedger</el-button>
-          <el-button size="small" plain @click="tongbu" v-if="$route.query.tag === 'instancyPay'">同步状态</el-button>
-          <el-button size="small" @click="makeReport" v-if="$route.query.tag === 'partialDone'" plain>生成核销报告</el-button>
-          <el-button size="small" @click="tongbu" plain v-if="$route.query.tag === 'partialDone'">同步状态</el-button>
+        <!-- partial -->
+        <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'partialDone'">
+          <el-button type="primary" @click="openBPSICS" plain>打开BpLedger</el-button>
+          <el-button size="small" plain @click="getSGSg">同步状态</el-button>
+          <el-button size="small" @click="makeReport" plain>生成核销报告</el-button>
           <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button>
+        </div>
+        <!-- 支付 -->
+        <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payment'">
+          <el-button size="small" plain @click="getSGSg">同步状态</el-button>
+          <!-- <el-button size="small" plain @click="">指派</el-button> -->
+          <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button><
         </div>
         <!-- 操作 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payOperation'">
           <el-button size="small" :disabled="czState" @click="openSICS" plain>打开SICS</el-button>
-          <el-button size="small" @click="tongbu" plain>同步状态</el-button>
+          <el-button size="small" @click="getSGSg" plain>同步状态</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeDoc('a')">生成审批文档</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(3,'置废','操作')">置废</el-button>
           <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'挂起':'悬停'}}</el-button>
@@ -43,7 +48,7 @@
         <!-- 支票 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'approvalDone'">
           <el-button size="small" @click="openSICS">打开SICS</el-button>
-          <el-button size="small" @click="tongbu" plain>同步状态</el-button>
+          <el-button size="small" @click="getSGSg" plain>同步状态</el-button>
           <el-button size="small" plain @click="submite(2,'指派','支票')">指派</el-button>
           <el-button size="small" plain @click="onRemitCreat">支票创建</el-button>
           <el-button size="small" plain @click="urgencyPay">紧急付款</el-button>
@@ -52,7 +57,7 @@
         <!-- 复核 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payReview'">
           <el-button size="small" plain @click="submite(2,'指派','复核')">指派</el-button>
-          <el-button size="small" plain @click="tongbu">同步状态</el-button>
+          <el-button size="small" plain @click="getSGSg">同步状态</el-button>
           <el-button size="small" plain @click="submite(4,'复核驳回')">复核驳回</el-button>
           <el-button size="small" plain @click="submite(6,'复核通过')">复核通过</el-button>
         </div>
@@ -72,7 +77,7 @@
             </el-button>
             <el-button size="small" plain @click="submite(9,'审批驳回')">审批驳回</el-button>
             <el-button size="small" plain @click="submite(2,'指派','审批')">指派</el-button>
-            <el-button size="small" @click="tongbu" plain>同步状态</el-button>
+            <el-button size="small" @click="getSGSg" plain>同步状态</el-button>
              <!-- <el-button size="small" plain @click="submite(5,'审批通过')">审批通过</el-button> -->
           </div>
         </div>
@@ -511,7 +516,7 @@
           <p><i class="iconfont iconGroup26"></i></p>
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag4" :height="maxHeight" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
+          <el-table v-show="searchFlag4" height="400" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column label="账单号" align="center">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
@@ -526,8 +531,7 @@
                   class="item"
                   effect="dark"
                   :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
-                  placement="top-start"
-                >
+                  placement="top-start">
                   <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
                 </el-tooltip>
               </template>
@@ -682,7 +686,7 @@
         </el-form-item>
         <el-form-item label="选择代理人" v-show="title==='审批通过' && proxyFlag">
           <el-select filterable v-model="proxyMan"  placeholder="请选择">
-            <el-option v-for="(item,i) in TJRoptions" :key="item.userId" :label="item.name" :value="i" :disabled="item.username == $store.state.userName"></el-option>
+            <el-option v-for="(item,i) in proxyList" :key="item.userId" :label="item.name" :value="i" :disabled="item.username == $store.state.userName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="title === '指派'?'选择指派人':'选择处理人'" v-show="title === '指派' || putIn=='b'">
@@ -989,6 +993,7 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        proxyList:[],
         // hydNum:0,
         yuanTypeFlag:false,
         currentPage:1,
@@ -1357,16 +1362,20 @@ export default {
             this.proxyFlag = true;
             this.title = '审批通过';
             this.flag = 5;
-            console.log(this.row.approvalLevel,'this.row.approvalLevel,最后节点');
-            this.getName('付款录入');
+            // 8.27 代理审批人—平级，审批人—entryOperator
+            // 获取代理人
+            this.getName(this.emnuGetName[this.row.approvalLevel-1],'代理');
             this.dialogFormVisible3 = true;
-          } else{
+          } else{  // 非最后节点
             this.title = '审批通过';
             this.preApprove = false;
             this.proxyFlag = true;
             this.flag = 5;
-            console.log(this.row.approvalLevel,'this.row.approvalLevel,非最后节点');
+            // 8.27 代理审批人—平级，审批人—需要查
+            // 获取审批人
             this.getName(this.emnuGetName[this.row.approvalLevel]);
+            // 获取代理人
+            this.getName(this.emnuGetName[this.row.approvalLevel-1],'代理');
             this.dialogFormVisible3 = true;
             
           }
@@ -1390,12 +1399,10 @@ export default {
         });
         return false;
       }
-      this.$http
-        .post("api/sics/liveDesktop/openBpLedger", {
-          modifiedBy: this.mustData.actOperator,
+      this.$http.post("api/sics/liveDesktop/openBpLedger", {
+          modifiedBy: this.$store.state.userName,
           bpId: this.row.rmSettleCompanyCode
-        })
-        .then(res => {
+        }).then(res => {
           console.log(res, "打开SICS");
         });
     },
@@ -1407,8 +1414,7 @@ export default {
       console.log(statusArr)
       // this.hydNum=this.row.approvalLevel;
       oldStrArrCreInd = this.row.approvalLevel;
-        this.$http
-      .post("api/pay/activitiForPay/getAllLevel", {
+        this.$http.post("api/pay/activitiForPay/getAllLevel", {
         processId: this.row.processId
       }).then(res=>{
         this.saveLevel = res.data;
@@ -1503,16 +1509,6 @@ export default {
       oInput.remove();
       if(!tag){this.$message({message: '复制成功',type: 'success'});}
     },
-    tongbu(){
-      this.getSGSg();
-      // 8.26 -下午 wtd 同步状态只调sg的
-      // 8.26 -上午 wtd 复核 同步状态的时候，支票接口改为getPayRemitFromSicsByRemids
-      // if(this.$route.query.tag === 'payReview'){  // 复核页面用🖤的接口
-      //   this.getRMSg('getPayRemitFromSicsByRemids');
-      // } else{
-      //   this.getRMSg();
-      // }
-    },
     getBscBankInfo(){
       this.$http.post('api/othersDO/bscBankInfo/list',{}).then(res =>{
         if(res.status === 200 && res.data.rows){
@@ -1566,7 +1562,7 @@ export default {
         this.$message({type: 'error', message:'process中rmSettleCompanyCode无值，打不开'});
         return false;
       }
-      this.$http.post('api/sics/liveDesktop/openBpLedger',{modifiedBy:this.mustData.actOperator,bpId:this.row.rmSettleCompanyCode}).then(res =>{
+      this.$http.post('api/sics/liveDesktop/openBpLedger',{modifiedBy:this.$store.state.userName,bpId:this.row.rmSettleCompanyCode}).then(res =>{
         console.log(res,'打开SICS');
       })
     },
@@ -1589,7 +1585,7 @@ export default {
       // if(this.RMData){
         let rmIds = '';
         this.RMData.forEach(el=>{rmIds += `${el.rmId},`})
-        this.$http.post(url,{actOperator:this.mustData.actOperator,rmIds:rmIds,processId:this.row.processId}).then(res =>{
+        this.$http.post(url,{actOperator:this.$store.state.userName,rmIds:rmIds,processId:this.row.processId}).then(res =>{
           if(res.status == 200){
             this.refreshDetailData();
             // this.SgData = res.data.worksheetsgDOlist;
@@ -1602,20 +1598,40 @@ export default {
       
     },
     getSGSg(){
-      this.searchFlag3 = !this.searchFlag3;
-      this.$http.post('api/sics/basis/getWSAndSGfromSics',{actOperator:this.mustData.actOperator,processId:this.row.processId}).then(res =>{
-        if(res.status === 200){ 
-          this.SgData = res.data.worksheetsgDOlist;
-          this.RMData = res.data.remitDOlist;
-          this.WSData = res.data.workSheetDOlsit;
+      let url = '',params = null;
+      // this.RMData.forEach(el => {rmIds += `${el.rmId},`;});
+      // 新的 。8.27 wtd 原话：收付款所有回写接口改为getMessageFromSics，入参processId actOperator(三个列表的页面)
+      if(this.$route.query.tag==='payClose' || this.$route.query.tag==='payment' || this.$route.query.tag==='partialDone' || this.$route.query.tag==='payEnd'){
+        url = 'api/sics/basis/getMessageFromSics';
+      } else{
+        url = 'api/sics/basis/getWSAndSGfromSics';
+      }
+      this.$http.post(url,{actOperator:this.$store.state.userName,processId:this.row.processId}).then(res => {
+        if (res.status === 200 && res.data.code!=1) {
+          if(res.data.code == 0){ this.$message({message: res.data.msg,type: 'success'});  }
+          if(res.data.code == 2){ this.$message({message: res.data.msg,type: 'warning'});  }
+          this.SgData = res.data.data.worksheetsgDOlist;
+          this.RMData = res.data.data.remitDOlist;
+          this.WSData = res.data.data.workSheetDOlsit;
           this.refreshDetailData();
-        }
-      })
+        } else{ this.$message.error(res.data.msg); }
+      });
+      // 旧的
+      // this.$http.post('api/sics/basis/getWSAndSGfromSics',{actOperator:this.$store.state.userName,processId:this.row.processId}).then(res =>{
+      //   if(res.status === 200){ 
+      //     this.SgData = res.data.worksheetsgDOlist;
+      //     this.RMData = res.data.remitDOlist;
+      //     this.WSData = res.data.workSheetDOlsit;
+      //     this.refreshDetailData();
+      //   }
+      // })
     },
-    getName(name) {
+    getName(name,tag) {
       this.$http.post('api/activiti/getAssigneeName',{roleName:name}).then(res =>{
         if(res.status === 200){
-          this.TJRoptions = res.data;
+          if(tag && tag=='代理'){
+            this.proxyList = res.data;
+          } else{ this.TJRoptions = res.data; }
         }
       })
     },
@@ -1882,8 +1898,7 @@ export default {
                                 type:this.$route.query.name,
                                 actOperator:this.$store.state.userName,
                                 approvalLevel:this.row.approvalLevel,
-                                })
-                              .then(res =>{
+                                }).then(res =>{
                                 if(res.status === 200 && res.data.errorCode == 1){
                                   // this.$message({type: 'success', message:res.data.errorMessage });
                                   this.dialogFormVisible3 = false;

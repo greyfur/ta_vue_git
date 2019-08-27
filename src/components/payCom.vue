@@ -210,20 +210,15 @@
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" width="432" class="SwitchingMode">
       <el-form label-width="140px" v-show="title==='流程提交'">
-        <el-form-item label="选择处理人"  v-show="title==='流程提交' && urlName != 'emailNotify'">
-          <el-select filterable v-model="assignee"  placeholder="请选择">
-            <el-option v-for="item in TJRoptions" :key="item.userId" :label="item.name" :value="item.username"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="选择管理员">
+        <el-form-item label="选择处理人" v-show="title==='流程提交'">
           <el-select filterable v-model="assignee"  placeholder="请选择">
             <el-option v-for="(item,i) in TJRoptionsA" :key="i" :label="item.name" :value="item.username"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item>
+        <!-- <el-form-item>
           <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
           <el-button size="small" type="primary" plain @click="confirm">确定</el-button>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
         <!-- 上传附件 -->
         <el-upload
@@ -279,7 +274,7 @@
         </el-table-column>
       </el-table>
 
-      <el-table :data="fileData" height="300" style="width: 100%;height:auto;" border class="document" v-show="title==='上传附件' || title==='附件'" :header-row-class-name="StableClass">
+      <el-table :data="fileData" height="300" style="width: 100%;height:auto;" border class="document" v-if="title==='上传附件' || title==='附件'" :header-row-class-name="StableClass">
         <el-table-column label="文件名" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -300,10 +295,17 @@
             <el-button @click.stop="detailRemove(scope.row)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column> -->
-        <div class="browseDoc" v-show="title=='附件' || title=='编辑'">
-          <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
-        </div>
+      
+      <div class="browseDoc" v-if="title=='附件'||title=='编辑'">
+        <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
+      </div>
       </el-table>
+      <div slot="footer" class="dialog-footer" style="margin-top:10px;" v-show="title==='流程提交'">
+        <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
+        <el-button size="small" type="primary" plain @click="confirm">确定</el-button>
+      </div>
+      
+
     </el-dialog>
  
     <el-dialog :title="title" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal" class="SwitchingMode">
@@ -641,7 +643,6 @@ export default {
             })
           }
           this.tableData = res.data.rows;
-          console.log(this.tableData);
           this.mustData.total = res.data.total;
           if(res.data && res.data.rows && res.data.rows.length){
             // if(res.data.rows[0].processStatus === '待处理' && this.urlName === 'payOperation'){
@@ -788,31 +789,39 @@ export default {
           })
         break;
         case 12: //流程提交  //  8.23 胖虎说邮件流程提交，不用指下一个人，直接只给entryOperator
-          this.title = '流程提交';
-          this.$confirm('是否流程提交?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
-              ,{processId:this.chooseRow.processId, 
-              procInstId:this.chooseRow.processInstId, 
-              assignee:this.chooseRow.entryOperator, 
-              type:'PAYING',
-              actOperator:this.$store.state.userName,
-              // hasNoticedFlag:this.chooseRow.hasNoticedFlag
-              }).then(res =>{
-              if(res.status === 200 && res.data.errorCode == 1){
-                this.dialogFormVisible2 = false;
-                this.$message({type: 'success', message: res.data.errorMessage});  
-                this.assignee = null;
-                this.init();
-              } else if(res.data.errorCode == 0){
-                this.$message({type: 'error', message:res.data.errorMessage }); 
+          // 8.27 胖虎又说流程提交需要选人 邮件通知的 提交,  支付页面的  指派,   角色都传'收款出纳'
+          this.$http.post("api/activiti/getAssigneeName", {roleName:'收款出纳'})
+            .then(res => {
+              if (res.status === 200) {
+                this.TJRoptionsA = res.data;
               }
-            })
-          })
-          // this.dialogFormVisible2 = true;
+            });
+          this.title = '流程提交';
+          // this.$confirm('是否流程提交?', '提示', {
+          //   confirmButtonText: '确定',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
+          //   this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
+          //     ,{processId:this.chooseRow.processId, 
+          //     procInstId:this.chooseRow.processInstId, 
+          //     assignee:this.chooseRow.entryOperator, 
+          //     type:'PAYING',
+          //     actOperator:this.$store.state.userName,
+          //     // hasNoticedFlag:this.chooseRow.hasNoticedFlag
+          //     }).then(res =>{
+          //     if(res.status === 200 && res.data.errorCode == 1){
+          //       this.dialogFormVisible2 = false;
+          //       this.$message({type: 'success', message: res.data.errorMessage});  
+          //       this.assignee = null;
+          //       this.init();
+          //     } else if(res.data.errorCode == 0){
+          //       this.$message({type: 'error', message:res.data.errorMessage }); 
+          //     }
+          //   })
+          // })
+          this.dialogFormVisible2 = true;
+
         break;
         case 13: //邮件通知 
            if(this.chooseRow.businessOrigin=="International"){  // 国际
@@ -981,12 +990,11 @@ export default {
             assignee:this.assignee, 
             type:'PAYING',
             actOperator:this.$store.state.userName,
-            // hasNoticedFlag:this.chooseRow.hasNoticedFlag
             })
             .then(res =>{
               if(res.status === 200 && res.data.errorCode == 1){
                 this.dialogFormVisible2 = false;
-                this.$message({type: 'success', message: '提交成功!'});  
+                this.$message({type: 'success', message: res.data.errorMessage});  
                 this.assignee = null;
                 this.init();
               } else if(res.data.errorCode == 0){
