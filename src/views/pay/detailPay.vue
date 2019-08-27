@@ -22,12 +22,18 @@
           <el-button size="small" :type="hxState?'info':''" @click="gangUp('核销')" plain>{{!hxState?'挂起':'悬停'}}</el-button>
           <el-button size="small" :disabled="hxState" plain @click="submite(1,'流程提交')">流程提交</el-button>
         </div>
-        <!-- 支付/partial -->
-        <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payment' || $route.query.tag === 'partialDone'">
-          <el-button type="primary" v-if="$route.query.tag === 'partialDone'" @click="openBPSICS" plain>打开BpLedger</el-button>
+        <!-- partial -->
+        <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'partialDone'">
+          <el-button type="primary" @click="openBPSICS" plain>打开BpLedger</el-button>
           <el-button size="small" plain @click="getSGSg">同步状态</el-button>
-          <el-button size="small" @click="makeReport" v-if="$route.query.tag === 'partialDone'" plain>生成核销报告</el-button>
+          <el-button size="small" @click="makeReport" plain>生成核销报告</el-button>
           <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button>
+        </div>
+        <!-- 支付 -->
+        <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payment'">
+          <el-button size="small" plain @click="getSGSg">同步状态</el-button>
+          <!-- <el-button size="small" plain @click="">指派</el-button> -->
+          <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button><
         </div>
         <!-- 操作 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payOperation'">

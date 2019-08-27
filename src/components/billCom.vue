@@ -586,11 +586,7 @@
           <el-button type="primary" plain @click="split()">确定</el-button>
         </el-form-item> -->
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-        style="margin-top:10px;"
-      >
+      <div slot="footer" class="dialog-footer" style="margin-top:10px;">
         <el-button size="small" @click="dialogFormVisible3 = false">取消</el-button>
         <el-button type="primary" plain @click="split()">确定</el-button>
       </div>
@@ -1339,6 +1335,7 @@ export default {
               }else{ sessionStorage.setItem('data',JSON.stringify({})); }
             }
           });
+          if(this.RWFlag){ this.billSearch.wsBusinessType='C'; } // 8.26 有RW的账单----任务类型硬核变成 修正账单
           this.dialogFormVisible = true;
           this.title = "编辑";
           break;
