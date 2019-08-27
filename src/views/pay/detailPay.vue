@@ -906,6 +906,7 @@
         </el-form-item>
         <el-form-item label="原币币制/金额" required>
           <el-form-item>
+             <!-- <el-select filterable style="width:90%;height:40px;line-height:40px;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange"> 8.27注释-->
             <el-select filterable style="width:90%;height:40px;line-height:40px;" placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
               <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
             </el-select>
@@ -931,7 +932,22 @@
             </div>
           </el-form-item>
         </el-form-item>
-        <el-form-item label="折币币制/金额" required v-show="!yuanTypeFlag">
+        <!-- <el-form-item label="折币币制/金额" required v-show="!yuanTypeFlag"> -->
+        <el-form-item label="折币币制/金额" required v-if="makeDocListEctype.yuanType.length>1">
+          <el-col :span="10">
+            <el-form-item>
+              <el-select filterable v-model="makeDocListEctype.zheType" placeholder="请选择" class="curAmount" @change="zheTypeChange">
+                <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item>
+              <el-input v-model="makeDocListEctype.zheNum" class="curAmount"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="折币币制/金额" v-else>
           <el-col :span="10">
             <el-form-item>
               <el-select filterable v-model="makeDocListEctype.zheType" placeholder="请选择" class="curAmount" @change="zheTypeChange">
@@ -2571,11 +2587,14 @@ export default {
         return url;
     },
     selectChange(){
-      this.makeDocListEctype.yuanType.length==1?this.yuanTypeFlag=true:this.yuanTypeFlag=false;
+      // this.makeDocListEctype.yuanType.length==1?this.yuanTypeFlag=true:this.yuanTypeFlag=false;8.27
       this.makeDocListEctype.zheType=this.makeDocListEctype.yuanType[0];//只有一个的时候默认为这个 8.26
-      if(this.makeDocListEctype.yuanType.length){
-        this.zheTypeChange();
-      } else{ this.makeDocListEctype.zheNum = null; }
+      // if(this.makeDocListEctype.yuanType.length){ 8.27
+      //   this.zheTypeChange();
+      // } else{ this.makeDocListEctype.zheNum = null; }
+      if(this.makeDocListEctype.yuanType.length==0){
+        this.makeDocListEctype.zheNum='';
+      }
     },
     zheTypeChange(){  // 折币币制改变 --- 改总折币金额 --- 改原币制的汇率
       // this.filterCurrencyRateList('CNY','iii')
