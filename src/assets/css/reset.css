@@ -123,12 +123,15 @@ body .el-table colgroup.gutter {
 }
 .titleSearch{
   width: 100%;
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1px solid #eaeaea;
   padding: 12px 16px;
   cursor: pointer;
 }
+table th{
+  border-color: #eaeaea;
+}
 .searchNew{
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1px solid #eaeaea;
 }
 .searchNews{
   border:1px solid rgba(238,238,238,1);
@@ -151,6 +154,11 @@ body .el-table colgroup.gutter {
   border-bottom-right-radius: 4px;
   border-bottom-left-radius: 4px; */
   border-radius: 4px;
+  /* border-color:#eaeaea; */
+}
+/*8.27改变边框颜色*/
+.el-table th,.el-table tr,.el-table td{
+  border-color: #eaeaea;
 }
 .tableClass th,.tableClass th.is-right{
   background-color: #F5F5F5;

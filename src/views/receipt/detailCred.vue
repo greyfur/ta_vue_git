@@ -44,7 +44,7 @@
       <el-button type="primary" :disabled="hxState" v-show="row.hasRecheckFlag==1" plain @click="submite(1,'流程提交','收款录入')">流程提交</el-button>
     </div>
     <!-- 详情 -->
-    <div :class="searchFlag1===true?'searchNew':''" >
+    <div :class="searchFlag1===true?'searchNew':''" style="margin-bottom:10px;">
       <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
         <div><i style="margin-right:8px;" :class="searchFlag1===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>详情</div>
         <p class="info" style="color:#666;">流程编号:
