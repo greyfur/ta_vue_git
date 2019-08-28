@@ -107,7 +107,7 @@
     </div> 
     <el-table :header-row-class-name="StableClass" :data="tableData" border style="width: 100%"  :height="changeClientHight">
       <el-table-column prop="createdAt" label="创建时间" width="160" align="center"></el-table-column>
-      <el-table-column label="流程编号" width="130" align="center">
+      <el-table-column label="流程编号" width="160" align="center">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName !== 'sortOperation'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>
@@ -184,7 +184,11 @@
           <span>{{nameList[scope.row.registBy]}}</span>
         </template>
       </el-table-column> -->
-      <el-table-column label="录入人" prop="registBy" width="110" align="center"></el-table-column>
+      <el-table-column label="录入人" prop="registBy" width="110" align="center">
+        <template slot-scope="scope">
+          <span>{{nameList[scope.row.registBy]}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="录入时间" prop="inputAt" width="160" align="center"></el-table-column>
       <el-table-column prop="closedBy" label="复核人" width="130" align="center"></el-table-column>
       <el-table-column prop="registAt" label="提交复核时间" width="160" align="center"></el-table-column>

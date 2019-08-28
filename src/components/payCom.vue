@@ -887,8 +887,8 @@ export default {
         this.formLabelAlign.rmSettleCompanyCode = obj.codecode;
         this.formLabelAlign.rmSettleCompanyName = obj.codeName;
       } else{
-        this.formLabelAlign.rmSettleCompanyCode = '';
-        this.formLabelAlign.rmSettleCompanyName = '';
+        this.formLabelAlign.rmSettleCompanyCode = null;
+        this.formLabelAlign.rmSettleCompanyName = null;
       }
       switch(this.tag){
         case 1: //创建

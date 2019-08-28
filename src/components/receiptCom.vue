@@ -412,7 +412,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="Business Origin" prop="businessOrigin" v-show="title==='创建' || title==='编辑'">
-          <el-select clearable v-model="formLabelAlign.businessOrigin" placeholder="请选择">
+          <el-select :disabled='originFlag' clearable v-model="formLabelAlign.businessOrigin" placeholder="请选择">
             <el-option
               v-for="item in businessOriginList"
               :key="item.code"
@@ -422,7 +422,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="Base Company" v-show="title==='创建' || title==='编辑'" prop="baseCompany">
-          <el-select clearable v-model="formLabelAlign.baseCompany" placeholder="请选择">
+          <el-select :disabled='companyFlag' clearable v-model="formLabelAlign.baseCompany" placeholder="请选择">
             <el-option
               v-for="item in baseCompanyList"
               :key="item.code"
@@ -479,10 +479,11 @@
             action=""
             :before-upload="beforeAvatarUpload"
             :auto-upload="true"
+            multiple
             :http-request="upload"
             :file-list="fileList"
           >
-            <el-button plain type="primary">上传</el-button>
+            <el-button plain type="primary">上传111</el-button>
           </el-upload>
         </el-form-item>
         <!-- <el-form-item>
@@ -670,6 +671,8 @@ export default {
   },
   data() {
     return {
+      originFlag:false,
+      companyFlag:false,
       dRProcessId:null,
       suffixFlag:false,
       nameList:{},
@@ -694,8 +697,8 @@ export default {
       },
       formLabelAlign: {
         processId:'',
-        rmSettleCompanyCode: '',
-        rmSettleCompanyName: '',
+        rmSettleCompanyCode: null,
+        rmSettleCompanyName: null,
         rmCurrency: '',
         rmReceiptDate: '',
         businessOrigin: '',
@@ -1006,6 +1009,8 @@ export default {
       }
     },
     handleClick(tag, row) {
+      row.rmSettleCompanyCode=null;
+      row.rmSettleCompanyName=null;
       this.chooseRow = Object.assign({}, row);
       this.singlePId = this.chooseRow.processId;
       this.tag = tag;
@@ -1030,12 +1035,25 @@ export default {
           this.confirm();
           break;
         case 6: //编辑
+        console.log(this.chooseRow,'wwwww')
           for(let k in this.formLabelAlign){ this.formLabelAlign[k] = this.chooseRow[k]; };
           // this.formLabelAlign = this.chooseRow;
-          this.formLabelAlign.rmSettleCompanyCode = '';
-          this.formLabelAlign.rmSettleCompanyName = '';
+          this.formLabelAlign.rmSettleCompanyCode = null;
+          this.formLabelAlign.rmSettleCompanyName = null;
+          console.log(this.companyFlag)
+          if(row.baseCompany===null){
+            this.companyFlag=false;
+          }else if(row.baseCompany.length&&row.baseCompany.length>0){
+            this.companyFlag=true;
+          }
+          if(row.businessOrigin===null){
+            this.originFlag=false;
+          }else if(row.businessOrigin.length&&row.businessOrigin.length>0){
+            this.originFlag=true;
+          }
           // rmSettleCompanyName
           console.log(this.formLabelAlign.businessOrigin)
+          console.log(row)
           if (this.chooseRow.businessOrigin) {
             let arr = this.businessOriginList.filter(el => {
               return el.name == this.chooseRow.businessOrigin;
@@ -1321,16 +1339,18 @@ export default {
                 }
               });
           });
-
         break;
-      
       }
     },
     confirm(formName) {
+      console.log(this.cedentModel)
       if (this.cedentModel != null) {
         let obj = this.cedentList[this.cedentModel];
         this.formLabelAlign.rmSettleCompanyCode = obj.codecode;
         this.formLabelAlign.rmSettleCompanyName = obj.codeName;
+      }else{
+        this.formLabelAlign.rmSettleCompanyCode = null;
+        this.formLabelAlign.rmSettleCompanyName = null;
       }
       if (this.searchList.cedentModel != null) {
         let obj = this.cedentList[this.searchList.cedentModel];
@@ -1394,14 +1414,17 @@ export default {
           });
           break;
         case 6: //编辑
-          console.log(params1);
+        console.log(this.mustData, this.formLabelAlign)
           let params1 = Object.assign({}, this.mustData, this.formLabelAlign, {actOperator: this.$store.state.userName});
+          console.log(params1.rmSettleCompanyCode)
           for(let k in params1){
               if(!params1[k] && params1[k]!=0){
                 params1[k] = '';
               }
             }
           if(!params1.rmAmount){ params1.rmAmount = 0; }
+          if(params1.rmSettleCompanyCode==''){ params1.rmSettleCompanyCode = null; }
+          if(params1.rmSettleCompanyName==''){ params1.rmSettleCompanyName = null; }
           if(this.formLabelAlign.businessOrigin&&this.formLabelAlign.baseCompany){
              this.$http.post("api/receipt/finaCreat/update",params1)
             .then(res => {
@@ -1421,8 +1444,6 @@ export default {
           }else{
             this.$message.error('businessOrigin、baseCompany为必填项')
           }
-          console.log(this.formLabelAlign.businessOrigin,'hyd')
-         
           break;
         case 7: //删除
           break;
