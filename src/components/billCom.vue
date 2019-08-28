@@ -138,10 +138,7 @@
     <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;text-align:center;margin:0 auto;">  
       <el-table-column label="流程编号" width="170" align="center">
         <template slot-scope="scope">
-          <span
-            :class="{'smallHand':urlName !== 'sortOperation'}"
-            @click="goDetail(scope.row)"
-          >{{scope.row.processId}}</span>
+          <span :class="{'smallHand':urlName !== 'sortOperation'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>
       </el-table-column>
       <el-table-column label="流程名称" width="400" align="left">
@@ -401,27 +398,34 @@
         <el-form-item label="账单收到日期" :prop="billSearch.wsBusinessType=='C'?'':'wsReceiptDate'" v-show="title === '手工创建' || title==='编辑'">
           <el-date-picker value-format="timestamp" v-model="billSearch.wsReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item label="原流程编号" :prop="title==='编辑'&& billSearch.wsBusinessType=='C'?'parentProcessId':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'">
+         <el-form-item label="是否为历史账单" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'">
+          <el-checkbox v-model="historicalBill">是</el-checkbox>
+        </el-form-item>
+        <!-- <el-form-item label="原流程编号" :prop="!historicalBill&&title==='编辑'&& billSearch.wsBusinessType=='C'?'parentProcessId':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'&&!historicalBill">
           <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
         </el-form-item>
         <el-form-item label="原流程编号" v-show="title==='手工创建'&& billSearch.wsBusinessType=='C'">
           <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
+        </el-form-item> -->
+        <el-form-item label="原流程编号" :prop="!historicalBill&&title==='编辑'&& billSearch.wsBusinessType=='C'?'parentProcessId':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'&&!historicalBill">
+          <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
         </el-form-item>
-
-        <el-form-item label="收到邮件更正期" v-show="title==='手工创建'&& billSearch.wsBusinessType!='T' && billSearch.wsBusinessType!='F' && billSearch.wsBusinessType">
+        <el-form-item label="原流程编号" :prop="title==='手工创建'&& billSearch.wsBusinessType=='C'?'parentProcessId':''" v-show="title==='手工创建'&& billSearch.wsBusinessType=='C'">
+          <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
+        </el-form-item>
+        <el-form-item label="收到邮件更正期" v-show="title==='手工创建'&& billSearch.wsBusinessType=='C' && billSearch.wsBusinessType">
           <el-date-picker value-format="timestamp" v-model="billSearch.correctMailDate" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item label="收到邮件更正期" :prop="title==='编辑'&&billSearch.wsBusinessType!='T'&&billSearch.wsBusinessType!='F'&&billSearch.wsBusinessType?'correctMailDate':''" v-show="title==='编辑'&&billSearch.wsBusinessType!='T'&&billSearch.wsBusinessType!='F'&&billSearch.wsBusinessType">
+        <el-form-item label="收到邮件更正期" :prop="title==='编辑'&& billSearch.wsBusinessType=='C'?'correctMailDate':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'&&billSearch.wsBusinessType">
           <el-date-picker value-format="timestamp" v-model="billSearch.correctMailDate" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item label="更正原因" v-show="title==='手工创建'&& billSearch.wsBusinessType!='T' && billSearch.wsBusinessType!='F' && billSearch.wsBusinessType">
+        <el-form-item label="更正原因" v-show="title==='手工创建'&&billSearch.wsBusinessType=='C'">
           <el-input v-model.trim="billSearch.correctMailReason" placeholder="请输入更正原因"></el-input>
         </el-form-item>
-        <el-form-item label="更正原因" :prop="title==='编辑'&&billSearch.wsBusinessType!='T'&&billSearch.wsBusinessType!='F'&&billSearch.wsBusinessType?'correctMailReason':''" v-show="title==='编辑'&&billSearch.wsBusinessType!='T'&&billSearch.wsBusinessType!='F'&&billSearch.wsBusinessType">
+        <el-form-item label="更正原因" :prop="title==='编辑'&&billSearch.wsBusinessType=='C'?'correctMailReason':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'&&billSearch.wsBusinessType">
           <el-input v-model.trim="billSearch.correctMailReason" placeholder="请输入更正原因"></el-input>
         </el-form-item>
-
-        <el-form-item label="母合同编号" :prop="title==='编辑'&& billSearch.wsBusinessType=='O'?'occId':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='O'">
+        <el-form-item label="母合同编号" :prop="title==='编辑'&&billSearch.wsBusinessType=='O'?'occId':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='O'">
           <el-input v-model.trim="billSearch.occId" placeholder="请输入母合同编号"></el-input>
         </el-form-item>
         <el-form-item label="母合同编号" v-show="title==='手工创建'&& billSearch.wsBusinessType=='O'">
@@ -605,6 +609,7 @@ export default {
   },
   data() {
     return {
+      historicalBill:false,
       dRProcessId:null,
       suffixFlag:false,
       RWFlag:false,
@@ -840,6 +845,7 @@ export default {
       this.cedentList = JSON.parse(sessionStorage.getItem("CedentType"));
       // 经纪人
       this.brokerList = JSON.parse(sessionStorage.getItem("BrokerType"));
+      this.brokerList.unshift({codeName: "无",codeType: null,codecode: "无"});
       // 账单类型
       this.ZDoptions = JSON.parse(sessionStorage.getItem("wsType"));
 
@@ -860,14 +866,12 @@ export default {
   methods: {
     onWsBusinessType(){
       if(this.billSearch.wsBusinessType!='C'){
-        this.billSearch.parentProcessId = '';
+        this.billSearch.parentProcessId = null;
+        this.billSearch.correctMailReason = null;
+        this.billSearch.correctMailDate = null;
       }
       if(this.billSearch.wsBusinessType!='O'){
-        this.billSearch.occId = '';
-      }
-      if(this.billSearch.wsBusinessType=='O' || this.billSearch.wsBusinessType=='C'){
-        this.billSearch.correctMailReason = '';
-        this.billSearch.correctMailDate = '';
+        this.billSearch.occId = null;
       }
     },
     countYear(str){
@@ -1035,7 +1039,7 @@ export default {
         if (res.status === 200) {
           this.mustData.total = res.data.total;
           if (res.data && res.data.rows && res.data.rows.length) {
-              if(this.urlName === 'billEntry' && res.data.rows && res.data.rows.length){
+            if(this.urlName === 'billEntry' && res.data.rows && res.data.rows.length){
               res.data.rows.forEach(el=>{
                 el.processStatus === '待处理'?el['pendingFlag']=true:el['pendingFlag']=false;
               })
@@ -1057,8 +1061,15 @@ export default {
       }
       if (this.brokerModel != null && this.brokerModel != '') {
         let obj = this.brokerList[this.brokerModel];
-        this.billSearch.wsBrokerCode = obj.codecode;
-        this.billSearch.wsBrokerName = obj.codeName;
+        // this.brokerList.unshift({codeName: "无",codeType: null,codecode: "无"});
+        if(obj.codeType == null){
+          this.billSearch.wsBrokerCode = null;
+          this.billSearch.wsBrokerName = null;
+        } else{
+          this.billSearch.wsBrokerCode = obj.codecode;
+          this.billSearch.wsBrokerName = obj.codeName;
+        }
+        
       } else{
         this.billSearch.wsBrokerCode = '';
         this.billSearch.wsBrokerName = '';
@@ -1067,9 +1078,14 @@ export default {
         case 0: // 创建
           this.$refs[formName].validate(valid => {
             if (valid) {
+              if(this.billSearch.wsBusinessType=='C' && !this.billSearch.parentProcessId){
+                this.$message({ type: "error", message: '请输入原流程编号' });
+                return false;
+              }
               this.$http.post("api/worksheet/wSEntry/save",Object.assign({}, this.mustData, this.billSearch))
                 .then(res => {
                   if (res.status === 200 && res.data.code == 0) {
+                    this.$message({ type: "success", message:res.data.msg });
                     this.dialogFormVisible = false;
                     this.init();
                   } else if(res.data.code == 1){
@@ -1121,6 +1137,11 @@ export default {
               if (!res.data.rows.length) {
                 this.$message({ type: "warning", message: "未查询出数据" });
               } else {
+                if(this.urlName === 'billEntry' && res.data.rows && res.data.rows.length){
+                    res.data.rows.forEach(el=>{
+                      el.processStatus === '待处理'?el['pendingFlag']=true:el['pendingFlag']=false;
+                    })
+                  }
                 this.tableData = res.data.rows;
                 this.mustData.total = res.data.total;
                 this.dialogFormVisible = false;
@@ -1131,8 +1152,16 @@ export default {
         case 2: // 编辑
           this.$refs[formName].validate(valid => {
             if (valid) {
-              if(this.billSearch.wsBusinessType=='C' && !this.billSearch.parentProcessId){
+              if(this.billSearch.wsBusinessType=='C' && !this.billSearch.parentProcessId && !this.historicalBill){
                 this.$message({ type: "error", message: '请输入原流程编号' });
+                return false;
+              }
+              if(this.billSearch.wsBusinessType=='C' && !this.billSearch.correctMailDate){
+                this.$message({ type: "error", message: '请输入收到邮件更正期' });
+                return false;
+              }
+              if(this.billSearch.wsBusinessType=='C' && !this.billSearch.correctMailReason){
+                this.$message({ type: "error", message: '请输入更正原因' });
                 return false;
               }
               let params1 = Object.assign({},this.billSearch, this.mustData, {processId: this.chooseRow.processId})
@@ -1142,8 +1171,10 @@ export default {
                    params1[k] = '';
                  }
                }
-                params1['hasRecheckFlag']=null;
+               if(this.historicalBill){
                 params1['parentProcessId']=null;
+              }
+                params1['hasRecheckFlag']=null;
                 this.$http.post("api/worksheet/wSEntry/update",params1)
                   .then(res => {
                     if (res.status === 200 && res.data.code == 0) {
@@ -1230,18 +1261,21 @@ export default {
           break;
         case 2:
           // 账单类型
+          for(let k in this.billSearch){
+            this.billSearch[k] = row[k];
+          }
           this.RWFlag = row.processId.indexOf('RW')>0;
           this.fileData = [];
-         this.billSearch.wsPeriod=row.wsPeriod;
-          if (row.wsType) {
-            this.ZDoptions.forEach((el, i) => {
-              if (el.name == row.wsType) {
-                this.billSearch.wsType = el.code;
-              }
-            });
-          } else {
-            this.billSearch.wsType = '';
-          }
+          this.billSearch.wsPeriod=row.wsPeriod;
+            if (row.wsType) {
+              this.ZDoptions.forEach((el, i) => {
+                if (el.name == row.wsType) {
+                  this.billSearch.wsType = el.code;
+                }
+              });
+            } else {
+              this.billSearch.wsType = '';
+            }
           // 任务类型
           if (row.wsBusinessType) {
             this.billSearch.wsBusinessType = row.wsBusinessType;
@@ -1250,11 +1284,15 @@ export default {
           }
           // 账单收到日期
           if (row.wsReceiptDate) {
-            this.billSearch.wsReceiptDate = new Date(
-              row.wsReceiptDate
-            ).valueOf();
+            this.billSearch.wsReceiptDate = new Date(row.wsReceiptDate).valueOf();
           } else {
             this.billSearch.wsReceiptDate = '';
+          }
+          // 收到邮件更正期
+          if (row.correctMailDate) {
+            this.billSearch.correctMailDate = new Date(row.correctMailDate).valueOf();
+          } else {
+            this.billSearch.correctMailDate = '';
           }
           //  分出人cedentModel  cedentList
           if (row.wsCedentCode) {
