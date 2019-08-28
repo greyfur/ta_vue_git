@@ -479,11 +479,10 @@
             action=""
             :before-upload="beforeAvatarUpload"
             :auto-upload="true"
-            multiple
             :http-request="upload"
             :file-list="fileList"
           >
-            <el-button plain type="primary">上传111</el-button>
+            <el-button plain type="primary">上传</el-button>
           </el-upload>
         </el-form-item>
         <!-- <el-form-item>
@@ -697,8 +696,8 @@ export default {
       },
       formLabelAlign: {
         processId:'',
-        rmSettleCompanyCode: null,
-        rmSettleCompanyName: null,
+        rmSettleCompanyCode: '',
+        rmSettleCompanyName: '',
         rmCurrency: '',
         rmReceiptDate: '',
         businessOrigin: '',
@@ -1009,8 +1008,6 @@ export default {
       }
     },
     handleClick(tag, row) {
-      row.rmSettleCompanyCode=null;
-      row.rmSettleCompanyName=null;
       this.chooseRow = Object.assign({}, row);
       this.singlePId = this.chooseRow.processId;
       this.tag = tag;
@@ -1038,8 +1035,8 @@ export default {
         console.log(this.chooseRow,'wwwww')
           for(let k in this.formLabelAlign){ this.formLabelAlign[k] = this.chooseRow[k]; };
           // this.formLabelAlign = this.chooseRow;
-          this.formLabelAlign.rmSettleCompanyCode = null;
-          this.formLabelAlign.rmSettleCompanyName = null;
+          this.formLabelAlign.rmSettleCompanyCode = '';
+          this.formLabelAlign.rmSettleCompanyName = '';
           console.log(this.companyFlag)
           if(row.baseCompany===null){
             this.companyFlag=false;
@@ -1212,8 +1209,9 @@ export default {
             this.dialogFormVisible2 = true; 
           break;
         case 13: // 任务认领
+        console.log(111)
           let url = "",
-            obj = null;
+              obj = null;
           if (
             this.multipleSelection.length &&
             this.multipleSelection.length == 1
@@ -1348,9 +1346,6 @@ export default {
         let obj = this.cedentList[this.cedentModel];
         this.formLabelAlign.rmSettleCompanyCode = obj.codecode;
         this.formLabelAlign.rmSettleCompanyName = obj.codeName;
-      }else{
-        this.formLabelAlign.rmSettleCompanyCode = null;
-        this.formLabelAlign.rmSettleCompanyName = null;
       }
       if (this.searchList.cedentModel != null) {
         let obj = this.cedentList[this.searchList.cedentModel];
@@ -1414,9 +1409,9 @@ export default {
           });
           break;
         case 6: //编辑
-        console.log(this.mustData, this.formLabelAlign)
           let params1 = Object.assign({}, this.mustData, this.formLabelAlign, {actOperator: this.$store.state.userName});
-          console.log(params1.rmSettleCompanyCode)
+          console.log(params1);
+
           for(let k in params1){
               if(!params1[k] && params1[k]!=0){
                 params1[k] = '';
