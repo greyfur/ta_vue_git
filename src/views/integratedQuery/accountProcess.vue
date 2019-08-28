@@ -292,7 +292,7 @@ export default {
         formLabelAlign:{
           createdBy:null,
           createdAt:null,
-          processType:['付款','收款'],
+          processType:null,
           rmSettleCompanyCode:null,
           rmSettleCompanyName:null,
           rmCurrency:null,
@@ -509,7 +509,6 @@ export default {
     },1000)
      
     this.mustData.actOperator = this.$store.state.userName;
-    //this.formLabelAlign.modifiedBy = this.$store.state.userName;
 
     //获取币制
     this.rmCurrencyList = JSON.parse(sessionStorage.getItem('CurrencyList'));
@@ -600,6 +599,7 @@ export default {
           this.formLabelAlign[k] = null;
         }
         this.cedentModel = null;
+        this.formLabelAlign.processType = ['收款','付款'];
     },
   reportClick(){
       // this.dialogReport=false;
@@ -816,7 +816,7 @@ export default {
         case 4: //查询
         if(!this.formLabelAlign.processStatus){ this.formLabelAlign.processStatus = this.processStatusCom; }
           let params = Object.assign({},this.mustData,this.formLabelAlign);
-         // let params = Object.assign({},this.mustData,this.formLabelAlign,{curOperator:this.$store.state.userName});
+          if(!params.processType){ params.processType = ['收款','付款'] };
           delete params['actOperator'];
           this.$http.post('api/integeratedQuery/ProcessMessagelist',params).then(res =>{
             if(res.status === 200){
