@@ -65,7 +65,7 @@
         <div :class="this.$store.state.flod?'btn approvalDoneBtn':'btns approvalDoneBtn'" v-if="$route.query.tag === 'payVerification'">
           <div class="btnChild">
             <el-button size="mini" plain class="approved" style="height: 32px; position:relative">
-              <span class="approvedName" @click="submite(5,'审批通过')">审批通过111</span>
+              <span class="approvedName" @click="submite(5,'审批通过')">审批通过</span>
               <el-dropdown size="mini" style="padding-left:10px" placement="top-end">
                 <span class="el-dropdown-link"><i class="el-icon-arrow-down el-icon--right" style="color:#fff"></i></span>
                 <el-dropdown-menu slot="dropdown" style="border-color:#005C8D">
@@ -86,7 +86,7 @@
         <ul class="step" v-if="$route.query.tag === 'payVerification'">
           <li v-for="(item,index) in strArr" :key="item+index">
             <span class="status" ref="status">{{index+1}}</span>
-            <span class="drc" ref="drc">{{item.wait}}</span>
+            <span class="drc" ref="drc">{{item}}</span>
           </li>
         </ul>
 
@@ -1007,8 +1007,8 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        strArr:[],
         proxyList:[],
-        // hydNum:0,
         yuanTypeFlag:false,
         currentPage:1,
         blockRefresh:null,
@@ -1205,7 +1205,6 @@ export default {
         file:[],
         fileList:[],
         fileData:[],
-        strArr:[],
         rules:{
           rmStatusIndex: [
             { required: true, message: '请选择支票状态', trigger: 'blur' }
@@ -1270,6 +1269,7 @@ export default {
         if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
       })
     }
+    this.createdStep();
   },
   beforeMount(){this.copy('proNum',1);},
   mounted(){ 
@@ -1279,23 +1279,7 @@ export default {
       } else{ this.$store.commit('ChangeFlod',false) }
     this.maxHeight = `${document.body.clientHeight-200}px`;
     this.mustData.actOperator = this.$store.state.userName;
-    let strArr = [];
     // this.refreshDetailData();
-    if(this.$route.query.tag === 'payVerification'){
-      this.$http.post("api/pay/activitiForPay/getAllLevel", {processId: this.row.processId})
-      .then(res => {
-        if (res.data > 0) {
-          for (let i = 0; i < res.data; i++) {
-            strArr.push({
-              wait: `待${i + 1}级审批`
-            });
-          }
-        } else {
-          return;
-        }
-        this.strArr = strArr;
-      });
-    }
     setTimeout(()=>{
       // 分出人+经济人
       let bList = JSON.parse(sessionStorage.getItem('BrokerBankList'));
@@ -1333,15 +1317,33 @@ export default {
     }
     this.dataBaseSG();
     this.mailSend(2,'',1);
-    let that=this;
-  },
-  updated(){
-    // 进度条1
-    if(this.$route.query.tag === 'payVerification'){
-      this.nextStep();
-    }
   },
   methods: {
+    async createdStep(){
+      await  this.$http.post("api/pay/activitiForPay/getAllLevel", {processId: this.row.processId})
+          .then(res => {
+            for(let i=0;i<res.data;i++){
+              this.strArr.push(`待${i+1}级审批`)
+            }
+          });
+          this.strArr.map((item,index)=>{
+            if(this.row.approvalLevel===0){
+              return;
+            }else{
+                if(index<this.row.approvalLevel){
+                  this.$refs.drc[index].className = "drc success";
+                  this.$refs.drc[index].innerHTML = `${index +1}级审批完成`;
+                  this.$refs.status[index].className = "status success";
+                  this.$refs.status[index].innerHTML = "✔";
+                }else if(index==this.row.approvalLevel){
+                    this.$refs.drc[index].className = "drc wait";
+                    this.$refs.drc[index].innerHTML = `${index +1}级审批中`;
+                    this.$refs.status[index].className = "status pending";
+                }
+            }
+            
+          })
+    },
     refreshDetailData(){
       let param = {
         pageNumber: 1,
@@ -1421,36 +1423,6 @@ export default {
           console.log(res, "打开SICS");
         });
     },
-    //进度条111
-    nextStep(){
-      let oldStrArrCreInd=0;
-      let drcArr = [...document.querySelectorAll(".drc")];
-      let statusArr = [...document.querySelectorAll(".status")];
-      oldStrArrCreInd = this.row.approvalLevel;
-        this.$http.post("api/pay/activitiForPay/getAllLevel", {
-        processId: this.row.processId
-      }).then(res=>{
-        this.saveLevel = res.data;
-        for(var i=0;i<res.data;i++){
-            oldStrArrCreInd--;
-            if(drcArr[oldStrArrCreInd]==undefined){
-              return
-            }else{
-                drcArr[oldStrArrCreInd].className = "drc success";
-                statusArr[oldStrArrCreInd].className = "status success";
-                statusArr[oldStrArrCreInd].innerHTML = "✔";
-                drcArr[oldStrArrCreInd].innerHTML = `${oldStrArrCreInd +1}级审批完成`;
-                console.log(drcArr[oldStrArrCreInd].innerHTML)
-            } 
-        }
-      })
-       if(drcArr[this.row.approvalLevel]==undefined){
-          return
-        }else{
-          drcArr[this.row.approvalLevel].className = "drc wait";
-          statusArr[this.row.approvalLevel].className = "status pending";
-        }
-    },
     urgencyPay(){
       this.$confirm('是否紧急付款？', '提示', {
         confirmButtonText: '确定',
@@ -1475,39 +1447,6 @@ export default {
             })
         
       })
-    },
-    openSGSICS(row){
-      this.$http
-        .post("api/pay/activitiForPay/getAllLevel", {
-          processId: this.row.processId
-        })
-        .then(res => {
-          let oldStrArrCreInd = this.row.approvalLevel;
-          if (this.row.approvalLevel > res.data) {
-            this.row.approvalLevel = res.data;
-          } else {
-            if (oldStrArrCreInd < this.row.approvalLevel + 1) {
-              let timer = setInterval(function() {
-                oldStrArrCreInd--;
-                if (oldStrArrCreInd <= 0) {
-                  clearInterval(timer);
-                }
-                drcArr[oldStrArrCreInd].className = "drc success";
-                statusArr[oldStrArrCreInd].className = "status success";
-                statusArr[oldStrArrCreInd].innerHTML = "✔";
-                drcArr[oldStrArrCreInd].innerHTML = `${oldStrArrCreInd +
-                  1}级审批完成`;
-              }, 0);
-            }
-            if (
-              drcArr[oldStrArrCreInd].classList.contains("drc success") ===
-              false
-            ) {
-              drcArr[this.row.approvalLevel].className = "drc wait";
-              statusArr[this.row.approvalLevel].className = "status pending";
-            }
-          }
-        });
     },
     copy(id,tag){
       let Url2 = null;

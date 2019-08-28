@@ -291,7 +291,11 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="createdBy" label="创建人" width="100" align="center"></el-table-column>
+      <el-table-column prop="createdBy" label="创建人" width="100" align="center">
+        <template slot-scope="scope">
+          <span>{{nameList[scope.row.createdBy]}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" width="200" align="center">
         <template slot-scope="scope">
           <el-tooltip
@@ -474,7 +478,7 @@
         </el-collapse-item>
       </el-collapse>
       <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'" :header-row-class-name="StableClass">
-        <el-table-column prop="processId" label="流程编号" width="140" align="center"></el-table-column>
+        <el-table-column prop="processId" label="流程编号" width="160" align="center"></el-table-column>
         <el-table-column prop="actName" label="操作名称" align="center"></el-table-column>
         <el-table-column label="任务来源" align="center">
           <template slot-scope="scope">

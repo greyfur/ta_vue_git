@@ -65,7 +65,7 @@
       <!-- <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button> -->
     </div>
     <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">
-      <el-table-column label="流程编号" width="145" align="center">
+      <el-table-column label="流程编号" width="160" align="center">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
@@ -78,9 +78,17 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="录入人" prop="registBy" width="110" align="center"></el-table-column>
+      <el-table-column label="录入人" prop="registBy" width="110" align="center">
+        <template slot-scope="scope">
+          <span>{{nameList[scope.row.registBy]}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="录入时间" prop="inputAt" width="160" align="center"></el-table-column>
-      <el-table-column prop="closedBy" label="复核人" width="130" align="center"></el-table-column>
+      <el-table-column prop="closedBy" label="复核人" width="130" align="center">
+        <template slot-scope="scope">
+          <span>{{nameList[scope.row.closedBy]}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="registAt" label="提交复核时间" width="160" align="center"></el-table-column>
       <el-table-column prop="closedAt" label="复核完成时间" width="160" align="center"></el-table-column>
       <el-table-column prop="rmCurrency" label="币制" width="60" align="center"></el-table-column>
@@ -165,7 +173,7 @@
         </el-collapse-item>
       </el-collapse>
       <el-table :data="track" border style="width: 100%" v-show="title==='踪迹'" :header-row-class-name="StableClass">
-        <el-table-column prop="processId" label="流程编号" width="140" align="center"></el-table-column>
+        <el-table-column prop="processId" label="流程编号" width="160" align="center"></el-table-column>
         <el-table-column prop="actName" label="操作名称" align="center"></el-table-column>
         <el-table-column label="任务来源" align="center">
           <template slot-scope="scope">
