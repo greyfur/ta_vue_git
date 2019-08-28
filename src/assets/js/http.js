@@ -48,7 +48,7 @@ error => {
 		case 403:
 			Message.error({message: "token过期，请登录"});
 			cookie.remove('jwttokenInfo');
-			window.location.href = `http://${cip.loginUrl}:2222/login?service=http://${cip.currentIp}:${cip.currentPort}/indexPage`;
+			window.location.href = `${cip.loginUrl}/login?service=http://${cip.currentIp}:${cip.currentPort}/indexPage`;
 			return Promise.reject(error);
 		case 404:
 			Message.error({message: "404-不存在的接口"});

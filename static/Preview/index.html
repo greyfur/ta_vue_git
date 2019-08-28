@@ -47,9 +47,13 @@
                 if(Object.keys(obj).length){
                 var AS = AnyShare({
                 locale: 'zh-cn',
-                host: 'http://172.25.147.132', // 需替换成实际的部署地址
-                EACPPort: 9998, // 如果部署地址使用http，则填写9998
-                EFSPPort: 9123, // 如果部署地址使用http，则填写9123
+                // host: 'fcloud.chinare.com.cn', // 需替换成实际的部署地址
+                // host: 'http://172.25.147.132', // 需替换成实际的部署地址
+                host: `http://${obj.ip}`, // 需替换成实际的部署地址
+                // EACPPort: 9998, // 如果部署地址使用http，则填写9998
+                EACPPort: obj.acPort, // 如果部署地址使用http，则填写9998
+                EFSPPort: obj.fsPort, // 如果部署地址使用http，则填写9123
+                // EFSPPort: 9123, // 如果部署地址使用http，则填写9123
                 userid: function () {
                     // 替换用户自己的userid
                     // return '76e414a8-785c-11e9-a0aa-00163e010158'

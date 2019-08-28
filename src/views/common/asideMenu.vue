@@ -233,7 +233,7 @@ import { mapState } from "vuex";
         sessionStorage.removeItem('roleIdList');
         cookie.remove('jwttoken');
         cookie.remove('jwttokenInfo');
-        window.location.href = `http://${cip.loginUrl}:2222/logout?service=http://${cip.currentIp}:${cip.currentPort}/indexPage`;
+        window.location.href = `${cip.loginUrl}/logout?service=http://${cip.currentIp}:${cip.currentPort}/indexPage`;
       },
       changeExtend(str){
         if(str==='伸'){

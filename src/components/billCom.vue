@@ -845,10 +845,9 @@ export default {
       this.cedentList = JSON.parse(sessionStorage.getItem("CedentType"));
       // 经纪人
       this.brokerList = JSON.parse(sessionStorage.getItem("BrokerType"));
-      this.brokerList.unshift({codeName: "无",codeType: null,codecode: "无"});
       // 账单类型
       this.ZDoptions = JSON.parse(sessionStorage.getItem("wsType"));
-
+      this.brokerList.unshift({codeName: "无",codeType: null,codecode: "无"});
       let objbc = JSON.parse(sessionStorage.getItem("baseCompany"));
       this.baseCompanyList = objbc.filter(el => {
         return el.code != "Both";
