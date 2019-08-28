@@ -509,7 +509,9 @@ export default {
       // 分出人+经济人
       let fcArr = JSON.parse(sessionStorage.getItem('CedentType'));
       let jArr = JSON.parse(sessionStorage.getItem('BrokerType'));
-      this.cedentList = jArr.concat(fcArr);
+      // this.cedentList = jArr.concat(fcArr);
+      let rArr = JSON.parse(sessionStorage.getItem('ReinsurerList'));
+      this.cedentList = [...fcArr,...jArr,...rArr];
       // 集团产再
       this.baseCompanyList = JSON.parse(sessionStorage.getItem('baseCompany'));
       // 国际国内

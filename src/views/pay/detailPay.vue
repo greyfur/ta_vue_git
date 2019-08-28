@@ -1282,9 +1282,11 @@ export default {
     // this.refreshDetailData();
     setTimeout(()=>{
       // 分出人+经济人
+      let rArr = JSON.parse(sessionStorage.getItem('ReinsurerList'));
       let bList = JSON.parse(sessionStorage.getItem('BrokerBankList'));
       let cList = JSON.parse(sessionStorage.getItem('CedentBankList'));
-      this.brokerList = bList.concat(cList);
+      // this.brokerList = bList.concat(cList);
+      this.brokerList = [...bList,...cList,...rArr];
       let fcArr = JSON.parse(sessionStorage.getItem('CedentType'));
       let jArr = JSON.parse(sessionStorage.getItem('BrokerType'));
       this.brokerListHK = fcArr.concat(jArr);
