@@ -839,20 +839,13 @@ export default {
             <span style="margin-left:300px;"><input type="text" class="mailTemplate" id="Esignature" placeholder="请输入个人签名"/><span></div>   `
           } 
           this.$http.get("api/worksheet/wSEntry/getEmailContacts").then(res => {
-          if (res.status === 200 && res.data.length) {
+          if (res.status === 200) {
             this.fileData = this.chooseRow.bscDocumentVOlist;
             this.dialogFormVisible3 = true;
             this.title = "邮件通知";
             this.mailOption = res.data;
-          } else {
-            this.title = "邮件通知";
-            this.dialogFormVisible3 = true;
-            this.fileData = this.chooseRow.bscDocumentVOlist;
-            this.$message.error("获取不到发送人列表信息");
-          }
+          } 
         });
-          // this.title = '邮件通知';
-          // this.dialogFormVisible3 = true;
         break; 
         case 15: //附件查看改为附件 hyd
           this.$http.post('api/worksheet/sortOperation/listDocument'

@@ -45,10 +45,16 @@
           </el-col>
         </el-row>
         <el-row :gutter="10" class="billRow">
-          <el-col :span="16" v-show="processStatusList.length">
+          <el-col :span="8" v-show="processStatusList.length>2">
             <span class="slable">流程状态</span>
-            <el-select clearable v-model="searchList.processStatus" placeholder="请选择">
+            <el-select clearable v-model="searchList.processStatus" placeholder="请选择流程状态">
               <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="8" v-show="urlName=='viewInvalidate'">
+            <span class="slable">流程来源</span>
+            <el-select clearable v-model="accountClose" placeholder="请选择流程来源">
+              <el-option v-for="item in [{a:'操作',b:'3'},{a:'复核',b:'4'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
             </el-select>
           </el-col>
         </el-row>
@@ -267,19 +273,18 @@
             class="item"
             effect="dark"
             :content="scope.row.rmOriSettleCompanyName"
-            placement="top-start"
-          >
+            placement="top-start">
             <span class="abbreviate">{{scope.row.rmOriSettleCompanyName}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column prop="rmReceiptDate" width="120" label="到账日期" align="center"></el-table-column>
       <el-table-column prop="processStatus" width="95" label="流程状态" align="center"></el-table-column>
-      <!-- <el-table-column width="110" label="任务来源">
+      <el-table-column width="95" label="流程来源" align="center" v-if="urlName=='viewInvalidate'">
         <template slot-scope="scope">
-          <span>{{nameList[scope.row.curOperator]}}</span>
+          <span>{{accountCloseEnum[scope.row.accountCloseFlag]}}</span>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column width="110" label="录入人员" align="center">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.registBy]}}</span>
@@ -671,6 +676,12 @@ export default {
   },
   data() {
     return {
+      accountCloseEnum:{  // 
+        '3':'操作',
+        '4':'复核',
+        '5':'核销',
+      },
+      accountClose:null,
       originFlag:false,
       companyFlag:false,
       dRProcessId:null,
@@ -1398,6 +1409,9 @@ export default {
           }
           delete params.actOperator;
           delete params.modifiedBy;
+          if(this.accountClose){
+            params['accountCloseFlag'] = this.accountClose;
+          }
           this.$http.post("api/receipt/finaCreat/list", params).then(res => {
             if (res.status === 200) {
               if (!res.data.rows.length) {

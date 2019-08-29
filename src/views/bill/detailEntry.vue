@@ -1041,14 +1041,10 @@ export default {
       if (tag == 1) { // 邮件通知
         // 显示内容模板
         this.$http.get("api/worksheet/wSEntry/getEmailContacts").then(res => {
-          if (res.status === 200 && res.data.length) {
+          if (res.status === 200) {
             this.dialogFormVisible2 = true;
             this.title = "邮件通知";
             this.mailOption = res.data;
-          } else {
-            this.title = "邮件通知";
-            this.dialogFormVisible2 = true;
-            this.$message.error("获取不到发送人列表信息");
           }
         });
       } else {
