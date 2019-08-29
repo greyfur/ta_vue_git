@@ -2449,6 +2449,10 @@ li.detail-item {
   display: flex;
   width: 33%;
 }
+li.detail-item2 {
+  display: flex;
+  width: 50%;
+}
 .detailSearch {
   display: flex;
   align-items: center;

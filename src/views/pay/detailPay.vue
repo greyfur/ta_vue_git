@@ -60,7 +60,8 @@
           <el-button size="small" plain @click="getSGSg">同步状态</el-button>
           <el-button size="small" plain @click="submite(4,'复核驳回')">复核驳回</el-button>
           <el-button size="small" plain @click="submite(6,'复核通过')">复核通过</el-button>
-          <el-button size="small" plain @click="payReviewZGDX">暂挂待销</el-button>
+          <!-- <el-button size="small" plain @click="onVerification">暂挂待销</el-button> -->
+          <!-- onVerification('DELAY')" -->
         </div>
         <!-- 审批 -->
         <div :class="this.$store.state.flod?'btn approvalDoneBtn':'btns approvalDoneBtn'" v-if="$route.query.tag === 'payVerification'">
@@ -106,20 +107,9 @@
               <span class="detail-name">{{item.a}} : </span><span class="detail-content" v-if="typeof item.b=='number'">{{ Number(item.b).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
               <span class="detail-content" v-else-if="item.b=='null-null'"></span>
               <span class="detail-content abbreviate" v-else-if="item.a==='结付公司'" style="width:200px !important;">
-                  <!-- :title="item.b"标题 -->
-                <!-- <el-popover
-                  placement="top-start"
-                  width="288"
-                  trigger="hover"
-                  :content="item.b">
-                  <el-button slot="reference">{{item.b}}</el-button>
-                </el-popover> -->
-                  <el-tooltip class="item" effect="dark" :content="item.b" placement="top-start">
-                    <span>{{item.b}}</span>
-                  </el-tooltip>
-                  <!-- <el-tooltip content="Top center" placement="top">
-                    <el-button>Dark</el-button>
-                  </el-tooltip> -->
+                <el-tooltip class="item" effect="dark" :content="item.b" placement="top-start">
+                  <span>{{item.b}}</span>
+                </el-tooltip>
               </span>
               <span class="detail-content" v-else>{{item.b}}</span>
             </li>
@@ -1322,6 +1312,32 @@ export default {
     this.mailSend(2,'',1);
   },
   methods: {
+    onVerification(type1){
+      let tip = '';
+      type1=='UNDELAY'?tip='是否恢复至操作?':tip='是否暂挂待销?'
+      this.$confirm(tip, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$http.post("api/receipt/activitiForReceipt/commonActivitiForReceipt",
+          {
+            processId: this.row.processId,
+            procInstId: this.row.processInstId,
+            assignee: this.$store.state.userName,
+            type: type1,
+            actOperator: this.$store.state.userName
+          }
+        ).then(res => {
+          if (res.status === 200 && res.data.errorCode == 1) {
+            this.$message({ type: "success", message: res.data.errorMessage});
+            this.$router.push({ name: this.$route.query.tag });
+          } else if (res.data.errorCode == 0) {
+            this.$message({type: "error",message: res.data.errorMessage});
+          }
+        });
+      });
+    },
     async createdStep(){
       await  this.$http.post("api/pay/activitiForPay/getAllLevel", {processId: this.row.processId})
           .then(res => {
