@@ -476,6 +476,7 @@
           <el-upload
             v-show="title==='编辑'"
             class="upload-demo"
+            multiple
             action=""
             :before-upload="beforeAvatarUpload"
             :auto-upload="true"
@@ -1466,13 +1467,16 @@ export default {
       let url = this.title == "批量创建"?"/receipt/finaCreat/uploadCreate": "/anyShare/fileOperation/uploadFilesForPage";
       let people = this.title == "批量创建" ? "modifiedBy" : "actOperator";
       let resFile = new FormData();
+      console.log(this.file)
       resFile.append("file", this.file[0]);
       resFile.append(people, this.mustData.actOperator);
       if (this.title != "批量创建") {
         resFile.append("processId", this.chooseRow.processId);
       }
+      console.log(url)
       this.$http.post(`api${url}`, resFile, {headers: { "Content-Type": "application/json;charset=UTF-8" }})
         .then(res => {
+          console.log(res)
           if (res.status === 200) {
             if (this.title == "批量创建") {
               if (res.data.code == 0) {
