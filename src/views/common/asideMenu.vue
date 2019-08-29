@@ -170,6 +170,14 @@ import { mapState } from "vuex";
           }
         })
       }
+      // 获取再保险人
+      if(!sessionStorage.getItem('ReinsurerList')){
+        this.$http.post('api/sics/basis/getCedentListByReceiptBank',{codeType:'ReinsurerType'}).then(res =>{
+          if(res.status === 200){
+            sessionStorage.setItem('ReinsurerList',JSON.stringify(res.data));
+          }
+        })
+      }
       // 获取CedentType账户列表
       if(!sessionStorage.getItem('CedentBankList')){
         this.$http.post('api/sics/basis/getCedentListByReceiptBank',{codeType:'CedentType'}).then(res =>{
@@ -225,7 +233,7 @@ import { mapState } from "vuex";
         sessionStorage.removeItem('roleIdList');
         cookie.remove('jwttoken');
         cookie.remove('jwttokenInfo');
-        window.location.href = `http://${cip.loginUrl}:2222/logout?service=http://${cip.currentIp}:${cip.currentPort}/indexPage`;
+        window.location.href = `${cip.loginUrl}/logout?service=http://${cip.currentIp}:${cip.currentPort}/indexPage`;
       },
       changeExtend(str){
         if(str==='伸'){
