@@ -41,7 +41,7 @@
       <el-button type="primary" plain @click="mailSend(2,'附件')">附件</el-button>
       <el-button type="primary" :disabled="hxState" plain @click="makeReport">生成核销报告</el-button>
       <el-button type="primary" v-show="row.hasRecheckFlag==1" @click="gangUp('核销')" plain>{{!hxState?'悬停':'已悬停'}}</el-button>
-      <el-button type="primary" :disabled="hxState" v-show="row.hasRecheckFlag!=1" plain @click="onVerification('UNDELAY')">恢复至操作</el-button>
+      <el-button type="primary" :disabled="hxState" v-show="row.hasRecheckFlag!=1" plain @click="onVerification('UNDELAY')">恢复</el-button>
       <el-button type="primary" :disabled="hxState" v-show="row.hasRecheckFlag==1" plain @click="submite(1,'流程提交','收款录入')">流程提交</el-button>
     </div>
     <!-- 详情 -->
@@ -1556,22 +1556,25 @@ export default {
         });
     },
     tbState() {
+      let rmIds = '',url = '',params = null;
        // 8.26 wtd 原来三个页面 都听不状态全部一样，现在3个同步状态全部改为receiptSynchronize
        // 8.27 wtd 原话：收付款所有回写接口改为getMessageFromSics，入参processId actOperator
       //  8.27 翻译一下：操作&复核，只显示支票列表，用原来的，其他页面是三个页面都展示用getMessageFromSics
-      let rmIds = '',url = '',params = null;
-      if(this.RMData){
-        this.RMData.forEach(el => {rmIds += `${el.rmId},`;});
-      }
       if(this.$route.query.tag === 'credReview' || this.$route.query.tag === 'credOperation'){ // 一个支票列表
         this.$route.query.tag === 'credReview'?url='api/sics/basis/getPayRemitFromSicsByRemids':url='api/sics/basis/getPayRemitFromSics'
-        if (this.RMData && this.RMData.length) { 
-          params = { actOperator: this.$store.state.userName,processId: this.row.processId,rmIds: rmIds }
-         } else{ this.$message.error("无账单，无法更新信息"); return false; }
       } else{ // 三个列表
         url = 'api/sics/basis/getMessageFromSics';
+      }
+
+      if(this.$route.query.tag === 'credReview'){ // 8.29 改 只有复核需要rmIds
+        if (this.RMData && this.RMData.length) { 
+          this.RMData.forEach(el => {rmIds += `${el.rmId},`;});
+          params = { actOperator: this.$store.state.userName,processId: this.row.processId,rmIds: rmIds }
+        } else{ this.$message.error("无账单，无法更新信息"); return false; }
+      } else{
         params = { actOperator: this.$store.state.userName,processId: this.row.processId, }
-      } 
+      }
+
       this.$http.post(url,params).then(res => {
         if (res.status === 200 && res.data.code!=1) {
           if(res.data.code == 0){ this.$message({message: res.data.msg,type: 'success'});  }
