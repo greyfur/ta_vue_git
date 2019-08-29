@@ -21,15 +21,15 @@
       <el-button type="primary" :disabled="czState" plain @click="submite(3,'置废')">置废</el-button>
       <el-button :type="czState?'info':'primary'" @click="gangUp('操作')" plain>{{!czState?'悬停':'已悬停'}}</el-button>
       <el-button type="primary" :disabled="czState" plain @click="creatRM('a')">支票创建</el-button>
-      <el-button type="primary" :disabled="czState" plain @click="onVerification('DELAY')">暂挂待销</el-button>
+      <el-button type="primary" :disabled="czState" plain @click="onVerification('DELAY',3)">暂挂待销</el-button>
       <el-button type="primary" :disabled="czState" plain @click="submite(1,'流程提交','收款复核')">流程提交</el-button>
     </div>
     <!-- 复核 -->
     <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'credReview'">
       <el-button type="primary" plain @click="submite(2,'指派','复核','收款复核')">指派</el-button>
       <el-button type="primary" plain @click="tbState">同步状态</el-button>
-      <!-- <el-button type="primary" plain @click="getSg('收款复核')">同步状态</el-button> -->
       <el-button type="primary" plain @click="mailSend(2,'附件')">附件</el-button>
+      <el-button type="primary" :disabled="czState" plain @click="onVerification('DELAY',4)">暂挂待销</el-button>
       <el-button type="primary" plain @click="submite(4,'复核驳回')">复核驳回</el-button>
       <el-button type="primary" plain @click="submite(1,'复核通过','收款录入')">复核通过</el-button>
     </div>
@@ -2080,23 +2080,26 @@ export default {
         break;
       }
     },
-    onVerification(type1){
+    onVerification(type1,num){
       let tip = '';
-      type1=='UNDELAY'?tip='是否恢复至操作?':tip='是否暂挂待销?'
+      type1=='UNDELAY'?tip='是否恢复?':tip='是否暂挂待销?';
+      let param = {
+        processId: this.row.processId,
+        procInstId: this.row.processInstId,
+        assignee: this.$store.state.userName,
+        type: type1,
+        actOperator: this.$store.state.userName,
+        accountCloseFlag:num
+      }
+      if(type1=='UNDELAY'){
+        delete param['accountCloseFlag'];
+      }
       this.$confirm(tip, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        this.$http.post("api/receipt/activitiForReceipt/commonActivitiForReceipt",
-          {
-            processId: this.row.processId,
-            procInstId: this.row.processInstId,
-            assignee: this.$store.state.userName,
-            type: type1,
-            actOperator: this.$store.state.userName
-          }
-        ).then(res => {
+        this.$http.post("api/receipt/activitiForReceipt/commonActivitiForReceipt",param).then(res => {
           if (res.status === 200 && res.data.errorCode == 1) {
             this.$message({ type: "success", message: res.data.errorMessage});
             this.$router.push({ name: this.$route.query.tag });

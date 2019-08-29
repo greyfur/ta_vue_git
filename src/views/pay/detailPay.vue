@@ -60,8 +60,6 @@
           <el-button size="small" plain @click="getSGSg">同步状态</el-button>
           <el-button size="small" plain @click="submite(4,'复核驳回')">复核驳回</el-button>
           <el-button size="small" plain @click="submite(6,'复核通过')">复核通过</el-button>
-          <!-- <el-button size="small" plain @click="onVerification">暂挂待销</el-button> -->
-          <!-- onVerification('DELAY')" -->
         </div>
         <!-- 审批 -->
         <div :class="this.$store.state.flod?'btn approvalDoneBtn':'btns approvalDoneBtn'" v-if="$route.query.tag === 'payVerification'">
@@ -1312,32 +1310,6 @@ export default {
     this.mailSend(2,'',1);
   },
   methods: {
-    onVerification(type1){
-      let tip = '';
-      type1=='UNDELAY'?tip='是否恢复至操作?':tip='是否暂挂待销?'
-      this.$confirm(tip, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        this.$http.post("api/receipt/activitiForReceipt/commonActivitiForReceipt",
-          {
-            processId: this.row.processId,
-            procInstId: this.row.processInstId,
-            assignee: this.$store.state.userName,
-            type: type1,
-            actOperator: this.$store.state.userName
-          }
-        ).then(res => {
-          if (res.status === 200 && res.data.errorCode == 1) {
-            this.$message({ type: "success", message: res.data.errorMessage});
-            this.$router.push({ name: this.$route.query.tag });
-          } else if (res.data.errorCode == 0) {
-            this.$message({type: "error",message: res.data.errorMessage});
-          }
-        });
-      });
-    },
     async createdStep(){
       await  this.$http.post("api/pay/activitiForPay/getAllLevel", {processId: this.row.processId})
           .then(res => {
