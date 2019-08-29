@@ -4,7 +4,7 @@ const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"', 
-  // currentIp: '172.16.19.139',  // 139 ip
+  // currentIp: '172.16.19.139',  // 139 ip-
   // currentIp: '172.16.19.138',  // 138 ip
   // currentIp: 'asc.cpcr.com.cn',  // 投产环境
   currentIp: '172.17.106.68',  // 个人pc ip
