@@ -398,19 +398,16 @@
         <el-form-item label="账单收到日期" :prop="billSearch.wsBusinessType=='C'?'':'wsReceiptDate'" v-show="title === '手工创建' || title==='编辑'">
           <el-date-picker value-format="timestamp" v-model="billSearch.wsReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-         <el-form-item label="是否为历史账单" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'">
+        <el-form-item label="是否为历史账单" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'">
           <el-checkbox v-model="historicalBill">是</el-checkbox>
         </el-form-item>
-        <!-- <el-form-item label="原流程编号" :prop="!historicalBill&&title==='编辑'&& billSearch.wsBusinessType=='C'?'parentProcessId':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'&&!historicalBill">
-          <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
+        <el-form-item label="是否为历史账单" v-show="title==='手工创建'&& billSearch.wsBusinessType=='C'">
+          <el-checkbox v-model="historicalBill">是</el-checkbox>
         </el-form-item>
-        <el-form-item label="原流程编号" v-show="title==='手工创建'&& billSearch.wsBusinessType=='C'">
-          <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
-        </el-form-item> -->
         <el-form-item label="原流程编号" :prop="!historicalBill&&title==='编辑'&& billSearch.wsBusinessType=='C'?'parentProcessId':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'&&!historicalBill">
           <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
         </el-form-item>
-        <el-form-item label="原流程编号" :prop="title==='手工创建'&& billSearch.wsBusinessType=='C'?'parentProcessId':''" v-show="title==='手工创建'&& billSearch.wsBusinessType=='C'">
+        <el-form-item label="原流程编号" :prop="!historicalBill&&title==='手工创建'&& billSearch.wsBusinessType=='C'?'parentProcessId':''" v-show="title==='手工创建'&& billSearch.wsBusinessType=='C'&&!historicalBill">
           <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
         </el-form-item>
         <el-form-item label="收到邮件更正期" v-show="title==='手工创建'&& billSearch.wsBusinessType=='C' && billSearch.wsBusinessType">
@@ -1068,7 +1065,6 @@ export default {
           this.billSearch.wsBrokerCode = obj.codecode;
           this.billSearch.wsBrokerName = obj.codeName;
         }
-        
       } else{
         this.billSearch.wsBrokerCode = '';
         this.billSearch.wsBrokerName = '';
@@ -1077,9 +1073,12 @@ export default {
         case 0: // 创建
           this.$refs[formName].validate(valid => {
             if (valid) {
-              if(this.billSearch.wsBusinessType=='C' && !this.billSearch.parentProcessId){
+              if(this.billSearch.wsBusinessType=='C' && !this.billSearch.parentProcessId && !this.historicalBill){
                 this.$message({ type: "error", message: '请输入原流程编号' });
                 return false;
+              }
+              if(this.historicalBill){
+                this.billSearch['parentProcessId']=null;
               }
               this.$http.post("api/worksheet/wSEntry/save",Object.assign({}, this.mustData, this.billSearch))
                 .then(res => {
@@ -1165,6 +1164,7 @@ export default {
               }
               let params1 = Object.assign({},this.billSearch, this.mustData, {processId: this.chooseRow.processId})
               delete params1["processStatus"];
+              
                for(let k in params1){
                  if(!params1[k] && params1[k]!=0){
                    params1[k] = '';

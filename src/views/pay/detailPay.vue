@@ -60,6 +60,7 @@
           <el-button size="small" plain @click="getSGSg">同步状态</el-button>
           <el-button size="small" plain @click="submite(4,'复核驳回')">复核驳回</el-button>
           <el-button size="small" plain @click="submite(6,'复核通过')">复核通过</el-button>
+          <el-button size="small" plain @click="payReviewZGDX">暂挂待销</el-button>
         </div>
         <!-- 审批 -->
         <div :class="this.$store.state.flod?'btn approvalDoneBtn':'btns approvalDoneBtn'" v-if="$route.query.tag === 'payVerification'">
