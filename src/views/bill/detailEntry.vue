@@ -6,7 +6,7 @@
       <i class="iconfont iconleft-circle-o" style="color:#000;"></i>
     </router-link> -->
     <el-row style="margin-bottom:10px;">
-      <el-col :span="8" style="height:630px;">
+      <el-col :span="8" style="height:720px;">
         <!-- 签回 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'billSignBack'">
           <el-button size="small" @click="mailSend(1)" plain>邮件通知</el-button>
@@ -33,7 +33,7 @@
           <el-button size="small" @click="onSics()">账单回写</el-button>
           <el-button size="small" @click="exportBill">导出账单</el-button>
         </div>
-        <div class="left">
+        <div class="left" style="height:720px;">
           <div :class="searchFlag1===true?'searchNew searchNews':''" >
             <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
               <div>
@@ -138,7 +138,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="16" style="height:630px;">
+      <el-col :span="16" style="height:720px;background:#f5f5f5;">
         <div class="right">
           <div class="titleSearch detailSearch">
             <div>
@@ -173,7 +173,7 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="24" style="padding:0 16px;padding-bottom:100px">
+      <el-col :span="24" style="padding:0 16px;padding-bottom:100px;margin-top:10px;">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息</div>
           <div>
@@ -1976,7 +1976,8 @@ export default {
 .browseDoc {
   background-color: #ecf5ff;
   width: 100%;
-  height: 556px;
+  height: 658px;
+  /* 8.29 文档高度*/
   border: 1px solid #d4d4d4;
   border-top: none;
 }
@@ -1995,7 +1996,8 @@ export default {
   height: 100%;
   /* padding: 20px; */
   /* background-color: #eeeeee; */
-  background: #fff;
+  background: #f5f5f5;
+  /* 8.29 文档背景色*/
 }
 .fy2 {
   text-align: right;

@@ -5,7 +5,7 @@
       <i class="iconfont iconleft-circle-o"></i>
     </router-link>  -->
     <el-row>
-      <el-col :span="11" style="padding:0 16px;height:687px;">
+      <el-col :span="11" style="padding:0 16px;height:687px;background:#f5f5f5;">
          <!-- 完结 -->
         <div class="btn" v-if="$route.query.tag === 'payEnd'">
           <el-button size="small" @click="openSICS" plain>打开SICS</el-button>
