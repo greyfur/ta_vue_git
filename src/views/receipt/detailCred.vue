@@ -1489,11 +1489,9 @@ export default {
   methods: {
     downDialog(){
       this.downDialogFlag=true;
-      console.log(this.downDialogFlag)
     },
     upDialog(){
       this.downDialogFlag=false;
-      console.log(this.downDialogFlag)
     },
     moveDialog(){//8.29 移动dialog
     if(this.downDialogFlag===true){
@@ -1514,7 +1512,6 @@ export default {
         // }else if(startY>maxH){
         //     startY=maxH
         // }
-        console.log(startX,startY,maxW,maxH)
       mouseDialogChi.style.left=startX+'px';
       mouseDialogChi.style.top=startY+'px';
     }
