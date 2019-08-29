@@ -21,7 +21,7 @@
       <el-button type="primary" :disabled="czState" plain @click="submite(3,'置废')">置废</el-button>
       <el-button :type="czState?'info':'primary'" @click="gangUp('操作')" plain>{{!czState?'悬停':'已悬停'}}</el-button>
       <el-button type="primary" :disabled="czState" plain @click="creatRM('a')">支票创建</el-button>
-      <el-button type="primary" :disabled="czState" plain @click="onVerification('DELAY',3)">暂挂待销</el-button>
+      <el-button type="primary" :disabled="czState" plain @click="onVerification('DELAY','3')">暂挂待销</el-button>
       <el-button type="primary" :disabled="czState" plain @click="submite(1,'流程提交','收款复核')">流程提交</el-button>
     </div>
     <!-- 复核 -->
@@ -29,7 +29,7 @@
       <el-button type="primary" plain @click="submite(2,'指派','复核','收款复核')">指派</el-button>
       <el-button type="primary" plain @click="tbState">同步状态</el-button>
       <el-button type="primary" plain @click="mailSend(2,'附件')">附件</el-button>
-      <el-button type="primary" :disabled="czState" plain @click="onVerification('DELAY',4)">暂挂待销</el-button>
+      <el-button type="primary" :disabled="czState" plain @click="onVerification('DELAY','4')">暂挂待销</el-button>
       <el-button type="primary" plain @click="submite(4,'复核驳回')">复核驳回</el-button>
       <el-button type="primary" plain @click="submite(1,'复核通过','收款录入')">复核通过</el-button>
     </div>
@@ -1560,7 +1560,9 @@ export default {
        // 8.27 wtd 原话：收付款所有回写接口改为getMessageFromSics，入参processId actOperator
       //  8.27 翻译一下：操作&复核，只显示支票列表，用原来的，其他页面是三个页面都展示用getMessageFromSics
       let rmIds = '',url = '',params = null;
-      this.RMData.forEach(el => {rmIds += `${el.rmId},`;});
+      if(this.RMData){
+        this.RMData.forEach(el => {rmIds += `${el.rmId},`;});
+      }
       if(this.$route.query.tag === 'credReview' || this.$route.query.tag === 'credOperation'){ // 一个支票列表
         this.$route.query.tag === 'credReview'?url='api/sics/basis/getPayRemitFromSicsByRemids':url='api/sics/basis/getPayRemitFromSics'
         if (this.RMData && this.RMData.length) { 
@@ -1603,7 +1605,9 @@ export default {
       this.searchFlag2 = !this.searchFlag2;
       if (this.RMData && this.RMData.length) {
         let rmIds = "";
-        this.RMData.forEach(el => {rmIds += `${el.rmId},`;});
+        if(this.RMData){
+          this.RMData.forEach(el => {rmIds += `${el.rmId},`;});
+        }
         this.$http.post('api/sics/basis/getMessageFromSics', {
             actOperator: this.$store.state.userName,
             processId: this.row.processId,
