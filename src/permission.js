@@ -12,7 +12,7 @@ let detailArr = routData.root.filter(el=>{ return !el.level; });
 window.document.title = "账单结算管理系统";
 
 router.beforeEach((to, from, next) => {
-  //  1.首先判断有没有ticket
+  //  1.首先判断有没有ticket 
   if(window.location.href.indexOf("ticket=") == -1) {
     window.location.href = `${cip.loginUrl}/login?service=http://${cip.currentIp}:${cip.currentPort}/indexPage`;
   }  

@@ -1046,6 +1046,8 @@ export default {
             this.title = "邮件通知";
             this.mailOption = res.data;
           } else {
+            this.title = "邮件通知";
+            this.dialogFormVisible2 = true;
             this.$message.error("获取不到发送人列表信息");
           }
         });
