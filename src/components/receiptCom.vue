@@ -54,7 +54,7 @@
           <el-col :span="8" v-show="urlName=='viewInvalidate'">
             <span class="slable">流程来源</span>
             <el-select clearable v-model="accountClose" placeholder="请选择流程来源">
-              <el-option v-for="item in [{a:'操作',b:'3'},{a:'复核',b:'4'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
+              <el-option v-for="item in [{a:'操作',b:'3'},{a:'复核',b:'4'},{a:'核销',b:'5'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
             </el-select>
           </el-col>
         </el-row>
