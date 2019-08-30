@@ -979,8 +979,9 @@ export default {
       }
       this.$http.post("api/sics/liveDesktop/openBpLedger", {modifiedBy: this.$store.state.userName,bpId: this.chooseRow.rmSettleCompanyCode})
         .then(res => {
-          this.$message({message:res.data,type: 'warning'});
-          console.log(res, "打开SICS");
+          if (res.status === 200 &&res.data=="success") {
+          this.$message({message:'操作成功',type: 'success'});
+          } else{ this.$message({message:'打开失败',type: 'warning'}); }
         });
     },
     addRemark(row){
@@ -1016,7 +1017,9 @@ export default {
       //  获取当前选中worksheet
       this.$http.post("api/sics/liveDesktop/openWorksheet", {modifiedBy: this.$store.state.userName,worksheetId: row.wsId})
         .then(res => {
-          this.$message({message:res.data,type: 'warning'});
+          if (res.status === 200 &&res.data=="success") {
+          this.$message({message:'操作成功',type: 'success'});
+          } else{ this.$message({message:'打开失败',type: 'warning'}); }
         });
     },
     onSics(tag) {

@@ -825,7 +825,9 @@ export default {
         case 6: // 打开SICS
           this.$http.post("api/sics/liveDesktop/openWorksheet", {modifiedBy: this.$store.state.userName,worksheetId:row.wsId})
             .then(res => { 
-              this.$message({message:res.data,type: 'warning'});
+              if (res.status === 200 &&res.data=="success") {
+              this.$message({message:'操作成功',type: 'success'});
+              } else{ this.$message({message:'打开失败',type: 'warning'}); }
             });
          break;
       } 
