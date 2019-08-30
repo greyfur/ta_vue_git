@@ -114,7 +114,6 @@ import { mapState } from "vuex";
     created() {  // 获取公共数据
       // this.UName = sessionStorage.getItem('userCName')//登录名
       // 获取币制
-      console.log(this.flod)
       if(!sessionStorage.getItem('CurrencyList')){
         this.$http.post('api/sics/basis/getCurrencyList').then(res =>{
           if(res.status === 200){

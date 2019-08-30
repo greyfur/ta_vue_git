@@ -5,7 +5,7 @@
       <i class="iconfont iconleft-circle-o"></i>
     </router-link>  -->
     <el-row>
-      <el-col :span="11" style="padding:0 16px;height:687px;background:#f5f5f5;">
+      <el-col :span="11" style="padding:0 16px;height:720px;background:#f5f5f5;">
          <!-- 完结 -->
         <div class="btn" v-if="$route.query.tag === 'payEnd'">
           <el-button size="small" @click="openSICS" plain>打开SICS</el-button>
@@ -152,7 +152,7 @@
           </el-pagination>
         </div>
       </el-col>
-      <el-col :span="13" style="height:687px;">
+      <el-col :span="13" style="height:720px;">
         <div class="right">
           <div class="titleSearch detailSearch">
             <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览</div>
@@ -1353,28 +1353,40 @@ export default {
         AllBankAccountList:[],
         flagJ:null,
         reverseRow:{},
+        row:{},
       };
     },
   created(){
     sessionStorage.setItem('data',JSON.stringify({}));
-    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
     this.row = JSON.parse(this.$route.query.row);
+    console.log(this.row)
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
     if(this.$route.query.tag === 'payVerification'){
       this.makeDocEcho();
+      this.createdStep();
     }
     this.formLabelAlign.valueDate = new Date().getTime();
     this.formLabelAlign.dueDate = new Date().getTime();
+    // if(this.row){
+    //   this.listData.forEach(el=>{
+    //     el['b'] = this.row[el['c']];
+    //     if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
+    //   })
+    // }
+  },
+  beforeMount(){this.copy('proNum',1);},
+  mounted(){ 
+    console.log(JSON.parse(this.$route.query.row))
+    console.log(this.row)
+    this.row = JSON.parse(this.$route.query.row);
     if(this.row){
       this.listData.forEach(el=>{
         el['b'] = this.row[el['c']];
         if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
       })
     }
-    this.createdStep();
-  },
-  beforeMount(){this.copy('proNum',1);},
-  mounted(){ 
     this.approvalName = sessionStorage.getItem('userCName');
+    console.log(this.row)
     if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
         this.$store.commit('ChangeFlod',true)
       } else{ this.$store.commit('ChangeFlod',false) }
@@ -1460,6 +1472,9 @@ export default {
           });
           this.strArr.map((item,index)=>{
             if(this.row.approvalLevel===0){
+                this.$refs.drc[this.row.approvalLevel].className = "drc wait";
+                this.$refs.drc[this.row.approvalLevel].innerHTML = `${this.row.approvalLevel +1}级审批中`;
+                this.$refs.status[this.row.approvalLevel].className = "status pending";
               return;
             }else{
                 if(index<this.row.approvalLevel){
@@ -2839,6 +2854,7 @@ export default {
         pageNumber:1,
         pageSize:100, 
         }).then(res =>{
+          console.log(res)
           if(res.status === 200 && res.data.rows && res.data.rows.length){
             res.data.rows.forEach((el,i)=>{
               if(el.docType.substr(0,1) === 'S'){
@@ -3031,7 +3047,7 @@ export default {
 .browseDoc {
   background-color: #ecf5ff;
   width: 100%;
-  height: 626px;
+  height: 658px;
   border: 1px solid #D4D4D4;
   border-top: none;
 }
