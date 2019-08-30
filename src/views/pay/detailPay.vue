@@ -1370,7 +1370,9 @@ export default {
         if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
       })
     }
-    this.createdStep();
+    if(this.$route.query.tag === 'payVerification'){
+      this.createdStep();
+    }
   },
   beforeMount(){this.copy('proNum',1);},
   mounted(){ 
