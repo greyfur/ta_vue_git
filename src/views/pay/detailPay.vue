@@ -759,7 +759,6 @@
       </el-form>
     </el-dialog>
 
-
     <div class="mouseDialogPar" v-if="dialogFormVisible" ref="mouseDialogPar" @mousedown="downDialog" @mousemove="moveDialog" @mouseup="upDialog">
       <div class="mouseDialogChi" ref="mouseDialogChi">
         <div class="mouseTitle">
@@ -2159,13 +2158,14 @@ export default {
             this.$message.error('请选择审批人');
             return false;
           }
+          console.log(this.proxyMan,'this.proxyMan');
           let param = {
             processId:this.row.processId,
             actOperator:this.$store.state.userName,
             operatorLevel:this.row.approvalLevel+1,
             approvalName:this.approvalName,
-            proxyName:this.proxyMan==null?this.proxyMan:this.TJRoptions[this.proxyMan]['name'],
-            proxyEName:this.proxyMan==null?this.proxyMan:this.TJRoptions[this.proxyMan]['username'],
+            proxyName:this.proxyMan==null?this.proxyMan:this.proxyList[this.proxyMan]['name'],
+            proxyEName:this.proxyMan==null?this.proxyMan:this.proxyList[this.proxyMan]['username'],
           }
           let assignee1 = !this.preApprove?this.assignee:this.row.entryOperator
           this.$http.post('api/docOperation/addSignature',param).then(res =>{
@@ -2369,7 +2369,6 @@ export default {
             })
           }
         break;
-        
       }
     },
     edit(){
@@ -2858,7 +2857,7 @@ export default {
       console.log(`当前页: ${val}`);
     },
   },
-   watch:{//watch111
+  watch:{//watch111
     title:function(n,o){
       // b不可以选自己，n可以，0开账，1关账，关账支票可选自己
       // title === '流程提交' || title==='审批通过' title === '复核通过'
