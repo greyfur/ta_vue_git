@@ -1502,14 +1502,15 @@ export default {
       let startY=e.clientY-mouseDialogPar.offsetTop-mouseDialogChi.offsetHeight/10;
       let maxW=mouseDialogPar.offsetWidth-mouseDialogChi.offsetWidth;
       let maxH=mouseDialogPar.offsetHeight-mouseDialogChi.offsetHeight;
-      console.log(startX,'x',startY,'y')
+      console.log(startY,'y')
+      console.log(mouseDialogChi.offsetHeight)
         // if(startX<=0){
         //     startX=0;
         // }else if(startX>maxW){
         //     startX=maxW
         // }
         // if(startY<=0){
-        //     startY=0;
+        //     startY=320;
         // }else if(startY>maxH){
         //     startY=maxH
         // }
@@ -2771,7 +2772,7 @@ li.detail-item2 {
   bottom: 0;
   margin: auto; */
   width: 50%;
-  height: auto;
+  height: 120%;
   background: #fff;
   z-index: 1000;
   border-radius: 5px;

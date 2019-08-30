@@ -34,7 +34,7 @@
         <el-row :gutter="10" class="billRow">
            <el-col :span="8" v-show="urlName === 'taskClaim'">
             <span class="slable">币制查询</span>
-            <el-select clearable filterable v-model="formLabelAlign.rmCurrency" placeholder="请选择">
+            <el-select clearable filterable v-model="searchList.rmCurrency" placeholder="请选择">
                 <el-option
                   v-for="item in rmCurrencyList"
                   :key="item.alpha"
@@ -1402,7 +1402,7 @@ export default {
           break;
         case 3: //刷新
           break; 
-        case 4: //查询
+        case 4: //查询 996
           let params = null;
           if(!this.searchList.processStatus){
             if(this.admFlag || this.urlName === 'financialCreat' || this.urlName === 'taskClaim'){ 

@@ -5,7 +5,7 @@
       <i class="iconfont iconleft-circle-o"></i>
     </router-link>  -->
     <el-row>
-      <el-col :span="11" style="padding:0 16px;height:687px;background:#f5f5f5;">
+      <el-col :span="11" style="padding:0 16px;height:720px;background:#f5f5f5;">
          <!-- 完结 -->
         <div class="btn" v-if="$route.query.tag === 'payEnd'">
           <el-button size="small" @click="openSICS" plain>打开SICS</el-button>
@@ -152,7 +152,7 @@
           </el-pagination>
         </div>
       </el-col>
-      <el-col :span="13" style="height:687px;">
+      <el-col :span="13" style="height:720px;">
         <div class="right">
           <div class="titleSearch detailSearch">
             <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览</div>
@@ -1352,14 +1352,17 @@ export default {
         AllBankAccountList:[],
         flagJ:null,
         reverseRow:{},
+        row:{},
       };
     },
   created(){
     sessionStorage.setItem('data',JSON.stringify({}));
-    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
     this.row = JSON.parse(this.$route.query.row);
+    console.log(this.row)
+    this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
     if(this.$route.query.tag === 'payVerification'){
       this.makeDocEcho();
+      this.createdStep();
     }
     this.formLabelAlign.valueDate = new Date().getTime();
     this.formLabelAlign.dueDate = new Date().getTime();
@@ -1369,13 +1372,18 @@ export default {
         if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
       })
     }
-    if(this.$route.query.tag === 'payVerification'){
-      this.createdStep();
-    }
   },
   beforeMount(){this.copy('proNum',1);},
   mounted(){ 
+    // this.row = JSON.parse(this.$route.query.row); 8.30 未改好...
+    // if(this.row){
+    //   this.listData.forEach(el=>{
+    //     el['b'] = this.row[el['c']];
+    //     if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
+    //   })
+    // }
     this.approvalName = sessionStorage.getItem('userCName');
+    console.log(this.row)
     if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
         this.$store.commit('ChangeFlod',true)
       } else{ this.$store.commit('ChangeFlod',false) }
@@ -1452,6 +1460,9 @@ export default {
         mouseDialogChi.style.top=startY+'px';
       }
     },
+     closed(){ //8.29 关闭dialog
+        this.dialogFormVisible=false;
+    },
     async createdStep(){
       await  this.$http.post("api/pay/activitiForPay/getAllLevel", {processId: this.row.processId})
           .then(res => {
@@ -1461,6 +1472,9 @@ export default {
           });
           this.strArr.map((item,index)=>{
             if(this.row.approvalLevel===0){
+                this.$refs.drc[this.row.approvalLevel].className = "drc wait";
+                this.$refs.drc[this.row.approvalLevel].innerHTML = `${this.row.approvalLevel +1}级审批中`;
+                this.$refs.status[this.row.approvalLevel].className = "status pending";
               return;
             }else{
                 if(index<this.row.approvalLevel){
@@ -2725,8 +2739,6 @@ export default {
         this.dialogFormVisible2 = true;
       } else {
         if (tag == 2) {
-          console.log(this.makeDocListEctype.zheNum,this.makeDocListEctype.yuanType.length)
-          console.log(!this.makeDocListEctype.zheNum,this.makeDocListEctype.yuanType.length)
          if(this.makeDocListEctype.zheNum!=null&&this.makeDocListEctype.yuanType.length>0){
             // 是操作页面,2为点击确定---------------------生成审批文档提交hyd
              if((this.makeDocListEctype.cedentModel[0]==undefined||(this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null))||(this.makeDocListEctype.cedentModel[1]==undefined||(this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null))||(this.makeDocListEctype.cedentModel[2]==undefined||(this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==undefined))){
@@ -2734,9 +2746,9 @@ export default {
           if (this.makeDocListEctype.cedentModel &&this.makeDocListEctype.cedentModel.length) {
             if(this.checked){
               console.log(this.cedentList)
-              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'')+' various';
+              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'')+';various';
             }else{
-              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'');
+              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'');
             }
           }
           if(this.makeDocListEctype.shoukuanMode != null){
@@ -2842,6 +2854,7 @@ export default {
         pageNumber:1,
         pageSize:100, 
         }).then(res =>{
+          console.log(res)
           if(res.status === 200 && res.data.rows && res.data.rows.length){
             res.data.rows.forEach((el,i)=>{
               if(el.docType.substr(0,1) === 'S'){
@@ -3034,7 +3047,7 @@ export default {
 .browseDoc {
   background-color: #ecf5ff;
   width: 100%;
-  height: 626px;
+  height: 658px;
   border: 1px solid #D4D4D4;
   border-top: none;
 }
