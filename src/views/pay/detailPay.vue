@@ -1461,6 +1461,9 @@ export default {
         mouseDialogChi.style.top=startY+'px';
       }
     },
+     closed(){ //8.29 关闭dialog
+        this.dialogFormVisible=false;
+    },
     async createdStep(){
       await  this.$http.post("api/pay/activitiForPay/getAllLevel", {processId: this.row.processId})
           .then(res => {
