@@ -1367,24 +1367,22 @@ export default {
     }
     this.formLabelAlign.valueDate = new Date().getTime();
     this.formLabelAlign.dueDate = new Date().getTime();
-    // if(this.row){
-    //   this.listData.forEach(el=>{
-    //     el['b'] = this.row[el['c']];
-    //     if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
-    //   })
-    // }
-  },
-  beforeMount(){this.copy('proNum',1);},
-  mounted(){ 
-    console.log(JSON.parse(this.$route.query.row))
-    console.log(this.row)
-    this.row = JSON.parse(this.$route.query.row);
     if(this.row){
       this.listData.forEach(el=>{
         el['b'] = this.row[el['c']];
         if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
       })
     }
+  },
+  beforeMount(){this.copy('proNum',1);},
+  mounted(){ 
+    // this.row = JSON.parse(this.$route.query.row); 8.30 未改好...
+    // if(this.row){
+    //   this.listData.forEach(el=>{
+    //     el['b'] = this.row[el['c']];
+    //     if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
+    //   })
+    // }
     this.approvalName = sessionStorage.getItem('userCName');
     console.log(this.row)
     if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
@@ -2737,8 +2735,6 @@ export default {
         this.dialogFormVisible2 = true;
       } else {
         if (tag == 2) {
-          console.log(this.makeDocListEctype.zheNum,this.makeDocListEctype.yuanType.length)
-          console.log(!this.makeDocListEctype.zheNum,this.makeDocListEctype.yuanType.length)
          if(this.makeDocListEctype.zheNum!=null&&this.makeDocListEctype.yuanType.length>0){
             // 是操作页面,2为点击确定---------------------生成审批文档提交hyd
              if((this.makeDocListEctype.cedentModel[0]==undefined||(this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null))||(this.makeDocListEctype.cedentModel[1]==undefined||(this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null))||(this.makeDocListEctype.cedentModel[2]==undefined||(this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==undefined))){
@@ -2746,9 +2742,9 @@ export default {
           if (this.makeDocListEctype.cedentModel &&this.makeDocListEctype.cedentModel.length) {
             if(this.checked){
               console.log(this.cedentList)
-              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'')+' various';
+              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'')+';various';
             }else{
-              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'');
+              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'');
             }
           }
           if(this.makeDocListEctype.shoukuanMode != null){
