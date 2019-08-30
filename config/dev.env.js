@@ -9,7 +9,7 @@ module.exports = merge(prodEnv, {
   // currentIp: 'asc.cpcr.com.cn',  // 投产环境
   currentIp: '172.17.106.38',  // 个人pc ip
 
-  currentPort: 8088, // 个人pc port 139 138 8080
+  currentPort: 8080, // 个人pc port 139 138 8080
   // currentPort: 80, // 投产环境 port
 
   loginUrl: 'http://172.25.147.124:2222',  // 测试登录跳转ip  139

@@ -1686,8 +1686,9 @@ export default {
           modifiedBy: this.mustData.actOperator,
           bpId: this.row.rmSettleCompanyCode
         }).then(res => {
-          this.$message({message:res.data,type: 'warning'});
-          console.log(res, "打开SICS");
+          if (res.status === 200 &&res.data=="success") {
+          this.$message({message:'操作成功',type: 'success'});
+          } else{ this.$message({message:'打开失败',type: 'warning'}); }
         });
     },
     openReverse() {
@@ -1695,8 +1696,9 @@ export default {
           actOperator: this.$store.state.userName,
           processId: this.row.processId
         }).then(res => {
-          this.$message({message:res.data,type: 'warning'});
-          console.log(res, "打开SICS");
+          if (res.status === 200 &&res.data=="success") {
+          this.$message({message:'操作成功',type: 'success'});
+          } else{ this.$message({message:'打开失败',type: 'warning'}); }
         });
     },
     openSICS(row, id) {
@@ -1705,19 +1707,20 @@ export default {
             modifiedBy: this.$store.state.userName,
             remitId: row.rmId
           }).then(res => {
-            this.$message({message:res.data,type: 'warning'});
-            console.log(res, "打开SICS");
+            // this.$message({message:res.data,type: 'warning'});
+            if (res.status === 200 &&res.data=="success") {
+          this.$message({message:'操作成功',type: 'success'});
+          } else{ this.$message({message:'打开失败',type: 'warning'}); }
           });
       } else {
         this.$http.post("api/sics/liveDesktop/openWorksheet", {
             modifiedBy: this.$store.state.userName,
             worksheetId: row[id]
           }).then(res => {
-            this.$message({message:res.data,type: 'warning'});
-            console.log(res, "打开SICS");
-            // if(res.status === 200 && res.data.rows){
-            //   this.SICSData = res.data.rows;
-            // }
+            // this.$message({message:res.data,type: 'warning'});
+            if (res.status === 200 &&res.data=="success") {
+          this.$message({message:'操作成功',type: 'success'});
+          } else{ this.$message({message:'打开失败',type: 'warning'}); }
           });
       }
     },

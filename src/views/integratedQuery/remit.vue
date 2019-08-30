@@ -467,7 +467,6 @@ export default {
     }, 1000);
 
     this.mustData.actOperator = this.$store.state.userName;
-    // this.formLabelAlign.modifiedBy = this.$store.state.userName;
 
     //获取币制
     this.rmCurrencyList = JSON.parse(sessionStorage.getItem("CurrencyList"));
@@ -510,7 +509,9 @@ export default {
     },
      openSICS(row) {
        this.$http.post('api/sics/liveDesktop/openRemittance',{modifiedBy:this.$store.state.userName,remitId:row.rmId}).then(res =>{
-          console.log(res,'打开SICS')
+          if (res.status === 200 &&res.data=="success") {
+          this.$message({message:'操作成功',type: 'success'});
+          } else{ this.$message({message:'打开失败',type: 'warning'}); }
         })
     },
     docView(row) {

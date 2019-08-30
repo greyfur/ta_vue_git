@@ -1555,17 +1555,16 @@ export default {
     },
     openBPSICS() {
       if (!this.row.rmSettleCompanyCode) {
-        this.$message({
-          type: "error",
-          message: "process中rmSettleCompanyCode无值，打不开"
-        });
+        this.$message({type: "warning", message: "process中rmSettleCompanyCode无值，打不开" });
         return false;
       }
       this.$http.post("api/sics/liveDesktop/openBpLedger", {
           modifiedBy: this.$store.state.userName,
           bpId: this.row.rmSettleCompanyCode
         }).then(res => {
-          console.log(res, "打开SICS");
+          if (res.status === 200 &&res.data=="success") {
+          this.$message({message:'操作成功',type: 'success'});
+          } else{ this.$message({message:'打开失败',type: 'warning'}); }
         });
     },
     urgencyPay(){
@@ -1641,25 +1640,28 @@ export default {
     onOpenSICS(row,id){
       if(id == 'rmId'){
         this.$http.post('api/sics/liveDesktop/openRemittance',{modifiedBy:this.$store.state.userName,remitId:row.rmId}).then(res =>{
-          console.log(res,'打开SICS')
+          if (res.status === 200 &&res.data=="success") {
+          this.$message({message:'操作成功',type: 'success'});
+          } else{ this.$message({message:'打开失败',type: 'warning'}); }
         })
       } else{
         this.$http.post('api/sics/liveDesktop/openWorksheet',{modifiedBy:this.$store.state.userName,worksheetId:row[id]}).then(res =>{
-          console.log(res,'打开SICS')
-          // if(res.status === 200 && res.data.rows){
-          //   this.SICSData = res.data.rows;
-          // }
+          if (res.status === 200 &&res.data=="success") {
+          this.$message({message:'操作成功',type: 'success'});
+          } else{ this.$message({message:'打开失败',type: 'warning'}); }
         })
       }
       
     },
     openSICS(){  // 打开SICS
       if(!this.row.rmSettleCompanyCode){
-        this.$message({type: 'error', message:'process中rmSettleCompanyCode无值，打不开'});
+        this.$message({type: 'warning', message:'process中rmSettleCompanyCode无值，打不开'});
         return false;
       }
       this.$http.post('api/sics/liveDesktop/openBpLedger',{modifiedBy:this.$store.state.userName,bpId:this.row.rmSettleCompanyCode}).then(res =>{
-        console.log(res,'打开SICS');
+        if (res.status === 200 &&res.data=="success") {
+          this.$message({message:'操作成功',type: 'success'});
+          } else{ this.$message({message:'打开失败',type: 'warning'}); }
       })
     },
     dataBaseSG(){
