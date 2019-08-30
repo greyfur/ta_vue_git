@@ -147,20 +147,19 @@
             class="item"
             effect="dark"
             :content="scope.row.rmOriSettleCompanyName"
-            placement="top-start"
-          >
+            placement="top-start">
             <span class="abbreviate">{{scope.row.rmOriSettleCompanyName}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column width="120" label="备注" align="center">
+      <el-table-column width="150" v-if="urlName=='taskClaim'" label="汇款银行地址" align="center">
          <template slot-scope="scope">
           <el-tooltip
             class="item"
             effect="dark"
-            :content="scope.row.remark"
+            :content="scope.row.payerBankName"
             placement="top-start">
-            <span class="abbreviate">{{scope.row.remark}}</span>
+            <span class="abbreviate">{{scope.row.payerBankName}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -184,6 +183,17 @@
       <el-table-column label="收款公司" prop="baseCompany" width="130" align="center"></el-table-column>
       <el-table-column prop="businessOrigin" width="130" label="Business Origin" align="center"></el-table-column>
       <el-table-column prop="createdAt" label="创建时间" width="160" align="center"></el-table-column>
+      <el-table-column width="120" label="备注" align="center">
+         <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="scope.row.remark"
+            placement="top-start">
+            <span class="abbreviate">{{scope.row.remark}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="80" align="center">
         <template slot-scope="scope">
           <el-dropdown placement="top-start">
