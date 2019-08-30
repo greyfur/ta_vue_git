@@ -1433,8 +1433,8 @@ export default {
         var e= e||window.event;
         let mouseDialogPar=this.$refs.mouseDialogPar,
             mouseDialogChi=this.$refs.mouseDialogChi;
-        let startX=e.clientX-mouseDialogPar.offsetLeft-mouseDialogChi.offsetWidth/6;
-        let startY=e.clientY-mouseDialogPar.offsetTop-mouseDialogChi.offsetHeight/6;
+        let startX=e.clientX-mouseDialogPar.offsetLeft-mouseDialogChi.offsetWidth/10;
+        let startY=e.clientY-mouseDialogPar.offsetTop-mouseDialogChi.offsetHeight/10;
         let maxW=mouseDialogPar.offsetWidth-mouseDialogChi.offsetWidth;
         let maxH=mouseDialogPar.offsetHeight-mouseDialogChi.offsetHeight;
           // if(startX<=0){
