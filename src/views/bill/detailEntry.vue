@@ -1208,9 +1208,9 @@ export default {
                             wsSignbackFlag: "1",
                             processId: this.chooseRow.processId,
                             procInstId: this.chooseRow.processInstId,
-                            assignee: assign,
+                            assignee: this.chooseRow.curOperator,//9.2 参数调换位置
                             type: "SIGNBACK",
-                            actOperator: this.chooseRow.curOperator
+                            actOperator: assign//9.2 参数调换位置
                           }
                         )
                         .then(res => {

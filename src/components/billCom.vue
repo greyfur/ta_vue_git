@@ -785,6 +785,7 @@ export default {
     sessionStorage.setItem("data", JSON.stringify({}));
   },
   mounted() {
+    console.log( this.$store.state.userName)
     window.onclick=()=>{
       this.zq1Flag=false;
     }
