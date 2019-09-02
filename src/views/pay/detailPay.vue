@@ -1617,7 +1617,11 @@ export default {
     },
     getCurrencyRateList(){
       this.$http.post('api/sics/basis/getCurrencyRateList').then(res =>{
+        console.log(res,'this.currencyRateList---res');
         if(res.status == 200 && res.data){
+          if(!res.data.length){
+            this.$message({message: '后端未返回生成审批文档的数据，无法生成审批文档',type: 'error'});
+          }
           this.currencyRateList = res.data;
         }
       })
@@ -2684,7 +2688,7 @@ export default {
       }
     },
     zheTypeChange(){  // 折币币制改变 --- 改总折币金额 --- 改原币制的汇率
-      // this.filterCurrencyRateList('CNY','iii')
+      console.log(this.makeDocListEctype.yuanNum,'this.makeDocListEctype.yuanNum');
       // 当原币币制不是CNY或者USD,都要转先转成美元，再转成折币的小币种
       if(this.makeDocListEctype.yuanType.length){
         let allNum = 0;
@@ -2735,8 +2739,6 @@ export default {
           this.makeDocListEctype.yuanNum = [];
           this.makeDocListEctype.yuanNum.push(this.row.rmAmount);
         }
-        console.log(this.makeDocListEctype.yuanType,'this.makeDocListEctype.yuanType');
-        console.log(this.makeDocListEctype.yuanNum,'this.makeDocListEctype.yuanNum');
         this.makeDocListEctype.cedentModel = [];
         this.dialogFormVisible2 = true;
       } else {
@@ -2747,7 +2749,6 @@ export default {
               
           if (this.makeDocListEctype.cedentModel &&this.makeDocListEctype.cedentModel.length) {
             if(this.checked){
-              console.log(this.cedentList)
               this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'')+';various';
             }else{
               this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'');
