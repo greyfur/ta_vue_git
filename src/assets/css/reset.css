@@ -165,6 +165,11 @@ table th{
   color: #000;
   text-align: center;
 }
+.FFF{
+  background: #fff;
+  color: #000;
+  text-align: center;
+}
 .el-button--text{ color: #005C8D;  }
 .el-dropdown{ color: #005C8D; }
 .el-dropdown-link{ cursor: pointer; outline: none; }
@@ -240,4 +245,3 @@ table th{
 .el-form-item__label{
   padding: 0 8px 0 0;
 } 
-

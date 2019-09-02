@@ -138,15 +138,16 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="16" style="height:720px;background:#f5f5f5;">
+      <el-col :span="16" style="height:720px;background:#f5f5f5;padding-bottom:10px;">
         <div class="right">
-          <div class="titleSearch detailSearch">
+          <div class="titleSearch detailSearch" style="background:#fff;">
+            <!-- <i style="margin-right:8px;" class="el-icon-arrow-down"></i> 9.2去掉无用icon -->
             <div>
-              <i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览
+              文档预览
             </div>
             <p>
               <el-dropdown placement="top-start">
-                <span class="el-dropdown-link"><i class="iconfont iconcaozuoliebiao"></i></span>
+                <span class="el-dropdown-link" style="margin-right:20px"><i class="iconfont iconcaozuoliebiao"></i></span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>
                     <!-- <el-button size="mini" :disabled="isHover">
@@ -1921,9 +1922,10 @@ export default {
   /* padding:0 30px; */
   width: 100%;
   /* padding-left: 64px; */
-  height: -webkit-fill-available;
+  /* height: -webkit-fill-available; */
   padding-bottom: 90px;
   /* display: flex; */
+  /* background: #f5f5f5; */
 }
 .btn {
   width: 100%;
@@ -1989,15 +1991,17 @@ export default {
   background: #F5F5F5;
   /* box-shadow:4px 0px 10px 0px rgba(169,169,169,0.5); */
   /* padding: 20px; */
-  padding-right: 10px;
+  /* padding-right: 10px; */
 }
 .right {
   width: 100%;
   height: 100%;
   /* padding: 20px; */
   /* background-color: #eeeeee; */
-  background: #f5f5f5;
+  background: #fff;
   /* 8.29 文档背景色*/
+  padding-left: 10px;
+  margin-left: 10px;
 }
 .fy2 {
   text-align: right;

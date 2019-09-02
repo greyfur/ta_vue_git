@@ -205,7 +205,7 @@
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
           <div><i style="margin-right:8px;" :class="searchFlag3===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>结算清单</div>
-          <p><i class="iconfont iconGroup26"></i></p>
+          <!-- <p><i class="iconfont iconGroup26"></i></p> 9.2去掉多余icon -->
         </div>
         <el-collapse-transition>
           <el-table v-show="searchFlag3" :height="maxHeight" border :data="SgData" style="width: 100%" :header-row-class-name="StableClass">
@@ -506,7 +506,7 @@
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag4 = !searchFlag4">
           <div><i style="margin-right:8px;" :class="searchFlag4===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>账单信息</div>
-          <p><i class="iconfont iconGroup26"></i></p>
+          <!-- <p><i class="iconfont iconGroup26"></i></p> 9.2去掉多余icon -->
         </div>
         <el-collapse-transition>
           <el-table v-show="searchFlag4" height="400" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">

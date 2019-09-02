@@ -47,6 +47,10 @@ export default {
   flex-direction: column;
   /* overflow: hidden; */
 }
+.el-container{
+  width: 100%;
+  height: 100%;
+}
 .el-container .is-vertical{
   width: 100%;
   height: 100%;
