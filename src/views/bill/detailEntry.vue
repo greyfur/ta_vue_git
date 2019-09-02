@@ -1180,8 +1180,7 @@ export default {
         case 3: // 复核通过  ----- 不需要选择人，根据wsSignbackFlag判断是否需要签回，
           // this.title = '复核通过';
           if (this.$route.query.tag === "billCheck") {
-            this.$http
-              .post("api/worksheet/wSCheck/getType", {
+            this.$http.post("api/worksheet/wSCheck/getType", {
                 modifiedBy: this.$store.state.userName,
                 processID: this.chooseRow.processId
               })
@@ -1200,17 +1199,15 @@ export default {
                       cancelButtonText: "取消",
                       type: "warning"
                     }).then(() => {
-                      this.$http
-                        .post(
-                          "api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
+                      this.$http.post("api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
                           {
                             processStatus: "SIGNBACK",
                             wsSignbackFlag: "1",
                             processId: this.chooseRow.processId,
                             procInstId: this.chooseRow.processInstId,
-                            assignee: this.chooseRow.curOperator,//9.2 参数调换位置
+                            assignee: assign,
                             type: "SIGNBACK",
-                            actOperator: assign//9.2 参数调换位置
+                            actOperator: this.$store.state.userName
                           }
                         )
                         .then(res => {
