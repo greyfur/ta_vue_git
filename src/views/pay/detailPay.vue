@@ -1618,14 +1618,19 @@ export default {
     getCurrencyRateList(){
       this.$http.post('api/sics/basis/getCurrencyRateList').then(res =>{
         if(res.status == 200 && res.data){
+          console.log(res.data)
           this.currencyRateList = res.data;
         }
       })
     }, 
     filterCurrencyRateList(p,s){ // p为原币币制 s为折币币制
+    console.log(p,s)
+    console.log(this.currencyRateList)
       let obj = this.currencyRateList.filter(el=>{
+        console.log(el.primCurrency,el.scndryCurrency)
         return el.primCurrency==p && el.scndryCurrency==s
       })
+      console.log(obj.length?obj[0]['rate']:null)
       return obj.length?obj[0]['rate']:null;
     },
     changeOpinion(){
@@ -2689,14 +2694,18 @@ export default {
       if(this.makeDocListEctype.yuanType.length){
         let allNum = 0;
         this.makeDocListEctype.yuanNum.forEach((el,i)=>{
+          console.log(el)
           // 遍历原币金额。。。
           if(el){
             let curType = this.makeDocListEctype.yuanType[i];
+            console.log(curType)
             if(curType!='CNY' && curType!='USD'){ 
               // 先把小汇率转为美元
               let val = this.filterCurrencyRateList('USD',curType);
+              console.log(val)
               if(val){
                 let USD = 1/val;
+                console.log(USD)
                 // 再把美元转为另一个小汇率
                 let val2 = this.filterCurrencyRateList('USD',this.makeDocListEctype.zheType);
                 if(val2){ 
@@ -2706,6 +2715,7 @@ export default {
                   // }else{
                   //    this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(4):null;
                   // }
+                  console.log(this.makeDocListEctype.yuanHuiLv[i],999);
                   this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(4):null;
                   if(this.makeDocListEctype.yuanHuiLv[i] != null){
                     allNum += this.makeDocListEctype.yuanNum[i]/Number(1*this.makeDocListEctype.yuanHuiLv[i]);
@@ -2713,7 +2723,10 @@ export default {
                 }
               }
             } else{  // 直接转换、、、
+            console.log('else')
               let val3 = Number(this.filterCurrencyRateList(curType,this.makeDocListEctype.zheType))
+              console.log(val3)
+              console.log(this.makeDocListEctype.yuanHuiLv[i],999);
               this.makeDocListEctype.yuanHuiLv[i] = Number(val3)>0?Number(val3).toFixed(4):null;
               if(this.makeDocListEctype.yuanHuiLv[i] != null){
                 allNum += Number(this.makeDocListEctype.yuanNum[i])/Number(1*this.makeDocListEctype.yuanHuiLv[i]);
@@ -2898,6 +2911,7 @@ export default {
           // 要删除掉 删除元素对应索引的金额
           o.forEach((el,i)=>{
             if(n.indexOf(el) == -1){
+              console.log(this.makeDocListEctype.yuanHuiLv[i],999);
               this.makeDocListEctype.yuanNum.splice(i,1);
               this.makeDocListEctype.yuanHuiLv.splice(i,1);
               this.makeDocListEctype.zheNum = this.makeDocListEctype.zheNum
@@ -2919,6 +2933,7 @@ export default {
         if(this.makeDocListEctype.yuanNum.length){
           let all = 0;
           this.makeDocListEctype.yuanNum.forEach((el,i)=>{
+            console.log(this.makeDocListEctype.yuanHuiLv[i],999);
             // this.makeDocListEctype.yuanHuiLv[i]汇率
             // el 是金额
             all += Number(Number(el)/this.makeDocListEctype.yuanHuiLv[i]) ;
