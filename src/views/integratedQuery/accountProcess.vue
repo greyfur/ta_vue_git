@@ -618,38 +618,38 @@ export default {
       //   return
       // }
        this.$http.post(`api/integeratedQuery/download`,{
-            processType:this.mustData.processType,
-            reportName: '账单流程',
-            processId:this.billSearch.processId,
-            wsType:this.billSearch.wsType,
-            processStatus:this.billSearch.processStatus,
-            registBy:this.billSearch.registBy,
-            registAt:this.billSearch.registAt,
-            cedentModel:this.cedentModel,
-            brokerModel:this.brokerModel,
-            wsSignbackFlag:this.billSearch.wsSignbackFlag,
-            wsHasSignback:this.billSearch.wsHasSignback,
-            actOperator:this.mustData.actOperator,
-          }, { responseType: "blob" }).then(res=>{
-            if(res.status===200){
-              this.path = this.getObjectURL(res.data);
-              if (res.data) {
-                  var a = document.createElement("a");
-                  if (typeof a.download === "undefined") {
-                    window.location = this.path;
-                  } else {
-                    a.href = this.path;
-                    let formatString = escape(res.headers['content-disposition'].split(';')[1].split('=')[1]);
-                    a.download =  decodeURI(formatString);
-                    //  a.download = new Date().getTime();
-                    // a.download = this.reportArr.reportName;
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                  }
+          processType:this.mustData.processType,
+          reportName: '账单流程',
+          processId:this.formLabelAlign.processId,
+          wsType:this.formLabelAlign.wsType,
+          processStatus:this.formLabelAlign.processStatus,
+          registBy:this.formLabelAlign.registBy,
+          registAt:this.formLabelAlign.registAt,
+          cedentModel:this.cedentModel,
+          brokerModel:this.brokerModel,
+          wsSignbackFlag:this.formLabelAlign.wsSignbackFlag,
+          wsHasSignback:this.formLabelAlign.wsHasSignback,
+          actOperator:this.mustData.actOperator,
+        }, { responseType: "blob" }).then(res=>{
+          if(res.status===200){
+            this.path = this.getObjectURL(res.data);
+            if (res.data) {
+                var a = document.createElement("a");
+                if (typeof a.download === "undefined") {
+                  window.location = this.path;
+                } else {
+                  a.href = this.path;
+                  let formatString = escape(res.headers['content-disposition'].split(';')[1].split('=')[1]);
+                  a.download =  decodeURI(formatString);
+                  //  a.download = new Date().getTime();
+                  // a.download = this.reportArr.reportName;
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
                 }
-            }
-          })
+              }
+          }
+        })
     },
     getObjectURL(file) {
       let url = null;
