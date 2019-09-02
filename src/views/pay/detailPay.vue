@@ -1358,8 +1358,7 @@ export default {
     },
   created(){
     sessionStorage.setItem('data',JSON.stringify({}));
-    this.row = JSON.parse(this.$route.query.row);
-    console.log(this.row)
+    this.getJson();
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
     if(this.$route.query.tag === 'payVerification'){
       this.makeDocEcho();
@@ -1384,7 +1383,6 @@ export default {
     //   })
     // }
     this.approvalName = sessionStorage.getItem('userCName');
-    console.log(this.row)
     if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
         this.$store.commit('ChangeFlod',true)
       } else{ this.$store.commit('ChangeFlod',false) }
@@ -1432,6 +1430,10 @@ export default {
     this.mailSend(2,'',1);
   },
   methods: {
+    getJson(){
+      console.log(eval("("+this.$route.query.row+")"))
+      this.row = JSON.parse(this.$route.query.row);
+    },
      downDialog(){
       this.downDialogFlag=true;
     },
@@ -2855,7 +2857,6 @@ export default {
         pageNumber:1,
         pageSize:100, 
         }).then(res =>{
-          console.log(res)
           if(res.status === 200 && res.data.rows && res.data.rows.length){
             res.data.rows.forEach((el,i)=>{
               if(el.docType.substr(0,1) === 'S'){
