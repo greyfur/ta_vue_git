@@ -768,101 +768,129 @@
         </div>
         <div class="mouseContent" ref="mouseContent">
           <el-form :label-position="labelPosition" label-width="180px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
-            <el-form-item label="Process ID">
-              <el-input v-model.trim="formLabelAlign.processId" disabled style="width:194px"></el-input>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="Process ID">
+                <el-input v-model.trim="formLabelAlign.processId" disabled style="width:194px"></el-input>
               </el-form-item>
-            <el-form-item label="收/付款支票"> 
-              <el-radio-group v-model="formLabelAlign.rmType" @change.stop="bizhichange(1)">
-              <el-radio label="R">收款</el-radio>
-              <el-radio label="P">付款</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="支票状态" prop="rmStatusIndex">
-              <el-select filterable v-model="formLabelAlign.rmStatusIndex" placeholder="请选择" @focus.stop>
-              <el-option v-for="(item,i) in rmStatusList" :key="item.n" :label="item.n" :value="i"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="支付方式" prop="paymentTypeIndex">
-            <el-select filterable v-model="formLabelAlign.paymentTypeIndex" placeholder="请选择">
-            <el-option v-for="(item,i) in paymentTypeList" :key="item.n" :label="item.n" :value="i" :disabled="item.d==formLabelAlign.rmType"></el-option>
-            </el-select>
-            </el-form-item>
-            <el-form-item label="Base Company" prop="baseCompany">
-            <el-select v-model="formLabelAlign.baseCompany" placeholder="请选择" @change.stop="bankCurrencyChange">
-            <el-option v-for="item in baseCompanyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
-            </el-select>
-            </el-form-item>
-            <el-form-item label="Business Origin" prop="businessOrigin"> 
-            <el-select v-model="formLabelAlign.businessOrigin" placeholder="请选择">
-            <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
-            </el-select>
-            </el-form-item>
-            <el-form-item label="汇款人" prop="brokerModel" v-show="formLabelAlign.rmType=='R'">
-            <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择">
-            <el-option
-            v-for="(item,index) in brokerListHK"
-            :key="index"
-            :label="item.codecode+' - '+item.codeName"
-            :value="index">
-            <span style="float:left">{{ item.codecode }}</span>
-            <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-            </el-option>
-            </el-select>
-            </el-form-item>
-            <el-form-item label="收款人" prop="brokerModel" v-show="formLabelAlign.rmType=='P'">
-            <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择" @change="bizhichange(0)">
-            <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
-            <span style="float:left">{{ item.codecode }}</span>
-            <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-            </el-option>
-            </el-select>
-            </el-form-item>
-            <el-form-item label="收款账户" prop="partnerBankAccount" v-show="formLabelAlign.rmType=='P'" >
-            <el-select filterable v-model="formLabelAlign.partnerBankAccount" placeholder="请选择" v-if="formLabelAlign.rmType=='P'">
-            <el-option v-for="(item,i) in recepitList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="item.objectId"></el-option>
-            </el-select>
-            </el-form-item>
-            <el-form-item label="付款账户" prop="bankAccount1">
-            <el-select filterable v-model="formLabelAlign.bankAccount1" placeholder="请选择">
-            <el-option v-for="(item,i) in BankAccountList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="i"></el-option>
-            </el-select>
-            </el-form-item>
-            <el-form-item label="起息日" prop="valueDate">
-            <el-date-picker value-format="timestamp" v-model="formLabelAlign.valueDate" type="date" placeholder="选择日期"></el-date-picker>
-            </el-form-item>
-            <el-form-item label="到期日" prop="dueDate">
-            <el-date-picker value-format="timestamp" v-model="formLabelAlign.dueDate" type="date" placeholder="选择日期"></el-date-picker>
-            </el-form-item>
-            <el-form-item label="币制/金额" required>
-            <el-col :span="10">
-            <el-form-item prop="bankCurrency">
-            <el-select filterable v-model="formLabelAlign.bankCurrency" placeholder="请选择" class="curAmount" @change="bizhichange(0)">
-            <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
-            </el-select>
-            </el-form-item>
-            </el-col>
-            <el-col :span="10">
-            <el-form-item prop="bankAmount">
-            <input type="text" class="selfInput" v-model="formLabelAlign.bankAmount" @input.stop="watchInput('bankAmount')">
-            <!-- <el-input v-model="formLabelAlign.bankAmount" @input.native="watchInput('bankAmount')" class="curAmount"></el-input> -->
-            </el-form-item>
-            </el-col>
-            </el-form-item>
-            <el-form-item label="手续费币制/手续费金额" @click.stop>
-            <el-col :span="10">
-            <el-form-item>
-            <el-select filterable v-model="formLabelAlign.chargesCurrency" placeholder="请选择" class="curAmount">
-            <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
-            </el-select>
-            </el-form-item>
-            </el-col>         
-            <el-col :span="10">
-            <el-form-item>
-            <input type="text" class="selfInput" v-model="formLabelAlign.chargesAmount" @input.stop="watchInput('chargesAmount')">
-            <!-- <el-input v-model="formLabelAlign.chargesAmount" @input.native="watchInput('chargesAmount')" class="curAmount"></el-input> -->
-            </el-form-item>
-            </el-col>
-            </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="收/付款支票"> 
+                <el-radio-group v-model="formLabelAlign.rmType" @change.stop="bizhichange(1)">
+                <el-radio label="R">收款</el-radio>
+                <el-radio label="P">付款</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="支票状态" prop="rmStatusIndex">
+                <el-select filterable v-model="formLabelAlign.rmStatusIndex" placeholder="请选择" >
+                <el-option v-for="(item,i) in rmStatusList" :key="item.n" :label="item.n" :value="i"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="支付方式" prop="paymentTypeIndex">
+                <el-select filterable v-model="formLabelAlign.paymentTypeIndex" placeholder="请选择">
+                <el-option v-for="(item,i) in paymentTypeList" :key="item.n" :label="item.n" :value="i" :disabled="item.d==formLabelAlign.rmType"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="Base Company" prop="baseCompany">
+                <el-select v-model="formLabelAlign.baseCompany" placeholder="请选择" @change.stop="bankCurrencyChange">
+                  <el-option v-for="item in baseCompanyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="Business Origin" prop="businessOrigin"> 
+                <el-select v-model="formLabelAlign.businessOrigin" placeholder="请选择">
+                  <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="汇款人" prop="brokerModel" v-show="formLabelAlign.rmType=='R'">
+                <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择">
+                  <el-option
+                  v-for="(item,index) in brokerListHK"
+                  :key="index"
+                  :label="item.codecode+' - '+item.codeName"
+                  :value="index">
+                    <span style="float:left">{{ item.codecode }}</span>
+                    <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="收款人" prop="brokerModel" v-show="formLabelAlign.rmType=='P'">
+                <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择" @change="bizhichange(0)">
+                  <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
+                    <span style="float:left">{{ item.codecode }}</span>
+                    <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="收款账户" prop="partnerBankAccount" v-show="formLabelAlign.rmType=='P'" >
+                <el-select filterable v-model="formLabelAlign.partnerBankAccount" placeholder="请选择" v-if="formLabelAlign.rmType=='P'">
+                   <el-option v-for="(item,i) in recepitList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="item.objectId"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="付款账户" prop="bankAccount1">
+                <el-select filterable v-model="formLabelAlign.bankAccount1" placeholder="请选择">
+                   <el-option v-for="(item,i) in BankAccountList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="i"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="起息日" prop="valueDate">
+                 <el-date-picker value-format="timestamp" v-model="formLabelAlign.valueDate" type="date" placeholder="选择日期"></el-date-picker>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="到期日" prop="dueDate">
+                 <el-date-picker value-format="timestamp" v-model="formLabelAlign.dueDate" type="date" placeholder="选择日期"></el-date-picker>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="币制/金额" required>
+                <el-col :span="10">
+                  <el-form-item prop="bankCurrency">
+                    <el-select filterable v-model="formLabelAlign.bankCurrency" placeholder="请选择" class="curAmount" @change="bizhichange(0)">
+                      <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="10">
+                  <el-form-item prop="bankAmount">
+                     <input type="text" class="selfInput" v-model="formLabelAlign.bankAmount" @input.stop="watchInput('bankAmount')">
+                  <!-- <el-input v-model="formLabelAlign.bankAmount" @input.native="watchInput('bankAmount')" class="curAmount"></el-input> -->
+                  </el-form-item>
+                </el-col>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="手续费币制/手续费金额">
+                <el-col :span="10">
+                <el-form-item>
+                  <el-select filterable v-model="formLabelAlign.chargesCurrency" placeholder="请选择" class="curAmount">
+                    <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
+                  </el-select>
+                </el-form-item>
+                </el-col>         
+                <el-col :span="10">
+                  <el-form-item>
+                    <input type="text" class="selfInput" v-model="formLabelAlign.chargesAmount" @input.stop="watchInput('chargesAmount')">
+                  <!-- <el-input v-model="formLabelAlign.chargesAmount" @input.native="watchInput('chargesAmount')" class="curAmount"></el-input> -->
+                  </el-form-item>
+                </el-col>
+              </el-form-item>
+            </div>
             <el-form-item>
             <el-button size="small" @click.stop="dialogFormVisible = false">取消</el-button>
             <el-button size="small" plain type="primary" @click.stop="creatRM('formLabelAlign')" style="padding:0 16px;">确定</el-button>
@@ -1435,15 +1463,17 @@ export default {
   },
   methods: {
     getJson(){
+      console.log('getJson')
       console.log(eval("("+this.$route.query.row+")"))
       this.row = JSON.parse(this.$route.query.row);
     },
+    stopMouse(){
+      window.event.stopPropagation();
+    },
      downDialog(){
-      console.log(1)
       this.downDialogFlag=true;
     },
     upDialog(){
-      console.log(2)
       this.downDialogFlag=false;
     },
     moveDialog(){//8.29 移动dialog
