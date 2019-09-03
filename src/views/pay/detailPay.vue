@@ -1374,13 +1374,6 @@ export default {
   },
   beforeMount(){this.copy('proNum',1);},
   mounted(){ 
-    // this.row = JSON.parse(this.$route.query.row); 8.30 未改好...
-    // if(this.row){
-    //   this.listData.forEach(el=>{
-    //     el['b'] = this.row[el['c']];
-    //     if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
-    //   })
-    // }
     this.approvalName = sessionStorage.getItem('userCName');
     if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
         this.$store.commit('ChangeFlod',true)
@@ -1414,7 +1407,8 @@ export default {
         
       }
     },1000)
-    this.mustData.processStatus = this.$route.query.row.processStatus;
+    // this.mustData.processStatus = this.$route.query.row.processStatus;
+    this.mustData.processStatus = this.row.processStatus;
     if(this.$route.query.tag === 'payOperation' && this.row.processStatus == '已悬停'){
       this.czState = true;
     }
@@ -1430,8 +1424,8 @@ export default {
   },
   methods: {
     getJson(){
-      console.log(eval("("+this.$route.query.row+")"))
-      this.row = JSON.parse(this.$route.query.row);
+      // console.log(eval("("+this.$route.query.row+")"))
+      this.row = Object.assign({},JSON.parse(this.$route.query.row));
     },
      downDialog(){
       this.downDialogFlag=true;

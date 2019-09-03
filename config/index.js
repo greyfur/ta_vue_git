@@ -16,10 +16,11 @@ module.exports = {
         // target: "http://172.17.106.2:9999", //wangtengda
         // target: "http://172.17.106.69:9999", //fanzhiyuan
         // target: "http://172.17.106.129:9999", //ligang
-
+        // target: "http://gateway.sit.chinare.com.cn", // 139 网关
         changOrigin: true, //允许跨域
         pathRewrite: {
-          "^/api": "" //请求的时候使用这个api就可以
+          // "^/api": "/ta_server" //请求的时候使用这个api就可以 网关需要
+          "^/api": "" 
         }
       },
       "/loginApi": {
@@ -34,6 +35,13 @@ module.exports = {
         changOrigin: true, //允许跨域
         pathRewrite: {
           "^/ocrApi": "" //请求的时候使用这个api就可以
+        }
+      },
+      "/uploadApi": {
+        target: `http://172.16.19.139:9999`,
+        changOrigin: true, //允许跨域
+        pathRewrite: {
+          "^/uploadApi": "" //请求的时候使用这个api就可以
         }
       },
     },

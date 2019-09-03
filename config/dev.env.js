@@ -15,4 +15,8 @@ module.exports = merge(prodEnv, {
   loginUrl: 'http://172.25.147.124:2222',  // 测试登录跳转ip  139
   // loginUrl: 'http://172.25.147.146:2222',  // UAT登录跳转ip 138
   // loginUrl: 'http://cas.crudp.chinare.com.cn',  // 投产环境
+
+  uploadUrl:'http://gateway.sit.chinare.com.cn' // 139
+  // uploadUrl:'http://ops.uat.chinare.com.cn:6060' // 138
+  // uploadUrl:'http://ops.crudp.chinare.com.cn' // 投产
 })

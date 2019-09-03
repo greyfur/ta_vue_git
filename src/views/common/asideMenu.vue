@@ -28,28 +28,20 @@
           active-text-color="#fff">
           <el-submenu v-if="$route.name==='detailEntry'|| $route.name==='detailCred'||$route.name==='detailPay'" style="background:#005C8D !important;">
             <template slot="title">
-              <router-link
-                :to="{name:$route.query.tag}"
-                >
+              <router-link :to="{name:$route.query.tag}">
                 <i class="iconfont iconleft-circle-o" style="color:#fff;"></i>
               </router-link>
-              <router-link
-                :to="{name:$route.query.tag}"
-                >
+              <router-link :to="{name:$route.query.tag}">
                 <span style="color:#fff;">返回</span>
               </router-link>
             </template>
-                <el-menu-item>
-                    <router-link
-                      :to="{name:$route.query.tag}"
-                      >
-                    </router-link>
-                    <router-link
-                      :to="{name:$route.query.tag}"
-                      >
-                      <span style="color:#fff;">返回</span>
-                    </router-link>
-                </el-menu-item>
+            <el-menu-item>
+              <router-link :to="{name:$route.query.tag}">
+              </router-link>
+              <router-link :to="{name:$route.query.tag}">
+                <span style="color:#fff;">返回</span>
+              </router-link>
+            </el-menu-item>
           </el-submenu>
           <el-submenu :index="el.name" v-for="(el,index) in urlArr" :key="index" class="navFirst">
             <template slot="title">
@@ -57,7 +49,10 @@
               <span>{{el.title}}</span>
             </template>
               <el-menu-item v-for="(item,i) in el.children" :key="i" :index="item.name" :class="{'is-active':$route.name == item.name}">
-                <span slot="title">{{item.title}}</span>
+                <el-badge :value="item.redPoint" class="item" :hidden="item.redPoint==0">
+                  <div>{{item.title}}</div>
+                  <!-- <span slot="title"></span> -->
+                </el-badge>
               </el-menu-item>
           </el-submenu>
         </el-menu>
@@ -101,6 +96,7 @@ import { mapState } from "vuex";
         firstName:'',
         // UName:'',
         // fold:true,
+        ws: null,
         transtionflag:false,
         iconEmnu:{
           'bill':'iconfont iconzhangdan',
@@ -108,8 +104,13 @@ import { mapState } from "vuex";
           'pay':'iconfont iconfukuan',
           'integratedQuery':'iconfont iconzonghechaxun',
           'admin':'iconfont iconguanliyuan',
+        },
+        upcoming:{
+         '账单': [1,33,5,0],// 共4个
+         '收款': [1,3,5,0,8,0,6], // 共7个
+         '付款': [1,3,5,0,4,8,0,0,0,2], // 共10个 
         }
-      };
+      }
     },
     created() {  // 获取公共数据
       // this.UName = sessionStorage.getItem('userCName')//登录名
@@ -211,15 +212,41 @@ import { mapState } from "vuex";
             }
         }        
       }
+      // if(typeof(WebSocket)=='function'){
+      //   this.initWebSocket();
+      // } else{
+      //   this.$message.error('浏览器不支持webSocket');
+      // }
     },
     mounted(){
+      // if(typeof(WebSocket)=='function'){
+      //   this.initWebSocket();
+      // } else{
+      //   this.$message.error('浏览器不支持webSocket');
+      // }
+      console.log('asideMenu');
       this.urlArr = computeNavbar(this.$store.state.deFineRout);
+      // let arrurl = computeNavbar(this.$store.state.deFineRout);
+      // let qqq = [];
+      // arrurl.forEach(el=>{
+      //   if(this.upcoming[el.title]){
+      //     el.children.forEach(al=>{
+      //       al['redPoint'] = this.upcoming[el.title][al.num];
+      //     })
+      //     qqq.push(el);
+      //   }
+      // })
+      // this.urlArr = arrurl;
+      // console.log(qqq,'qqq');
       if(computeName(this.$route.name,this.$store.state.deFineRout)){
         this.name = computeName(this.$route.name,this.$store.state.deFineRout);
       } else{
         window.location.href = `${window.location.href}${this.firstName}`
       }
     },
+    // destroyed () {
+    //   this.ws.close() ;
+    // },
     methods: {
       handleSelect(key, keyPath) {
         this.$router.push({name:key})
@@ -240,6 +267,27 @@ import { mapState } from "vuex";
         }else if(str==='缩'){
            this.$store.commit('ChangeFlod',false)
         }
+      },
+      initWebSocket () { // 初始化weosocket
+        this.ws = new WebSocket('ws://172.17.106.69:9999/websocket/20');
+        this.ws.onmessage = this.websocketonmessage;
+        this.ws.onopen = this.websocketonopen;
+        this.ws.onerror = this.websocketonerror;
+        this.ws.onclose = this.websocketclose;
+        },
+      websocketonopen () { // 连接建立之后执行send方法发送数据
+        // if(this.ws.readyState==1){
+          this.ws.send(this.$store.state.userName);
+        // }
+      },
+      websocketonerror () {
+        console.log( "WebSocket连接发生错误" + ',状态码：' + this.ws.readyState)
+      },
+      websocketonmessage (e) { // 数据接收
+        console.log('数据接收',e,'状态码'+this.ws.readyState);
+      },
+      websocketclose (e) {  // 关闭
+        console.log('已关闭连接',e);
       }
     },
     watch:{
@@ -255,6 +303,15 @@ import { mapState } from "vuex";
   }
 </script>
 <style>
+.el-badge__content{
+  /* padding: 0 3px; */
+  border: none;
+  font-size: 12px;
+}
+.el-badge__content.is-fixed{
+  top: 25px;
+  right: -6px;
+}
   .asideMenu{
     height:100%;
     background-color:#005C8D;

@@ -1,5 +1,5 @@
 <template>
-     <div class="headNav">
+    <div class="headNav">
         <img src="@/assets/img/navLeft@2x.png" style="width:197px;" alt="error">
         <div class="logOut">
             <span style="color:#999;">
@@ -9,15 +9,6 @@
                 <i class="el-icon-switch-button" style="margin-right:4px;color:#fff;"></i>退出
             </span>
         </div>
-        <!-- <span class="word" v-show="!fold">
-        <span style="font-size:15px;display: inline-block;transform: scale(.9);width:80px;">中再产险</span>
-        <span class="enWord">CHINA RE P&C</span>
-        </span>
-        <span class="line" v-show="!fold"></span>
-        <span class="word" v-show="!fold" style="margin-left:-15px;">
-        <span style="font-size:15px;display: inline-block;transform: scale(.9);width:90px;">账单结算管理</span>
-        <span class="enWord">Accounts/Settlement</span>
-        </span> -->
     </div>
 </template>
 <script>
@@ -33,8 +24,9 @@ export default {
         }
     },
     created(){
-        this.UName = sessionStorage.getItem('userCName')
+        this.UName = sessionStorage.getItem('userCName');
     },
+    
     methods:{
         logOut() {
         sessionStorage.removeItem('resMenuList');
@@ -42,7 +34,8 @@ export default {
         cookie.remove('jwttoken');
         cookie.remove('jwttokenInfo');
         window.location.href = `${cip.loginUrl}/logout?service=http://${cip.currentIp}:${cip.currentPort}/indexPage`;
-      }
+      },
+      
     }
 }
 </script>
