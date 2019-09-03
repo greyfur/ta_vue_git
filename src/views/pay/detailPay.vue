@@ -4,8 +4,8 @@
    <!-- <router-link :to="{name:$route.query.tag}" :class="this.$store.state.flod?'leftBack':'rightBack'">
       <i class="iconfont iconleft-circle-o"></i>
     </router-link>  -->
-    <el-row>
-      <el-col :span="11" style="padding:0 16px;height:720px;background:#f5f5f5;">
+    <el-row style="background:#f5f5f5;">
+      <el-col :span="11" style="height:720px;">
          <!-- 完结 -->
         <div class="btn" v-if="$route.query.tag === 'payEnd'">
           <el-button size="small" @click="openSICS" plain>打开SICS</el-button>
@@ -91,7 +91,7 @@
         </ul>
 
         <!-- 详情 -->
-        <div :class="searchFlag1===true?'searchNew':''" >
+        <div :class="searchFlag1===true?'searchNew':''" style="background:#fff;">
           <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
             <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>详情</div>
             <p class="info" style="color:#666;">流程编号: 
@@ -114,13 +114,13 @@
           </ul>
         </div>
         <div :class="searchFlag2===true?'searchNew':''"  :style="$route.query.tag==='payVerification'?'border-bottom:none;margin-top:0;':'border-bottom:none;margin-top:16px;'">
-          <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2">
+          <div class="titleSearch detailSearch" @click="searchFlag2 = !searchFlag2" style="background:#fff;">
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表</div>
             <p v-if="$route.query.tag != 'payClose'&&$route.query.tag != 'payReview' && $route.query.tag != 'payReview' && $route.query.tag != 'payVerification' && row.processStatus!='已置废' && row.processStatus!='已悬停'">
               <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
             </p>         
           </div>
-          <el-table :data="fileData.slice((currentPage-1)*3,currentPage*3)" border style="width:100%;height:392px;" class="document" :header-row-class-name="StableClass">
+          <el-table :data="fileData.slice((currentPage-1)*3,currentPage*3)" border style="width:100%;height:392px;" class="document FFF" :header-row-class-name="FFF">
             <el-table-column label="文件名" width="200" align="center">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -143,7 +143,7 @@
             </el-table-column>
           </el-table>
             <el-pagination
-            background
+            style="background:#fff"
             layout="prev, pager, next"
             :page-size="3"
             :current-page="currentPage"
@@ -154,10 +154,11 @@
       </el-col>
       <el-col :span="13" style="height:720px;">
         <div class="right">
-          <div class="titleSearch detailSearch">
-            <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>文档预览</div>
+          <div class="titleSearch detailSearch" style="background:#fff;">
+            <!-- <i style="margin-right:8px;" class="el-icon-arrow-down"></i> 9.2去掉无用icon -->
+            <!-- <i style="margin-right:8px;" class="iconfont iconGroup26"></i> -->
+            <div>文档预览</div>
               <el-button size="small">
-                <i style="margin-right:8px;" class="iconfont iconGroup26"></i>
                 <a href="../../../static/Preview/index.html" target="_blank">全屏</a>
               </el-button>
             <!-- <el-button class="rotate" size="mini" @click="rotateMua">顺时针旋转</el-button>
@@ -496,13 +497,13 @@
       </el-col>
     </el-row>
     <!-- 账单信息 -->
-    <el-row v-if="$route.query.tag === 'payClose' || $route.query.tag === 'partialDone' || $route.query.tag === 'payment' || $route.query.tag === 'payEnd'">
+    <el-row style="padding:0 16px;" v-if="$route.query.tag === 'payClose' || $route.query.tag === 'partialDone' || $route.query.tag === 'payment' || $route.query.tag === 'payEnd'">
       <el-col :span="24">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag4 = !searchFlag4">
           <div>
             <i style="margin-right:8px;" :class="searchFlag4===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>账单信息
           </div>
-          <p><i class="iconfont iconGroup26"></i></p>
+          <!-- <p><i class="iconfont iconGroup26"></i></p> 9.2去掉多余icon -->
         </div>
         <el-collapse-transition>
           <el-table v-show="searchFlag4" height="400" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
@@ -759,113 +760,143 @@
       </el-form>
     </el-dialog>
 
-    <div class="mouseDialogPar" v-if="dialogFormVisible" ref="mouseDialogPar" @mousedown="downDialog" @mousemove="moveDialog" @mouseup="upDialog">
+    <div class="mouseDialogPar" v-if="dialogFormVisible" ref="mouseDialogPar" @mousedown.stop="downDialog" @mousemove.stop="moveDialog" @mouseup.stop="upDialog">
       <div class="mouseDialogChi" ref="mouseDialogChi">
         <div class="mouseTitle">
           <h3>支票创建</h3>
           <P class="closed" @click.stop="closed">&times;</P>
         </div>
+        <div class="mouseContent" ref="mouseContent">
           <el-form :label-position="labelPosition" label-width="180px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
-        <el-form-item label="Process ID">
-          <el-input v-model.trim="formLabelAlign.processId" disabled style="width:194px"></el-input>
-        </el-form-item>
-         <el-form-item label="收/付款支票"> 
-          <el-radio-group v-model="formLabelAlign.rmType" @change="bizhichange(1)">
-            <el-radio label="R">收款</el-radio>
-            <el-radio label="P">付款</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="支票状态" prop="rmStatusIndex">
-          <el-select filterable v-model="formLabelAlign.rmStatusIndex" placeholder="请选择">
-            <el-option v-for="(item,i) in rmStatusList" :key="item.n" :label="item.n" :value="i"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="支付方式" prop="paymentTypeIndex">
-          <el-select filterable v-model="formLabelAlign.paymentTypeIndex" placeholder="请选择">
-            <el-option v-for="(item,i) in paymentTypeList" :key="item.n" :label="item.n" :value="i" :disabled="item.d==formLabelAlign.rmType"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Base Company" prop="baseCompany">
-          <el-select v-model="formLabelAlign.baseCompany" placeholder="请选择" @change="bankCurrencyChange">
-            <el-option v-for="item in baseCompanyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Business Origin" prop="businessOrigin"> 
-          <el-select v-model="formLabelAlign.businessOrigin" placeholder="请选择">
-            <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="汇款人" prop="brokerModel" v-show="formLabelAlign.rmType=='R'">
-          <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择">
-            <el-option
-              v-for="(item,index) in brokerListHK"
-              :key="index"
-              :label="item.codecode+' - '+item.codeName"
-              :value="index">
-              <span style="float:left">{{ item.codecode }}</span>
-              <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="收款人" prop="brokerModel" v-show="formLabelAlign.rmType=='P'">
-          <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择" @change="bizhichange(0)">
-            <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
-              <span style="float:left">{{ item.codecode }}</span>
-              <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="收款账户" prop="partnerBankAccount" v-show="formLabelAlign.rmType=='P'">
-          <el-select filterable v-model="formLabelAlign.partnerBankAccount" placeholder="请选择" v-if="formLabelAlign.rmType=='P'">
-            <el-option v-for="(item,i) in recepitList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="item.objectId"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="付款账户" prop="bankAccount1">
-          <el-select filterable v-model="formLabelAlign.bankAccount1" placeholder="请选择">
-            <el-option v-for="(item,i) in BankAccountList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="i"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="起息日" prop="valueDate">
-          <el-date-picker value-format="timestamp" v-model="formLabelAlign.valueDate" type="date" placeholder="选择日期"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="到期日" prop="dueDate">
-          <el-date-picker value-format="timestamp" v-model="formLabelAlign.dueDate" type="date" placeholder="选择日期"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="币制/金额" required>
-          <el-col :span="10">
-            <el-form-item prop="bankCurrency">
-              <el-select filterable v-model="formLabelAlign.bankCurrency" placeholder="请选择" class="curAmount" @change="bizhichange(0)">
-                <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="10">
-            <el-form-item prop="bankAmount">
-              <input type="text" class="selfInput" v-model="formLabelAlign.bankAmount" @input="watchInput('bankAmount')">
-              <!-- <el-input v-model="formLabelAlign.bankAmount" @input.native="watchInput('bankAmount')" class="curAmount"></el-input> -->
-            </el-form-item>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="手续费币制/手续费金额">
-          <el-col :span="10">
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="Process ID">
+                <el-input v-model.trim="formLabelAlign.processId" disabled style="width:194px"></el-input>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="收/付款支票"> 
+                <el-radio-group v-model="formLabelAlign.rmType" @change.stop="bizhichange(1)">
+                <el-radio label="R">收款</el-radio>
+                <el-radio label="P">付款</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="支票状态" prop="rmStatusIndex">
+                <el-select filterable v-model="formLabelAlign.rmStatusIndex" placeholder="请选择" >
+                <el-option v-for="(item,i) in rmStatusList" :key="item.n" :label="item.n" :value="i"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="支付方式" prop="paymentTypeIndex">
+                <el-select filterable v-model="formLabelAlign.paymentTypeIndex" placeholder="请选择">
+                <el-option v-for="(item,i) in paymentTypeList" :key="item.n" :label="item.n" :value="i" :disabled="item.d==formLabelAlign.rmType"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="Base Company" prop="baseCompany">
+                <el-select v-model="formLabelAlign.baseCompany" placeholder="请选择" @change.stop="bankCurrencyChange">
+                  <el-option v-for="item in baseCompanyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="Business Origin" prop="businessOrigin"> 
+                <el-select v-model="formLabelAlign.businessOrigin" placeholder="请选择">
+                  <el-option v-for="item in businessOriginList" :key="item.code" :label="item.name" :value="item.code"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="汇款人" prop="brokerModel" v-show="formLabelAlign.rmType=='R'">
+                <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择">
+                  <el-option
+                  v-for="(item,index) in brokerListHK"
+                  :key="index"
+                  :label="item.codecode+' - '+item.codeName"
+                  :value="index">
+                    <span style="float:left">{{ item.codecode }}</span>
+                    <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="收款人" prop="brokerModel" v-show="formLabelAlign.rmType=='P'">
+                <el-select filterable v-model="formLabelAlign.brokerModel" placeholder="请选择" @change="bizhichange(0)">
+                  <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
+                    <span style="float:left">{{ item.codecode }}</span>
+                    <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="收款账户" prop="partnerBankAccount" v-show="formLabelAlign.rmType=='P'" >
+                <el-select filterable v-model="formLabelAlign.partnerBankAccount" placeholder="请选择" v-if="formLabelAlign.rmType=='P'">
+                   <el-option v-for="(item,i) in recepitList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="item.objectId"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="付款账户" prop="bankAccount1">
+                <el-select filterable v-model="formLabelAlign.bankAccount1" placeholder="请选择">
+                   <el-option v-for="(item,i) in BankAccountList" :key="i" :label="item.currency+'-'+item.bankName+'-'+item.accountNumber" :value="i"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="起息日" prop="valueDate">
+                 <el-date-picker value-format="timestamp" v-model="formLabelAlign.valueDate" type="date" placeholder="选择日期"></el-date-picker>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="到期日" prop="dueDate">
+                 <el-date-picker value-format="timestamp" v-model="formLabelAlign.dueDate" type="date" placeholder="选择日期"></el-date-picker>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="币制/金额" required>
+                <el-col :span="10">
+                  <el-form-item prop="bankCurrency">
+                    <el-select filterable v-model="formLabelAlign.bankCurrency" placeholder="请选择" class="curAmount" @change="bizhichange(0)">
+                      <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="10">
+                  <el-form-item prop="bankAmount">
+                     <input type="text" class="selfInput" v-model="formLabelAlign.bankAmount" @input.stop="watchInput('bankAmount')">
+                  <!-- <el-input v-model="formLabelAlign.bankAmount" @input.native="watchInput('bankAmount')" class="curAmount"></el-input> -->
+                  </el-form-item>
+                </el-col>
+              </el-form-item>
+            </div>
+            <div class="stopMouse" @mousedown.stop="stopMouse">
+              <el-form-item label="手续费币制/手续费金额">
+                <el-col :span="10">
+                <el-form-item>
+                  <el-select filterable v-model="formLabelAlign.chargesCurrency" placeholder="请选择" class="curAmount">
+                    <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
+                  </el-select>
+                </el-form-item>
+                </el-col>         
+                <el-col :span="10">
+                  <el-form-item>
+                    <input type="text" class="selfInput" v-model="formLabelAlign.chargesAmount" @input.stop="watchInput('chargesAmount')">
+                  <!-- <el-input v-model="formLabelAlign.chargesAmount" @input.native="watchInput('chargesAmount')" class="curAmount"></el-input> -->
+                  </el-form-item>
+                </el-col>
+              </el-form-item>
+            </div>
             <el-form-item>
-              <el-select filterable v-model="formLabelAlign.chargesCurrency" placeholder="请选择" class="curAmount">
-                <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
-              </el-select>
+            <el-button size="small" @click.stop="dialogFormVisible = false">取消</el-button>
+            <el-button size="small" plain type="primary" @click.stop="creatRM('formLabelAlign')" style="padding:0 16px;">确定</el-button>
             </el-form-item>
-          </el-col>         
-          <el-col :span="10">
-            <el-form-item>
-              <input type="text" class="selfInput" v-model="formLabelAlign.chargesAmount" @input="watchInput('chargesAmount')">
-              <!-- <el-input v-model="formLabelAlign.chargesAmount" @input.native="watchInput('chargesAmount')" class="curAmount"></el-input> -->
-            </el-form-item>
-          </el-col>
-        </el-form-item>
-        <el-form-item>
-          <el-button size="small" @click="dialogFormVisible = false">取消</el-button>
-          <el-button size="small" plain type="primary" @click="creatRM('formLabelAlign')" style="padding:0 16px;">确定</el-button>
-        </el-form-item>
-      </el-form>
+          </el-form>
+        </div>
       </div>
     </div>
 
@@ -1120,6 +1151,7 @@ export default {
         proxyFlag:false,
         proxyMan:null,
         StableClass: "tableClass",
+        FFF:"FFF",
         WSData: [],
         saveLevel:null,
         partBankAccountList:[],
@@ -1356,8 +1388,9 @@ export default {
       };
     },
   created(){
-    sessionStorage.setItem('data',JSON.stringify({}));
     this.getJson();
+    sessionStorage.setItem('data',JSON.stringify({}));
+    // this.getJson(); 9.3注释
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
     if(this.$route.query.tag === 'payVerification'){
       this.makeDocEcho();
@@ -1424,8 +1457,27 @@ export default {
   },
   methods: {
     getJson(){
-      // console.log(eval("("+this.$route.query.row+")"))
-      this.row = Object.assign({},JSON.parse(this.$route.query.row));
+      // console.log('getJson')
+      // console.log(JSON.parse(this.$route.query.row.replace(/sortOperation/g,''))) 9.3解决刷新
+      // console.log(eval("("+this.$route.query.row+")")) eval 写法
+      let reg=/sortOperation/g;
+      // console.log(reg)
+      // let newReg=new RegExp(sortOperation);
+      console.log(JSON.parse(reg.test(this.$route.query.row)))
+      if(JSON.parse(/sortOperation/g.test(this.$route.query.row))){
+         this.row = JSON.parse(this.$route.query.row.replace(/sortOperation/g,''));
+      }else{
+        this.row = JSON.parse(this.$route.query.row)
+      }
+        if(this.row){
+        this.listData.forEach(el=>{
+          el['b'] = this.row[el['c']];
+          if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
+        })
+      }
+    },
+    stopMouse(){
+      window.event.stopPropagation();
     },
      downDialog(){
       this.downDialogFlag=true;
@@ -1611,7 +1663,6 @@ export default {
     },
     getCurrencyRateList(){
       this.$http.post('api/sics/basis/getCurrencyRateList').then(res =>{
-        console.log(res,'this.currencyRateList---res');
         if(res.status == 200 && res.data){
           if(!res.data.length){
             this.$message({message: '后端未返回生成审批文档的数据，无法生成审批文档',type: 'error'});
@@ -1621,9 +1672,13 @@ export default {
       })
     }, 
     filterCurrencyRateList(p,s){ // p为原币币制 s为折币币制
+    console.log(p,s)
+    console.log(this.currencyRateList)
       let obj = this.currencyRateList.filter(el=>{
+        console.log(el.primCurrency,el.scndryCurrency)
         return el.primCurrency==p && el.scndryCurrency==s
       })
+      console.log(obj.length?obj[0]['rate']:null)
       return obj.length?obj[0]['rate']:null;
     },
     changeOpinion(){
@@ -2687,14 +2742,18 @@ export default {
       if(this.makeDocListEctype.yuanType.length){
         let allNum = 0;
         this.makeDocListEctype.yuanNum.forEach((el,i)=>{
+          console.log(el)
           // 遍历原币金额。。。
           if(el){
             let curType = this.makeDocListEctype.yuanType[i];
+            console.log(curType)
             if(curType!='CNY' && curType!='USD'){ 
               // 先把小汇率转为美元
               let val = this.filterCurrencyRateList('USD',curType);
+              console.log(val)
               if(val){
                 let USD = 1/val;
+                console.log(USD)
                 // 再把美元转为另一个小汇率
                 let val2 = this.filterCurrencyRateList('USD',this.makeDocListEctype.zheType);
                 if(val2){ 
@@ -2704,6 +2763,7 @@ export default {
                   // }else{
                   //    this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(4):null;
                   // }
+                  console.log(this.makeDocListEctype.yuanHuiLv[i],999);
                   this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(4):null;
                   if(this.makeDocListEctype.yuanHuiLv[i] != null){
                     allNum += this.makeDocListEctype.yuanNum[i]/Number(1*this.makeDocListEctype.yuanHuiLv[i]);
@@ -2711,7 +2771,10 @@ export default {
                 }
               }
             } else{  // 直接转换、、、
+            console.log('else')
               let val3 = Number(this.filterCurrencyRateList(curType,this.makeDocListEctype.zheType))
+              console.log(val3)
+              console.log(this.makeDocListEctype.yuanHuiLv[i],999);
               this.makeDocListEctype.yuanHuiLv[i] = Number(val3)>0?Number(val3).toFixed(4):null;
               if(this.makeDocListEctype.yuanHuiLv[i] != null){
                 allNum += Number(this.makeDocListEctype.yuanNum[i])/Number(1*this.makeDocListEctype.yuanHuiLv[i]);
@@ -2893,6 +2956,7 @@ export default {
           // 要删除掉 删除元素对应索引的金额
           o.forEach((el,i)=>{
             if(n.indexOf(el) == -1){
+              console.log(this.makeDocListEctype.yuanHuiLv[i],999);
               this.makeDocListEctype.yuanNum.splice(i,1);
               this.makeDocListEctype.yuanHuiLv.splice(i,1);
               this.makeDocListEctype.zheNum = this.makeDocListEctype.zheNum
@@ -2914,6 +2978,7 @@ export default {
         if(this.makeDocListEctype.yuanNum.length){
           let all = 0;
           this.makeDocListEctype.yuanNum.forEach((el,i)=>{
+            console.log(this.makeDocListEctype.yuanHuiLv[i],999);
             // this.makeDocListEctype.yuanHuiLv[i]汇率
             // el 是金额
             all += Number(Number(el)/this.makeDocListEctype.yuanHuiLv[i]) ;
@@ -2925,7 +2990,7 @@ export default {
     },
     'row.approvalLevel':{
       handler:function(o,n){
-        console.log(o,n)
+        // console.log(o,n)
       }
     }
   }
@@ -3055,6 +3120,7 @@ export default {
   width: 100%;
   height:100%;
   background-color: #EEEEEE;
+  margin-left: 10px;
 }
 .right2 {
   width: 100%;
@@ -3079,6 +3145,7 @@ ul.detail-ul{
   margin-left: 0;
   background-color: #fff;
   margin-top: 10px;
+  border: 1px solid #f5f5f5;
 }
 li.detail-item{
   display: flex;
@@ -3273,5 +3340,8 @@ li.detail-item{
 }
 .closed:hover{
   color: red;
+}
+.tableClass th, .tableClass th.is-right{
+  background: #fff ;
 }
 </style>

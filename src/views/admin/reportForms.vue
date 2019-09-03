@@ -1,7 +1,7 @@
 <template>
   <div class="reportForms">
       <div class="area">
-        <span>选择报表类型：</span>
+        <span>账单报表：</span>
           <el-select clearable filterable v-model="reportType" placeholder="请选择">
             <el-option v-for="(item,index) in ReportFormArr" :key="'h'+index" :label="item.name" :value="item.type">
               <span>{{ item.name }}</span>
@@ -17,7 +17,7 @@
           <div class="do">操作： <p class="btn" @click="sure('one')">下载</p></div>
       </div>
        <div class="area">
-        <span>选择报表类型：</span>
+        <span>结算报表：</span>
           <el-select clearable filterable v-model="reportTypes" placeholder="请选择">
             <el-option v-for="(item,index) in ReportFormArrs" :key="'h'+index" :label="item.name" :value="item.type">
               <span>{{ item.name }}</span>

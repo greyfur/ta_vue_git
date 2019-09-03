@@ -254,13 +254,13 @@ import { mapState } from "vuex";
       handleOpen(){
 
       },
-      logOut() {
-        sessionStorage.removeItem('resMenuList');
-        sessionStorage.removeItem('roleIdList');
-        cookie.remove('jwttoken');
-        cookie.remove('jwttokenInfo');
-        window.location.href = `${cip.loginUrl}/logout?service=http://${cip.currentIp}:${cip.currentPort}/indexPage`;
-      },
+      // logOut() {
+      //   sessionStorage.removeItem('resMenuList');
+      //   sessionStorage.removeItem('roleIdList');
+      //   cookie.remove('jwttoken');
+      //   cookie.remove('jwttokenInfo');
+      //   window.location.href = `${cip.loginUrl}/logout?service=http://${cip.currentIp}:${cip.currentPort}/indexPage`;
+      // },
       changeExtend(str){
         if(str==='伸'){
           this.$store.commit('ChangeFlod',true)

@@ -47,6 +47,13 @@ export default {
   flex-direction: column;
   /* overflow: hidden; */
 }
+.el-container{
+  width: 100%;
+  /* height: 100%; */
+  display: flex;
+  flex:1;
+  overflow: hidden; /*9.3样式*/
+}
 .el-container .is-vertical{
   width: 100%;
   height: 100%;
@@ -60,10 +67,9 @@ export default {
   line-height: 64px;
   background:linear-gradient(270deg,rgba(0,149,193,1) 0%,rgba(1,81,124,1) 88%,rgba(0,92,141,1) 100%);
 }
-.appMain{
+.el-container .appMain{
   display: flex;
   width: 100%;
-  height: 658px;
   flex: 1;
   flex-shrink: 0;
 }
