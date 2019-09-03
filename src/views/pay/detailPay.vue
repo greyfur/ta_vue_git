@@ -1389,7 +1389,7 @@ export default {
     },
   created(){
     sessionStorage.setItem('data',JSON.stringify({}));
-    this.getJson();
+    // this.getJson(); 9.3注释
     this.nameList = JSON.parse(sessionStorage.getItem("nameList"));
     if(this.$route.query.tag === 'payVerification'){
       this.makeDocEcho();
@@ -1397,23 +1397,17 @@ export default {
     }
     this.formLabelAlign.valueDate = new Date().getTime();
     this.formLabelAlign.dueDate = new Date().getTime();
-    if(this.row){
-      this.listData.forEach(el=>{
-        el['b'] = this.row[el['c']];
-        if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
-      })
-    }
-  },
-  beforeMount(){this.copy('proNum',1);},
-  mounted(){ 
-    console.log(this.$refs.formLabelAlign)
-    // this.row = JSON.parse(this.$route.query.row); 8.30 未改好...
-    // if(this.row){
+    // if(this.row){  9.3注释
     //   this.listData.forEach(el=>{
     //     el['b'] = this.row[el['c']];
     //     if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
     //   })
     // }
+  },
+  beforeMount(){this.copy('proNum',1);},
+  mounted(){ 
+    this.getJson();
+    // this.row = JSON.parse(this.$route.query.row); /*8.30 未改好...*/
     this.approvalName = sessionStorage.getItem('userCName');
     if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
         this.$store.commit('ChangeFlod',true)
@@ -1463,9 +1457,24 @@ export default {
   },
   methods: {
     getJson(){
-      console.log('getJson')
-      console.log(eval("("+this.$route.query.row+")"))
-      this.row = JSON.parse(this.$route.query.row);
+      // console.log('getJson')
+      // console.log(JSON.parse(this.$route.query.row.replace(/sortOperation/g,''))) 9.3解决刷新
+      // console.log(eval("("+this.$route.query.row+")")) eval 写法
+      let reg=/sortOperation/g;
+      // console.log(reg)
+      // let newReg=new RegExp(sortOperation);
+      console.log(JSON.parse(reg.test(this.$route.query.row)))
+      if(JSON.parse(/sortOperation/g.test(this.$route.query.row))){
+         this.row = JSON.parse(this.$route.query.row.replace(/sortOperation/g,''));
+      }else{
+        this.row = JSON.parse(this.$route.query.row)
+      }
+        if(this.row){
+        this.listData.forEach(el=>{
+          el['b'] = this.row[el['c']];
+          if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
+        })
+      }
     },
     stopMouse(){
       window.event.stopPropagation();
@@ -1654,9 +1663,7 @@ export default {
     },
     getCurrencyRateList(){
       this.$http.post('api/sics/basis/getCurrencyRateList').then(res =>{
-        console.log(res,'this.currencyRateList---res');
         if(res.status == 200 && res.data){
-          console.log(res.data)
           if(!res.data.length){
             this.$message({message: '后端未返回生成审批文档的数据，无法生成审批文档',type: 'error'});
           }
@@ -2983,7 +2990,7 @@ export default {
     },
     'row.approvalLevel':{
       handler:function(o,n){
-        console.log(o,n)
+        // console.log(o,n)
       }
     }
   }
