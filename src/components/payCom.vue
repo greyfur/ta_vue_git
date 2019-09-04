@@ -18,7 +18,7 @@
                 </el-option>
               </el-select>
           </el-col>
-          <el-col :span="8" v-show="processStatusList.length">
+          <el-col :span="8" v-show="processStatusList.length>1">
             <span class="slable">流程状态</span>
             <el-select clearable v-model="searchList.processStatus" placeholder="请选择流程状态">
               <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
@@ -635,6 +635,12 @@ export default {
         params = Object.assign({},this.mustData);
         }
       delete params['actOperator'];
+      if(this.urlName === "payOperation"){  // 9.4 胖虎说要加上hasRecheckFlag
+        params['hasRecheckFlag'] = '0';
+      }
+      if(this.urlName === "payClose"){  // 9.4 胖虎说要加上hasRecheckFlag
+        params['hasRecheckFlag'] = '1';
+      }
       this.$http.post('api/pay/teskClaim/list',params).then(res =>{
         if(res.status === 200 ) { 
           // 回显结付公司
@@ -926,6 +932,12 @@ export default {
             } else{
               params = Object.assign({},fenye,this.searchList);
             }
+          }
+          if(this.urlName === "payOperation"){  // 9.4 胖虎说要加上hasRecheckFlag
+            params['hasRecheckFlag'] = '0';
+          }
+          if(this.urlName === "payClose"){  // 9.4 胖虎说要加上hasRecheckFlag
+            params['hasRecheckFlag'] = '1';
           }
           this.$http.post('api/pay/teskClaim/list',params).then(res =>{
             if(res.status === 200){
