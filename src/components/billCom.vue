@@ -126,13 +126,13 @@
     </div>
     <div class="btn">
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)">
-        <i class="iconfont iconGroup91"></i>手工创建
+        <i class="iconfont iconGroup91" style="font-size:12px;"></i>手工创建
       </el-button>
       <el-button type="primary" plain @click="init" class="borderBtn">
-        <i class="iconfont iconGroup37"></i>刷新
+        <i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新
       </el-button>
       <el-button type="primary" plain @click="init2" class="borderBtn" v-show="urlName === 'sortOperation'">
-        <i class="iconfont iconGroup37"></i>刷新邮件
+        <i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新邮件
       </el-button>
     </div>
     <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;text-align:center;margin:0 auto;">  
