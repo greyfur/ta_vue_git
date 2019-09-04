@@ -26,7 +26,7 @@
           text-color="#fff"
           @open="handleOpen"
           active-text-color="#fff">
-          <el-submenu v-if="$route.name==='detailEntry'|| $route.name==='detailCred'||$route.name==='detailPay'" style="background:#005C8D !important;">
+          <el-submenu v-if="$route.name==='detailEntry'|| $route.name==='detailCred'||$route.name==='detailPay'" style="background:#005C8D !important;" key="hyd" index="hyd">
             <template slot="title">
               <router-link :to="{name:$route.query.tag}">
                 <i class="iconfont iconleft-circle-o" style="color:#fff;"></i>
@@ -285,6 +285,24 @@ import { mapState } from "vuex";
   }
 </script>
 <style>
+div::-webkit-scrollbar{
+  width:0px;
+  /* height:10px; */
+}
+div::-webkit-scrollbar-track{
+  background: rgb(239, 239, 239);
+  border-radius:2px;
+}
+div::-webkit-scrollbar-thumb{
+  background: #bfbfbf;
+  border-radius:10px;
+}
+div::-webkit-scrollbar-thumb:hover{
+  background: #bfbfbf
+}
+div::-webkit-scrollbar-corner{
+  background: #179a16;
+}
 .el-badge__content{
   /* padding: 0 3px; */
   border: none;
@@ -297,6 +315,8 @@ import { mapState } from "vuex";
   .asideMenu{
     height:100%;
     background-color:#005C8D;
+    overflow: hidden;
+    overflow-y: auto;
   }
   .vertical{
     height: -webkit-fill-available;
