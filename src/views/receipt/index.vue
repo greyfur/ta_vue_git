@@ -71,6 +71,7 @@ import {computeSidebar} from '@/assets/js/util.js'
 .receipt{
   /* margin-left: 180px; */
   height: 100%;
+  overflow:hidden;
 }
 .left-content{
   margin-left: 20px;
