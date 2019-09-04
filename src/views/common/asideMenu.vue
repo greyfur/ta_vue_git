@@ -105,15 +105,14 @@ import { mapState } from "vuex";
           'integratedQuery':'iconfont iconzonghechaxun',
           'admin':'iconfont iconguanliyuan',
         },
-        upcoming:{
-         '账单': [1,33,5,0],// 共4个
-         '收款': [1,3,5,0,8,0,6], // 共7个
-         '付款': [1,3,5,0,4,8,0,0,0,2], // 共10个 
-        }
       }
     },
     created() {  // 获取公共数据
-      // this.UName = sessionStorage.getItem('userCName')//登录名
+      if(typeof(WebSocket)=='function'){
+        this.initWebSocket();
+      } else{
+        this.$message.error('浏览器不支持webSocket');
+      }
       // 获取币制
       if(!sessionStorage.getItem('CurrencyList')){
         this.$http.post('api/sics/basis/getCurrencyList').then(res =>{
@@ -212,32 +211,9 @@ import { mapState } from "vuex";
             }
         }        
       }
-      // if(typeof(WebSocket)=='function'){
-      //   this.initWebSocket();
-      // } else{
-      //   this.$message.error('浏览器不支持webSocket');
-      // }
     },
     mounted(){
-      // if(typeof(WebSocket)=='function'){
-      //   this.initWebSocket();
-      // } else{
-      //   this.$message.error('浏览器不支持webSocket');
-      // }
-      console.log('asideMenu');
       this.urlArr = computeNavbar(this.$store.state.deFineRout);
-      // let arrurl = computeNavbar(this.$store.state.deFineRout);
-      // let qqq = [];
-      // arrurl.forEach(el=>{
-      //   if(this.upcoming[el.title]){
-      //     el.children.forEach(al=>{
-      //       al['redPoint'] = this.upcoming[el.title][al.num];
-      //     })
-      //     qqq.push(el);
-      //   }
-      // })
-      // this.urlArr = arrurl;
-      // console.log(qqq,'qqq');
       if(computeName(this.$route.name,this.$store.state.deFineRout)){
         this.name = computeName(this.$route.name,this.$store.state.deFineRout);
       } else{
@@ -254,13 +230,6 @@ import { mapState } from "vuex";
       handleOpen(){
 
       },
-      // logOut() {
-      //   sessionStorage.removeItem('resMenuList');
-      //   sessionStorage.removeItem('roleIdList');
-      //   cookie.remove('jwttoken');
-      //   cookie.remove('jwttokenInfo');
-      //   window.location.href = `${cip.loginUrl}/logout?service=http://${cip.currentIp}:${cip.currentPort}/indexPage`;
-      // },
       changeExtend(str){
         if(str==='伸'){
           this.$store.commit('ChangeFlod',true)
@@ -269,7 +238,7 @@ import { mapState } from "vuex";
         }
       },
       initWebSocket () { // 初始化weosocket
-        this.ws = new WebSocket('ws://172.17.106.69:9999/websocket/20');
+        this.ws = new WebSocket('ws://172.16.19.139:9999/websocket/20');
         this.ws.onmessage = this.websocketonmessage;
         this.ws.onopen = this.websocketonopen;
         this.ws.onerror = this.websocketonerror;
@@ -277,14 +246,27 @@ import { mapState } from "vuex";
         },
       websocketonopen () { // 连接建立之后执行send方法发送数据
         // if(this.ws.readyState==1){
-          this.ws.send(this.$store.state.userName);
+          // this.ws.send(this.$store.state.userName);
         // }
       },
       websocketonerror () {
         console.log( "WebSocket连接发生错误" + ',状态码：' + this.ws.readyState)
       },
       websocketonmessage (e) { // 数据接收
-        console.log('数据接收',e,'状态码'+this.ws.readyState);
+        console.log('数据接收状态码'+this.ws.readyState);
+        if(e.data && e.data.substr(0,1)=='{' && e.data.substr(1,1)=='"'){
+          let upcomingObj = JSON.parse(e.data)[this.$store.state.userName];
+          let arrurl = computeNavbar(this.$store.state.deFineRout);
+          arrurl.forEach(el=>{
+            if(upcomingObj[el.title]){
+              el.children.forEach(al=>{
+                al['redPoint'] = upcomingObj[el.title][al.num];
+              })
+            }
+          })
+          this.urlArr = arrurl;
+          console.log(upcomingObj);
+        }
       },
       websocketclose (e) {  // 关闭
         console.log('已关闭连接',e);
@@ -297,8 +279,8 @@ import { mapState } from "vuex";
         this.$store.commit('ChangeFlod',true)
       } else{ this.$store.commit('ChangeFlod',false) }
       },
-      '$store.state.deFineRout':function(n,o){
-      }
+      // '$store.state.deFineRout':function(n,o){
+      // }
     }
   }
 </script>

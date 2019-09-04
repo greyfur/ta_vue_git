@@ -162,7 +162,7 @@ export default {
       let resFile = new FormData();
       resFile.append("file", this.file[0]);
       resFile.append("actOperator", this.$store.state.userName);
-      this.$http.post("api/pay/teskClaim/uploadFile", resFile, {headers: { "Content-Type": "application/json;charset=UTF-8" }})
+      this.$http.post("uploadApi/pay/teskClaim/uploadFile", resFile, {headers: { "Content-Type": "application/json;charset=UTF-8" }})
         .then(res => {
           this.fileList = [];
           this.file = [];

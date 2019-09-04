@@ -2527,7 +2527,7 @@ export default {
       resFile.append("actOperator", this.$store.state.userName);
       resFile.append("processId", this.row.processId);
       this.$http
-        .post("api/anyShare/fileOperation/uploadFilesForPage", resFile, {
+        .post("uploadApi/anyShare/fileOperation/uploadFilesForPage", resFile, {
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(res => {

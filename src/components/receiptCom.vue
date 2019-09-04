@@ -1498,7 +1498,7 @@ export default {
         resFile.append("processId", this.chooseRow.processId);
       }
       console.log(url)
-      this.$http.post(`api${url}`, resFile, {headers: { "Content-Type": "application/json;charset=UTF-8" }})
+      this.$http.post(`uploadApi${url}`, resFile, {headers: { "Content-Type": "application/json;charset=UTF-8" }})
         .then(res => {
           console.log(res)
           if (res.status === 200) {

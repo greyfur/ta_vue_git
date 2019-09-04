@@ -8,37 +8,37 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       "/api": {
-        // target: "http://asc.cpcr.com.cn:9999", //投产
+        // target: "http://asc.cpcr.com.cn:9999", //投产---旧版本
         // target: "http://172.23.10.155:9999", //lm
-        target: "http://172.16.19.139:9999", //fwq  
+        // target: "http://172.16.19.139:9999", //fwq  
         // target: "http://172.16.19.138:9999", //UAT 
         // target: "http://172.17.106.24:9999", //lzw
         // target: "http://172.17.106.2:9999", //wangtengda
         // target: "http://172.17.106.69:9999", //fanzhiyuan
         // target: "http://172.17.106.129:9999", //ligang
-        // target: "http://gateway.sit.chinare.com.cn", // 139 网关
+        target: cip.apiUrl,
         changOrigin: true, //允许跨域
         pathRewrite: {
-          // "^/api": "/ta_server" //请求的时候使用这个api就可以 网关需要
-          "^/api": "" 
+          "^/api": "/ta_server" //请求的时候使用这个api就可以 网关需要
+          // "^/api": ""  // 不走网关时用的
         }
-      },
+      }, 
       "/loginApi": {
-        target: `${cip.loginUrl}`, 
+        target: cip.loginUrl, 
         changOrigin: true, //允许跨域
         pathRewrite: {
           "^/loginApi": "" //请求的时候使用这个api就可以
         }
       },
-      "/ocrApi": {
-        target: "http://172.30.19.200:8080",
-        changOrigin: true, //允许跨域
-        pathRewrite: {
-          "^/ocrApi": "" //请求的时候使用这个api就可以
-        }
-      },
+      // "/ocrApi": {
+      //   target: "http://172.30.19.200:8080",
+      //   changOrigin: true, //允许跨域
+      //   pathRewrite: {
+      //     "^/ocrApi": "" //请求的时候使用这个api就可以
+      //   }
+      // },
       "/uploadApi": {
-        target: `http://172.16.19.139:9999`,
+        target: cip.uploadUrl,
         changOrigin: true, //允许跨域
         pathRewrite: {
           "^/uploadApi": "" //请求的时候使用这个api就可以

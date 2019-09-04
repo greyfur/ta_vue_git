@@ -925,7 +925,7 @@ export default {
       resFile.append('file', this.file[0]);
       resFile.append('actOperator', this.mustData.actOperator);
       resFile.append('processId', this.chooseRow.processId);
-      this.$http.post(`api/anyShare/fileOperation/uploadFilesForPage`,resFile,{headers:{ 'Content-Type': "application/json;charset=UTF-8" }}).then(res =>{
+      this.$http.post(`uploadApi/anyShare/fileOperation/uploadFilesForPage`,resFile,{headers:{ 'Content-Type': "application/json;charset=UTF-8" }}).then(res =>{
         if(res.status === 200){
           if(res.data.errorCode && res.data.errorCode == 1){
             this.dialogFormVisible2 = false;
