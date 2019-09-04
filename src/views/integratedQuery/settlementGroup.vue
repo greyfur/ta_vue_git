@@ -1153,7 +1153,7 @@ export default {
       resFile.append("actOperator", this.mustData.actOperator);
       resFile.append("processId", this.chooseRow.processId);
       this.$http
-        .post(`api/anyShare/fileOperation/uploadFilesForPage`, resFile, {
+        .post(`uploadApi/anyShare/fileOperation/uploadFilesForPage`, resFile, {
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(res => {

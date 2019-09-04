@@ -40,12 +40,12 @@
                   :key="item.alpha"
                   :label="item.alpha"
                   :value="item.alpha"
-                ></el-option>
+                ></el-option> 
             </el-select>
           </el-col>
         </el-row>
         <el-row :gutter="10" class="billRow">
-          <el-col :span="8" v-show="processStatusList.length>2">
+          <el-col :span="8" v-show="processStatusList.length>1">
             <span class="slable">流程状态</span>
             <el-select clearable v-model="searchList.processStatus" placeholder="请选择流程状态">
               <el-option v-for="item in processStatusList" :key="item" :label="item" :value="item"></el-option>
@@ -967,6 +967,12 @@ export default {
       if (this.urlName === "taskClaim") {
         delete params.curOperator;
       }
+      if(this.urlName === "credOperation"){  // 9.4 胖虎说要加上hasRecheckFlag
+        params['hasRecheckFlag'] = '0';
+      }
+      if(this.urlName === "credVerification"){  // 9.4 胖虎说要加上hasRecheckFlag
+        params['hasRecheckFlag'] = '1';
+      }
       this.$http.post("api/receipt/finaCreat/list", params).then(res => {
         if (res.status === 200) {
           if(res.data.rows&&res.data.rows.length){
@@ -1422,6 +1428,12 @@ export default {
           if(this.accountClose){
             params['accountCloseFlag'] = this.accountClose;
           }
+          if(this.urlName === "credOperation"){  // 9.4 胖虎说要加上hasRecheckFlag
+            params['hasRecheckFlag'] = '0';
+          }
+          if(this.urlName === "credVerification"){  // 9.4 胖虎说要加上hasRecheckFlag
+            params['hasRecheckFlag'] = '1';
+          }
           this.$http.post("api/receipt/finaCreat/list", params).then(res => {
             if (res.status === 200) {
               if (!res.data.rows.length) {
@@ -1498,7 +1510,7 @@ export default {
         resFile.append("processId", this.chooseRow.processId);
       }
       console.log(url)
-      this.$http.post(`api${url}`, resFile, {headers: { "Content-Type": "application/json;charset=UTF-8" }})
+      this.$http.post(`uploadApi${url}`, resFile, {headers: { "Content-Type": "application/json;charset=UTF-8" }})
         .then(res => {
           console.log(res)
           if (res.status === 200) {

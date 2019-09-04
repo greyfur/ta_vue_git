@@ -1484,8 +1484,7 @@ export default {
         });
         resFile.append("actOperator", this.$store.state.userName);
         resFile.append("processId", this.chooseRow.processId);
-        console.log('uploadApi');
-        this.$http.post("api/anyShare/fileOperation/uploadFilesForPageBatch", resFile, {  headers: { "Content-Type": "application/json;charset=UTF-8" }})
+        this.$http.post("uploadApi/anyShare/fileOperation/uploadFilesForPageBatch", resFile, {  headers: { "Content-Type": "application/json;charset=UTF-8" }})
           .then(res => {
             if (res.status === 200 && res.data.errorCode == 1) {
               this.fileList = [];
