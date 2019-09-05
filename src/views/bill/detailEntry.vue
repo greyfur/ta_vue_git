@@ -58,7 +58,7 @@
                   <span class="detail-name">{{item.a}} :</span>
                   <el-tooltip effect="dark" :content="item.b" placement="top">
                     <span
-                      class="detail-content"
+                      class="detail-content abbreviate"
                     >{{item.b}}</span>
                   </el-tooltip>
                 </li>
@@ -2355,6 +2355,9 @@ export default {
 .btns .el-button.is-plain:focus,
 .btns .el-button.is-plain:hover {
    background-color: #1A6C98;
+}
+.detail-name{
+  white-space: nowrap;
 }
 .detail-word {
   /* background-color: #ecf5ff; */
