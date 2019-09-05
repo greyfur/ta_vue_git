@@ -5,8 +5,8 @@
       :class="this.$store.state.flod?'leftBack':'rightBack'">
       <i class="iconfont iconleft-circle-o" style="color:#000;"></i>
     </router-link> -->
-    <el-row style="margin-bottom:10px;">
-      <el-col :span="8" style="height:720px;">
+    <el-row style="padding-bottom:10px;background:#f5f5f5;">
+      <el-col :span="8" style="height:680px;">
         <!-- 签回 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'billSignBack'">
           <el-button size="small" @click="mailSend(1)" plain>邮件通知</el-button>
@@ -33,30 +33,34 @@
           <el-button size="small" @click="onSics()">账单回写</el-button>
           <el-button size="small" @click="exportBill">导出账单</el-button>
         </div>
-        <div class="left" style="height:720px;">
-          <div :class="searchFlag1===true?'searchNew searchNews':''" >
+        <div class="left" style="height:100%;width:98%;">
+          <div class="leftTop" style="background:#fff;margin-bottom:10px;padding:0 10px 10px 0;">
             <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
-              <div>
-                <i style="margin-right:8px;" class="el-icon-arrow-down"></i>详情
-              </div>
-              <p class="info" style="color:#666;">流程编号:
-                <el-tooltip class="item" effect="dark" content="点击复制" placement="top">
-                  <span
-                    style="color:#000;"
-                    id="proNum"
-                    @click.stop="copy('proNum')"
-                  >{{chooseRow.processId}}</span>
-                </el-tooltip>
-              </p>
+                <div>
+                  <i style="margin-right:8px;" class="el-icon-arrow-down"></i>详情
+                </div>
+                <p class="info" style="color:#666;">流程编号:
+                  <el-tooltip class="item" effect="dark" content="点击复制" placement="top">
+                    <span
+                      style="color:#000;"
+                      id="proNum"
+                      @click.stop="copy('proNum')"
+                    >{{chooseRow.processId}}</span>
+                  </el-tooltip>
+                </p>
             </div>
             <ul class="detail-ul" v-show="searchFlag1">
-              <li v-for="(item,i) in listData" :key="i" class="detail-item">
-                <span class="detail-name">{{item.a}} :</span>
-                <span class="detail-content">{{item.b}}</span>
-              </li>
+                <li v-for="(item,i) in listData" :key="i" class="detail-item">
+                  <span class="detail-name">{{item.a}} :</span>
+                  <el-tooltip effect="dark" :content="item.b" placement="top">
+                    <span
+                      class="detail-content"
+                    >{{item.b}}</span>
+                  </el-tooltip>
+                </li>
             </ul>
           </div>
-          <div :class="searchFlag2===true?'searchNew searchNews':''"  style="margin-top:33px;">
+          <div :class="searchFlag2===true?'searchNew searchNews':''">
             <div class="titleSearch detailSearch" @click.stop="searchFlag2 = !searchFlag2">
               <div>
                 <i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表
@@ -71,6 +75,8 @@
             <el-table
               v-show="searchFlag2"
               border
+              height="197px"
+              max-height="197px"
               :data="tableData.slice((currentPage-1)*3,currentPage*3)"
               style="width: 100%;margin-top:10px;"
               class="document">
@@ -120,27 +126,19 @@
             <el-pagination
               background
               layout="prev, pager, next"
+              style="padding:4px 0;"
               :page-size="3"
               :current-page="currentPage"
               @current-change="handleCurrentChange"
               :total="tableData.length">
             </el-pagination>
-            <!-- <el-pagination
-              style="height:40px;"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page.sync="currentPage1"
-              :page-size="2"
-              layout="total, prev, pager, next"
-              :total="5">
-            </el-pagination> -->
-            <!-- pagination hyd -->
           </div>
         </div>
       </el-col>
-      <el-col :span="16" style="height:720px;background:#f5f5f5;padding-bottom:10px;">
+      <!-- padding-bottom:10px; -->
+      <el-col :span="16" style="height:680px;">
         <div class="right">
-          <div class="titleSearch detailSearch" style="background:#fff;">
+            <div class="titleSearch detailSearch" style="background:#fff;">
             <!-- <i style="margin-right:8px;" class="el-icon-arrow-down"></i> 9.2去掉无用icon -->
             <div>
               文档预览
@@ -1978,8 +1976,8 @@ export default {
 .browseDoc {
   background-color: #ecf5ff;
   width: 100%;
-  height: 658px;
-  /* 8.29 文档高度*/
+  height: 624px;
+  /* 9.4 文档高度*/
   border: 1px solid #d4d4d4;
   border-top: none;
 }
@@ -2001,7 +1999,8 @@ export default {
   background: #fff;
   /* 8.29 文档背景色*/
   padding-left: 10px;
-  margin-left: 10px;
+  box-sizing: border-box;
+  /* margin-left: 10px; */
 }
 .fy2 {
   text-align: right;
@@ -2020,43 +2019,40 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
-.detail-ul {
-  margin-left: 10px;
-  padding: 10px 16px;
+ul.detail-ul {
+  height: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #fff;
+  margin-top: 10px;
+  box-sizing: border-box;
+  border:1px solid #eaeaea;
+  padding: 0 10px;
+  border-radius: 3px;
 }
-.detail-ul li {
-  margin-bottom: 10px;
+li.detail-item {
+  display: flex;
+  width: 48%;
+  height: 25px;
+  line-height: 25px;
 }
 .detail-ul li .detail-content {
   color: #999;
 }
-.detail-ul li .detail-name {
-  white-space: nowrap;
-}
-ul.detail-ul {
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: 0;
-  background-color: #fff;
-  margin-top: 10px;
-}
-li.detail-item {
-  display: flex;
-  width: 100%;
-}
 .detailSearch {
-  border: 1px solid rgba(238, 238, 238, 1);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background:#fff;
+  border-bottom: 1px solid #eaeaea;
 }
 .el-collapse-item__header {
   border-bottom: none;
 }
-.document {
+/* .document {
   border: 1px solid rgba(238, 238, 238, 1);
-  /* border-radius:8px; */
-}
+  border-radius:8px;
+} */
 .itemNum {
   height: 36px;
   border-radius: 4px;
