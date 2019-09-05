@@ -909,33 +909,35 @@
       </div>
     </div>
 
+    <!-- 高风险地区 -->
     <el-dialog title="高风险地区" :visible.sync="dialogFormVisibleRisk" :close-on-click-modal="modal">
-      <el-form :label-position="labelPosition" label-width="100px">
-        <el-form-item label="汇款编号"><el-input  placeholder="请输入" v-model="risk.remittanceNumber"></el-input></el-form-item>
-        <el-form-item label="发票号"><el-input  placeholder="请输入" v-model="risk.invoiceNumber"></el-input></el-form-item>
-        <el-form-item label="业务金额"><el-input  placeholder="请输入" v-model="risk.businessAmount"></el-input></el-form-item>
-        <el-form-item label="日期"><el-date-picker v-model="risk.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+      <el-form :label-position="labelPosition" :model="risk" :rules="RiskAreasRules" label-width="100px" ref="risk">
+        <el-form-item label="汇款编号" prop="remittanceNumber" required><el-input  placeholder="请输入" v-model="risk.remittanceNumber"></el-input></el-form-item>
+        <el-form-item label="发票号" prop="invoiceNumber" required><el-input  placeholder="请输入" v-model="risk.invoiceNumber"></el-input></el-form-item>
+        <el-form-item label="业务金额" prop="businessAmount" required><el-input  placeholder="请输入" v-model="risk.businessAmount"></el-input></el-form-item>
+        <el-form-item label="日期" prop="currentDate" required><el-date-picker v-model="risk.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
         <el-form-item>
-          <el-button size="small" @click="dialogFormVisibleRisk = false">取消</el-button>
-          <el-button size="small" type="primary" plain @click="fourPopUps(1)" style="padding:0 16px;">确定</el-button>
+          <el-button size="small" @click="fourPopUps(0,'risk')">取消</el-button>
+          <el-button size="small" type="primary" plain @click="fourPopUps(1,'risk')" style="padding:0 16px;">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
 
+    <!-- 境外人民币 -->
     <el-dialog title="境外人民币" :visible.sync="dialogFormVisibleOversea" :close-on-click-modal="modal">
-      <el-form :label-position="labelPosition" label-width="120px">
-        <el-form-item label="付款日期"><el-date-picker v-model="oversea.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-        <el-form-item label="付款企业名称"><el-input  placeholder="请输入" v-model="oversea.rmSettleCompanyName"></el-input></el-form-item>
-        <el-form-item label="组织机构代码"><el-input  placeholder="请输入" v-model="oversea.orgCode"></el-input></el-form-item>
-        <el-form-item label="收款人名称"><el-input  placeholder="请输入" v-model="oversea.compName"></el-input></el-form-item>
-        <el-form-item label="收款人国别"><el-input  placeholder="请输入" v-model="oversea.country"></el-input></el-form-item>
-        <el-form-item label="付款金额合计"><el-input  placeholder="请输入" v-model="oversea.toltalAmount"></el-input></el-form-item>
-        <el-form-item label="服务贸易"><el-input  placeholder="请输入" v-model="oversea.tradeAmount"></el-input></el-form-item>
-        <el-form-item label="填报人"><el-input  placeholder="请输入" v-model="oversea.operator"></el-input></el-form-item>
-        <el-form-item label="联系电话"><el-input  placeholder="请输入" v-model="oversea.telephone"></el-input></el-form-item>
+      <el-form :label-position="labelPosition" label-width="120px" :model="oversea" ref="oversea" :rules="overseaRules">
+        <el-form-item label="付款日期" prop="payDate"><el-date-picker v-model="oversea.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="付款企业名称" prop="rmSettleCompanyName"><el-input  placeholder="请输入" v-model="oversea.rmSettleCompanyName"></el-input></el-form-item>
+        <el-form-item label="组织机构代码" prop="orgCode"><el-input  placeholder="请输入" v-model="oversea.orgCode"></el-input></el-form-item>
+        <el-form-item label="收款人名称" prop="compName"><el-input  placeholder="请输入" v-model="oversea.compName"></el-input></el-form-item>
+        <el-form-item label="收款人国别" prop="country"><el-input  placeholder="请输入" v-model="oversea.country"></el-input></el-form-item>
+        <el-form-item label="付款金额合计" prop="toltalAmount"><el-input  placeholder="请输入" v-model="oversea.toltalAmount"></el-input></el-form-item>
+        <el-form-item label="服务贸易" prop="tradeAmount"><el-input  placeholder="请输入" v-model="oversea.tradeAmount"></el-input></el-form-item>
+        <el-form-item label="填报人" prop="operator"><el-input  placeholder="请输入" v-model="oversea.operator"></el-input></el-form-item>
+        <el-form-item label="联系电话" prop="telephone"><el-input  placeholder="请输入" v-model="oversea.telephone"></el-input></el-form-item>
         <el-form-item>
-          <el-button size="small" @click="dialogFormVisibleOversea = false">取消</el-button>
-          <el-button size="small" type="primary" plain @click="fourPopUps(2)" style="padding:0 16px;">确定</el-button>
+          <el-button size="small" @click="fourPopUps(0,'oversea')">取消</el-button>
+          <el-button size="small" type="primary" plain @click="fourPopUps(2,'oversea')" style="padding:0 16px;">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -1440,6 +1442,49 @@ export default {
             { required: true, message: '请输入手续费金额', trigger: 'blur' }
           ],
         },
+        RiskAreasRules:{
+          remittanceNumber: [
+            { required: true, message: '请输入汇款账号', trigger: 'blur' }
+          ],
+          invoiceNumber: [
+            { required: true, message: '请输入发票号', trigger: 'blur' }
+          ],
+          businessAmount: [
+            { required: true, message: '请输入业务金额', trigger: 'blur' }
+          ],
+          currentDate: [
+            { required: true, message: '请选择日期', trigger: 'blur' }
+          ],
+        },
+        overseaRules:{
+          payDate: [
+            { required: true, message: '请选择付款日期', trigger: 'blur' }
+          ],
+          rmSettleCompanyName: [
+            { required: true, message: '请输入付款企业名称', trigger: 'blur' }
+          ],
+          orgCode: [
+            { required: true, message: '请输入组织机构代码', trigger: 'blur' }
+          ],
+          compName: [
+            { required: true, message: '请输入收款人名称', trigger: 'blur' }
+          ],
+          toltalAmount: [
+            { required: true, message: '请输入收款人国别', trigger: 'blur' }
+          ],
+          tradeAmount: [
+            { required: true, message: '请输入付款金额合计', trigger: 'blur' }
+          ],
+          operator: [
+            { required: true, message: '请输入服务贸易', trigger: 'blur' }
+          ],
+          telephone: [
+            { required: true, message: '请输入填报人', trigger: 'blur' }
+          ],
+          country: [
+            { required: true, message: '请输入练习电话', trigger: 'blur' }
+          ],
+        },
         AllBankAccountList:[],
         flagJ:null,
         reverseRow:{},
@@ -1574,19 +1619,48 @@ export default {
         break;
       }
     },
-    fourPopUps(tag){
+    fourPopUps(tag,formName){
       switch(tag){    
-        case 1: // 高风险地区
+        case 0 :
+          if(formName==='risk'){
+            this.dialogFormVisibleRisk = false;
+          }else if(formName==='oversea'){
+            this.dialogFormVisibleOversea = false
+          }
+           this.$refs[formName].resetFields();
+          break;
+        case 1: // 高风险地区999
           // this.$http.post("api/------", {processId: this.row.processId})
           // .then(res => {
 
           // })
+          this.$refs[formName].validate((valid) => {
+            console.log(valid)
+            if (valid) {
+              alert('submit!');
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
+          });
+          console.log(formName)
+          console.log('高风险地区确定')
         break;
         case 2: // 境外人民币
           // this.$http.post("api/------", {processId: this.row.processId})
           // .then(res => {
 
           // })
+          this.$refs[formName].validate((valid) => {
+            console.log(valid)
+            if (valid) {
+              alert('submit!');
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
+          });
+          console.log('境外人民币确定')
         break;
         case 3: // 转账模板
           // this.$http.post("api/------", {processId: this.row.processId})
