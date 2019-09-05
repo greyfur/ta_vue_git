@@ -21,9 +21,10 @@
           <el-button size="small" :disabled="isHover" @click="submit(1,'录入指派')" plain>指派</el-button>
           <el-button :type="isHover?'info':''" size="small" @click="submit(5)" plain>{{isHover?'已悬停':'状态悬停'}}</el-button>
           <el-button @click="dialogFormVisible = true" :disabled="isHover" size="small" plain>拆分</el-button>
-          <el-button size="small" @click="onSics()">账单回写</el-button>
-          <el-button size="small" @click="exportBill">导出账单</el-button>
+          <el-button plain :disabled="isHover" size="small" @click="onSics()">账单回写</el-button>
+          <el-button plain :disabled="isHover" size="small" @click="exportBill">导出账单</el-button>
           <el-button plain :disabled="isHover" size="small" @click="submit(6,'录入提交')">流程提交</el-button>
+          <el-button plain :disabled="isHover" size="small" @click="changeLayout">更改布局</el-button>
         </div>
         <!-- 复核 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'billCheck'">
@@ -32,6 +33,7 @@
           <el-button size="small" @click="submit(3)" plain>复核通过</el-button>
           <el-button size="small" @click="onSics()">账单回写</el-button>
           <el-button size="small" @click="exportBill">导出账单</el-button>
+          <el-button plain :disabled="isHover" size="small" @click="changeLayout">更改布局</el-button>
         </div>
         <div class="left" style="height:100%;width:98%;">
           <div class="leftTop" style="background:#fff;margin-bottom:10px;padding:0 10px 10px 0;">
@@ -137,41 +139,279 @@
       </el-col>
       <!-- padding-bottom:10px; -->
       <el-col :span="16" style="height:680px;">
-        <div class="right">
+          <el-tabs style="height:680px;" v-model="activeName" >
+            <el-tab-pane
+              label="文档预览"
+              name="first"
+            >
+            <div class="right">
             <div class="titleSearch detailSearch" style="background:#fff;">
-            <!-- <i style="margin-right:8px;" class="el-icon-arrow-down"></i> 9.2去掉无用icon -->
-            <div>
-              文档预览
+              <p>
+                <el-dropdown placement="top-start">
+                  <span class="el-dropdown-link" style="margin-right:20px"><i class="iconfont iconcaozuoliebiao"></i></span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>
+                    <a href="../../../static/Preview/index.html" target="_blank"><span>全屏</span></a>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <span @click="rotateMua">顺时针旋转</span>
+                    </el-dropdown-item>
+                    <el-dropdown-item> 
+                      <span @click="rotateMuas">逆时针旋转</span>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </p>
             </div>
-            <p>
-              <el-dropdown placement="top-start">
-                <span class="el-dropdown-link" style="margin-right:20px"><i class="iconfont iconcaozuoliebiao"></i></span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>
-                    <!-- <el-button size="mini" :disabled="isHover">
-                    <i style="margin-right:8px;font-size:8px;" class="iconfont iconGroup26"></i> -->
-                   <a href="../../../static/Preview/index.html" target="_blank"><span>全屏</span></a>
-                  <!-- </el-button> -->
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <span @click="rotateMua">顺时针旋转</span>
-                    <!-- <el-button class="rotate" size="mini" @click="rotateMua" style="">顺时针旋转</el-button> -->
-                  </el-dropdown-item>
-                  <el-dropdown-item> 
-                    <span @click="rotateMuas">逆时针旋转</span>
-                    <!-- <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button> -->
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </p>
-          </div>
-          <div class="browseDoc">
-            <iframe src="../../../static/Preview/index.html" id="iframeId" name="ifrmname" ref="mapFrame" style="width:100%;height:100%" frameborder="0"></iframe>
-          </div>
-        </div>
+            <div class="browseDoc">
+              <iframe src="../../../static/Preview/index.html" id="iframeId" name="ifrmname" ref="mapFrame" style="width:100%;height:100%" frameborder="0"></iframe>
+            </div>
+            </div>
+
+            <!-- <div class="right" v-html="item.content"></div> -->
+              <!-- <div class="titleSearch detailSearch" style="background:#fff;"> -->
+              <!-- <i style="margin-right:8px;" class="el-icon-arrow-down"></i> 9.2去掉无用icon -->
+              <!-- <div>
+                文档预览
+              </div>
+              <p>
+                <el-dropdown placement="top-start">
+                  <span class="el-dropdown-link" style="margin-right:20px"><i class="iconfont iconcaozuoliebiao"></i></span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item> -->
+                      <!-- <el-button size="mini" :disabled="isHover">
+                      <i style="margin-right:8px;font-size:8px;" class="iconfont iconGroup26"></i> -->
+                    <!-- <a href="../../../static/Preview/index.html" target="_blank"><span>全屏</span></a> -->
+                    <!-- </el-button> -->
+                    <!-- </el-dropdown-item>
+                    <el-dropdown-item>
+                      <span @click="rotateMua">顺时针旋转</span> -->
+                      <!-- <el-button class="rotate" size="mini" @click="rotateMua" style="">顺时针旋转</el-button> -->
+                    <!-- </el-dropdown-item>
+                    <el-dropdown-item> 
+                      <span @click="rotateMuas">逆时针旋转</span> -->
+                      <!-- <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button> -->
+                    <!-- </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </p>
+            </div>
+            <div class="browseDoc">
+              <iframe src="../../../static/Preview/index.html" id="iframeId" name="ifrmname" ref="mapFrame" style="width:100%;height:100%" frameborder="0"></iframe>
+            </div> -->
+            </el-tab-pane>
+            <el-tab-pane
+              name="second"
+              v-if="changeLayoutflags"
+              label="账单信息"
+            >
+            <el-row >
+              <el-col :span="24" style="padding:0 16px;padding-bottom:100px;margin-top:10px;">
+                <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
+                  <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息</div>
+                  <div>
+                    <el-checkbox-group v-model="wsCheckList" @change="onWsCheck" :disabled="isHover">
+                      <el-checkbox label="C">Closed</el-checkbox>
+                      <el-checkbox label="O">Open</el-checkbox>
+                      <el-checkbox label="I">Inactive</el-checkbox>
+                    </el-checkbox-group>
+                  </div>
+                </div>
+                <el-table
+                  v-show="searchFlag3"
+                  :data="SICSData"
+                  border
+                  width="100%"
+                  height="560"
+                  :header-row-class-name="StableClass">
+                  <el-table-column type="index" width="50" align="center"></el-table-column>
+                  <el-table-column label="账单号" width="160" align="center">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.wsId"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.wsId}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="wsCurrency" label="币制" width="80" align="center"></el-table-column>
+                  <el-table-column label="金额" align="right" width="120">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
+                        placement="top-start">
+                        <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="业务编号" align="center" width="110">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.businessId"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.businessId}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="SECTION" width="110" align="center">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.section"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.section}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="uwYear" label="业务年度" align="center"></el-table-column>
+                  <el-table-column label="NOTE" align="center">
+                    <template slot-scope="scope">
+                      <el-tooltip class="item" effect="dark" :content="scope.row.note" placement="top-start">
+                        <span class="abbreviate">{{scope.row.note}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="wsPeriod" label="账单期" width="120" align="center"></el-table-column>
+                  <el-table-column label="账单标题" align="center">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.wsTitle"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.wsTitle}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="wsStatus" label="账单状态" width="100" align="center">
+                    <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
+                  </el-table-column>
+                  <el-table-column prop="registBy" label="录入人" width="130" align="center"></el-table-column>
+                  <el-table-column prop="closedBy" label="复核人" width="130" align="center"></el-table-column>
+                  <!-- <el-table-column label="驳回原因类型" width="160" align="center">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.rejectType"
+                        placement="top-start">
+                        <span class="abbreviate">{{scope.row.rejectType}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="修改意见" align="left">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.remark"
+                        placement="top-start">
+                        <span class="abbreviate">{{scope.row.remark}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column> -->
+                  <el-table-column width="180" label="修改意见" align="center">
+                    <template slot-scope="scope">
+                      <!-- <el-tooltip class="item" effect="dark"  :content="scope.row.rejectType&&scope.row.remark?scope.row.remark+'-'+scope.row.rejectType:''" placement="top-start"> -->
+                      <el-tooltip class="item" effect="dark"  :content="scope.row.remark+'-'+scope.row.rejectType" placement="top-start">
+                        <span class="abbreviate">{{scope.row.rejectType}}-{{scope.row.remark}}</span>
+                        <!-- <span class="abbreviate" v-if="scope.row.rejectType&&scope.row.remark">{{scope.row.rejectType}}-{{scope.row.remark}}</span>
+                        <span class="abbreviate" v-else></span> -->
+                        <!-- 8.21 v-else有问题  -->
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="附件名称" align="center">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.docName"
+                        placement="top-start">
+                        <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="registAt" label="录入时间" width="160" align="center"></el-table-column>
+                  <el-table-column prop="closedAt" label="复核时间" width="160" align="center"></el-table-column>
+                  <!-- <el-table-column label="任务类型">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.businessType"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.businessType}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column> -->
+                  <!-- <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column> -->
+                  <!-- <el-table-column label="分出公司" width="120">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.cedentCode+'-'+scope.row.cedentName"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column> -->
+                  <!-- <el-table-column label="经纪公司" width="120">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.brokerCode+'-'+scope.row.brokerName"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.brokerCode}}-{{scope.row.brokerName}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column> -->
+                  <!-- <el-table-column prop="wsType" label="账单类型"></el-table-column> -->
+                  <!-- <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column> -->
+                  <!-- <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column> -->
+                  <!-- <el-table-column prop="dept" label="经营机构"></el-table-column> -->
+                  <el-table-column fixed="right" label="操作" width="80" align="center">
+                    <template slot-scope="scope">
+                      <el-dropdown placement="top-start">
+                        <span class="el-dropdown-link"><i class="iconfont iconcaozuoliebiao"></i></span>
+                        <el-dropdown-menu slot="dropdown">
+                          <el-dropdown-item>
+                            <span class="blueColor" @click.stop="openSics(scope.row)">打开SICS</span>
+                          </el-dropdown-item>
+                          <el-dropdown-item>
+                            <span class="blueColor" v-show="$route.query.tag == 'billCheck'" @click.stop="submit(2,'添加意见',scope.row.wsId)">添加意见</span>
+                          </el-dropdown-item>
+                          <el-dropdown-item> 
+                            <span class="blueColor" v-show="scope.row.wsStatus=='Closed' && $route.query.tag !== 'billCheck' && $route.query.tag !== 'billProcess'" @click.stop="reverse(scope.row)">Reverse</span>
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </el-dropdown>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-col>
+            </el-row>
+            </el-tab-pane>
+          </el-tabs> 
       </el-col>
     </el-row>
-    <el-row>
+    <el-row v-if="changeLayoutflag">
       <el-col :span="24" style="padding:0 16px;padding-bottom:100px;margin-top:10px;">
         <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
           <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息</div>
@@ -640,6 +880,9 @@ export default {
   name: "detailEntry",
   data() { 
     return {
+      activeName: 'first',
+      changeLayoutflag:true,
+      changeLayoutflags:false,
       wsCheckList:[],
       maxHeight:null,
       wsId:null,
@@ -813,6 +1056,17 @@ export default {
     this.getBillInfo();
   },
   methods: {
+    changeLayout(){
+      console.log('changeLayout')
+      this.changeLayoutflag=!this.changeLayoutflag;
+      this.changeLayoutflags=!this.changeLayoutflags;
+      if(this.changeLayoutflag){
+        this.activeName='first'
+      }
+      if(this.changeLayoutflags){
+        this.activeName='second'
+      }
+    },
     onWsCheck(){
       // console.log(this.wsCheckList,'wsCheckList');
       this.$http.post("api/worksheet/wSCheck/getWorkSheetList", {processId: this.chooseRow.processId,wsStatus:this.wsCheckList})
@@ -1973,10 +2227,10 @@ export default {
   padding: 10px;
   margin-top: 30px;
 }
-.browseDoc {
+.right>>>.browseDoc {
   background-color: #ecf5ff;
   width: 100%;
-  height: 624px;
+  height: 580px;
   /* 9.4 文档高度*/
   border: 1px solid #d4d4d4;
   border-top: none;
@@ -1991,9 +2245,12 @@ export default {
   /* padding: 20px; */
   /* padding-right: 10px; */
 }
+.el-tabs__content{
+  background: #f5f5f5;
+}
 .right {
   width: 100%;
-  height: 100%;
+  height: 624px;
   /* padding: 20px; */
   /* background-color: #eeeeee; */
   background: #fff;
@@ -2040,6 +2297,13 @@ li.detail-item {
   color: #999;
 }
 .detailSearch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background:#fff;
+  border-bottom: 1px solid #eaeaea;
+}
+.right >>>.detailSearch {
   display: flex;
   align-items: center;
   justify-content: space-between;
