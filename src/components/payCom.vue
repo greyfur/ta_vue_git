@@ -50,8 +50,8 @@
           <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
-      <el-table-column prop="rmCurrency" label="币制" align="center"></el-table-column>
-      <el-table-column label="结付公司" width="120" align="right">
+      <el-table-column prop="rmCurrency" label="币制" align="center" width="90"></el-table-column>
+      <el-table-column label="结付公司">
          <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" :content="scope.row.checkoutPayment" placement="top-start">
             <span class="abbreviate">{{scope.row.checkoutPayment}}</span>

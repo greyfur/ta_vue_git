@@ -40,6 +40,12 @@
           <el-button size="small" :disabled="czState" @click="openSICS" plain>打开SICS</el-button>
           <el-button size="small" @click="getSGSg" plain>同步状态</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeDoc('a')">生成审批文档</el-button>
+
+          <!-- <el-button size="small" :disabled="czState" plain @click="makeWord(1)">高风险地区</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(2)">境外人民币</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(3)">转账模板</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(4)">全额</el-button> -->
+
           <el-button size="small" :disabled="czState" plain @click="submite(3,'置废','操作')">置废</el-button>
           <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'悬停':'已悬停'}}</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(2,'指派','操作')">指派</el-button>
@@ -1484,6 +1490,34 @@ export default {
     },
     upDialog(){
       this.downDialogFlag=false;
+    },
+    makeWord(tag){
+      switch(tag){    
+        case 1: // 高风险地区
+          this.$http.post("api/------", {processId: this.row.processId})
+          .then(res => {
+
+          })
+        break;
+        case 2: // 境外人民币
+          this.$http.post("api/------", {processId: this.row.processId})
+          .then(res => {
+
+          })
+        break;
+        case 3: // 转账模板
+          this.$http.post("api/------", {processId: this.row.processId})
+          .then(res => {
+
+          })
+        break;
+        case 4: // 全额
+          this.$http.post("api/------", {processId: this.row.processId})
+          .then(res => {
+
+          })
+        break;
+      }
     },
     moveDialog(){//8.29 移动dialog
     if(this.downDialogFlag===true){
