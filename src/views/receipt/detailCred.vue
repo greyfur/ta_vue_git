@@ -224,7 +224,7 @@
                       </el-tooltip>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="wsCurrency" label="币制" width="50" align="center"></el-table-column>
+                  <el-table-column prop="wsCurrency" label="币制" width="60" align="center"></el-table-column>
                   <el-table-column label="金额" align="right">
                     <template slot-scope="scope">
                       <el-tooltip
@@ -262,7 +262,18 @@
                     </template>
                   </el-table-column>
                   <el-table-column prop="uwYear" label="业务年度" align="center"></el-table-column>
-                  <el-table-column prop="wsPeriod" label="账单期" align="center"></el-table-column>
+                  <el-table-column prop="wsPeriod" label="账单期" align="center">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.wsPeriod"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.wsPeriod}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
                   <el-table-column label="账单标题" align="center">
                     <template slot-scope="scope">
                       <el-tooltip
@@ -279,7 +290,18 @@
                     <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
                   </el-table-column>
                   <el-table-column prop="registBy" label="录入人" width="80" align="center"></el-table-column>
-                  <el-table-column prop="registAt" label="录入时间" width="100" align="center"></el-table-column>
+                  <el-table-column prop="registAt" label="录入时间" width="100" align="center">
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="scope.row.registAt"
+                        placement="top-start"
+                      >
+                        <span class="abbreviate">{{scope.row.registAt}}</span>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
                   <el-table-column label="附件名称" align="center">
                     <template slot-scope="scope">
                       <el-tooltip
@@ -412,7 +434,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="sgStatus" label="结算清单状态" width="110" align="center"></el-table-column>
-            <el-table-column prop="settlementIndicator" label="结算指标" align="center"></el-table-column>
+            <el-table-column prop="settlementIndicator" width="110" label="结算指标" align="center"></el-table-column>
             <el-table-column prop="sgCurrency" label="币制" align="center"></el-table-column>
             <el-table-column label="结算总额" align="right">
               <template slot-scope="scope">
@@ -556,7 +578,13 @@
               </template>
             </el-table-column>
             <el-table-column prop="uwYear" label="业务年度" align="center" width="100"></el-table-column>
-            <el-table-column prop="wsPeriod" label="账单期" align="center" width="100"></el-table-column>
+            <el-table-column prop="wsPeriod" label="账单期" align="center" width="100">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :content="scope.row.wsPeriod" placement="top-start">
+                  <span class="abbreviate">{{scope.row.wsPeriod}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
              <el-table-column label="账单标题" align="center" width="100">
               <template slot-scope="scope">
                 <el-tooltip
@@ -573,7 +601,18 @@
               <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
             </el-table-column>
             <el-table-column prop="registBy" label="录入人" width="80" align="center"></el-table-column>
-            <el-table-column prop="registAt" label="录入时间" width="100" align="center"></el-table-column>
+            <el-table-column prop="registAt" label="录入时间" width="100" align="center">
+               <template slot-scope="scope">
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    :content="scope.row.registAt"
+                    placement="top-start"
+                  >
+                    <span class="abbreviate">{{scope.row.registAt}}</span>
+                  </el-tooltip>
+               </template>
+            </el-table-column>
             <el-table-column label="附件名称" align="center">
               <template slot-scope="scope">
                 <el-tooltip
