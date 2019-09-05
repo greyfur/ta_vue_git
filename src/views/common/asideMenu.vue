@@ -78,6 +78,7 @@
 </template>
  
 <script>
+const devEnv = require('../../../config/dev.env.js');
 import cip from '../../../config/dev.env.js'
 import cookie from 'js-cookie' 
 import {computeNavbar} from '@/assets/js/util.js'
@@ -238,7 +239,7 @@ import { mapState } from "vuex";
         }
       },
       initWebSocket () { // 初始化weosocket
-        this.ws = new WebSocket('ws://172.16.19.139:9999/websocket/20');
+        this.ws = new WebSocket(devEnv.webSocketUrl);
         this.ws.onmessage = this.websocketonmessage;
         this.ws.onopen = this.websocketonopen;
         this.ws.onerror = this.websocketonerror;

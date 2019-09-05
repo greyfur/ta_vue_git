@@ -25,6 +25,7 @@
           <el-button plain :disabled="isHover" size="small" @click="exportBill">导出账单</el-button>
           <el-button plain :disabled="isHover" size="small" @click="submit(6,'录入提交')">流程提交</el-button>
           <el-button plain :disabled="isHover" size="small" @click="changeLayout">更改布局</el-button>
+          <el-button plain :disabled="isHover" size="small" @click="catastrophe(1)">巨灾录入</el-button>
         </div>
         <!-- 复核 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'billCheck'">
@@ -34,6 +35,7 @@
           <el-button size="small" @click="onSics()">账单回写</el-button>
           <el-button size="small" @click="exportBill">导出账单</el-button>
           <el-button plain :disabled="isHover" size="small" @click="changeLayout">更改布局</el-button>
+          <el-button plain :disabled="isHover" size="small" @click="catastrophe(1)">巨灾录入</el-button>
         </div>
         <div class="left" style="height:100%;width:98%;">
           <div class="leftTop" style="background:#fff;margin-bottom:10px;padding:0 10px 10px 0;">
@@ -207,7 +209,7 @@
             >
             <el-row >
               <el-col :span="24" style="padding:0 16px;padding-bottom:100px;margin-top:10px;">
-                <div class="titleSearch detailSearch" style="margin-bottom:10px;" @click="searchFlag3 = !searchFlag3">
+                <div class="titleSearch detailSearch" style="margin-bottom:10px;">
                   <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息</div>
                   <div>
                     <el-checkbox-group v-model="wsCheckList" @change="onWsCheck" :disabled="isHover">
@@ -870,6 +872,121 @@
         <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="巨灾录入" :visible.sync="dialogFormVisibleCatastrophe" :close-on-click-modal="modal" width="1200px">
+      <el-tabs v-model="tabsFlag">
+        <el-tab-pane label="NEW CLAIM" name="1">
+          <el-form label-width="130px" :label-position="labelPosition" class="catastrophe">
+            <el-form-item label="Business ID">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Insured Period">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Section">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Claim's Name"><el-input v-model="jzlr" placeholder="请输入"></el-input></el-form-item>
+            <el-form-item label="Date of Loss From"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Date of Loss To"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Original Policy Period From"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Original Policy Period To"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Claim Cause Of Loss Group">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Cause Of Loss">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Advise Date"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Claim Risk Event Indicator">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in [{a:'Risk',b:'0'},{a:'Event',b:'1'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Headline Loss ID">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Headline Loss Name">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+          
+        </el-tab-pane>
+        <el-tab-pane label="INCURRED CLAIM" name="2">
+          <el-form label-width="120px" :inline="true" class="catastrophe">
+            <el-form-item label="Claim ID">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Claim Name">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Headline Loss ID">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Headline Loss Name">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Business ID">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Insured Period">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Section">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="To be booked in B/L">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in [{a:'NO',b:'0'},{a:'YES',b:'1'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="As Of Date"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Receive Date"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="BP Reference"><el-input v-model="jzlr" placeholder="请输入"></el-input></el-form-item>
+            <el-form-item label="Currency">
+              <el-select v-model="jzlr" filterable placeholder="请选择">
+                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="To be Paid"><el-input v-model="jzlr" placeholder="请输入"></el-input></el-form-item>
+            <el-form-item label="Outstanding"><el-input v-model="jzlr" placeholder="请输入"></el-input></el-form-item>
+            <el-form-item label="IBNR"><el-input v-model="jzlr" placeholder="请输入"></el-input></el-form-item>
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
+      <div slot="footer" class="dialog-footer" style="margin-top:10px;">
+        <el-button size="small" @click="dialogFormVisibleCatastrophe = false">重置</el-button>
+        <el-button type="primary" plain @click="catastrophe()">提交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -880,6 +997,12 @@ export default {
   name: "detailEntry",
   data() { 
     return {
+      jzlrArr:[],
+      jzlr:null,
+      bigDisaster:{
+
+      },
+      tabsFlag:'1',
       activeName: 'first',
       changeLayoutflag:true,
       changeLayoutflags:false,
@@ -1000,6 +1123,7 @@ export default {
       dialogFormVisible2: false,
       dialogFormVisible3: false,
       dialogFormVisible5: false,
+      dialogFormVisibleCatastrophe: false,
       title: "",
       dialogState: "",
       currentPage3: 5,
@@ -1056,6 +1180,13 @@ export default {
     this.getBillInfo();
   },
   methods: {
+    catastrophe(tag){
+      if(tag){   // 弹窗回显
+        this.dialogFormVisibleCatastrophe = true;
+      } else{  // 点击确定
+
+      }
+    },
     changeLayout(){
       console.log('changeLayout')
       this.changeLayoutflag=!this.changeLayoutflag;
@@ -2074,6 +2205,10 @@ export default {
 </script>
 
 <style scoped>
+.catastrophe .el-form-item{
+  width: 32%;
+  display: inline-block;
+}
 .mua1{
  animation:rotateMua1 linear 0s;
   animation-fill-mode:forwards;
