@@ -40,6 +40,12 @@
           <el-button size="small" :disabled="czState" @click="openSICS" plain>打开SICS</el-button>
           <el-button size="small" @click="getSGSg" plain>同步状态</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeDoc('a')">生成审批文档</el-button>
+
+          <el-button size="small" :disabled="czState" plain @click="makeWord(1)">高风险地区</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(2)">境外人民币</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(3)">转账模板</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(4)">全额</el-button>
+
           <el-button size="small" :disabled="czState" plain @click="submite(3,'置废','操作')">置废</el-button>
           <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'悬停':'已悬停'}}</el-button>
           <el-button size="small" :disabled="czState" plain @click="submite(2,'指派','操作')">指派</el-button>
@@ -903,6 +909,37 @@
       </div>
     </div>
 
+    <el-dialog title="高风险地区" :visible.sync="dialogFormVisibleRisk" :close-on-click-modal="modal">
+      <el-form :label-position="labelPosition" label-width="100px">
+        <el-form-item label="汇款编号"><el-input  placeholder="请输入" v-model="risk.remittanceNumber"></el-input></el-form-item>
+        <el-form-item label="发票号"><el-input  placeholder="请输入" v-model="risk.invoiceNumber"></el-input></el-form-item>
+        <el-form-item label="业务金额"><el-input  placeholder="请输入" v-model="risk.businessAmount"></el-input></el-form-item>
+        <el-form-item label="日期"><el-date-picker v-model="risk.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item>
+          <el-button size="small" @click="dialogFormVisibleRisk = false">取消</el-button>
+          <el-button size="small" type="primary" plain @click="fourPopUps(1)" style="padding:0 16px;">确定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+    <el-dialog title="境外人民币" :visible.sync="dialogFormVisibleOversea" :close-on-click-modal="modal">
+      <el-form :label-position="labelPosition" label-width="120px">
+        <el-form-item label="付款日期"><el-date-picker v-model="oversea.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="付款企业名称"><el-input  placeholder="请输入" v-model="oversea.rmSettleCompanyName"></el-input></el-form-item>
+        <el-form-item label="组织机构代码"><el-input  placeholder="请输入" v-model="oversea.orgCode"></el-input></el-form-item>
+        <el-form-item label="收款人名称"><el-input  placeholder="请输入" v-model="oversea.compName"></el-input></el-form-item>
+        <el-form-item label="收款人国别"><el-input  placeholder="请输入" v-model="oversea.country"></el-input></el-form-item>
+        <el-form-item label="付款金额合计"><el-input  placeholder="请输入" v-model="oversea.toltalAmount"></el-input></el-form-item>
+        <el-form-item label="服务贸易"><el-input  placeholder="请输入" v-model="oversea.tradeAmount"></el-input></el-form-item>
+        <el-form-item label="填报人"><el-input  placeholder="请输入" v-model="oversea.operator"></el-input></el-form-item>
+        <el-form-item label="联系电话"><el-input  placeholder="请输入" v-model="oversea.telephone"></el-input></el-form-item>
+        <el-form-item>
+          <el-button size="small" @click="dialogFormVisibleOversea = false">取消</el-button>
+          <el-button size="small" type="primary" plain @click="fourPopUps(2)" style="padding:0 16px;">确定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
     <!-- <el-dialog title="支票创建" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="180px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
         <el-form-item label="Process ID">
@@ -1140,6 +1177,23 @@ export default {
   name: 'detailPay',
   data() {
       return {
+        risk:{
+          remittanceNumber:null,
+          invoiceNumber:null,
+          businessAmount:null,
+          currentDate:null,
+        },
+        oversea:{
+          payDate:null,
+          rmSettleCompanyName:null, 
+          orgCode:null,
+          compName:null,
+          toltalAmount:null,
+          tradeAmount:null,
+          operator:null,
+          telephone:null,
+          country:null,
+        },
         downDialogFlag:false,
         strArr:[],
         proxyList:[],
@@ -1234,6 +1288,8 @@ export default {
         dialogFormVisibleA:false,
         dialogFormVisibleFHRWZF:false,
         dialogFormVisiblePayment:false,
+        dialogFormVisibleOversea:false,
+        dialogFormVisibleRisk:false,
         title:'',
         currentPage3: 5,
         currentPage4: 2,
@@ -1482,11 +1538,69 @@ export default {
     stopMouse(){
       window.event.stopPropagation();
     },
-     downDialog(){
+    downDialog(){
       this.downDialogFlag=true;
     },
     upDialog(){
       this.downDialogFlag=false;
+    },
+    makeWord(tag){
+      switch(tag){    
+        case 1: // 高风险地区
+          this.dialogFormVisibleRisk = true;
+          // this.$http.post("api/------", {processId: this.row.processId})
+          // .then(res => {
+
+          // })
+        break;
+        case 2: // 境外人民币
+          this.dialogFormVisibleOversea = true;
+          // this.$http.post("api/------", {processId: this.row.processId})
+          // .then(res => {
+
+          // })
+        break;
+        case 3: // 转账模板
+          // this.$http.post("api/------", {processId: this.row.processId})
+          // .then(res => {
+
+          // })
+        break;
+        case 4: // 全额
+          // this.$http.post("api/------", {processId: this.row.processId})
+          // .then(res => {
+
+          // })
+        break;
+      }
+    },
+    fourPopUps(tag){
+      switch(tag){    
+        case 1: // 高风险地区
+          // this.$http.post("api/------", {processId: this.row.processId})
+          // .then(res => {
+
+          // })
+        break;
+        case 2: // 境外人民币
+          // this.$http.post("api/------", {processId: this.row.processId})
+          // .then(res => {
+
+          // })
+        break;
+        case 3: // 转账模板
+          // this.$http.post("api/------", {processId: this.row.processId})
+          // .then(res => {
+
+          // })
+        break;
+        case 4: // 全额
+          // this.$http.post("api/------", {processId: this.row.processId})
+          // .then(res => {
+
+          // })
+        break;
+      }
     },
     moveDialog(){//8.29 移动dialog
     if(this.downDialogFlag===true){
@@ -1675,8 +1789,8 @@ export default {
       })
     }, 
     filterCurrencyRateList(p,s){ // p为原币币制 s为折币币制
-    console.log(p,s)
-    console.log(this.currencyRateList)
+      console.log(p,s)
+      console.log(this.currencyRateList)
       let obj = this.currencyRateList.filter(el=>{
         console.log(el.primCurrency,el.scndryCurrency)
         return el.primCurrency==p && el.scndryCurrency==s
