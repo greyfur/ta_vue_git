@@ -941,6 +941,26 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    
+    <!-- 全额 -->
+    <el-dialog title="全额" :visible.sync="dialogFormVisibleWhole" :close-on-click-modal="modal">
+      <el-form :label-position="labelPosition" label-width="120px" :model="whole" ref="whole" :rules="wholeRules">
+        <el-form-item label="付款银行名称" prop="rmAccountbankName"><el-input  placeholder="请输入" v-model="whole.rmAccountbankName"></el-input></el-form-item>
+        <el-form-item label="汇款日期" prop="payDate"><el-date-picker v-model="whole.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="汇款币别/金额" prop="rmAmount"><el-input  placeholder="请输入" v-model="whole.rmAmount"></el-input></el-form-item>
+        <el-form-item label="收款人" prop="compName"><el-input  placeholder="请输入" v-model="whole.compName"></el-input></el-form-item>
+        <el-form-item label="收款人开户银行" prop="bankName"><el-input  placeholder="请输入" v-model="whole.bankName"></el-input></el-form-item>
+        <el-form-item label="借记帐号" prop="bankAcnt"><el-input  placeholder="请输入" v-model="whole.bankAcnt"></el-input></el-form-item>
+        <el-form-item label="付款公司名称" prop="rmOriSettleCompanyName"><el-input  placeholder="请输入" v-model="whole.rmOriSettleCompanyName"></el-input></el-form-item>
+        <el-form-item label="经办人姓名" prop="operator"><el-input  placeholder="请输入" v-model="whole.operator"></el-input></el-form-item>
+        <el-form-item label="联系电话" prop="telephone"><el-input  placeholder="请输入" v-model="whole.telephone"></el-input></el-form-item>
+        <el-form-item label="日期" prop="currentDate"><el-date-picker v-model="whole.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item>
+          <el-button size="small" @click="fourPopUps(0,'whole')">取消</el-button>
+          <el-button size="small" type="primary" plain @click="fourPopUps(4,'whole')" style="padding:0 16px;">确定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
 
     <!-- <el-dialog title="支票创建" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="180px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
@@ -1196,6 +1216,18 @@ export default {
           telephone:null,
           country:null,
         },
+        whole:{
+          rmAccountbankName:null,
+          payDate:null,
+          rmAmount:null,
+          compName:null,
+          bankName:null,
+          bankAcnt:null,
+          rmOriSettleCompanyName:'中国再保险（集团）股份有限公司',
+          operator:null,
+          telephone:null,
+          currentDate:new Date().getTime(),
+        },
         downDialogFlag:false,
         strArr:[],
         proxyList:[],
@@ -1291,6 +1323,7 @@ export default {
         dialogFormVisibleFHRWZF:false,
         dialogFormVisiblePayment:false,
         dialogFormVisibleOversea:false,
+        dialogFormVisibleWhole:false,
         dialogFormVisibleRisk:false,
         title:'',
         currentPage3: 5,
@@ -1470,19 +1503,51 @@ export default {
             { required: true, message: '请输入收款人名称', trigger: 'blur' }
           ],
           toltalAmount: [
-            { required: true, message: '请输入收款人国别', trigger: 'blur' }
-          ],
-          tradeAmount: [
             { required: true, message: '请输入付款金额合计', trigger: 'blur' }
           ],
-          operator: [
+          tradeAmount: [
             { required: true, message: '请输入服务贸易', trigger: 'blur' }
           ],
-          telephone: [
+          operator: [
             { required: true, message: '请输入填报人', trigger: 'blur' }
           ],
+          telephone: [
+            { required: true, message: '请输入联系电话', trigger: 'blur' }
+          ],
           country: [
-            { required: true, message: '请输入练习电话', trigger: 'blur' }
+            { required: true, message: '请输入收款人国别', trigger: 'blur' }
+          ],
+        },
+        wholeRules:{
+          rmAccountbankName: [
+            { required: true, message: '请输入公司', trigger: 'blur' }
+          ],
+          payDate: [
+            { required: true, message: '请选择日期', trigger: 'blur' }
+          ],
+          rmAmount: [
+            { required: true, message: '请输入汇款币别/金额', trigger: 'blur' }
+          ],
+          compName: [
+            { required: true, message: '请输入收款人名称', trigger: 'blur' }
+          ],
+          bankName: [
+            { required: true, message: '请输入收款人开户银行号', trigger: 'blur' }
+          ],
+          bankAcnt: [
+            { required: true, message: '请输入借记账号', trigger: 'blur' }
+          ],
+          rmOriSettleCompanyName: [
+            { required: true, message: '请输入授权公司', trigger: 'blur' }
+          ],
+          operator: [
+            { required: true, message: '请输入经办人姓名', trigger: 'blur' }
+          ],
+          telephone: [
+            { required: true, message: '请输入联系电话', trigger: 'blur' }
+          ],
+           currentDate: [
+            { required: true, message: '请选择日期', trigger: 'blur' }
           ],
         },
         AllBankAccountList:[],
@@ -1612,6 +1677,8 @@ export default {
           // })
         break;
         case 4: // 全额
+
+          this.dialogFormVisibleWhole=true;
           // this.$http.post("api/------", {processId: this.row.processId})
           // .then(res => {
 
@@ -1625,11 +1692,13 @@ export default {
           if(formName==='risk'){
             this.dialogFormVisibleRisk = false;
           }else if(formName==='oversea'){
-            this.dialogFormVisibleOversea = false
+            this.dialogFormVisibleOversea = false;
+          }else if(formName==='whole'){
+            this.dialogFormVisibleWhole = false;
           }
            this.$refs[formName].resetFields();
           break;
-        case 1: // 高风险地区999
+        case 1: // 高风险地区
           // this.$http.post("api/------", {processId: this.row.processId})
           // .then(res => {
 
@@ -1673,6 +1742,16 @@ export default {
           // .then(res => {
 
           // })
+          this.$refs[formName].validate((valid) => {
+            console.log(valid)
+            if (valid) {
+              alert('submit!');
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
+          });
+          console.log('全额')
         break;
       }
     },
