@@ -1624,7 +1624,7 @@ export default {
     docView(row) {
       // this.dialogFormVisibleA = true;
       if (row) {
-        let arrr = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'];
+        let arrr = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT','XLS','xls','ppt','PPT','pptx','PPTX'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && !this.suffixFlag){ return false; }
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
@@ -1770,7 +1770,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
+                    el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT','XLS','xls','ppt','PPT','pptx','PPTX'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
                 this.SgData = arr5;
@@ -1834,7 +1834,7 @@ export default {
               if(el.docName){
                 let suffix = el.docName.split('.');
                 el['suffix'] = suffix[suffix.length-1];
-                el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
+                el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT','XLS','xls','ppt','PPT','pptx','PPTX'].some(el=>{ return el==suffix[suffix.length-1]; })
               }
             })
             this.SgData = arr5;
@@ -1873,7 +1873,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
+                    el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT','XLS','xls','ppt','PPT','pptx','PPTX'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }  
                 })
                 this.SgData = arr5;
@@ -2560,7 +2560,7 @@ export default {
                   if(el.docName){
                     let suffix = el.docName.split('.');
                     el['suffix'] = suffix[suffix.length-1];
-                    el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT'].some(el=>{ return el==suffix[suffix.length-1]; })
+                    el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT','XLS','xls','ppt','PPT','pptx','PPTX'].some(el=>{ return el==suffix[suffix.length-1]; })
                   }
                 })
               this.fileData = arr5;
