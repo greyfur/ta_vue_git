@@ -245,3 +245,15 @@ table th{
 .el-form-item__label{
   padding: 0 8px 0 0;
 } 
+.el-tabs__content{
+  height: 85%;
+}
+.el-tab-pane{
+  height: 100%;
+}
+.el-tab-pane>.el-row{
+  height: 100%;
+}
+.el-tabs__nav-scroll{
+  padding-left: 10px;
+}

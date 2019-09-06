@@ -1,12 +1,12 @@
 <template> 
-  <div class="detailEntry">
+  <div class="detailEntry" :class="changeLayoutflag?'changeLayoutflag':'changeLayoutflags'">
     <!-- <router-link
       :to="{name:$route.query.tag}"
       :class="this.$store.state.flod?'leftBack':'rightBack'">
       <i class="iconfont iconleft-circle-o" style="color:#000;"></i>
     </router-link> -->
-    <el-row style="padding-bottom:10px;background:#f5f5f5;">
-      <el-col :span="8" style="height:680px;">
+    <el-row style="padding-bottom:10px;background:#f5f5f5;" :class="changeLayoutflag?'':'changeLayoutflags'">
+      <el-col :span="8" :class="changeLayoutflag?'':'changeLayoutflags'">
         <!-- 签回 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'billSignBack'">
           <el-button size="small" @click="mailSend(1)" plain>邮件通知</el-button>
@@ -64,7 +64,7 @@
                 </li>
             </ul>
           </div>
-          <div :class="searchFlag2===true?'searchNew searchNews':''">
+          <div :class="searchFlag2===true?'searchNew searchNews':''" style="height:48%;">
             <div class="titleSearch detailSearch" @click.stop="searchFlag2 = !searchFlag2">
               <div>
                 <i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表
@@ -140,13 +140,14 @@
         </div>
       </el-col>
       <!-- padding-bottom:10px; -->
-      <el-col :span="16" style="height:680px;">
-          <el-tabs style="height:680px;" v-model="activeName" >
+      <el-col :span="16" :class="changeLayoutflag?'':'changeLayoutflags'">
+          <el-tabs v-model="activeName" :class="changeLayoutflag?'':'changeLayoutflags'" style="background:#fff;">
             <el-tab-pane
               label="文档预览"
               name="first"
+              style="padding-left:10px;"
             >
-            <div class="right">
+            <div class="right" :class="changeLayoutflag?'':'changeLayoutflags'">
             <div class="titleSearch detailSearch" style="background:#fff;">
               <p>
                 <el-dropdown placement="top-start">
@@ -165,7 +166,7 @@
                 </el-dropdown>
               </p>
             </div>
-            <div class="browseDoc">
+            <div class="browseDocs" :class="changeLayoutflag?'':'changeLayoutflags'">
               <iframe src="../../../static/Preview/index.html" id="iframeId" name="ifrmname" ref="mapFrame" style="width:100%;height:100%" frameborder="0"></iframe>
             </div>
             </div>
@@ -208,7 +209,7 @@
               label="账单信息"
             >
             <el-row >
-              <el-col :span="24" style="padding:0 16px;padding-bottom:100px;margin-top:10px;">
+              <el-col :span="24" style="padding:0 16px;margin-top:10px;height:100%;">
                 <div class="titleSearch detailSearch" style="margin-bottom:10px;">
                   <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息</div>
                   <div>
@@ -224,7 +225,7 @@
                   :data="SICSData"
                   border
                   width="100%"
-                  height="560"
+                  height="88%"
                   :header-row-class-name="StableClass">
                   <el-table-column type="index" width="50" align="center"></el-table-column>
                   <el-table-column label="账单号" width="160" align="center">
@@ -2373,6 +2374,13 @@ export default {
   border: 1px solid #d4d4d4;
   border-top: none;
 }
+.right>>>.browseDocs {
+  background-color: #ecf5ff;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #d4d4d4;
+  border-top: none;
+}
 .el-table{
   background: #fff;
 }
@@ -2487,5 +2495,15 @@ li.detail-item {
 }
 .rightBack{
   position:fixed;top:65px;left:205px;z-index:100;
+}
+.changeLayoutflag{
+  height: 680px;
+}
+.changeLayoutflags{
+  height: 100%;
+  padding-bottom: 0;
+}
+.heigh{
+  height: 100%;
 }
 </style>

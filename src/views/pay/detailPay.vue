@@ -1623,6 +1623,7 @@ export default {
     }
     this.dataBaseSG();
     this.mailSend(2,'',1);
+    console.log(this.row)
   },
   methods: {
     getJson(){
@@ -1699,16 +1700,29 @@ export default {
            this.$refs[formName].resetFields();
           break;
         case 1: // 高风险地区
-          // this.$http.post("api/------", {processId: this.row.processId})
-          // .then(res => {
-
-          // })
           this.$refs[formName].validate((valid) => {
-            console.log(valid)
             if (valid) {
-              alert('submit!');
+               this.$http.post("api/docCreate/createRiskDoc", {
+                 processId: this.row.processId,
+                 actOperator: this.row.curOperator , 
+                 remittanceNumber: this.risk.remittanceNumber,
+                 invoiceNumber: this.risk.invoiceNumber,
+                 businessAmount:this.risk.businessAmount,
+                 currentDate:this.risk.currentDate,
+               })
+              .then(res => {
+                if(res.status===200&&res.statusText==='OK'){
+                  this.$message.success(res.data.msg);
+                  this.dialogFormVisibleRisk = false;
+                  this.$refs[formName].resetFields();
+                }else{
+                    this.$message.error(res.data.msg);
+                    this.dialogFormVisibleRisk = false;
+                    this.$refs[formName].resetFields();
+                }
+              })
             } else {
-              console.log('error submit!!');
+              this.$message.error('参数错误');
               return false;
             }
           });
@@ -1716,16 +1730,36 @@ export default {
           console.log('高风险地区确定')
         break;
         case 2: // 境外人民币
-          // this.$http.post("api/------", {processId: this.row.processId})
-          // .then(res => {
-
-          // })
           this.$refs[formName].validate((valid) => {
             console.log(valid)
             if (valid) {
-              alert('submit!');
+                this.$http.post("api/docCreate/createCBB", {
+                  processId: this.row.processId,
+                  actOperator: this.row.curOperator,
+                  payDate: this.oversea.payDate,
+                  rmSettleCompanyName: this.oversea.rmSettleCompanyName,
+                  orgCode: this.oversea.orgCode,
+                  compName: this.oversea.compName,
+                  toltalAmount: this.oversea.toltalAmount,
+                  tradeAmount: this.oversea.tradeAmount,
+                  operator: this.oversea.operator,
+                  telephone: this.oversea.telephone,
+                  country: this.oversea.country,
+                  })
+                .then(res => {
+                  console.log(res)
+                     if(res.status===200&&res.statusText==='OK'){
+                      this.$message.success(res.data.msg);
+                      this.dialogFormVisibleOversea = false;
+                      this.$refs[formName].resetFields();
+                    }else{
+                        this.$message.error(res.data.msg);
+                        this.dialogFormVisibleOversea = false;
+                        this.$refs[formName].resetFields();
+                    }
+                })
             } else {
-              console.log('error submit!!');
+              this.$message.error('参数错误');
               return false;
             }
           });
@@ -1737,17 +1771,48 @@ export default {
 
           // })
         break;
-        case 4: // 全额
-          // this.$http.post("api/------", {processId: this.row.processId})
-          // .then(res => {
-
-          // })
+        case 4: // 全额999
+          // rmAccountbankName:null,
+          // payDate:null,
+          // rmAmount:null,
+          // compName:null,
+          // bankName:null,
+          // bankAcnt:null,
+          // rmOriSettleCompanyName:'中国再保险（集团）股份有限公司',
+          // operator:null,
+          // telephone:null,
+          // currentDate:new Date().getTime(),
           this.$refs[formName].validate((valid) => {
             console.log(valid)
             if (valid) {
-              alert('submit!');
+              this.$http.post("api/docCreate/createTotalAmountDoc", {
+                processId: this.row.processId,
+                actOperator: this.row.curOperator , 
+                rmAccountbankName: this.whole.rmAccountbankName,
+                payDate: this.whole.payDate,
+                rmAmount: this.whole.rmAmount,
+                compName: this.whole.compName,
+                bankName: this.whole.bankName,
+                bankAcnt: this.whole.bankAcnt,
+                rmOriSettleCompanyName: this.whole.rmOriSettleCompanyName,
+                operator: this.whole.operator,
+                telephone: this.whole.telephone,
+                currentDate: this.whole.currentDate,
+               })
+              .then(res => {
+                console.log(res)
+                  if(res.status===200&&res.statusText==='OK'){
+                  this.$message.success(res.data.msg);
+                  this.dialogFormVisibleWhole = false;
+                  this.$refs[formName].resetFields();
+                }else{
+                    this.$message.error(res.data.msg);
+                    this.dialogFormVisibleWhole = false;
+                    this.$refs[formName].resetFields();
+                }
+              })
             } else {
-              console.log('error submit!!');
+              this.$message.error('参数错误');
               return false;
             }
           });
@@ -1928,6 +1993,7 @@ export default {
       this.$http.post('api/othersDO/bscBankInfo/list',{}).then(res =>{
         if(res.status === 200 && res.data.rows){
           this.bscBankList = res.data.rows;
+          console.log(this.bscBankList)
         }
       })
     },
@@ -1945,7 +2011,7 @@ export default {
       console.log(p,s)
       console.log(this.currencyRateList)
       let obj = this.currencyRateList.filter(el=>{
-        console.log(el.primCurrency,el.scndryCurrency)
+        // console.log(el.primCurrency,el.scndryCurrency)
         return el.primCurrency==p && el.scndryCurrency==s
       })
       console.log(obj.length?obj[0]['rate']:null)
@@ -3033,7 +3099,7 @@ export default {
                   // }else{
                   //    this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(4):null;
                   // }
-                  console.log(this.makeDocListEctype.yuanHuiLv[i],999);
+                  // console.log(this.makeDocListEctype.yuanHuiLv[i],999);
                   this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(4):null;
                   if(this.makeDocListEctype.yuanHuiLv[i] != null){
                     allNum += this.makeDocListEctype.yuanNum[i]/Number(1*this.makeDocListEctype.yuanHuiLv[i]);
@@ -3043,8 +3109,8 @@ export default {
             } else{  // 直接转换、、、
             console.log('else')
               let val3 = Number(this.filterCurrencyRateList(curType,this.makeDocListEctype.zheType))
-              console.log(val3)
-              console.log(this.makeDocListEctype.yuanHuiLv[i],999);
+              // console.log(val3)
+              // console.log(this.makeDocListEctype.yuanHuiLv[i],999);
               this.makeDocListEctype.yuanHuiLv[i] = Number(val3)>0?Number(val3).toFixed(4):null;
               if(this.makeDocListEctype.yuanHuiLv[i] != null){
                 allNum += Number(this.makeDocListEctype.yuanNum[i])/Number(1*this.makeDocListEctype.yuanHuiLv[i]);
@@ -3056,6 +3122,7 @@ export default {
       }
     },
     makeDoc(tag,name){    // 生成审批文档
+    console.log(this.makeDocListEctype)
       if(tag == 'a'){  // 是操作页面，弹窗，S0,
         if(this.row.rmCurrency){
           this.makeDocListEctype.yuanType = [];
@@ -3082,7 +3149,17 @@ export default {
             }
           }
           if(this.makeDocListEctype.shoukuanMode != null){
-            this.makeDocList = Object.assign({},this.bscBankList[this.makeDocListEctype.shoukuanMode],this.makeDocList)
+            this.makeDocList = Object.assign({},this.bscBankList[this.makeDocListEctype.shoukuanMode],this.makeDocList);
+            console.log(this.makeDocList.id)
+            this.$http.post("api/othersDO/bscBankInfo/list")
+          .then(res => {
+           var detail=res.data.rows.filter(item=>{
+            return  item.id==this.makeDocList.id
+            })
+            console.log(detail)
+            this.oversea.compName=detail[0].compName;
+          })
+            //777
           }
           if(this.makeDocListEctype.zheNum){
             this.makeDocList.convertAmount = `${this.makeDocListEctype.zheType} ${this.makeDocListEctype.zheNum}`;

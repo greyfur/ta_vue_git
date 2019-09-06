@@ -1,7 +1,7 @@
 <template>
   <div class="billCom">
     <div :class="searchFlag===true?'searchNew':''" >
-      <div class="titleSearch" @click="searchFlag = !searchFlag">
+      <div class="titleSearch" @click="searchFlag = !searchFlag" style="margin-bottom:10px;">
         <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>查询
       </div>
       <el-collapse-transition>
@@ -97,7 +97,7 @@
               </el-select>
             </el-col>
           </el-row>
-          <el-row :gutter="10" class="billRow">
+          <el-row :gutter="10" class="billRow" v-if="urlName === 'billSignBack'">
             <el-col :span="8" v-show="urlName === 'billSignBack'">
               <span class="slable">是否需签回</span>
               <el-select clearable v-model="querySearch.wsSignbackFlag" placeholder="请选择">
