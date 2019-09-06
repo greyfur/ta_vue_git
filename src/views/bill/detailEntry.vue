@@ -25,7 +25,8 @@
           <el-button plain :disabled="isHover" size="small" @click="exportBill">导出账单</el-button>
           <el-button plain :disabled="isHover" size="small" @click="submit(6,'录入提交')">流程提交</el-button>
           <el-button plain :disabled="isHover" size="small" @click="changeLayout">更改布局</el-button>
-          <el-button plain :disabled="isHover" size="small" @click="catastrophe(1)">巨灾录入</el-button>
+          <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button>
+          <!-- <el-button plain :disabled="isHover" size="small" @click="cleanCut()">Clean-Cut</el-button> -->
         </div>
         <!-- 复核 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'billCheck'">
@@ -35,7 +36,8 @@
           <el-button size="small" @click="onSics()">账单回写</el-button>
           <el-button size="small" @click="exportBill">导出账单</el-button>
           <el-button plain :disabled="isHover" size="small" @click="changeLayout">更改布局</el-button>
-          <el-button plain :disabled="isHover" size="small" @click="catastrophe(1)">巨灾录入</el-button>
+          <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button>
+          <!-- <el-button plain :disabled="isHover" size="small" @click="cleanCut()">Clean-Cut</el-button> -->
         </div>
         <div class="left" style="height:100%;width:98%;">
           <div class="leftTop" style="background:#fff;margin-bottom:10px;padding:0 10px 10px 0;">
@@ -878,115 +880,150 @@
         <el-tab-pane label="NEW CLAIM" name="1">
           <el-form label-width="130px" :label-position="labelPosition" class="catastrophe">
             <el-form-item label="Business ID">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster.businessId" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Insured Period">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster.insuredPeriod" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Section">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster.section" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Claim's Name"><el-input v-model="jzlr" placeholder="请输入"></el-input></el-form-item>
-            <el-form-item label="Date of Loss From"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-            <el-form-item label="Date of Loss To"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-            <el-form-item label="Original Policy Period From"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-            <el-form-item label="Original Policy Period To"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Claim's Name"><el-input v-model="bigDisaster.claimName" placeholder="请输入"></el-input></el-form-item>
+            <el-form-item label="Date of Loss From"><el-date-picker v-model="bigDisaster.lossDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Date of Loss To"><el-date-picker v-model="bigDisaster.lossDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Original Policy Period From"><el-date-picker v-model="bigDisaster.plcyStartDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Original Policy Period To"><el-date-picker v-model="bigDisaster.plcyEndDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
             <el-form-item label="Claim Cause Of Loss Group">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster.causeOfLossGroup" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Cause Of Loss">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster.causeOfLoss" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Advise Date"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Advise Date"><el-date-picker v-model="bigDisaster.advisedDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
             <el-form-item label="Claim Risk Event Indicator">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
+              <el-select v-model="bigDisaster.riskEvnt" filterable placeholder="请选择">
                 <el-option v-for="item in [{a:'Risk',b:'0'},{a:'Event',b:'1'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Headline Loss ID">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster.headlinelossCode" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Headline Loss Name">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster.headlinelossName" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
-          
         </el-tab-pane>
         <el-tab-pane label="INCURRED CLAIM" name="2">
           <el-form label-width="120px" :inline="true" class="catastrophe">
             <el-form-item label="Claim ID">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster2.refClaimIdentifier" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Claim Name">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster2.claimName" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Headline Loss ID">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster2.headlinelossCode" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Headline Loss Name">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster2.headlinelossName" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Business ID">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster2.businessId" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Insured Period">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster2.insuredPeriod" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Section">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster2.section" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="To be booked in B/L">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
+              <el-select v-model="bigDisaster2.BL" filterable placeholder="请选择">
                 <el-option v-for="item in [{a:'NO',b:'0'},{a:'YES',b:'1'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="As Of Date"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-            <el-form-item label="Receive Date"><el-date-picker v-model="jzlr" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-            <el-form-item label="BP Reference"><el-input v-model="jzlr" placeholder="请输入"></el-input></el-form-item>
+            <el-form-item label="As Of Date"><el-date-picker v-model="bigDisaster2.accAsOfDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Receive Date"><el-date-picker v-model="bigDisaster2.registTimestamp" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="BP Reference"><el-input v-model="bigDisaster2.bpRef" placeholder="请输入"></el-input></el-form-item>
             <el-form-item label="Currency">
-              <el-select v-model="jzlr" filterable placeholder="请选择">
-                <el-option v-for="item in jzlrArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster2.fkCurr" filterable placeholder="请选择">
+                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="To be Paid"><el-input v-model="jzlr" placeholder="请输入"></el-input></el-form-item>
-            <el-form-item label="Outstanding"><el-input v-model="jzlr" placeholder="请输入"></el-input></el-form-item>
-            <el-form-item label="IBNR"><el-input v-model="jzlr" placeholder="请输入"></el-input></el-form-item>
+            <el-form-item label="To be Paid"><el-input v-model="bigDisaster2.paid" placeholder="请输入"></el-input></el-form-item>
+            <el-form-item label="Outstanding"><el-input v-model="bigDisaster2.outStanding" placeholder="请输入"></el-input></el-form-item>
+            <el-form-item label="IBNR"><el-input v-model="bigDisaster2.ibnr" placeholder="请输入"></el-input></el-form-item>
           </el-form>
         </el-tab-pane>
       </el-tabs>
-      <div slot="footer" class="dialog-footer" style="margin-top:10px;">
-        <el-button size="small" @click="dialogFormVisibleCatastrophe = false">重置</el-button>
-        <el-button type="primary" plain @click="catastrophe()">提交</el-button>
+      <div slot="footer" v-show="$route.query.tag === 'billEntry'" class="dialog-footer" style="margin-top:10px;">
+        <el-button size="small" @click="reset('bigDisaster')">重置</el-button>
+        <el-button type="primary" plain @click="catastropheSubmite('提交复核')">提交复核</el-button>
+      </div>
+      <div slot="footer"  class="dialog-footer" style="margin-top:10px;">
+        <el-button size="small" @click="catastropheSubmite('驳回')">驳回</el-button>
+        <el-button type="primary" plain @click="catastropheSubmite('通过')">通过</el-button>
       </div>
     </el-dialog>
+
+    <!-- <el-dialog title="Clean-Cut" :visible.sync="dialogFormVisiblecleanCut" :close-on-click-modal="modal" width="1200px">
+      <el-form label-width="130px" :label-position="labelPosition" class="catastrophe">
+        <el-form-item label="赔案编号"><el-input v-model="cleanCut." placeholder="请输入"></el-input></el-form-item>
+        <el-form-item label="是否转已决">
+          <el-radio-group v-model="cleanCut.">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="合同编号">
+          <el-select v-model="cleanCut." filterable placeholder="请选择">
+            <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="合同起期"><el-date-picker v-model="cleanCut." value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="合同止期"><el-date-picker v-model="cleanCut." value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="Section">
+          <el-select v-model="cleanCut." filterable placeholder="请选择">
+            <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" v-show="$route.query.tag === 'billEntry'" class="dialog-footer" style="margin-top:10px;">
+        <el-button size="small" @click="reset('cleanCut')">重置</el-button>
+        <el-button type="primary" plain @click="cleanCutSubmite('提交复核')">提交复核</el-button>
+      </div>
+      <div slot="footer"  class="dialog-footer" style="margin-top:10px;">
+        <el-button size="small" @click="cleanCutSubmite('驳回')">驳回</el-button>
+        <el-button type="primary" plain @click="cleanCutSubmite('通过')">通过</el-button>
+      </div>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -997,9 +1034,42 @@ export default {
   name: "detailEntry",
   data() { 
     return {
-      jzlrArr:[],
-      jzlr:null,
+      bigArr:[],
       bigDisaster:{
+        claimName:null,
+        causeOfLossGroup:null,
+        causeOfLoss:null,
+        advisedDate:null,
+        riskEvnt:null,
+        headlinelossCode:null,
+        headlinelossName:null,
+        plcyStartDate:null,
+        plcyEndDate:null,
+        lossDate:null,
+        // 一下为不给后端传的字段
+        businessId:null,
+        insuredPeriod:null,
+        section:null,
+      },
+      bigDisaster2:{
+        refClaimIdentifier:null,
+        headlinelossCode:null,
+        headlinelossName:null,
+        accAsOfDate:null,
+        registTimestamp:null,
+        bpRef:null,
+        fkCurr:null,
+        paid:null,
+        outStanding:null,
+        ibnr:null,
+        // 一下为不给后端传的字段
+        businessId:null,
+        insuredPeriod:null,
+        section:null,
+        claimName:null,
+        BL:'0',
+      },
+      cleanCut:{
 
       },
       tabsFlag:'1',
@@ -1124,6 +1194,7 @@ export default {
       dialogFormVisible3: false,
       dialogFormVisible5: false,
       dialogFormVisibleCatastrophe: false,
+      dialogFormVisiblecleanCut: false,
       title: "",
       dialogState: "",
       currentPage3: 5,
@@ -1180,11 +1251,51 @@ export default {
     this.getBillInfo();
   },
   methods: {
-    catastrophe(tag){
-      if(tag){   // 弹窗回显
+    catastrophe(tag){ 
+      if(this.$route.query.tag === 'billEntry'){   // 操作页面
         this.dialogFormVisibleCatastrophe = true;
-      } else{  // 点击确定
+      } else{  // 
 
+      }
+    },
+    catastropheSubmite(tag){
+      switch(tag){
+        case '提交复核':
+          
+        break;
+        case '驳回':
+
+        break;
+        case '通过':
+
+        break;
+      }
+    },
+    reset(tag){   
+      if(tag=='bigDisaster'){  // 巨灾重置
+
+      } else{  // cleanCut重置
+
+      }
+    },
+    cleanCut(tag){
+      if(this.$route.query.tag === 'billEntry'){   // 操作页面
+        this.dialogFormVisiblecleanCut = true;
+      } else{  // 复核
+
+      }
+    },
+    cleanCutSubmite(tag){
+      switch(tag){
+        case '提交复核':
+          
+        break;
+        case '驳回':
+
+        break;
+        case '通过':
+
+        break;
       }
     },
     changeLayout(){
@@ -1336,7 +1447,7 @@ export default {
         case 4:document.querySelector('.browseDoc').className='browseDoc mua4';break;
       }
     },
-     rotateMuas(){
+    rotateMuas(){
        this.rotateCounts--;
        if(this.rotateCounts<=0){
          this.rotateCounts=4
