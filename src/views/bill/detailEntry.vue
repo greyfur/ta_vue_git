@@ -25,8 +25,8 @@
           <el-button plain :disabled="isHover" size="small" @click="exportBill">导出账单</el-button>
           <el-button plain :disabled="isHover" size="small" @click="submit(6,'录入提交')">流程提交</el-button>
           <el-button plain :disabled="isHover" size="small" @click="changeLayout">更改布局</el-button>
-          <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button>
-          <!-- <el-button plain :disabled="isHover" size="small" @click="cleanCut()">Clean-Cut</el-button> -->
+          <!-- <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button> -->
+          <!-- <el-button plain :disabled="isHover" size="small" @click="onCleanCut()">Clean-Cut</el-button> -->
         </div>
         <!-- 复核 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'billCheck'">
@@ -36,8 +36,8 @@
           <el-button size="small" @click="onSics()">账单回写</el-button>
           <el-button size="small" @click="exportBill">导出账单</el-button>
           <el-button plain :disabled="isHover" size="small" @click="changeLayout">更改布局</el-button>
-          <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button>
-          <!-- <el-button plain :disabled="isHover" size="small" @click="cleanCut()">Clean-Cut</el-button> -->
+          <!-- <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button> -->
+          <!-- <el-button plain :disabled="isHover" size="small" @click="onCleanCut()">Clean-Cut</el-button> -->
         </div>
         <div class="left" style="height:100%;width:98%;">
           <div class="leftTop" style="background:#fff;margin-bottom:10px;padding:0 10px 10px 0;">
@@ -1279,7 +1279,7 @@ export default {
 
       }
     },
-    cleanCut(tag){
+    onCleanCut(tag){
       if(this.$route.query.tag === 'billEntry'){   // 操作页面
         this.dialogFormVisiblecleanCut = true;
       } else{  // 复核

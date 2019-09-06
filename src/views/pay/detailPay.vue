@@ -41,10 +41,10 @@
           <el-button size="small" @click="getSGSg" plain>同步状态</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeDoc('a')">生成审批文档</el-button>
 
-          <el-button size="small" :disabled="czState" plain @click="makeWord(1)">高风险地区</el-button>
+          <!-- <el-button size="small" :disabled="czState" plain @click="makeWord(1)">高风险地区</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeWord(2)">境外人民币</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeWord(3)">转账模板</el-button>
-          <el-button size="small" :disabled="czState" plain @click="makeWord(4)">全额</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(4)">全额</el-button> -->
 
           <el-button size="small" :disabled="czState" plain @click="submite(3,'置废','操作')">置废</el-button>
           <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'悬停':'已悬停'}}</el-button>
@@ -1993,7 +1993,6 @@ export default {
       this.$http.post('api/othersDO/bscBankInfo/list',{}).then(res =>{
         if(res.status === 200 && res.data.rows){
           this.bscBankList = res.data.rows;
-          console.log(this.bscBankList)
         }
       })
     },
