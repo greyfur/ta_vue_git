@@ -41,10 +41,10 @@
           <el-button size="small" @click="getSGSg" plain>同步状态</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeDoc('a')">生成审批文档</el-button>
 
-          <!-- <el-button size="small" :disabled="czState" plain @click="makeWord(1)">高风险地区</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(1)">高风险地区</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeWord(2)">境外人民币</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeWord(3)">转账模板</el-button>
-          <el-button size="small" :disabled="czState" plain @click="makeWord(4)">全额</el-button> -->
+          <el-button size="small" :disabled="czState" plain @click="makeWord(4)">全额</el-button>
 
           <el-button size="small" :disabled="czState" plain @click="submite(3,'置废','操作')">置废</el-button>
           <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'悬停':'已悬停'}}</el-button>
@@ -941,6 +941,20 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+      <!-- 转账模板 -->
+     <el-dialog title="转账模板" :visible.sync="dialogFormVisibleTransfer" :close-on-click-modal="modal">
+      <!-- <el-form :label-position="labelPosition" :model="transfer" :rules="transferRules" label-width="100px" ref="transfer">
+        <el-form-item label="汇款编号" prop="remittanceNumber" required><el-input  placeholder="请输入" v-model="risk.remittanceNumber"></el-input></el-form-item>
+        <el-form-item label="发票号" prop="invoiceNumber" required><el-input  placeholder="请输入" v-model="risk.invoiceNumber"></el-input></el-form-item>
+        <el-form-item label="业务金额" prop="businessAmount" required><el-input  placeholder="请输入" v-model="risk.businessAmount"></el-input></el-form-item>
+        <el-form-item label="日期" prop="currentDate" required><el-date-picker v-model="risk.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item>
+          <el-button size="small" @click="fourPopUps(0,'transfer')">取消</el-button>
+          <el-button size="small" type="primary" plain @click="fourPopUps(1,'transfer')" style="padding:0 16px;">确定</el-button>
+        </el-form-item>
+      </el-form> -->
+    </el-dialog>
     
     <!-- 全额 -->
     <el-dialog title="全额" :visible.sync="dialogFormVisibleWhole" :close-on-click-modal="modal">
@@ -1325,6 +1339,7 @@ export default {
         dialogFormVisibleOversea:false,
         dialogFormVisibleWhole:false,
         dialogFormVisibleRisk:false,
+        dialogFormVisibleTransfer:false,
         title:'',
         currentPage3: 5,
         currentPage4: 2,
@@ -1672,6 +1687,7 @@ export default {
           // })
         break;
         case 3: // 转账模板
+        this.dialogFormVisibleTransfer=true;
           // this.$http.post("api/------", {processId: this.row.processId})
           // .then(res => {
 
@@ -1696,6 +1712,8 @@ export default {
             this.dialogFormVisibleOversea = false;
           }else if(formName==='whole'){
             this.dialogFormVisibleWhole = false;
+          }else if(formName==='transfer'){
+            this.dialogFormVisibleTransfer=false;
           }
            this.$refs[formName].resetFields();
           break;
@@ -1766,7 +1784,7 @@ export default {
           console.log('境外人民币确定')
         break;
         case 3: // 转账模板
-          // this.$http.post("api/------", {processId: this.row.processId})
+          // this.$http.post("api//docCreate/createWillisDoc", {processId: this.row.processId})
           // .then(res => {
 
           // })

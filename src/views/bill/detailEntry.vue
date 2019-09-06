@@ -168,7 +168,7 @@
                 </el-dropdown>
               </p>
             </div>
-            <div class="browseDocs" :class="changeLayoutflag?'':'changeLayoutflags'">
+            <div class="browseDoc browseDocs" :class="changeLayoutflag?'':'changeLayoutflags'">
               <iframe src="../../../static/Preview/index.html" id="iframeId" name="ifrmname" ref="mapFrame" style="width:100%;height:100%" frameborder="0"></iframe>
             </div>
             </div>
