@@ -1361,7 +1361,7 @@ export default {
         this.chooseRow.brokerCodeName=[];
           this.chooseRow.wsBrokerCode&&this.chooseRow.wsBrokerCode.split(';').map((item,index)=>{
             console.log(this.chooseRow.wsBrokerName.split(';')[index])
-             this.chooseRow.brokerCodeName.push(item!=null&& this.chooseRow.wsBrokerName.split(';')[index]!=null?item+'-'+ this.chooseRow.wsBrokerName.split(';')[index]+';':item||this.chooseRow.wsBrokerName.split(';')[index]);
+             this.chooseRow.brokerCodeName.push(item!==null&& this.chooseRow.wsBrokerName.split(';')[index]!==null?item+'-'+ this.chooseRow.wsBrokerName.split(';')[index]+';':item||this.chooseRow.wsBrokerName.split(';')[index]);
                 return  this.chooseRow.brokerCodeName
           })
         this.chooseRow.brokerCodeName=this.chooseRow.brokerCodeName.join('');
