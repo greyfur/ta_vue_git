@@ -18,7 +18,8 @@
         <el-col :span="8">
           <span class="slable">流程状态 &nbsp;&nbsp;</span>
           <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
-            <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','已悬停']" :key="item" :label="item" :value="item"></el-option>
+            <!-- 9.9 UAT原话：综合查询－账单流程－流程状态缺失“复核驳回”项 -->
+            <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','已悬停','复核驳回']" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-col>
       </el-row>
@@ -30,8 +31,7 @@
                 v-for="(item,index) in nameList"
                 :key="item"
                 :value="index"
-                :label="item"
-              >
+                :label="item">
                 <span style="float:left">{{item}}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{index}}</span>
               </el-option>
@@ -245,7 +245,6 @@
         <img :src="picture" style="width:100%;height:1005;">
       </div>
     </el-dialog>
-
     <!-- el-dialog导出报表 -->
      <!-- <el-dialog title="导出报表" width="50%" :visible.sync="dialogReport" :close-on-click-modal="modal">
         <el-form   class="demo-form-inline" v-model="reportArr">
@@ -671,6 +670,10 @@ export default {
           params = Object.assign({},this.mustData,this.billSearch);
         }
         delete params['actOperator'];
+        if(params.processStatus=='复核驳回'){
+          params.processStatus = '待处理';
+          params.rejectedFlag = '1';
+        }
           this.$http.post('api/integeratedQuery/ProcessMessagelist',params).then(res =>{
               if(res.status === 200){
                 if(!res.data.rows.length){

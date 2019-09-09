@@ -759,7 +759,8 @@
       </el-form>
     </el-dialog>
     <!-- 可拖拽的弹出框 8.29 -->
-    <div class="mouseDialogPar" v-if="dialogFormVisible" ref="mouseDialogPar" @mousedown="downDialog" @mousemove="moveDialog" @mouseup="upDialog">
+    <!-- <div class="mouseDialogPar" draggable="true" v-if="dialogFormVisible" ref="mouseDialogPar" @drop ="downDialog" @dragover="moveDialog" @dragenter="upDialog"> -->
+    <div class="mouseDialogPar" :draggable="dragFlag" v-if="dialogFormVisible" ref="mouseDialogPar" @mousedown="downDialog" @mousemove="moveDialog" @mouseup="upDialog">
       <div class="mouseDialogChi" ref="mouseDialogChi">
         <div class="mouseTitle">
           <h3>支票创建</h3>
@@ -1225,6 +1226,7 @@ export default {
   name: "detailCred",
   data() {
     return {
+      dragFlag:false,
       downDialogFlag:false,
       maxHeight:null,
       suffixFlag:false,
@@ -1567,6 +1569,7 @@ export default {
     moveDialog(){//8.29 移动dialog
     if(this.downDialogFlag===true){
       var e= e||window.event;
+      e.preventDefault();
       let mouseDialogPar=this.$refs.mouseDialogPar,
           mouseDialogChi=this.$refs.mouseDialogChi;
       let startX=e.clientX-mouseDialogPar.offsetLeft-mouseDialogChi.offsetWidth/10;

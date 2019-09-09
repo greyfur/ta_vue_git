@@ -90,20 +90,21 @@
                 </el-option>
               </el-select>
             </el-col>
-            <el-col :span="8">
-              <span class="slable">账单状态 &nbsp;&nbsp;</span>
-              <el-select clearable v-model="querySearch.wsStatus" placeholder="请选择">
-                <el-option v-for="(v,k) of {'Inactive':'2','Open':'1','Closed':'0'}" :key="v" :label="k" :value="v"></el-option>
-              </el-select>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10" class="billRow" v-if="urlName === 'billSignBack'">
             <el-col :span="8" v-show="urlName === 'billSignBack'">
               <span class="slable">是否需签回</span>
               <el-select clearable v-model="querySearch.wsSignbackFlag" placeholder="请选择">
                 <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
               </el-select>
             </el-col>
+            <!-- 9.9 UAT原话：所有查询筛选条件移除“账单状态” -->
+            <!-- <el-col :span="8">
+              <span class="slable">账单状态 &nbsp;&nbsp;</span>
+              <el-select clearable v-model="querySearch.wsStatus" placeholder="请选择">
+                <el-option v-for="(v,k) of {'Inactive':'2','Open':'1','Closed':'0'}" :key="v" :label="k" :value="v"></el-option>
+              </el-select>
+            </el-col> -->
+          </el-row>
+          <el-row :gutter="10" class="billRow" v-if="urlName === 'billSignBack'">
             <el-col :span="8" v-show="urlName === 'billSignBack'">
               <span class="slable">是否已签回</span>
               <el-select clearable v-model="querySearch.wsHasSignback" placeholder="请选择">
@@ -136,6 +137,13 @@
       </el-button>
     </div>
     <el-table :header-row-class-name="StableClass" :height="changeClientHight" :data="tableData" border style="width: 100%;text-align:center;margin:0 auto;">  
+      <el-table-column v-if="urlName === 'billEntry'" width="50" align="center">
+        <template slot-scope="scope" v-if="urlName === 'billEntry'">
+          <div style="display: flex;align-items: center;justify-content: center;">
+            <span :class="scope.row.rejectedFlag == '1'?'statePoint stateRed':'statePoint stateGreen'"></span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="流程编号" width="170" align="center">
         <template slot-scope="scope">
           <span :class="{'smallHand':urlName !== 'sortOperation'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
