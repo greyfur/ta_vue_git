@@ -985,6 +985,8 @@
      <el-dialog title="WILLIS" :visible.sync="dialogFormVisibleWillis" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="130px" :model="willis" ref="willis" :rules="willisRules">
         <el-form-item label="currentDate" prop="currentDate"><el-date-picker v-model="willis.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="币制" prop="rmCurrency"><el-select filterable v-model="whole.rmCurrency" placeholder="请选择" @change="zheTypeChange">
+        <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option></el-select></el-form-item>
         <el-form-item label="金额1" prop="orgAmount1"><el-input  placeholder="请输入" v-model="willis.orgAmount1"></el-input></el-form-item>
         <el-form-item label="金额（大写）" prop="chineseAmount"><el-input  placeholder="请输入" v-model="willis.chineseAmount"></el-input></el-form-item>
         <!-- <el-form-item label="orgAmount2" prop="orgAmount2"><el-input  placeholder="请输入" v-model="willis.orgAmount2"></el-input></el-form-item> -->
@@ -1284,6 +1286,7 @@ export default {
         willis:{
           payDate:new Date().getTime(),
           currentDate:new Date().getTime(),
+          rmCurrency:null,
           operator:null,
           telephone:null,
           orgAmount1:null,
@@ -1636,6 +1639,9 @@ export default {
           ],
         },
         willisRules:{
+          rmCurrency:[{
+              required: true, message: '请选择币制', trigger: 'blur' 
+          }],
           payDate: [
             { required: true, message: '请选择日期', trigger: 'blur' }
           ],
@@ -1777,6 +1783,7 @@ export default {
         var detail=res.data.rows.filter(item=>{
           return item.id=this.row.recComId;
         })
+        console.log(detail)
         if(detail.length>0){
           //2 币制
           this.risk.businessAmount=this.listData[4].b;
@@ -1789,6 +1796,9 @@ export default {
           this.whole.rmAmount=this.listData[4].b;
           this.whole.rmCurrency=this.listData[2].b;
           this.willis.operator=this.approvalName;
+          this.willis.rmCurrency=this.listData[2].b;
+          this.willis. orgAmount1=this.listData[4].b;
+          this.willis.compName=detail[0].compName;
         }
       })
   },
@@ -1978,12 +1988,12 @@ export default {
                 console.log(res)
                   if(res.status===200&&res.statusText==='OK'){
                   this.$message.success(res.data.msg);
-                  this.dialogFormVisibleWillis = false;
+                  this.dialogFormVisibleWhole = false;
                   this.$refs[formName].resetFields();
                   this.AnnextList();
                 }else{
                     this.$message.error(res.data.msg);
-                    this.dialogFormVisibleWillis = false;
+                    this.dialogFormVisibleWhole = false;
                     this.$refs[formName].resetFields();
                 }
               })
@@ -2015,7 +2025,7 @@ export default {
                   param8: this.willis.param8,
                   mark1: this.willis.mark1,
                   mark2: this.willis.mark2,
-                  orgAmount1: this.willis.orgAmount1,
+                  orgAmount1:this.willis.rmCurrency+this.willis.orgAmount1,
                   // orgAmount2: this.willis.orgAmount2,
                   // orgAmount3: this.willis.orgAmount3,
                   chineseAmount: this.willis.chineseAmount,
@@ -2028,12 +2038,12 @@ export default {
                   console.log(res)
                      if(res.status===200&&res.statusText==='OK'){
                       this.$message.success(res.data.msg);
-                      this.dialogFormVisibleOversea = false;
+                      this.dialogFormVisibleWillis = false;
                       this.$refs[formName].resetFields();
                       this.AnnextList();
                     }else{
                         this.$message.error(res.data.msg);
-                        this.dialogFormVisibleOversea = false;
+                        this.dialogFormVisibleWillis = false;
                         this.$refs[formName].resetFields();
                     }
                 })
