@@ -610,6 +610,8 @@ export default {
           this.formLabelAlign[k] = null;
         }
         this.cedentModel = null;
+        // this.formLabelAlign.processType = ['收款','付款']; 
+        //9.9解决重置出字
     },
     reportClick(){
       // this.dialogReport=false;
