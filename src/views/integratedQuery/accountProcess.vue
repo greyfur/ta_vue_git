@@ -610,7 +610,7 @@ export default {
           this.formLabelAlign[k] = null;
         }
         this.cedentModel = null;
-        this.formLabelAlign.processType = ['收款','付款'];
+        // this.formLabelAlign.processType = "['付款','收款']";
     },
   reportClick(){
       // this.dialogReport=false;

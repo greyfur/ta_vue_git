@@ -697,7 +697,6 @@ export default {
       for(let k in this.searchList){
           this.searchList[k] = null;
         }
-        this.searchList = null;
     },
     handleClick(tag,row){
       this.chooseRow = Object.assign({},row);
@@ -939,6 +938,11 @@ export default {
           if(this.urlName === "payClose"){  // 9.4 胖虎说要加上hasRecheckFlag
             params['hasRecheckFlag'] = '1';
           }
+          if(this.searchList.cedentModel){
+            let obj = this.cedentList[this.searchList.cedentModel];
+            params['rmSettleCompanyCode'] = obj.codecode;
+            params['rmSettleCompanyName'] = obj.codeName;
+          } 
           this.$http.post('api/pay/teskClaim/list',params).then(res =>{
             if(res.status === 200){
               if(!res.data.rows.length){
