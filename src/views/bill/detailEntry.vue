@@ -902,7 +902,7 @@
             <el-form-item label="Original Policy Period To"><el-date-picker v-model="bigDisaster.plcyEndDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
             <el-form-item label="Claim Cause Of Loss Group">
               <el-select v-model="bigDisaster.causeOfLossGroup" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in [{a:'Accident',b:'ACCIDENT'},{a:'Act of God',b:'ACTOFGOD'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Cause Of Loss">

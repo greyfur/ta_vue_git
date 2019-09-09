@@ -546,7 +546,7 @@ export default {
         });
     },
     mySubmit(){
-      this.$http.post('apiintegeratedQuery/ProcessMessagelist',{
+      this.$http.post('api/integeratedQuery/ProcessMessagelist',{
           processType:['付款','收款'],
           pageNumber:1,
           pageSize:1000,
