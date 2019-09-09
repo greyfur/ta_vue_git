@@ -1,12 +1,8 @@
 <template>
   <div class="settlementGroup">
     <div :class="searchFlag===true?'searchNew':''" >
-      <div class="titleSearch" @click="searchFlag = !searchFlag">
-        <i
-          style="margin-right:8px;"
-          :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"
-        ></i>查询
-      </div>
+      <!--  @click="searchFlag = !searchFlag" <i style="margin-right:8px;":class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i> -->
+      <div class="titleSearch">查询</div>
       <el-collapse-transition>
         <div v-show="searchFlag">
           <el-row :gutter="10" class="billRow" class-name="transition-box">
@@ -569,7 +565,7 @@ export default {
   data() {
     return {
       nameList: {},
-      searchFlag: false,
+      searchFlag: true,
       modal: false,
       changeClientHight:null,
       StableClass:'tableClass',

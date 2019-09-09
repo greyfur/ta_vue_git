@@ -43,8 +43,9 @@
 
           <el-button size="small" :disabled="czState" plain @click="makeWord(1)">高风险地区</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeWord(2)">境外人民币</el-button>
-          <el-button size="small" :disabled="czState" plain @click="makeWord(3)">转账模板</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeWord(4)">全额</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(5)">WILLIS</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(3)">转账模板</el-button>
 
           <el-button size="small" :disabled="czState" plain @click="submite(3,'置废','操作')">置废</el-button>
           <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'悬停':'已悬停'}}</el-button>
@@ -127,7 +128,7 @@
                 <el-button size="mini" @click="mailSend(1,'上传附件')"><i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传</el-button>
               </p>         
             </div>
-            <el-table :data="fileData.slice((currentPage-1)*3,currentPage*3)" border style="width:100%;height:380px;" class="document FFF" :header-row-class-name="FFF">
+            <el-table :data="fileData.slice((currentPage-1)*5,currentPage*5)" border style="width:100%;height:380px;" class="document FFF" :header-row-class-name="FFF">
               <el-table-column label="文件名" width="200" align="center">
                 <template slot-scope="scope">
                   <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
@@ -931,6 +932,8 @@
         <el-form-item label="组织机构代码" prop="orgCode"><el-input  placeholder="请输入" v-model="oversea.orgCode"></el-input></el-form-item>
         <el-form-item label="收款人名称" prop="compName"><el-input  placeholder="请输入" v-model="oversea.compName"></el-input></el-form-item>
         <el-form-item label="收款人国别" prop="country"><el-input  placeholder="请输入" v-model="oversea.country"></el-input></el-form-item>
+        <el-form-item label="币制" prop="rmCurrency"><el-select filterable v-model="oversea.rmCurrency" placeholder="请选择" @change="zheTypeChange">
+        <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option></el-select></el-form-item>
         <el-form-item label="付款金额合计" prop="toltalAmount"><el-input  placeholder="请输入" v-model="oversea.toltalAmount"></el-input></el-form-item>
         <el-form-item label="服务贸易" prop="tradeAmount"><el-input  placeholder="请输入" v-model="oversea.tradeAmount"></el-input></el-form-item>
         <el-form-item label="填报人" prop="operator"><el-input  placeholder="请输入" v-model="oversea.operator"></el-input></el-form-item>
@@ -961,6 +964,8 @@
       <el-form :label-position="labelPosition" label-width="120px" :model="whole" ref="whole" :rules="wholeRules">
         <el-form-item label="付款银行名称" prop="rmAccountbankName"><el-input  placeholder="请输入" v-model="whole.rmAccountbankName"></el-input></el-form-item>
         <el-form-item label="汇款日期" prop="payDate"><el-date-picker v-model="whole.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="币制" prop="rmCurrency"><el-select filterable v-model="whole.rmCurrency" placeholder="请选择" @change="zheTypeChange">
+        <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option></el-select></el-form-item>
         <el-form-item label="汇款币别/金额" prop="rmAmount"><el-input  placeholder="请输入" v-model="whole.rmAmount"></el-input></el-form-item>
         <el-form-item label="收款人" prop="compName"><el-input  placeholder="请输入" v-model="whole.compName"></el-input></el-form-item>
         <el-form-item label="收款人开户银行" prop="bankName"><el-input  placeholder="请输入" v-model="whole.bankName"></el-input></el-form-item>
@@ -972,6 +977,38 @@
         <el-form-item>
           <el-button size="small" @click="fourPopUps(0,'whole')">取消</el-button>
           <el-button size="small" type="primary" plain @click="fourPopUps(4,'whole')" style="padding:0 16px;">确定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+    <!-- WILLIS -->
+     <el-dialog title="WILLIS" :visible.sync="dialogFormVisibleWillis" :close-on-click-modal="modal">
+      <el-form :label-position="labelPosition" label-width="130px" :model="willis" ref="willis" :rules="willisRules">
+        <el-form-item label="currentDate" prop="currentDate"><el-date-picker v-model="willis.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="orgAmount1" prop="orgAmount1"><el-input  placeholder="请输入" v-model="willis.orgAmount1"></el-input></el-form-item>
+        <el-form-item label="chineseAmount" prop="chineseAmount"><el-input  placeholder="请输入" v-model="willis.chineseAmount"></el-input></el-form-item>
+        <el-form-item label="orgAmount2" prop="orgAmount2"><el-input  placeholder="请输入" v-model="willis.orgAmount2"></el-input></el-form-item>
+        <el-form-item label="param1" prop="param1"><el-input  placeholder="请输入" v-model="willis.param1"></el-input></el-form-item>
+        <el-form-item label="param2" prop="param2"><el-input  placeholder="请输入" v-model="willis.param2"></el-input></el-form-item>
+        <el-form-item label="param3" prop="param3"><el-input  placeholder="请输入" v-model="willis.param3"></el-input></el-form-item>
+        <el-form-item label="param4" prop="param4"><el-input  placeholder="请输入" v-model="willis.param4"></el-input></el-form-item>
+        <el-form-item label="bankAddr" prop="bankAddr"><el-input  placeholder="请输入" v-model="willis.bankAddr"></el-input></el-form-item>
+        <el-form-item label="bankInfo" prop="bankInfo"><el-input  placeholder="请输入" v-model="willis.bankInfo"></el-input></el-form-item>
+        <el-form-item label="compName" prop="compName"><el-input  placeholder="请输入" v-model="willis.compName"></el-input></el-form-item>
+        <el-form-item label="compAddr" prop="compAddr"><el-input  placeholder="请输入" v-model="willis.compAddr"></el-input></el-form-item>
+        <el-form-item label="汇款日期" prop="payDate"><el-date-picker v-model="willis.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="mark1" prop="mark1"><el-input  placeholder="请输入" v-model="willis.mark1"></el-input></el-form-item>
+        <el-form-item label="mark2" prop="mark2"><el-input  placeholder="请输入" v-model="willis.mark2"></el-input></el-form-item>
+        <el-form-item label="param5" prop="param5"><el-input  placeholder="请输入" v-model="willis.param5"></el-input></el-form-item>
+        <el-form-item label="param6" prop="param6"><el-input  placeholder="请输入" v-model="willis.param6"></el-input></el-form-item>
+        <el-form-item label="param7" prop="param7"><el-input  placeholder="请输入" v-model="willis.param7"></el-input></el-form-item>
+        <el-form-item label="orgAmount3" prop="orgAmount3"><el-input  placeholder="请输入" v-model="willis.orgAmount3"></el-input></el-form-item>
+        <el-form-item label="param8" prop="param8"><el-input  placeholder="请输入" v-model="willis.param8"></el-input></el-form-item>
+        <el-form-item label="operator" prop="operator"><el-input  placeholder="请输入" v-model="willis.operator"></el-input></el-form-item>
+        <el-form-item label="telephone" prop="telephone"><el-input  placeholder="请输入" v-model="willis.telephone"></el-input></el-form-item>
+        <el-form-item>
+          <el-button size="small" @click="fourPopUps(0,'willis')">取消</el-button>
+          <el-button size="small" type="primary" plain @click="fourPopUps(5,'willis')" style="padding:0 16px;">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -1217,22 +1254,24 @@ export default {
           remittanceNumber:null,
           invoiceNumber:null,
           businessAmount:null,
-          currentDate:null,
+          currentDate:new Date().getTime(),
         },
         oversea:{
-          payDate:null,
+          payDate:new Date().getTime(),
           rmSettleCompanyName:null, 
           orgCode:null,
           compName:null,
           toltalAmount:null,
           tradeAmount:null,
           operator:null,
+          rmCurrency:null,
           telephone:null,
           country:null,
         },
         whole:{
           rmAccountbankName:null,
-          payDate:null,
+          payDate:new Date().getTime(),
+          rmCurrency:null,
           rmAmount:null,
           compName:null,
           bankName:null,
@@ -1241,6 +1280,30 @@ export default {
           operator:null,
           telephone:null,
           currentDate:new Date().getTime(),
+        },
+        willis:{
+          payDate:new Date().getTime(),
+          currentDate:new Date().getTime(),
+          operator:null,
+          telephone:null,
+          orgAmount1:null,
+          orgAmount2:null,
+          orgAmount3:null,
+          chineseAmount:null,
+          param1:null,
+          param2:null,
+          param3:null,
+          param4:null,
+          param5:null,
+          param6:null,
+          param7:null,
+          param8:null,
+          maek1:null,
+          mark2:null,
+          bankAddr:null,
+          bankInfo:null,
+          comeName:null,
+          comeAddr:null,
         },
         downDialogFlag:false,
         strArr:[],
@@ -1340,6 +1403,7 @@ export default {
         dialogFormVisibleWhole:false,
         dialogFormVisibleRisk:false,
         dialogFormVisibleTransfer:false,
+        dialogFormVisibleWillis:false,
         title:'',
         currentPage3: 5,
         currentPage4: 2,
@@ -1517,6 +1581,9 @@ export default {
           compName: [
             { required: true, message: '请输入收款人名称', trigger: 'blur' }
           ],
+         rmCurrency:[{
+            required: true, message: '请选择币制', trigger: 'blur' 
+         }],
           toltalAmount: [
             { required: true, message: '请输入付款金额合计', trigger: 'blur' }
           ],
@@ -1540,6 +1607,9 @@ export default {
           payDate: [
             { required: true, message: '请选择日期', trigger: 'blur' }
           ],
+           rmCurrency:[{
+            required: true, message: '请选择币制', trigger: 'blur' 
+         }],
           rmAmount: [
             { required: true, message: '请输入汇款币别/金额', trigger: 'blur' }
           ],
@@ -1563,6 +1633,68 @@ export default {
           ],
            currentDate: [
             { required: true, message: '请选择日期', trigger: 'blur' }
+          ],
+        },
+        willisRules:{
+          payDate: [
+            { required: true, message: '请选择日期', trigger: 'blur' }
+          ],
+          currentDate: [
+            { required: true, message: '请选择日期', trigger: 'blur' }
+          ],
+          operator: [
+            { required: true, message: '请输入operator', trigger: 'blur' }
+          ],
+          telephone: [
+            { required: true, message: '请输入telephone', trigger: 'blur' }
+          ],
+          param1:[{
+            required: true, message: '请输入param1', trigger: 'blur' 
+         }],
+          param2: [
+            { required: true, message: '请输入param2', trigger: 'blur' }
+          ],
+          param3: [
+            { required: true, message: '请输入param3', trigger: 'blur' }
+          ],
+          param4: [
+            { required: true, message: '请输入param4', trigger: 'blur' }
+          ],
+          param5: [
+            { required: true, message: '请输入param5', trigger: 'blur' }
+          ],
+          param6: [
+            { required: true, message: '请输入param6', trigger: 'blur' }
+          ],
+          param7: [
+            { required: true, message: '请输入param7', trigger: 'blur' }
+          ],
+          param8: [
+            { required: true, message: '请输入param8', trigger: 'blur' }
+          ],
+          orgAmount1:[{
+            required: true, message: '请输入orgAmount1', trigger: 'blur' 
+         }],
+          orgAmount2: [
+            { required: true, message: '请输入orgAmount2', trigger: 'blur' }
+          ],
+          orgAmount3: [
+            { required: true, message: '请输入orgAmount3', trigger: 'blur' }
+          ],
+          chineseAmount: [
+            { required: true, message: '请输入chineseAmount', trigger: 'blur' }
+          ],
+          bankAddr:[{
+            required: true, message: '请输入bankAddr', trigger: 'blur' 
+         }],
+          bankInfo: [
+            { required: true, message: '请输入bankInfo', trigger: 'blur' }
+          ],
+          compName: [
+            { required: true, message: '请输入compName', trigger: 'blur' }
+          ],
+          compAddr: [
+            { required: true, message: '请输入compAddr', trigger: 'blur' }
           ],
         },
         AllBankAccountList:[],
@@ -1639,6 +1771,26 @@ export default {
     this.dataBaseSG();
     this.mailSend(2,'',1);
     console.log(this.row)
+    console.log(this.listData)
+    this.$http.post("api/othersDO/bscBankInfo/list",{})//9.9境外 全额回显
+      .then(res => {
+        var detail=res.data.rows.filter(item=>{
+          return item.id=this.row.recComId;
+        })
+        if(detail.length>0){
+          //2 币制
+          this.risk.businessAmount=this.listData[4].b;
+          this.oversea.compName=detail[0].compName;
+          this.oversea.operator=this.approvalName;
+          this.oversea.toltalAmount=this.listData[4].b;
+          this.oversea.rmCurrency=this.listData[2].b;
+          this.whole.bankName=detail[0].compName;
+          this.whole.operator=this.approvalName;
+          this.whole.rmAmount=this.listData[4].b;
+          this.whole.rmCurrency=this.listData[2].b;
+          this.willis.operator=this.approvalName;
+        }
+      })
   },
   methods: {
     getJson(){
@@ -1681,6 +1833,7 @@ export default {
         break;
         case 2: // 境外人民币
           this.dialogFormVisibleOversea = true;
+          // this.$refs['oversea'].resetFields();
           // this.$http.post("api/------", {processId: this.row.processId})
           // .then(res => {
 
@@ -1701,6 +1854,14 @@ export default {
 
           // })
         break;
+        case 5: // WILLIS
+
+          this.dialogFormVisibleWillis=true;
+          // this.$http.post("api/------", {processId: this.row.processId})
+          // .then(res => {
+
+          // })
+        break;
       }
     },
     fourPopUps(tag,formName){
@@ -1714,6 +1875,9 @@ export default {
             this.dialogFormVisibleWhole = false;
           }else if(formName==='transfer'){
             this.dialogFormVisibleTransfer=false;
+          }
+          else if(formName==='willis'){
+            this.dialogFormVisibleWillis=false;
           }
            this.$refs[formName].resetFields();
           break;
@@ -1733,6 +1897,7 @@ export default {
                   this.$message.success(res.data.msg);
                   this.dialogFormVisibleRisk = false;
                   this.$refs[formName].resetFields();
+                  this.AnnextList();
                 }else{
                     this.$message.error(res.data.msg);
                     this.dialogFormVisibleRisk = false;
@@ -1758,7 +1923,8 @@ export default {
                   rmSettleCompanyName: this.oversea.rmSettleCompanyName,
                   orgCode: this.oversea.orgCode,
                   compName: this.oversea.compName,
-                  toltalAmount: this.oversea.toltalAmount,
+                  toltalAmount: Number(this.oversea.toltalAmount).toFixed(2),
+                  // toltalAmount: this.oversea.rmCurrency+this.oversea.toltalAmount,
                   tradeAmount: this.oversea.tradeAmount,
                   operator: this.oversea.operator,
                   telephone: this.oversea.telephone,
@@ -1770,6 +1936,7 @@ export default {
                       this.$message.success(res.data.msg);
                       this.dialogFormVisibleOversea = false;
                       this.$refs[formName].resetFields();
+                      this.AnnextList();
                     }else{
                         this.$message.error(res.data.msg);
                         this.dialogFormVisibleOversea = false;
@@ -1789,17 +1956,7 @@ export default {
 
           // })
         break;
-        case 4: // 全额999
-          // rmAccountbankName:null,
-          // payDate:null,
-          // rmAmount:null,
-          // compName:null,
-          // bankName:null,
-          // bankAcnt:null,
-          // rmOriSettleCompanyName:'中国再保险（集团）股份有限公司',
-          // operator:null,
-          // telephone:null,
-          // currentDate:new Date().getTime(),
+        case 4: // 全额
           this.$refs[formName].validate((valid) => {
             console.log(valid)
             if (valid) {
@@ -1823,6 +1980,7 @@ export default {
                   this.$message.success(res.data.msg);
                   this.dialogFormVisibleWhole = false;
                   this.$refs[formName].resetFields();
+                  this.AnnextList();
                 }else{
                     this.$message.error(res.data.msg);
                     this.dialogFormVisibleWhole = false;
@@ -1836,7 +1994,80 @@ export default {
           });
           console.log('全额')
         break;
+         case 5: // WILLIS
+             this.$refs[formName].validate((valid) => {
+            console.log(valid)
+            if (valid) {
+                this.$http.post("api/docCreate/createWillisDoc", {
+                  processId: this.row.processId,
+                  actOperator: this.row.curOperator,
+                  payDate: this.willis.payDate,
+                  currentDate: this.willis.currentDate,
+                  operator: this.willis.operator,
+                  telephone: this.willis.telephone,
+                  param1: this.willis.param1,
+                  param2: this.willis.param2,
+                  param3: this.willis.param3,
+                  param4: this.willis.param4,
+                  param5: this.willis.param5,
+                  param6: this.willis.param6,
+                  param7: this.willis.param7,
+                  param8: this.willis.param8,
+                  mark1: this.willis.mark1,
+                  mark2: this.willis.mark2,
+                  orgAmount1: this.willis.orgAmount1,
+                  orgAmount2: this.willis.orgAmount2,
+                  orgAmount3: this.willis.orgAmount3,
+                  chineseAmount: this.willis.chineseAmount,
+                  bankAddr: this.willis.bankAddr,
+                  bankInfo: this.willis.bankInfo,
+                  compName: this.willis.compName,
+                  compAddr: this.willis.compAddr,
+                  })
+                .then(res => {
+                  console.log(res)
+                     if(res.status===200&&res.statusText==='OK'){
+                      this.$message.success(res.data.msg);
+                      this.dialogFormVisibleOversea = false;
+                      this.$refs[formName].resetFields();
+                      this.AnnextList();
+                    }else{
+                        this.$message.error(res.data.msg);
+                        this.dialogFormVisibleOversea = false;
+                        this.$refs[formName].resetFields();
+                    }
+                })
+            } else {
+              this.$message.error('参数错误');
+              return false;
+            }
+          });
+          console.log('WILLIS')
+        break;
       }
+    },
+    AnnextList(){
+        this.$http.post('api/worksheet/sortOperation/listDocument'
+        ,{actOperator:this.$store.state.userName,
+        processId:this.row.processId,
+        pageNumber:1,
+        pageSize:100, 
+        }).then(res =>{
+            if(res.data.rows && res.data.rows.length){
+            let arr5 = res.data.rows;
+            arr5.forEach(el=>{
+              if(el.docName){
+                let suffix = el.docName.split('.');
+                el['suffix'] = suffix[suffix.length-1];
+                el['suffixFlag'] = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT','XLS','xls','ppt','PPT','pptx','PPTX'].some(el=>{ return el==suffix[suffix.length-1]; })
+              }
+            })
+            this.fileData = arr5;
+            let arr = this.fileData.filter(el=>{
+              return el.docType == 'S0';
+            })
+          } else{ this.$message.error('请先生成审批文档'); }
+        })
     },
     moveDialog(){//8.29 移动dialog
     if(this.downDialogFlag===true){
@@ -3167,15 +3398,15 @@ export default {
           }
           if(this.makeDocListEctype.shoukuanMode != null){
             this.makeDocList = Object.assign({},this.bscBankList[this.makeDocListEctype.shoukuanMode],this.makeDocList);
-            console.log(this.makeDocList.id)
-            this.$http.post("api/othersDO/bscBankInfo/list")
-          .then(res => {
-           var detail=res.data.rows.filter(item=>{
-            return  item.id==this.makeDocList.id
-            })
-            console.log(detail)
-            this.oversea.compName=detail[0].compName;
-          })
+            //   console.log(this.makeDocList.id)  //9.7回显实验
+            //   this.$http.post("api/othersDO/bscBankInfo/list")
+            // .then(res => {
+            //  var detail=res.data.rows.filter(item=>{
+            //   return  item.id==this.makeDocList.id
+            //   })
+            //   console.log(detail)
+            //   this.oversea.compName=detail[0].compName;
+            // })
             //777
           }
           if(this.makeDocListEctype.zheNum){
