@@ -81,8 +81,8 @@
             <el-table
               v-show="searchFlag2"
               border
-              height="197px"
-              max-height="197px"
+              height="240px"
+              max-height="240px"
               :data="tableData.slice((currentPage-1)*3,currentPage*3)"
               style="width: 100%;margin-top:10px;"
               class="document">
@@ -132,7 +132,7 @@
             <el-pagination
               background
               layout="prev, pager, next"
-              style="padding:4px 0;"
+              style="padding:4px 0;margin-top:10px;"
               :page-size="3"
               :current-page="currentPage"
               @current-change="handleCurrentChange"
@@ -2480,7 +2480,7 @@ export default {
 .right>>>.browseDoc {
   background-color: #ecf5ff;
   width: 100%;
-  height: 580px;
+  height: 600px;
   /* 9.4 文档高度*/
   border: 1px solid #d4d4d4;
   border-top: none;
@@ -2507,7 +2507,7 @@ export default {
 }
 .right {
   width: 100%;
-  height: 624px;
+  height: 680px;
   /* padding: 20px; */
   /* background-color: #eeeeee; */
   background: #fff;
