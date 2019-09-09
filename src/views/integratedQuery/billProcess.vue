@@ -908,7 +908,7 @@ export default {
   padding-right: 30px;
 }
 .btn {
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 .el-pagination{
   text-align: right;

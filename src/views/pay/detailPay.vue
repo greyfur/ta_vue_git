@@ -1978,12 +1978,12 @@ export default {
                 console.log(res)
                   if(res.status===200&&res.statusText==='OK'){
                   this.$message.success(res.data.msg);
-                  this.dialogFormVisibleWhole = false;
+                  this.dialogFormVisibleWillis = false;
                   this.$refs[formName].resetFields();
                   this.AnnextList();
                 }else{
                     this.$message.error(res.data.msg);
-                    this.dialogFormVisibleWhole = false;
+                    this.dialogFormVisibleWillis = false;
                     this.$refs[formName].resetFields();
                 }
               })
