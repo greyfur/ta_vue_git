@@ -304,7 +304,7 @@
       </div>
     </div> 
     <!-- 弹窗 -->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" :width="title==='流程提交'?'432px':'782px'">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" :width="title==='流程提交'?'432px':'1160px'">
       <el-form label-position="right" label-width="120px" :model="billSearch" :rules="rules" ref="billSearch" class="SwitchingMode">
         <el-form-item label="流程编号" v-show="title==='查询'">
           <el-input v-model.trim="billSearch.processId" placeholder="请输入流程编号"></el-input>
@@ -464,7 +464,7 @@
           <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">
         </el-collapse-item>
       </el-collapse>
-      <el-table :data="fileData" height="300" style="width: 100%;" :header-row-class-name="StableClass" class="document" border v-show="title=='编辑'">
+      <el-table :data="fileData" style="width: 100%;margin-bottom:42px;" :header-row-class-name="StableClass" class="document" border v-show="title=='编辑'">
         <el-table-column label="文件名" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">

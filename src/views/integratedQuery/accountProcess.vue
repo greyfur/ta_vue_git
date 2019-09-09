@@ -610,7 +610,6 @@ export default {
           this.formLabelAlign[k] = null;
         }
         this.cedentModel = null;
-        // this.formLabelAlign.processType = "['付款','收款']";
     },
   reportClick(){
       // this.dialogReport=false;
@@ -988,7 +987,7 @@ export default {
   padding-right: 30px;
 }
 .btn {
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 .el-pagination{
   text-align: right;
