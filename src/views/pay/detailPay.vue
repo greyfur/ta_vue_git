@@ -3395,7 +3395,7 @@ export default {
         this.dialogFormVisible2 = true;
       } else {
         if (tag == 2) {
-         if(this.makeDocListEctype.zheNum!=null&&this.makeDocListEctype.yuanType.length>0){
+         if(this.makeDocListEctype.zheNum!==null&&this.makeDocListEctype.yuanType.length>0){
             // 是操作页面,2为点击确定---------------------生成审批文档提交hyd
              if((this.makeDocListEctype.cedentModel[0]==undefined||(this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null))||(this.makeDocListEctype.cedentModel[1]==undefined||(this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null))||(this.makeDocListEctype.cedentModel[2]==undefined||(this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==undefined))){
               

@@ -280,215 +280,215 @@ export default {
       goDetailName:'',
     },
   data() {
-      return {
-        nameList:{},
-        searchFlag:true,
-        modal:false,
-        dialogReport:false,
-        changeClientHight:null,
-        reportArr:{
-          reportName:null,
+    return {
+      nameList:{},
+      searchFlag:true,
+      modal:false,
+      dialogReport:false,
+      changeClientHight:null,
+      reportArr:{
+        reportName:null,
+      },
+      ReportFormArr:['结算流程','结算流程1','结算流程2','结算流程3'],
+      tableData:[],
+      ZDoptions:[],
+      businessOriginList:[],
+      baseCompanyList:[],
+      rmCurrencyList:[],
+      currentPage3: 5,
+      hide:false,
+      labelPosition:'right',
+      formLabelAlign:{
+        createdBy:null,
+        createdAt:null,
+        processType:null,
+        rmSettleCompanyCode:null,
+        rmSettleCompanyName:null,
+        rmCurrency:null,
+        rmReceiptDate:null,
+        businessOrigin:null,
+        baseCompany:null,
+        rmAmount:null,
+        modifyBy:null,
+        rmWrittenOffNum:null,
+        rmOriSettleCompanyName:null,
+        rmOriCurrency:null,
+        rmOriAmount:null,
+        rmChargesCurrency:null,
+        rmChargesAmount:null,
+        rmSettleUser:null,
+        payerBankNumber:null,
+        payerBankName:null,
+        payerAccountNumber:null,
+        payerName:null,
+        processStatus:null,
+        wsType:null
+      },
+      pendingFlag:false,
+      TJRoptions:[],
+      TJRoptionsA:[],
+      track:[],
+      assignee:'',
+      mustData:{
+        actOperator:'',
+        processStatus:'',
+        pageNumber:1,  // 页数
+        pageSize:20,  //页面一次要展示的条数
+        total:0, //总条数
+        processType:['付款','收款']
+      },
+      dialogFormVisible: false,
+      dialogFormVisible2: false,
+      dialogFormVisible3: false,
+      dialogFormVisibleA: false,
+      title:'', 
+      tag:'',
+      fileList:[],
+      file:[],
+      fileData:[],
+      listData:[
+        {
+          a:'流程编号',
+          b:'',
+          c:'processId'
         },
-        ReportFormArr:['结算流程','结算流程1','结算流程2','结算流程3'],
-        tableData:[],
-        ZDoptions:[],
-        businessOriginList:[],
-        baseCompanyList:[],
-        rmCurrencyList:[],
-        currentPage3: 5,
-        hide:false,
-        labelPosition:'right',
-        formLabelAlign:{
-          createdBy:null,
-          createdAt:null,
-          processType:null,
-          rmSettleCompanyCode:null,
-          rmSettleCompanyName:null,
-          rmCurrency:null,
-          rmReceiptDate:null,
-          businessOrigin:null,
-          baseCompany:null,
-          rmAmount:null,
-          modifyBy:null,
-          rmWrittenOffNum:null,
-          rmOriSettleCompanyName:null,
-          rmOriCurrency:null,
-          rmOriAmount:null,
-          rmChargesCurrency:null,
-          rmChargesAmount:null,
-          rmSettleUser:null,
-          payerBankNumber:null,
-          payerBankName:null,
-          payerAccountNumber:null,
-          payerName:null,
-          processStatus:null,
-          wsType:null
+        {
+          a:'结付公司',
+          b:'',
+          c:'rmSettleCompanyCode',
         },
-        pendingFlag:false,
-        TJRoptions:[],
-        TJRoptionsA:[],
-        track:[],
-        assignee:'',
-        mustData:{
-          actOperator:'',
-          processStatus:'',
-          pageNumber:1,  // 页数
-          pageSize:20,  //页面一次要展示的条数
-          total:0, //总条数
-          processType:['付款','收款']
+        {
+          a:'汇款人名称',
+          b:'',
+          c:'payerName',
         },
-        dialogFormVisible: false,
-        dialogFormVisible2: false,
-        dialogFormVisible3: false,
-        dialogFormVisibleA: false,
-        title:'', 
-        tag:'',
-        fileList:[],
-        file:[],
-        fileData:[],
-        listData:[
-          {
-            a:'流程编号',
-            b:'',
-            c:'processId'
-          },
-          {
-            a:'结付公司',
-            b:'',
-            c:'rmSettleCompanyCode',
-          },
-          {
-            a:'汇款人名称',
-            b:'',
-            c:'payerName',
-          },
-          {
-            a:'币制',
-            b:'',
-            c:'rmCurrency',
-          },
-          {
-            a:'到账日期',
-            b:'',
-            c:'rmReceiptDate',
-          },
-          {
-            a:'Business Origin',
-            b:'',
-            c:'businessOrigin'
-          },
-          {
-            a:'汇款金额',
-            b:'',
-            c:'rmAmount',
-          },
-          {
-            a:'Base Company',
-            b:'',
-            c:'baseCompany',
-          },
-          {
-            a:'任务来源',
-            b:'',
-            c:'modifiedBy'
-          },
-          {
-            a:'我司销账编号',
-            b:'',
-            c:'rmWrittenOffNum',
-          },
+        {
+          a:'币制',
+          b:'',
+          c:'rmCurrency',
+        },
+        {
+          a:'到账日期',
+          b:'',
+          c:'rmReceiptDate',
+        },
+        {
+          a:'Business Origin',
+          b:'',
+          c:'businessOrigin'
+        },
+        {
+          a:'汇款金额',
+          b:'',
+          c:'rmAmount',
+        },
+        {
+          a:'Base Company',
+          b:'',
+          c:'baseCompany',
+        },
+        {
+          a:'任务来源',
+          b:'',
+          c:'modifiedBy'
+        },
+        {
+          a:'我司销账编号',
+          b:'',
+          c:'rmWrittenOffNum',
+        },
 
-          {
-            a:'原收款公司名称',
-            b:'',
-            c:'rmOriSettleCompanyName',
-          },
-          {
-            a:'原收款币制',
-            b:'',
-            c:'rmOriCurrency',
-          },
-          {
-            a:'原收款金额',
-            b:'',
-            c:'rmOriAmount',
-          },
-          {
-            a:'手续费币制',
-            b:'',
-            c:'rmChargesCurrency',
-          },
-          {
-            a:'手续费金额',
-            b:'',
-            c:'rmChargesAmount',
-          },
-          {
-            a:'付款人开户行号',
-            b:'',
-            c:'payerBankNumber',
-          },
-          {
-            a:'结算人员',
-            b:'',
-            c:'rmSettleUser',
-          },
-          {
-            a:'付款人开户行名',
-            b:'',
-            c:'payerBankName',
-          },
-          {
-            a:'付款人账号',
-            b:'',
-            c:'payerAccountNumber',
-          },
-          {
-            a:'付款人名称',
-            b:'',
-            c:'payerName',
-          },
-          {
-            a:'创建日期',
-            b:'',
-            c:'createdAt',
-          },
-          {
-            a:'备注',
-            b:'',
-            c:'remark',
-          },
+        {
+          a:'原收款公司名称',
+          b:'',
+          c:'rmOriSettleCompanyName',
+        },
+        {
+          a:'原收款币制',
+          b:'',
+          c:'rmOriCurrency',
+        },
+        {
+          a:'原收款金额',
+          b:'',
+          c:'rmOriAmount',
+        },
+        {
+          a:'手续费币制',
+          b:'',
+          c:'rmChargesCurrency',
+        },
+        {
+          a:'手续费金额',
+          b:'',
+          c:'rmChargesAmount',
+        },
+        {
+          a:'付款人开户行号',
+          b:'',
+          c:'payerBankNumber',
+        },
+        {
+          a:'结算人员',
+          b:'',
+          c:'rmSettleUser',
+        },
+        {
+          a:'付款人开户行名',
+          b:'',
+          c:'payerBankName',
+        },
+        {
+          a:'付款人账号',
+          b:'',
+          c:'payerAccountNumber',
+        },
+        {
+          a:'付款人名称',
+          b:'',
+          c:'payerName',
+        },
+        {
+          a:'创建日期',
+          b:'',
+          c:'createdAt',
+        },
+        {
+          a:'备注',
+          b:'',
+          c:'remark',
+        },
+      ],
+      ZJObj:{
+        total:50,
+        pageNumber:1,  // 页数
+        pageSize:10,  //页面一次要展示的条数
+      },
+      chooseRow:{},
+      cedentModel:null,
+      cedentList:[],
+      picture:'',
+      singlePId:'',
+      StableClass:'tableClass',
+      rules:{
+        baseCompany: [
+          { required: true, message: '请选择Base Company', trigger: 'blur' }
         ],
-        ZJObj:{
-          total:50,
-          pageNumber:1,  // 页数
-          pageSize:10,  //页面一次要展示的条数
-        },
-        chooseRow:{},
-        cedentModel:null,
-        cedentList:[],
-        picture:'',
-        singlePId:'',
-        StableClass:'tableClass',
-        rules:{
-          baseCompany: [
-            { required: true, message: '请选择Base Company', trigger: 'blur' }
-          ],
-          businessOrigin: [
-            { required: true, message: '请选择Business Origin', trigger: 'blur' }
-          ],
-        },
-        email:{
-          contactName:null,
-          emailAddr:null,
-          emailContent:null,
-          documentList:null,
-        },
-        // baseCompanyrules:{P:'产再',G:'集团'},
-        dialogFlag:false,
-        processStatusList:[],
-      };
-    },
+        businessOrigin: [
+          { required: true, message: '请选择Business Origin', trigger: 'blur' }
+        ],
+      },
+      email:{
+        contactName:null,
+        emailAddr:null,
+        emailContent:null,
+        documentList:null,
+      },
+      // baseCompanyrules:{P:'产再',G:'集团'},
+      dialogFlag:false,
+      processStatusList:[],
+    };
+  },
   created(){
     this.mustData.processStatus = this.processStatusCom;
     if(this.urlName === 'payOperation'){
@@ -613,7 +613,7 @@ export default {
         // this.formLabelAlign.processType = ['收款','付款']; 
         //9.9解决重置出字
     },
-  reportClick(){
+    reportClick(){
       // this.dialogReport=false;
       // if(this.reportArr.reportName===null){
       //   this.$message.error('报表名称为必填项')

@@ -1028,11 +1028,13 @@ export default {
       });
     },
     confirm(formName) {
-      if (this.billSearch.cedentModel != null && this.billSearch.cedentModel != '') {
+      if (this.billSearch.cedentModel !== null && this.billSearch.cedentModel !== '') {
+        console.log(this.billSearch.cedentModel,'this.billSearch.cedentModel-------赋值');
         let obj = this.cedentList[this.billSearch.cedentModel];
         this.billSearch.wsCedentCode = obj.codecode;
         this.billSearch.wsCedentName = obj.codeName;
       } else{
+        console.log(this.billSearch.cedentModel,'this.billSearch.cedentModel-------无值');
         this.billSearch.wsCedentCode = '';
         this.billSearch.wsCedentName = '';
       }

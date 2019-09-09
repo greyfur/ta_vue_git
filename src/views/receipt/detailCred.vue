@@ -1871,7 +1871,7 @@ export default {
           this.WritebackProcess();
           this.SgData = res.data.data.worksheetsgDOlist;
           let arr5 = res.data.data.worksheetsgDOlist;
-          if(arr5!=null && arr5.length){
+          if(arr5!==null && arr5.length){
             arr5.forEach(el=>{
               if(el.docName){
                 let suffix = el.docName.split('.');
