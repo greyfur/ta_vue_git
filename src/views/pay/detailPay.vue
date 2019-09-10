@@ -148,9 +148,10 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" align="center">
+              <el-table-column label="操作" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview' || $route.query.tag=='payment'" align="center">
                 <template slot-scope="scope">
                   <span class="blueColor" v-show="$route.query.tag=='payOperation' || $route.query.tag =='approvalDone' || $route.query.tag=='payReview'" @click.stop="detailRemove(scope.row)">删除</span>
+                  <span class="blueColor" @click.stop="downLoad(scope.row)" v-show="$route.query.tag=='payment'">下载</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -3117,6 +3118,27 @@ export default {
           this.$message.error('请输入数字，支持到小数点后两位');
         }
       }
+    },
+    downLoad(row){
+      this.$http.post("api/anyShare/fileOperation/downloadDocument",Object.assign({}, row, { processId: this.row.processId }),{ responseType: "blob" })
+          .then(res => {
+            if (res.status === 200) {
+              // this.path = res.data;
+              this.path = this.getObjectURL(res.data);
+              if (res.data) {
+                var a = document.createElement("a");
+                if (typeof a.download === "undefined") {
+                  window.location = this.path;
+                } else {
+                  a.href = this.path;
+                  a.download = row.docName;
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+                }
+              } 
+            }
+          });
     },
     detailRemove(row) {
       this.$confirm('是否删除？', '提示', {
