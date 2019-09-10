@@ -95,12 +95,11 @@
       </el-row>
        <el-row :gutter="10" class="billRow" class-name="transition-box">
         <el-col :span="8">
-          <span class="slable">复核人 &nbsp;&nbsp;</span>
+          <span class="slable">复核人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
           <el-input placeholder="请输入复核人" v-model.trim="billSearch.closedBy"></el-input>
         </el-col>
       </el-row>
       <el-row><el-col :span="24">
-        <el-button type="primary" plain @click="reportClick()" class="borderBtn">导出报表</el-button>
         <el-button type="primary" plain @click="reset" class="borderBtn"><i class="iconfont iconGroup39" ></i>重置</el-button>
         <el-button type="primary" plain @click="handleClick(1)"><i class="iconfont iconGroup42"></i>查询</el-button>
       </el-col></el-row>
@@ -110,6 +109,7 @@
     <div class="btn">
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91" style="font-size:12px;"></i>手工创建</el-button>
       <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新</el-button>
+      <el-button type="primary" plain @click="reportClick()" class="borderBtn">导出报表</el-button>
       <!-- <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button> -->
     </div> 
     <el-table :header-row-class-name="StableClass" :data="tableData" border style="width: 100%"  :height="changeClientHight">

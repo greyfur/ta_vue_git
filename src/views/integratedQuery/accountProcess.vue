@@ -55,7 +55,6 @@
         </el-row>
         <el-row :gutter="10" class="billRow">
           <el-col :span="24">
-            <el-button type="primary" plain @click="reportClick()" class="borderBtn">导出报表</el-button>
             <el-button type="primary" plain @click="mySubmit" class="borderBtn"><i class="iconfont iconGroup42"></i>我提交的</el-button>
             <el-button type="primary" plain @click="reset" class="borderBtn"><i class="iconfont iconGroup39"></i>重置</el-button>
             <el-button type="primary" plain @click="handleClick(4)"><i class="iconfont iconGroup42"></i>查询</el-button>
@@ -67,6 +66,7 @@
     <div class="btn">
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
       <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新</el-button>
+      <el-button type="primary" plain @click="reportClick()" class="borderBtn">导出报表</el-button>
       <!-- <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button> -->
     </div>
     <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">

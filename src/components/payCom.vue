@@ -237,8 +237,8 @@
           <img :src="picture" style="width:100%" @click="dialogFormVisibleA=true">
         </el-collapse-item>
       </el-collapse>
-      <el-table :data="track" border style="width: 100%;height:auto;" v-show="title==='踪迹'" :header-row-class-name="StableClass">
-        <el-table-column prop="processId" label="流程编号" width="150" align="center"></el-table-column>
+      <el-table :data="track" border style="width: 100%;" v-show="title==='踪迹'" :header-row-class-name="StableClass">
+        <el-table-column prop="processId" label="流程编号" width="140" align="center"></el-table-column>
         <el-table-column prop="actName" label="操作名称" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark"  :content="scope.row.actName" placement="top-start">

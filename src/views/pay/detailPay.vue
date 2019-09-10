@@ -37,7 +37,6 @@
           <el-button size="small" :disabled="czState" plain @click="makeWord(1)">高风险地区</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeWord(2)">境外人民币</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeWord(4)">全额</el-button>
-          <el-button size="small" :disabled="czState" plain @click="makeWord(5)">WILLIS</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeWord(3)">转账模板</el-button>
         </div>
         <!-- 操作 -->
@@ -1875,12 +1874,13 @@ export default {
           // })
         break;
         case 3: // 转账模板
-        this.dialogFormVisibleTransfer=true;
-        this.EchoDisplay();
-          // this.$http.post("api/------", {processId: this.row.processId})
-          // .then(res => {
 
-          // })
+        this.dialogFormVisibleWillis=true;
+        this.EchoDisplay();
+        // this.$http.post("api/------", {processId: this.row.processId})
+        // .then(res => {
+
+        // })
         break;
         case 4: // 全额
 
@@ -1891,15 +1891,7 @@ export default {
 
           // })
         break;
-        case 5: // WILLIS
-
-          this.dialogFormVisibleWillis=true;
-          this.EchoDisplay();
-          // this.$http.post("api/------", {processId: this.row.processId})
-          // .then(res => {
-
-          // })
-        break;
+      
       }
     },
     fourPopUps(tag,formName){
@@ -1992,52 +1984,7 @@ export default {
           });
           console.log('境外人民币确定')
         break;
-        case 3: // 转账模板
-          // this.$http.post("api//docCreate/createWillisDoc", {processId: this.row.processId})
-          // .then(res => {
-
-          // })
-        break;
-        case 4: // 全额
-          this.$refs[formName].validate((valid) => {
-            console.log(valid)
-            if (valid) {
-              this.$http.post("api/docCreate/createTotalAmountDoc", {
-                processId: this.row.processId,
-                actOperator: this.row.curOperator , 
-                rmAccountbankName: this.whole.rmAccountbankName,
-                payDate: this.whole.payDate,
-                rmAmount:this.whole.rmCurrency+Number(this.whole.rmAmount).toFixed(2),
-                compName: this.whole.compName,
-                bankName: this.whole.bankName,
-                bankAcnt: this.whole.bankAcnt,
-                rmOriSettleCompanyName: this.whole.rmOriSettleCompanyName,
-                operator: this.whole.operator,
-                telephone: this.whole.telephone,
-                currentDate: this.whole.currentDate,
-               })
-              .then(res => {
-                  if(res.status===200&&res.statusText==='OK'){
-                    if(res.data.code===0){
-                        this.$message.success(res.data.msg);
-                        this.dialogFormVisibleWhole = false;
-                        this.$refs[formName].resetFields();
-                        this.AnnextList();
-                    }else{
-                    this.$message.error(res.data.msg);
-                    this.dialogFormVisibleWhole = false;
-                    this.$refs[formName].resetFields();
-                  }
-                }
-              })
-            } else {
-              this.$message.error('参数错误');
-              return false;
-            }
-          });
-          console.log('全额')
-        break;
-         case 5: // WILLIS
+        case 3: // WILLIS
              this.$refs[formName].validate((valid) => {
             console.log(valid)
             if (valid) {
@@ -2089,6 +2036,46 @@ export default {
           });
           console.log('WILLIS')
         break;
+        case 4: // 全额
+          this.$refs[formName].validate((valid) => {
+            console.log(valid)
+            if (valid) {
+              this.$http.post("api/docCreate/createTotalAmountDoc", {
+                processId: this.row.processId,
+                actOperator: this.row.curOperator , 
+                rmAccountbankName: this.whole.rmAccountbankName,
+                payDate: this.whole.payDate,
+                rmAmount:this.whole.rmCurrency+Number(this.whole.rmAmount).toFixed(2),
+                compName: this.whole.compName,
+                bankName: this.whole.bankName,
+                bankAcnt: this.whole.bankAcnt,
+                rmOriSettleCompanyName: this.whole.rmOriSettleCompanyName,
+                operator: this.whole.operator,
+                telephone: this.whole.telephone,
+                currentDate: this.whole.currentDate,
+               })
+              .then(res => {
+                  if(res.status===200&&res.statusText==='OK'){
+                    if(res.data.code===0){
+                        this.$message.success(res.data.msg);
+                        this.dialogFormVisibleWhole = false;
+                        this.$refs[formName].resetFields();
+                        this.AnnextList();
+                    }else{
+                    this.$message.error(res.data.msg);
+                    this.dialogFormVisibleWhole = false;
+                    this.$refs[formName].resetFields();
+                  }
+                }
+              })
+            } else {
+              this.$message.error('参数错误');
+              return false;
+            }
+          });
+          console.log('全额')
+        break;
+        
       }
     },
     AnnextList(){
