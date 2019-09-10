@@ -985,6 +985,8 @@
      <el-dialog title="WILLIS" :visible.sync="dialogFormVisibleWillis" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="130px" :model="willis" ref="willis" :rules="willisRules">
         <el-form-item label="currentDate" prop="currentDate"><el-date-picker v-model="willis.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="币制" prop="rmCurrency"><el-select filterable v-model="whole.rmCurrency" placeholder="请选择" @change="zheTypeChange">
+        <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option></el-select></el-form-item>
         <el-form-item label="金额1" prop="orgAmount1"><el-input  placeholder="请输入" v-model="willis.orgAmount1"></el-input></el-form-item>
         <el-form-item label="金额（大写）" prop="chineseAmount"><el-input  placeholder="请输入" v-model="willis.chineseAmount"></el-input></el-form-item>
         <!-- <el-form-item label="orgAmount2" prop="orgAmount2"><el-input  placeholder="请输入" v-model="willis.orgAmount2"></el-input></el-form-item> -->
@@ -1284,6 +1286,7 @@ export default {
         willis:{
           payDate:new Date().getTime(),
           currentDate:new Date().getTime(),
+          rmCurrency:null,
           operator:null,
           telephone:null,
           orgAmount1:null,
@@ -1636,6 +1639,9 @@ export default {
           ],
         },
         willisRules:{
+          rmCurrency:[{
+              required: true, message: '请选择币制', trigger: 'blur' 
+          }],
           payDate: [
             { required: true, message: '请选择日期', trigger: 'blur' }
           ],
@@ -1772,25 +1778,7 @@ export default {
     this.mailSend(2,'',1);
     console.log(this.row)
     console.log(this.listData)
-    this.$http.post("api/othersDO/bscBankInfo/list",{})//9.9境外 全额回显
-      .then(res => {
-        var detail=res.data.rows.filter(item=>{
-          return item.id=this.row.recComId;
-        })
-        if(detail.length>0){
-          //2 币制
-          this.risk.businessAmount=this.listData[4].b;
-          this.oversea.compName=detail[0].compName;
-          this.oversea.operator=this.approvalName;
-          this.oversea.toltalAmount=this.listData[4].b;
-          this.oversea.rmCurrency=this.listData[2].b;
-          this.whole.bankName=detail[0].compName;
-          this.whole.operator=this.approvalName;
-          this.whole.rmAmount=this.listData[4].b;
-          this.whole.rmCurrency=this.listData[2].b;
-          this.willis.operator=this.approvalName;
-        }
-      })
+    this.EchoDisplay(); //回显
   },
   methods: {
     getJson(){
@@ -1822,10 +1810,38 @@ export default {
     upDialog(){
       this.downDialogFlag=false;
     },
+    EchoDisplay(){
+        this.$http.post("api/othersDO/bscBankInfo/list",{})//9.9境外 全额初始化回显
+        .then(res => {
+          console.log(this.row.recComId)
+          var detail=res.data.rows.filter(item=>{
+            console.log(item)
+            return item.id==this.row.recComId;
+          })
+          console.log(detail)
+          if(detail.length>0){
+            //2 币制
+            this.risk.businessAmount=this.listData[4].b;
+            this.oversea.compName=detail[0].compName;
+            this.oversea.operator=this.approvalName;
+            this.oversea.toltalAmount=this.listData[4].b;
+            this.oversea.rmCurrency=this.listData[2].b;
+            this.whole.bankName=detail[0].compName;
+            this.whole.operator=this.approvalName;
+            this.whole.rmAmount=this.listData[4].b;
+            this.whole.rmCurrency=this.listData[2].b;
+            this.willis.operator=this.approvalName;
+            this.willis.rmCurrency=this.listData[2].b;
+            this.willis. orgAmount1=this.listData[4].b;
+            this.willis.compName=detail[0].compName;
+          }
+        })
+    },
     makeWord(tag){
       switch(tag){    
         case 1: // 高风险地区
           this.dialogFormVisibleRisk = true;
+          this.EchoDisplay();
           // this.$http.post("api/------", {processId: this.row.processId})
           // .then(res => {
 
@@ -1833,6 +1849,7 @@ export default {
         break;
         case 2: // 境外人民币
           this.dialogFormVisibleOversea = true;
+          this.EchoDisplay();
           // this.$refs['oversea'].resetFields();
           // this.$http.post("api/------", {processId: this.row.processId})
           // .then(res => {
@@ -1841,6 +1858,7 @@ export default {
         break;
         case 3: // 转账模板
         this.dialogFormVisibleTransfer=true;
+        this.EchoDisplay();
           // this.$http.post("api/------", {processId: this.row.processId})
           // .then(res => {
 
@@ -1849,6 +1867,7 @@ export default {
         case 4: // 全额
 
           this.dialogFormVisibleWhole=true;
+          this.EchoDisplay();
           // this.$http.post("api/------", {processId: this.row.processId})
           // .then(res => {
 
@@ -1857,6 +1876,7 @@ export default {
         case 5: // WILLIS
 
           this.dialogFormVisibleWillis=true;
+          this.EchoDisplay();
           // this.$http.post("api/------", {processId: this.row.processId})
           // .then(res => {
 
@@ -1894,15 +1914,17 @@ export default {
                })
               .then(res => {
                 if(res.status===200&&res.statusText==='OK'){
-                  this.$message.success(res.data.msg);
-                  this.dialogFormVisibleRisk = false;
-                  this.$refs[formName].resetFields();
-                  this.AnnextList();
-                }else{
-                    this.$message.error(res.data.msg);
-                    this.dialogFormVisibleRisk = false;
-                    this.$refs[formName].resetFields();
-                }
+                    if(res.data.code===0){
+                        this.$message.success(res.data.msg);
+                        this.dialogFormVisibleRisk = false;
+                        this.$refs[formName].resetFields();
+                        this.AnnextList();
+                    }else{
+                      this.$message.error(res.data.msg);
+                      this.dialogFormVisibleRisk = false;
+                      this.$refs[formName].resetFields();
+                    }
+                  }
               })
             } else {
               this.$message.error('参数错误');
@@ -1923,25 +1945,27 @@ export default {
                   rmSettleCompanyName: this.oversea.rmSettleCompanyName,
                   orgCode: this.oversea.orgCode,
                   compName: this.oversea.compName,
-                  toltalAmount: Number(this.oversea.toltalAmount).toFixed(2),
+                  totalAmount: Number(this.oversea.toltalAmount).toFixed(2),
                   // toltalAmount: this.oversea.rmCurrency+this.oversea.toltalAmount,
-                  tradeAmount: this.oversea.tradeAmount,
+                  tradeAmount: Number(this.oversea.tradeAmount).toFixed(2),
                   operator: this.oversea.operator,
                   telephone: this.oversea.telephone,
                   country: this.oversea.country,
                   })
                 .then(res => {
                   console.log(res)
-                     if(res.status===200&&res.statusText==='OK'){
-                      this.$message.success(res.data.msg);
-                      this.dialogFormVisibleOversea = false;
-                      this.$refs[formName].resetFields();
-                      this.AnnextList();
-                    }else{
-                        this.$message.error(res.data.msg);
+                  if(res.status===200&&res.statusText==='OK'){
+                    if(res.data.code===0){
+                        this.$message.success(res.data.msg);
                         this.dialogFormVisibleOversea = false;
                         this.$refs[formName].resetFields();
+                        this.AnnextList();
+                    }else{
+                      this.$message.error(res.data.msg);
+                      this.dialogFormVisibleOversea = false;
+                      this.$refs[formName].resetFields();
                     }
+                  }
                 })
             } else {
               this.$message.error('参数错误');
@@ -1965,7 +1989,7 @@ export default {
                 actOperator: this.row.curOperator , 
                 rmAccountbankName: this.whole.rmAccountbankName,
                 payDate: this.whole.payDate,
-                rmAmount: this.whole.rmAmount,
+                rmAmount:this.whole.rmCurrency+Number(this.whole.rmAmount).toFixed(2),
                 compName: this.whole.compName,
                 bankName: this.whole.bankName,
                 bankAcnt: this.whole.bankAcnt,
@@ -1975,16 +1999,17 @@ export default {
                 currentDate: this.whole.currentDate,
                })
               .then(res => {
-                console.log(res)
                   if(res.status===200&&res.statusText==='OK'){
-                  this.$message.success(res.data.msg);
-                  this.dialogFormVisibleWillis = false;
-                  this.$refs[formName].resetFields();
-                  this.AnnextList();
-                }else{
+                    if(res.data.code===0){
+                        this.$message.success(res.data.msg);
+                        this.dialogFormVisibleWhole = false;
+                        this.$refs[formName].resetFields();
+                        this.AnnextList();
+                    }else{
                     this.$message.error(res.data.msg);
-                    this.dialogFormVisibleWillis = false;
+                    this.dialogFormVisibleWhole = false;
                     this.$refs[formName].resetFields();
+                  }
                 }
               })
             } else {
@@ -2015,7 +2040,7 @@ export default {
                   param8: this.willis.param8,
                   mark1: this.willis.mark1,
                   mark2: this.willis.mark2,
-                  orgAmount1: this.willis.orgAmount1,
+                  orgAmount1:this.willis.rmCurrency+this.willis.orgAmount1,
                   // orgAmount2: this.willis.orgAmount2,
                   // orgAmount3: this.willis.orgAmount3,
                   chineseAmount: this.willis.chineseAmount,
@@ -2025,17 +2050,18 @@ export default {
                   compAddr: this.willis.compAddr,
                   })
                 .then(res => {
-                  console.log(res)
-                     if(res.status===200&&res.statusText==='OK'){
-                      this.$message.success(res.data.msg);
-                      this.dialogFormVisibleOversea = false;
-                      this.$refs[formName].resetFields();
-                      this.AnnextList();
-                    }else{
-                        this.$message.error(res.data.msg);
-                        this.dialogFormVisibleOversea = false;
+                  if(res.status===200&&res.statusText==='OK'){
+                    if(res.data.code===0){
+                        this.$message.success(res.data.msg);
+                        this.dialogFormVisibleWillis = false;
                         this.$refs[formName].resetFields();
+                        this.AnnextList();
+                    }else{
+                      this.$message.error(res.data.msg);
+                      this.dialogFormVisibleWillis = false;
+                      this.$refs[formName].resetFields();
                     }
+                  }
                 })
             } else {
               this.$message.error('参数错误');
