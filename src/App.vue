@@ -52,7 +52,8 @@ export default {
   /* height: 100%; */
   display: flex;
   flex:1;
-  overflow: hidden; /*9.3样式*/
+  /* overflow: hidden;  */
+  /*9.3样式*/
 }
 .el-container .is-vertical{
   width: 100%;

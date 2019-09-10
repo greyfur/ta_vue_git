@@ -1827,6 +1827,7 @@ export default {
           if(detail.length>0){
             //2 币制
             this.risk.businessAmount=this.listData[4].b;
+            this.risk.rmCurrency=this.listData[2].b;
             this.oversea.compName=detail[0].compName;
             this.oversea.operator=this.approvalName;
             this.oversea.toltalAmount=this.listData[4].b;
@@ -1839,6 +1840,10 @@ export default {
             this.willis.rmCurrency=this.listData[2].b;
             this.willis. orgAmount1=this.listData[4].b;
             this.willis.compName=detail[0].compName;
+            this.willis.bankInfo=detail[0].bankInfo;
+            this.willis.bankAddr=detail[0].bankAddr;
+            this.willis.compAddr=detail[0].compAddr;
+            9999
           }
         })
     },
