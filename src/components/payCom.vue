@@ -556,8 +556,7 @@ export default {
           <span style="margin-left:300px;">${document.getElementById('Esignature').value}<span></div>   `
         } 
       let info = {},params = null;
-      // info = Object.assign({},{emailAddr:this.mailInfo, emailContent: this.emailContent, mailTitle: this.mailTitle });
-      info = Object.assign({},{emailAddr:this.mailInfo, emailContent: val, mailTitle: this.mailTitle,processId:this.chooseRow.processId });
+      info = Object.assign({},{actOperator:this.$store.state.userName,emailAddr:this.mailInfo, emailContent: val, mailTitle: this.mailTitle,processId:this.chooseRow.processId });
       // 本地上传
       if (this.file.length) {
         var resFile = new FormData();
@@ -568,29 +567,7 @@ export default {
       }
       // docList 上传
       if (this.chooseDocList && this.chooseDocList.length) {
-        // let row = this.tableData[this.chooseDocList];
-        // this.$http.post("api/anyShare/fileOperation/previewDocument",Object.assign({}, row, { processId: this.chooseRow.processId }),{ responseType: "blob" })
-        //   .then(res => {
-        //     if (res.status === 200) {
-        //       let resFiles = new FormData();
-        //       resFiles.append("file", res.data);
-        //       for (let k in info) {
-        //         resFiles.append(k, info[k]);
-        //       }
-        //       this.$http.post("api/worksheet/wSEntry/sendEmail", resFiles)
-        //         .then(res => {
-        //           if (res.status === 200 && res.data.code == 0) {
-        //             this.$message({type: "success",message: res.data.msg});
-        //             this.dialogFormVisible2 = false;
-        //           } else{
-        //             this.$message({type: "error",message: res.data.msg});
-        //             this.dialogFormVisible2 = false;
-        //           }
-        //         });
-        //     }
-        //   });
-        this.$http.post("api/worksheet/wSEntry/sendEmail", {emailAddr:this.mailInfo,emailContent: val, mailTitle: this.mailTitle, docCId:this.chooseDocList}).then(res => {
-        // this.$http.post("api/worksheet/wSEntry/sendEmail", {emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle, docCId:this.chooseDocList}).then(res => {
+        this.$http.post("api/worksheet/wSEntry/sendEmail", {actOperator:this.$store.state.userName,emailAddr:this.mailInfo,emailContent: val, mailTitle: this.mailTitle, docCId:this.chooseDocList}).then(res => {
           if (res.status === 200 && res.data.code == 0) {
             this.$message({type: "success",message: res.data.msg});
             this.dialogFormVisible3 = false;
@@ -837,7 +814,7 @@ export default {
             Attached sheet for your transaction reference.<br/>
             If however, you have any queries please let me know.<br/>  
             <span style="margin-left:300px;"><input type="text" class="mailTemplate" id="Esignature" placeholder="please enter Personal signature"/></span></div>`
-          }else{
+          }else{ 
             this.htmlContent = `<div><input class="mailTemplate" type="text" id="Ename"/>老师，您好！<br/>
             我们预计将在<input class="mailTemplate" type="text" value="${this.Edate}" id="Ename1"/>支付贵司金额为<input class="mailTemplate" type="text" value="${this.chooseRow.rmCurrency}" id="Ename2"/><input class="mailTemplate" type="text" value="${this.chooseRow.rmAmount}" id="Ename3"/>的款项，详情请见清单。<br/>
             如果有问题，请及时与我们联系。谢谢！<br/>
