@@ -33,7 +33,6 @@ let data = [
     } ,
     // component: () => import("@/views/pay/detailPay"), 
   },
-
   // Tab页-账单
   {
     level:1,

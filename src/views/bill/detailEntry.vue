@@ -1539,6 +1539,47 @@ export default {
     mailSend(tag) {  
       if (tag == 1) { // 邮件通知
         // 显示内容模板
+        if(this.chooseRow.businessOrigin=="International"){ // 国际
+          this.emailContent=`
+          Dear Sir/Madam:<br/>
+          Here attached our signed copy for your good record.<br/>
+          Please note this is Automated report delivery email - please do not reply. If any errors or other issues are found with the attachment, please contact the sender below.<br/>
+          Thanks & Regards<br/>
+          Xiaoyun Li (李晓昀)<br/>
+          Accounting Service Center<br/>
+          China Property & Casualty Reinsurance Company Limited<br/>
+          On behalf of<br/>
+          China Reinsurance (Group) Corporation<br/>
+          Tel: 8610 6657 6455 | E-mail: lixiaoyun@chinare.com.cn<br/>
+          Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing, China, 100033
+          `
+        } else{ // 国内
+this.emailContent=`敬启者：
+附上我方签章版文件，请查收惠存。
+本邮件为系统自动发送，请勿直接回复。如有问题，请联系下方落款人。
+顺颂商祺！
+Xiaoyun Li (李晓昀)
+Accounting Service Center
+China Property & Casualty Reinsurance Company Limited
+On behalf of
+China Reinsurance (Group) Corporation
+Tel: 8610 6657 6455 | E-mail: lixiaoyun@chinare.com.cn
+Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing, China, 100033`
+          
+          // this.emailContent=`
+          // 敬启者：<br/>
+          // 附上我方签章版文件，请查收惠存。<br/>
+          // 本邮件为系统自动发送，请勿直接回复。如有问题，请联系下方落款人。<br/>
+          // 顺颂商祺！<br/>
+          // Xiaoyun Li (李晓昀)<br/>
+          // Accounting Service Center<br/>
+          // China Property & Casualty Reinsurance Company Limited<br/>
+          // On behalf of<br/>
+          // China Reinsurance (Group) Corporation<br/>
+          // Tel: 8610 6657 6455 | E-mail: lixiaoyun@chinare.com.cn<br/>
+          // Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing, China, 100033
+          // `
+        }
         this.$http.get("api/worksheet/wSEntry/getEmailContacts").then(res => {
           if (res.status === 200) {
             this.dialogFormVisible2 = true;
@@ -1546,6 +1587,7 @@ export default {
             this.mailOption = res.data;
           }
         });
+
       } else {
         // 上传附件
         this.dialogFormVisible2 = true;
