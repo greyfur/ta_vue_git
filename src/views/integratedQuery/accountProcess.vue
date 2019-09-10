@@ -55,10 +55,10 @@
         </el-row>
         <el-row :gutter="10" class="billRow">
           <el-col :span="24">
-            <el-button type="primary" plain @click="handleClick(4)"><i class="iconfont iconGroup42"></i>查询</el-button>
+            <el-button type="primary" plain @click="reportClick()" class="borderBtn">导出报表</el-button>
             <el-button type="primary" plain @click="mySubmit" class="borderBtn"><i class="iconfont iconGroup42"></i>我提交的</el-button>
             <el-button type="primary" plain @click="reset" class="borderBtn"><i class="iconfont iconGroup39"></i>重置</el-button>
-            <el-button type="primary" plain @click="reportClick()" class="borderBtn">导出报表</el-button>
+            <el-button type="primary" plain @click="handleClick(4)"><i class="iconfont iconGroup42"></i>查询</el-button>
           </el-col>
         </el-row>
       </div>

@@ -100,9 +100,9 @@
         </el-col>
       </el-row>
       <el-row><el-col :span="24">
-        <el-button type="primary" plain @click="handleClick(1)"><i class="iconfont iconGroup42"></i>查询</el-button>
-        <el-button type="primary" plain @click="reset" class="borderBtn"><i class="iconfont iconGroup39" ></i>重置</el-button>
         <el-button type="primary" plain @click="reportClick()" class="borderBtn">导出报表</el-button>
+        <el-button type="primary" plain @click="reset" class="borderBtn"><i class="iconfont iconGroup39" ></i>重置</el-button>
+        <el-button type="primary" plain @click="handleClick(1)"><i class="iconfont iconGroup42"></i>查询</el-button>
       </el-col></el-row>
       </div>
        </el-collapse-transition>
