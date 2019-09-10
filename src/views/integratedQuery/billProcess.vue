@@ -175,7 +175,8 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="curOperator" label="任务来源" width="120" align="center">
+      <!-- TA-835 -->
+      <el-table-column prop="curOperator" label="当前操作人" width="120" align="center">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
         </template>
