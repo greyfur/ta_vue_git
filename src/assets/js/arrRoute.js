@@ -319,6 +319,12 @@ let data = [
         name: 'reportForms',
         component: () => import("@/views/admin/reportForms"), 
       },
+      {  //  9.10 TA-840  
+        title:'报表查询',
+        path: '/billReportForms',
+        name: 'billReportForms',
+        component: () => import("@/views/admin/billReportForms"), 
+      },
     ]
   },
 ]
