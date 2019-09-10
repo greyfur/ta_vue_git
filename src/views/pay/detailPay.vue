@@ -1308,8 +1308,8 @@ export default {
           mark2:null,
           bankAddr:null,
           bankInfo:null,
-          comeName:null,
-          comeAddr:null,
+          compName:null,
+          compAddr:null,
         },
         downDialogFlag:false,
         strArr:[],
@@ -1782,9 +1782,6 @@ export default {
     }
     this.dataBaseSG();
     this.mailSend(2,'',1);
-    console.log(this.row)
-    console.log(this.listData)
-    this.EchoDisplay(); //回显
   },
   methods: {
     getJson(){
@@ -1840,10 +1837,9 @@ export default {
             this.willis.rmCurrency=this.listData[2].b;
             this.willis. orgAmount1=this.listData[4].b;
             this.willis.compName=detail[0].compName;
+            this.willis.compAddr=detail[0].compAddr;
             this.willis.bankInfo=detail[0].bankInfo;
             this.willis.bankAddr=detail[0].bankAddr;
-            this.willis.compAddr=detail[0].compAddr;
-            9999
           }
         })
     },
@@ -2050,7 +2046,8 @@ export default {
                   param8: this.willis.param8,
                   mark1: this.willis.mark1,
                   mark2: this.willis.mark2,
-                  orgAmount1:this.willis.rmCurrency+Number(this.willis.orgAmount1).toFixed(2),
+                  orgCurrency:this.willis.rmCurrency,
+                  orgAmount1:Number(this.willis.orgAmount1).toFixed(2),
                   // orgAmount2: this.willis.orgAmount2,
                   // orgAmount3: this.willis.orgAmount3,
                   chineseAmount: this.willis.chineseAmount,
