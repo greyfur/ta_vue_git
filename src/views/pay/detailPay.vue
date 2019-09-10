@@ -34,6 +34,11 @@
           <el-button size="small" plain @click="getSGSg">同步状态</el-button>
           <el-button size="small" plain @click="submite(10,'指派')">指派</el-button>
           <el-button size="small" plain @click="submite(8,'流程提交',$route.query.tag)">流程提交</el-button> 
+          <el-button size="small" :disabled="czState" plain @click="makeWord(1)">高风险地区</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(2)">境外人民币</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(4)">全额</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(5)">WILLIS</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(3)">转账模板</el-button>
         </div>
         <!-- 操作 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'payOperation'">
@@ -41,11 +46,11 @@
           <el-button size="small" @click="getSGSg" plain>同步状态</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeDoc('a')">生成审批文档</el-button>
 
-          <el-button size="small" :disabled="czState" plain @click="makeWord(1)">高风险地区</el-button>
+          <!-- <el-button size="small" :disabled="czState" plain @click="makeWord(1)">高风险地区</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeWord(2)">境外人民币</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeWord(4)">全额</el-button>
           <el-button size="small" :disabled="czState" plain @click="makeWord(5)">WILLIS</el-button>
-          <el-button size="small" :disabled="czState" plain @click="makeWord(3)">转账模板</el-button>
+          <el-button size="small" :disabled="czState" plain @click="makeWord(3)">转账模板</el-button> -->
 
           <el-button size="small" :disabled="czState" plain @click="submite(3,'置废','操作')">置废</el-button>
           <el-button size="small" :type="czState?'info':''" @click="gangUp('操作')" plain>{{!czState?'悬停':'已悬停'}}</el-button>
@@ -1611,7 +1616,7 @@ export default {
         },
         wholeRules:{
           rmAccountbankName: [
-            { required: true, message: '请输入公司', trigger: 'blur' }
+            { required: true, message: '请输入付款银行', trigger: 'blur' }
           ],
           payDate: [
             { required: true, message: '请选择日期', trigger: 'blur' }
@@ -1707,6 +1712,12 @@ export default {
           ],
           compAddr: [
             { required: true, message: '请输入compAddr', trigger: 'blur' }
+          ],
+          mark1:[
+            { required: true, message: '请输入mark1', trigger: 'blur' }
+          ],
+          mark2:[
+            { required: true, message: '请输入mark2', trigger: 'blur' }
           ],
         },
         AllBankAccountList:[],
@@ -1816,6 +1827,7 @@ export default {
     EchoDisplay(){
         this.$http.post("api/othersDO/bscBankInfo/list",{})//9.9境外 全额初始化回显
         .then(res => {
+          console.log(this.row)
           console.log(this.row.recComId)
           var detail=res.data.rows.filter(item=>{
             return item.id==this.row.recComId;
@@ -1829,7 +1841,7 @@ export default {
             this.oversea.operator=this.approvalName;
             this.oversea.toltalAmount=this.listData[4].b;
             this.oversea.rmCurrency=this.listData[2].b;
-            this.whole.bankName=detail[0].compName;
+            this.whole.compName=detail[0].compName;
             this.whole.operator=this.approvalName;
             this.whole.rmAmount=this.listData[4].b;
             this.whole.rmCurrency=this.listData[2].b;
