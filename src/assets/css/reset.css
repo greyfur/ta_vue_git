@@ -220,6 +220,9 @@ table th{
 .SwitchingMode .el-form-item{
   width: 33%;
 }
+.SwitchingMode .dialogMan{
+  height: 1126px;
+}
 .el-message-box__errormsg{
   margin-top: 10px;
 }

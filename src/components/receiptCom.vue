@@ -382,7 +382,7 @@
         </el-pagination>
       </div>
     </div>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" class="SwitchingMode" width="1160px">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" class="SwitchingMode" width="1160px"  custom-class="dialogMan">
       <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign" class="SwitchingMode" style="text-align:right">
         <el-form-item label="结付公司">
           <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
@@ -589,7 +589,7 @@
           <img :src="picture" style="width:100%" @click="dialogFormVisibleA=true">
         </el-collapse-item>
       </el-collapse>
-      <el-table :header-row-class-name="StableClass" :data="track" border style="width: 100%" v-show="title==='踪迹'">
+      <el-table :header-row-class-name="StableClass" :data="track" border style="width: 100%;" v-show="title==='踪迹'" height>
         <el-table-column prop="processId" label="流程编号" width="140" align="center"></el-table-column>
         <el-table-column prop="actName" label="操作名称" align="center">
           <template slot-scope="scope">
@@ -1705,4 +1705,5 @@ export default {
   height: 32px;
   border-radius: 2px;
 }
+
 </style>
