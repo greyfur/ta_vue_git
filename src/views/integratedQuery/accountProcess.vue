@@ -32,14 +32,14 @@
               <el-date-picker value-format="timestamp" v-model="formLabelAlign.rmReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
           </el-col>
           <el-col :span="8">
-            <span class="slable">收/付款</span>
+            <span class="slable">收/付款 &nbsp;</span>
             <el-select clearable v-model="formLabelAlign.processType" placeholder="请选择">
               <el-option v-for="item in [{'l':'收款','v':['收款']},{'l':'付款','v':['付款']},{'l':'全部','v':['付款','收款']}]" :key="item.l" :label="item.l" :value="item.v"></el-option>
             </el-select>
           </el-col>
           <!-- 8.28 TA-747要求加操作人，操作日期字段查询，胖虎提供的字段 -->
           <el-col :span="8">
-            <span class="slable">操作人</span>
+            <span class="slable">操作人 &nbsp;&nbsp;</span>
             <el-input v-model="formLabelAlign.createdBy"></el-input>
           </el-col>
         </el-row>
@@ -48,6 +48,10 @@
             <span class="slable">操作时间</span>
             <el-date-picker value-format="timestamp" v-model="formLabelAlign.createdAt" type="date" placeholder="选择日期"></el-date-picker>
           </el-col>
+          <el-col :span="8">
+          <span class="slable">复核人 &nbsp;&nbsp;</span>
+          <el-input placeholder="请输入复核人" v-model.trim="formLabelAlign.closedBy"></el-input>
+        </el-col>
         </el-row>
         <el-row :gutter="10" class="billRow">
           <el-col :span="24">
@@ -301,6 +305,7 @@ export default {
       formLabelAlign:{
         createdBy:null,
         createdAt:null,
+        closedBy:null,
         processType:null,
         rmSettleCompanyCode:null,
         rmSettleCompanyName:null,

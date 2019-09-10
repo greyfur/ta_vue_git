@@ -1611,7 +1611,7 @@ export default {
         },
         wholeRules:{
           rmAccountbankName: [
-            { required: true, message: '请输入公司', trigger: 'blur' }
+            { required: true, message: '请输入付款银行', trigger: 'blur' }
           ],
           payDate: [
             { required: true, message: '请选择日期', trigger: 'blur' }
@@ -1829,7 +1829,7 @@ export default {
             this.oversea.operator=this.approvalName;
             this.oversea.toltalAmount=this.listData[4].b;
             this.oversea.rmCurrency=this.listData[2].b;
-            this.whole.bankName=detail[0].compName;
+            this.whole.compName=detail[0].compName;
             this.whole.operator=this.approvalName;
             this.whole.rmAmount=this.listData[4].b;
             this.whole.rmCurrency=this.listData[2].b;
