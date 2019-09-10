@@ -915,6 +915,8 @@
       <el-form :label-position="labelPosition" :model="risk" :rules="RiskAreasRules" label-width="100px" ref="risk">
         <el-form-item label="汇款编号" prop="remittanceNumber" required><el-input  placeholder="请输入" v-model="risk.remittanceNumber"></el-input></el-form-item>
         <el-form-item label="发票号" prop="invoiceNumber" required><el-input  placeholder="请输入" v-model="risk.invoiceNumber"></el-input></el-form-item>
+        <el-form-item label="币制" prop="rmCurrency"><el-select filterable v-model="risk.rmCurrency" placeholder="请选择" @change="zheTypeChange">
+        <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option></el-select></el-form-item>
         <el-form-item label="业务金额" prop="businessAmount" required><el-input  placeholder="请输入" v-model="risk.businessAmount"></el-input></el-form-item>
         <el-form-item label="日期" prop="currentDate" required><el-date-picker v-model="risk.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
         <el-form-item>
@@ -1256,6 +1258,7 @@ export default {
           remittanceNumber:null,
           invoiceNumber:null,
           businessAmount:null,
+          rmCurrency:null,
           currentDate:new Date().getTime(),
         },
         oversea:{
@@ -1297,10 +1300,10 @@ export default {
           param2:null,
           param3:null,
           param4:null,
-          param5:null,
+          param5:'英 国',
           param6:null,
           param7:null,
-          param8:null,
+          param8:'再保险支出',
           maek1:null,
           mark2:null,
           bankAddr:null,
@@ -1558,6 +1561,9 @@ export default {
           ],
         },
         RiskAreasRules:{
+          rmCurrency:[{
+            required: true, message: '请选择币制', trigger: 'blur' 
+          }],
           remittanceNumber: [
             { required: true, message: '请输入汇款账号', trigger: 'blur' }
           ],
@@ -1815,7 +1821,6 @@ export default {
         .then(res => {
           console.log(this.row.recComId)
           var detail=res.data.rows.filter(item=>{
-            console.log(item)
             return item.id==this.row.recComId;
           })
           console.log(detail)
@@ -1909,7 +1914,7 @@ export default {
                  actOperator: this.row.curOperator , 
                  remittanceNumber: this.risk.remittanceNumber,
                  invoiceNumber: this.risk.invoiceNumber,
-                 businessAmount:this.risk.businessAmount,
+                 businessAmount:this.risk.rmCurrency+Number(this.risk.businessAmount).toFixed(2),
                  currentDate:this.risk.currentDate,
                })
               .then(res => {
@@ -2040,7 +2045,7 @@ export default {
                   param8: this.willis.param8,
                   mark1: this.willis.mark1,
                   mark2: this.willis.mark2,
-                  orgAmount1:this.willis.rmCurrency+this.willis.orgAmount1,
+                  orgAmount1:this.willis.rmCurrency+Number(this.willis.orgAmount1).toFixed(2),
                   // orgAmount2: this.willis.orgAmount2,
                   // orgAmount3: this.willis.orgAmount3,
                   chineseAmount: this.willis.chineseAmount,
