@@ -45,9 +45,9 @@
               </el-select>
             </el-col>
             <el-col :span="8">
-              <span class="slable">录入人查询</span>
+              <span class="slable">录入人 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
               <!-- <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input> -->
-              <el-select clearable filterable v-model="querySearch.registBy" placeholder="请选择录入人查询">
+              <el-select clearable filterable v-model="querySearch.registBy" placeholder="请选择录入人">
               <el-option v-for="(item,index) in nameList" :key="item" :value="index" :label="item">
                 <span style="float:left">{{item}}</span>
                 <span style="float:right;color: #8492a6; font-size: 13px">{{index}}</span>
@@ -56,7 +56,7 @@
             </el-col>
             <el-col :span="8">
               <span class="slable">复核人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
-              <el-select clearable v-model="querySearch.closedBy" placeholder="请选择">
+              <el-select clearable v-model="querySearch.closedBy" placeholder="请选择复核人">
                 <el-option v-for="(item,index) in tableData.closedBy" :key="index" :label="item" :value="item"></el-option>
               </el-select>
             </el-col>

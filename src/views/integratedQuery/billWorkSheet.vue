@@ -25,8 +25,8 @@
         </el-row>
         <el-row :gutter="10" class="billRow">
           <el-col :span="8">
-            <span class="slable">录入人查询</span>
-            <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人查询">
+            <span class="slable">录入人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
+            <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人">
                 <el-option
                   v-for="(item,index) in nameList"
                   :key="item"
@@ -86,7 +86,7 @@
           </el-col>
           <el-col :span="8">
             <span class="slable">账单号 &nbsp;&nbsp;&nbsp;</span>
-            <el-input placeholder="请输入流程编号" v-model.trim="billSearch.wsId"></el-input>
+            <el-input placeholder="请输入账单号" v-model.trim="billSearch.wsId"></el-input>
           </el-col>
         </el-row>
         <el-row :gutter="10" class="billRow">  

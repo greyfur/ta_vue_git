@@ -71,7 +71,7 @@ import {computeSidebar} from '@/assets/js/util.js'
 .receipt{
   /* margin-left: 180px; */
   height: 100%;
-  overflow:hidden;
+  /* overflow:hidden; */ /* 9.10露出滚动条 */
 }
 .left-content{
   margin-left: 20px;

@@ -18,7 +18,7 @@
         </el-col>
         <el-col :span="8">
           <span class="slable">流程状态 &nbsp;&nbsp;</span>
-          <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
+          <el-select clearable v-model="billSearch.processStatus" placeholder="请选择流程状态">
             <!-- 9.9 UAT原话：综合查询－账单流程－流程状态缺失“复核驳回”项 -->
             <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','已悬停','复核驳回']" :key="item" :label="item" :value="item"></el-option>
           </el-select>
@@ -26,8 +26,8 @@
       </el-row>
       <el-row :gutter="10" class="billRow">
         <el-col :span="8">
-          <span class="slable">录入人查询</span>
-          <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人查询">
+          <span class="slable">录入人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
+          <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人">
               <el-option
                 v-for="(item,index) in nameList"
                 :key="item"
@@ -192,7 +192,11 @@
         </template>
       </el-table-column>
       <el-table-column label="录入时间" prop="inputAt" width="160" align="center"></el-table-column>
-      <el-table-column prop="closedBy" label="复核人" width="130" align="center"></el-table-column>
+      <el-table-column prop="closedBy" label="复核人" width="130" align="center">
+        <template slot-scope="scope">
+          <span>{{nameList[scope.row.closedBy]}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="registAt" label="提交复核时间" width="160" align="center"></el-table-column>
       <el-table-column prop="closedAt" label="复核完成时间" width="160" align="center"></el-table-column>
       <el-table-column prop="processStatus" label="流程状态" align="center"></el-table-column>
