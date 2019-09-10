@@ -308,8 +308,8 @@ div.asideMenu::-webkit-scrollbar-corner{
 
 
 div::-webkit-scrollbar{
-  width:8px;
-  height:8px;
+  width:15px;
+  height:15px;
 }
 div::-webkit-scrollbar-track{
   background: rgb(239, 239, 239);
