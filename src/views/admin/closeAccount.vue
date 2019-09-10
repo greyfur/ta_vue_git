@@ -20,8 +20,8 @@
       </el-form-item>
       <el-form-item label="审批是否发送邮件">
         <el-radio-group v-model="radio3" @change="onChange3">
-          <el-radio :label="true">开账</el-radio>
-          <el-radio :label="false">关账</el-radio>
+          <el-radio :label="true">是</el-radio>
+          <el-radio :label="false">否</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
