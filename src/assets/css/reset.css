@@ -224,7 +224,8 @@ table th{
   height: 1126px;
 }
 .SwitchingMode .dialogMans{
-  height: 785px;
+  height: 900px; 
+  /* 9.10 付款踪迹高度 */
 }
 .el-message-box__errormsg{
   margin-top: 10px;
