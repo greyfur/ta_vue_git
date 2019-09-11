@@ -1830,13 +1830,14 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
             this.checkRobortUser = res.data; // 0 需要屏蔽自己，1不需要
           })
           if (name === "录入提交") {
-            if (this.SICSData == null || !this.SICSData.length) {
-              this.$message({ type: "error", message: "无账单信息，无法提交" });
-              return false;
-            }
             this.getName("账单复核");
             this.dialogFormVisible5 = true;
             this.title = "流程提交";
+            setTimeout(()=>{
+              if (this.SICSData == null || !this.SICSData.length) {
+                this.$message({ type: "warning", message: "无账单信息" });
+              }
+            },100)
           } else {
             //  签回流程提交----到关闭 不需要选择下一人，assign需要录入人
             this.$confirm("是否流程结束？", "提示", {
