@@ -208,7 +208,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" :style="title==='流程提交'?'height:400px':''" width="432" class="SwitchingMode">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" :style="title==='流程提交'?'height:400px':''" width="432" class="SwitchingMode" custom-class="dialogMans">
       <el-form label-width="140px" v-show="title==='流程提交'">
         <el-form-item label="选择处理人" v-show="title==='流程提交'">
           <el-select filterable v-model="assignee"  placeholder="请选择">
@@ -237,7 +237,7 @@
           <img :src="picture" style="width:100%" @click="dialogFormVisibleA=true">
         </el-collapse-item>
       </el-collapse>
-      <el-table :data="track" border style="width: 100%;" v-show="title==='踪迹'" :header-row-class-name="StableClass">
+      <el-table :data="track" border style="width: 100%;" v-show="title==='踪迹'" :header-row-class-name="StableClass" height="300">
         <el-table-column prop="processId" label="流程编号" width="140" align="center"></el-table-column>
         <el-table-column prop="actName" label="操作名称" align="center">
           <template slot-scope="scope">
