@@ -51,7 +51,7 @@
           <el-col :span="8">
             <span class="slable">复核人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
             <el-select clearable v-model="billSearch.closedBy" placeholder="请选择复核人">
-              <el-option v-for="(item,index) in tableData.closedBy" :key="index" :label="item" :value="item"></el-option>
+              <el-option v-for="(item,index) in nameList" :key="index" :label="item" :value="item"></el-option>
             </el-select>
           </el-col>
         </el-row>
