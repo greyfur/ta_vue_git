@@ -10,7 +10,7 @@
           <span class="slable">流程编号 &nbsp;&nbsp;</span>
           <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
         </el-col>
-           <el-col :span="8">
+        <el-col :span="8">
           <span class="slable">流程名称 &nbsp;&nbsp;</span>
           <el-input placeholder="请输入流程名称" v-model.trim="billSearch.processName"></el-input>
         </el-col>
@@ -51,7 +51,7 @@
       
       </el-row>
       <el-row :gutter="10" class="billRow">
-          <el-col :span="8">
+        <el-col :span="8">
           <span class="slable">复核人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
           <el-select clearable v-model="billSearch.closedBy" placeholder="请选择复核人">
             <el-option v-for="(item,index) in tableData.closedBy" :key="index" :label="item" :value="item"></el-option>

@@ -103,7 +103,7 @@
                 </el-option>
               </el-select>
             </el-col>
-             <el-col :span="8">
+            <el-col :span="8">
               <span class="slable">收到日期 &nbsp;&nbsp;</span>
               <el-date-picker
                 value-format="timestamp"
