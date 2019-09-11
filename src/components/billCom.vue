@@ -57,7 +57,7 @@
             </el-col>
           </el-row>
            <el-row :gutter="10" class="billRow"> 
-            <el-col :span="8">
+            <el-col :span="8" v-if="urlName!=='sortOperation'">
               <span class="slable">录入人 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
               <!-- <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input> -->
               <el-select clearable filterable v-model="querySearch.registBy" placeholder="请选择录入人">
@@ -67,10 +67,10 @@
               </el-option>
             </el-select>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" v-if="urlName!=='sortOperation'">
               <span class="slable">复核人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
               <el-select clearable v-model="querySearch.closedBy" placeholder="请选择复核人">
-                <el-option v-for="(item,index) in nameList" :key="index" :label="item" :value="item"></el-option>
+                <el-option v-for="(item,index) in nameList" :key="index" :label="item" :value="index"></el-option>
               </el-select>
             </el-col>
             <el-col :span="8">
@@ -86,11 +86,7 @@
                 </el-option>
               </el-select>
             </el-col>
-          </el-row>
-          <el-row :gutter="10" class="billRow"> 
-            <!-- v-show="urlName === 'billEntry'" -->
-             <!-- v-show="urlName === 'billCheck'" -->
-            <el-col :span="8">
+            <el-col :span="8" v-if="urlName==='sortOperation'">
               <span class="slable">经纪公司 &nbsp;&nbsp;</span>
               <el-select clearable filterable v-model="querySearch.brokerModel" placeholder="请选择经纪公司">
                 <el-option
@@ -103,7 +99,33 @@
                 </el-option>
               </el-select>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" v-if="urlName==='sortOperation'">
+              <span class="slable">收到日期 &nbsp;&nbsp;</span>
+              <el-date-picker
+                value-format="timestamp"
+                v-model="querySearch.wsReceiptDate"
+                type="date"
+                placeholder="选择日期"
+              ></el-date-picker>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10" class="billRow"> 
+            <!-- v-show="urlName === 'billEntry'" -->
+             <!-- v-show="urlName === 'billCheck'" -->
+            <el-col :span="8" v-if="urlName!=='sortOperation'">
+              <span class="slable">经纪公司 &nbsp;&nbsp;</span>
+              <el-select clearable filterable v-model="querySearch.brokerModel" placeholder="请选择经纪公司">
+                <el-option
+                  v-for="(item,index) in brokerList"
+                  :key="index"
+                  :label="item.codecode+' - '+item.codeName"
+                  :value="index">
+                  <span style="float:left">{{ item.codecode }}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+                </el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="8" v-if="urlName!=='sortOperation'">
               <span class="slable">收到日期 &nbsp;&nbsp;</span>
               <el-date-picker
                 value-format="timestamp"
@@ -707,6 +729,7 @@ export default {
       splitId:'',
       admFlag: false,
       querySearch:{
+        closedBy:null,
         processName:null,
         wsBusinessType:null,
         wsPeriod:null,
