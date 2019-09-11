@@ -39,19 +39,35 @@
           </el-col>
           <!-- 8.28 TA-747要求加操作人，操作日期字段查询，胖虎提供的字段 -->
           <el-col :span="8">
-            <span class="slable">操作人 &nbsp;&nbsp;</span>
-            <el-input v-model="formLabelAlign.createdBy"></el-input>
+            <span class="slable">录入人 &nbsp;&nbsp;</span>
+            <el-select clearable filterable v-model="formLabelAlign.createdBy" placeholder="请选择录入人">
+                <el-option
+                  v-for="(item,index) in nameList"
+                  :key="item"
+                  :value="index"
+                  :label="item"
+                >
+                  <span style="float:left">{{item}}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{index}}</span>
+                </el-option>
+              </el-select>
           </el-col>
         </el-row>
         <el-row :gutter="10" class="billRow">
+        <!-- <el-col :span="8">
+          <span class="slable">复核人 &nbsp;&nbsp;</span>
+          <el-input placeholder="请输入复核人" v-model.trim="formLabelAlign.closedBy"></el-input>
+        </el-col> -->
+        <el-col :span="8">
+            <span class="slable">复核人 &nbsp;&nbsp;</span>
+            <el-select clearable v-model="formLabelAlign.closedBy" placeholder="请选择复核人">
+              <el-option v-for="(item,index) in nameList" :key="index" :label="item" :value="index"></el-option>
+            </el-select>
+          </el-col>
           <el-col :span="8">
             <span class="slable">操作时间</span>
             <el-date-picker value-format="timestamp" v-model="formLabelAlign.createdAt" type="date" placeholder="选择日期"></el-date-picker>
           </el-col>
-          <el-col :span="8">
-          <span class="slable">复核人 &nbsp;&nbsp;</span>
-          <el-input placeholder="请输入复核人" v-model.trim="formLabelAlign.closedBy"></el-input>
-        </el-col>
         </el-row>
         <el-row :gutter="10" class="billRow">
           <el-col :span="24">
