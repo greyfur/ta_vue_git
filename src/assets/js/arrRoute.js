@@ -80,6 +80,13 @@ let data = [
         num: 3,
         component: () => import("@/views/bill/billSignBack"), 
       },
+      {
+        title:'打印',
+        path: '/billPrint',
+        name: 'billPrint',
+        num: 4,
+        component: () => import("@/views/bill/billPrint"), 
+      },
     ]
   },
   // Tab页-收款
