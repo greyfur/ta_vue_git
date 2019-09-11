@@ -1798,7 +1798,7 @@ export default {
     TextCapitalization(){
       this.$http.post("api/docCreate/getChineseAmount", { //金额转大写
         oriCurrency:this.willis.rmCurrency,
-        orgAmount:Number(this.willis.orgAmount1).toFixed(0)
+        orgAmount:Number(this.willis.orgAmount1).toFixed(2)
       }).then(res=>{
         console.log(res)
         if(res.status===200&&res.statusText==='OK'){

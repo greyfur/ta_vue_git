@@ -12,6 +12,25 @@
               <el-input placeholder="请输入流程编号" v-model.trim="querySearch.processId"></el-input>
             </el-col>
             <el-col :span="8">
+              <span class="slable">流程名称 &nbsp;&nbsp;</span>
+              <el-input placeholder="请输入流程名称" v-model.trim="querySearch.processName"></el-input>
+            </el-col>
+            <el-col :span="8">
+              <span class="slable">流程状态 &nbsp;&nbsp;</span>
+              <el-select clearable v-model="querySearch.processStatus" placeholder="请选择流程状态">
+                <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
+            </el-col>
+            
+          </el-row>
+          <el-row :gutter="10" class="billRow">
+            <el-col :span="8">
+              <span class="slable">任务类型 &nbsp;&nbsp;</span>
+              <el-select clearable v-model="querySearch.wsBusinessType" placeholder="请选择流程状态"  @change="onWsBusinessType">
+                <el-option v-for="item in YWoptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+            </el-col>
+             <el-col :span="8">
               <span class="slable">账单类型 &nbsp;&nbsp;</span>
               <el-select clearable v-model="querySearch.wsType" placeholder="请选择账单类型">
                 <el-option
@@ -23,7 +42,7 @@
               </el-select>
             </el-col>
             <el-col :span="8" class="zq1Parent">
-              <span class="slable">账期 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;</span>
+              <span class="slable">账期 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</span>
               <input class="wsDate" style="width:224px;height:40px;border-radius:5px;outline:none;border:1px solid #DCDFE6;" placeholder="请选择账期" v-model="querySearch.wsPeriod" @click.stop="zq1FlagFn()" />
               <div class="zq1" v-show="zq1Flag">
                 <p class="zqTitle">
@@ -38,12 +57,6 @@
             </el-col>
           </el-row>
            <el-row :gutter="10" class="billRow"> 
-            <el-col :span="8">
-              <span class="slable">流程状态 &nbsp;&nbsp;</span>
-              <el-select clearable v-model="querySearch.processStatus" placeholder="请选择流程状态">
-                <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
-              </el-select>
-            </el-col>
             <el-col :span="8">
               <span class="slable">录入人 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
               <!-- <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input> -->
@@ -60,9 +73,6 @@
                 <el-option v-for="(item,index) in tableData.closedBy" :key="index" :label="item" :value="item"></el-option>
               </el-select>
             </el-col>
-          </el-row>
-          <el-row :gutter="10" class="billRow"> 
-            <!-- v-show="urlName === 'billEntry'" -->
             <el-col :span="8">
               <span class="slable">分出公司 &nbsp;&nbsp;</span>
               <el-select clearable filterable v-model="querySearch.cedentModel" placeholder="请选择分出公司">
@@ -76,6 +86,9 @@
                 </el-option>
               </el-select>
             </el-col>
+          </el-row>
+          <el-row :gutter="10" class="billRow"> 
+            <!-- v-show="urlName === 'billEntry'" -->
              <!-- v-show="urlName === 'billCheck'" -->
             <el-col :span="8">
               <span class="slable">经纪公司 &nbsp;&nbsp;</span>
@@ -89,6 +102,15 @@
                   <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
                 </el-option>
               </el-select>
+            </el-col>
+             <el-col :span="8">
+              <span class="slable">收到日期 &nbsp;&nbsp;</span>
+              <el-date-picker
+                value-format="timestamp"
+                v-model="querySearch.wsReceiptDate"
+                type="date"
+                placeholder="选择日期"
+              ></el-date-picker>
             </el-col>
             <el-col :span="8" v-show="urlName === 'billSignBack'">
               <span class="slable">是否需签回</span>
@@ -690,6 +712,8 @@ export default {
       splitId:'',
       admFlag: false,
       querySearch:{
+        processName:null,
+        wsBusinessType:null,
         wsPeriod:null,
         processId:null,
         wsType:null,
@@ -698,6 +722,7 @@ export default {
         wsSignbackFlag:null,
         cedentModel:null,
         brokerModel:null,
+        wsReceiptDate:null,
         wsStatus:null,
         wsSignbackFlag:null,
         wsHasSignback:null,
@@ -705,6 +730,7 @@ export default {
         wsCedentName:null,
         wsBrokerCode:null,
         wsBrokerName:null,
+        rmReceiptDate:null,
       },
       billSearch: {
         brokerModel: '',
@@ -775,7 +801,6 @@ export default {
     sessionStorage.setItem("data", JSON.stringify({}));
   },
   mounted() {
-    console.log( this.$store.state.userName)
     window.onclick=()=>{
       this.zq1Flag=false;
     }
@@ -1005,6 +1030,7 @@ export default {
               })
             }
           this.tableData = res.data.rows;
+          console.log(this.tableData)
           }
         }
       });
@@ -1097,6 +1123,7 @@ export default {
           delete params["actOperator"];
           this.$http.post("api/worksheet/wSEntry/list", params).then(res => {
             if (res.status === 200) {
+              console.log(res)
               if (!res.data.rows.length) {
                 this.$message({ type: "warning", message: "未查询出数据" });
               } else {
@@ -1106,6 +1133,7 @@ export default {
                     })
                   }
                 this.tableData = res.data.rows;
+                console.log(this.tableData)
                 this.mustData.total = res.data.total;
                 this.dialogFormVisible = false;
               }

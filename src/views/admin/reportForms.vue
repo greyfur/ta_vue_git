@@ -51,10 +51,6 @@
           </el-date-picker>
         <div class="do">操作： <p class="btn" @click="sure('three')">下载</p></div>
       </div>
-       <div class="area">
-        <span>hyd:</span>
-        <input type="text" :value="inputVal" placeholder="hyd" @input="changeInput">
-      </div>
   </div>
 </template>
 <script>
@@ -110,9 +106,6 @@
       };
     },
     methods:{
-      changeInput(){
-        console.log(window.event)
-      },
       sure(str){
         if(str==='one'){
           this.$http.post(`api/reportform`,{

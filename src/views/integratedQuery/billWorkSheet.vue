@@ -10,6 +10,10 @@
             <span class="slable">流程编号 &nbsp;&nbsp;</span>
             <el-input placeholder="请输入流程编号" v-model.trim="billSearch.processId"></el-input>
           </el-col>
+          <!-- <el-col :span="8">
+            <span class="slable">流程名称 &nbsp;&nbsp;</span>
+            <el-input placeholder="请输入流程名称" v-model.trim="billSearch.processName"></el-input>
+          </el-col> -->
           <el-col :span="8">
             <span class="slable">流程状态 &nbsp;&nbsp;</span>
             <el-select clearable v-model="billSearch.processStatus" placeholder="请选择">
@@ -17,13 +21,19 @@
             </el-select>
           </el-col>
           <el-col :span="8">
-            <span class="slable">账单类型</span>
-            <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
-              <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
+            <span class="slable">任务类型 &nbsp;&nbsp;</span>
+            <el-select clearable v-model="billSearch.wsBusinessType" placeholder="请选择任务类型">
+              <el-option v-for="item in YWoptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-col>
         </el-row>
         <el-row :gutter="10" class="billRow">
+           <el-col :span="8">
+            <span class="slable">账单类型 &nbsp;&nbsp;</span>
+            <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
+              <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
+            </el-select>
+          </el-col>
           <el-col :span="8">
             <span class="slable">录入人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
             <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人">
@@ -39,6 +49,14 @@
               </el-select>
           </el-col>
           <el-col :span="8">
+            <span class="slable">复核人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
+            <el-select clearable v-model="billSearch.closedBy" placeholder="请选择复核人">
+              <el-option v-for="(item,index) in tableData.closedBy" :key="index" :label="item" :value="item"></el-option>
+            </el-select>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10" class="billRow" class-name="transition-box">
+          <el-col :span="8">
             <span class="slable">分出公司 &nbsp;&nbsp;</span>
             <el-select clearable filterable v-model="cedentModel" placeholder="请选择分出公司">
                 <el-option
@@ -53,7 +71,7 @@
               </el-select>
           </el-col>
           <el-col :span="8">
-            <span class="slable">经纪公司</span>
+            <span class="slable">经纪公司 &nbsp;&nbsp;</span>
             <el-select clearable filterable v-model="brokerModel" placeholder="请选择经纪公司">
                 <el-option
                   v-for="(item,index) in brokerList"
@@ -66,8 +84,6 @@
                 </el-option>
               </el-select>
           </el-col>
-        </el-row>
-        <el-row :gutter="10" class="billRow" class-name="transition-box">
           <el-col :span="8" class="nowrap">
             <span class="slable">录入时间段</span>
             <el-date-picker
@@ -80,13 +96,24 @@
                 end-placeholder="结束日期">
               </el-date-picker>
           </el-col>
+        </el-row>
+        <el-row :gutter="10" class="billRow" class-name="transition-box">
           <el-col :span="8">
             <span class="slable">业务编号&nbsp;&nbsp;&nbsp;</span>
             <el-input placeholder="请输入业务编号" v-model.trim="billSearch.businessId"></el-input>
           </el-col>
           <el-col :span="8">
-            <span class="slable">账单号 &nbsp;&nbsp;&nbsp;</span>
+            <span class="slable">账单号 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;</span>
             <el-input placeholder="请输入账单号" v-model.trim="billSearch.wsId"></el-input>
+          </el-col>
+          <el-col :span="8">
+              <span class="slable">收到日期 &nbsp;&nbsp;</span>
+              <el-date-picker
+                value-format="timestamp"
+                v-model="billSearch.wsReceiptDate"
+                type="date"
+                placeholder="选择日期"
+              ></el-date-picker>
           </el-col>
         </el-row>
         <el-row :gutter="10" class="billRow">  
@@ -499,6 +526,7 @@ export default {
         dialogFormVisible1: false,
         billSearch: {
           processId:null,
+          processName:null,
           processStatus:null,
           wsType:null,
           wsPeriod:null,
