@@ -26,14 +26,14 @@
               <span class="slable">账期 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;</span>
               <input class="wsDate" style="width:224px;height:40px;border-radius:5px;outline:none;border:1px solid #DCDFE6;" placeholder="请选择账期" v-model="querySearch.wsPeriod" @click.stop="zq1FlagFn()" />
               <div class="zq1" v-show="zq1Flag">
-                  <p class="zqTitle">
-                    <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('-')"><i class="iconfont iconGroup33"></i></span>
-                    <span style="color:#000;">{{zq1Year}}</span>
-                    <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('+')"><i class="iconfont iconGroup11"></i></span>
-                  </p>
-                  <ul class="zq" id="zq">
-                      <li v-for="(item,index) in zqList" :key="item" :class="zq1Day===index?'active':''" @click="chooseDay(item,index,1)">{{item}}</li>
-                  </ul>
+                <p class="zqTitle">
+                  <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('-')"><i class="iconfont iconGroup33"></i></span>
+                  <span style="color:#000;">{{zq1Year}}</span>
+                  <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('+')"><i class="iconfont iconGroup11"></i></span>
+                </p>
+                <ul class="zq" id="zq">
+                  <li v-for="(item,index) in zqList" :key="item" :class="zq1Day===index?'active':''" @click="chooseDay(item,index,1)">{{item}}</li>
+                </ul>
               </div>
             </el-col>
           </el-row>
@@ -364,14 +364,14 @@
         <el-form-item label="账期" v-show="title==='手工创建' || title==='编辑' || title==='查询'" class="zqForm">
           <input class="wsDate" style="width:196px;height:40px;border-radius:5px;outline:none;border:1px solid #DCDFE6;" placeholder="请选择账期" v-model="billSearch.wsPeriod" @click.stop="zq1FlagFn()" />
               <div class="zq1" v-show="zq1Flag">
-                  <p class="zqTitle">
-                    <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('-')"><i class="iconfont iconGroup33"></i></span>
-                    <span style="color:#000;">{{zq1Year}}</span>
-                    <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('+')"><i class="iconfont iconGroup11"></i></span>
-                  </p>
-                  <ul class="zq" id="zq">
-                      <li v-for="(item,index) in zqList" :key="item" :class="zq1Day===index?'active':''" @click="chooseDay(item,index)">{{item}}</li>
-                  </ul>
+                <p class="zqTitle">
+                  <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('-')"><i class="iconfont iconGroup33"></i></span>
+                  <span style="color:#000;">{{zq1Year}}</span>
+                  <span style="color:#ccc;transform: scale(.6);" @click.stop="countYear('+')"><i class="iconfont iconGroup11"></i></span>
+                </p>
+                <ul class="zq" id="zq">
+                  <li v-for="(item,index) in zqList" :key="item" :class="zq1Day===index?'active':''" @click="chooseDay(item,index)">{{item}}</li>
+                </ul>
               </div>
         </el-form-item>
         <el-form-item label="流程状态" v-show="title === '查询' && urlName === 'billEntry'">
@@ -391,49 +391,30 @@
             </el-option>
           </el-select>
         </el-form-item>
-          <el-form-item label="经纪公司" v-show="title === '手工创建' || title==='编辑'">
-            <el-select clearable filterable v-model="brokerModel" placeholder="请选择经纪公司">
-              <el-option
-                v-for="(item,index) in brokerList"
-                :key="index"
-                :label="item.codecode+' - '+item.codeName"
-                :value="index">
-                <span style="float:left">{{ item.codecode }}</span>
-                <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
+        <el-form-item label="经纪公司" :prop="billSearch.wsBusinessType!='O'&&billSearch.wsBusinessType!='C'?'brokerModel':''" v-show="title === '手工创建' || title==='编辑'">
+          <el-select clearable filterable v-model="billSearch.brokerModel" placeholder="请选择经纪公司">
+            <el-option v-for="(item,index) in brokerList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
+              <span style="float:left">{{ item.codecode }}</span>
+              <span style="float:right;color: #8492a6; font-size: 13px">{{ item.codeName }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="账单收到日期" :prop="billSearch.wsBusinessType=='C'?'':'wsReceiptDate'" v-show="title === '手工创建' || title==='编辑'">
           <el-date-picker value-format="timestamp" v-model="billSearch.wsReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item label="是否为历史账单" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'">
+        <el-form-item label="是否为历史账单" v-show="title!=='流程提交'&&title!=='踪迹'&&billSearch.wsBusinessType=='C'">
           <el-checkbox v-model="historicalBill">是</el-checkbox>
         </el-form-item>
-        <el-form-item label="是否为历史账单" v-show="title==='手工创建'&& billSearch.wsBusinessType=='C'">
-          <el-checkbox v-model="historicalBill">是</el-checkbox>
-        </el-form-item>
-        <el-form-item label="原流程编号" :prop="!historicalBill&&title==='编辑'&& billSearch.wsBusinessType=='C'?'parentProcessId':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'&&!historicalBill">
+        <el-form-item label="原流程编号" :prop="!historicalBill&&title==='编辑'&& billSearch.wsBusinessType=='C'?'parentProcessId':''" v-show="title!=='流程提交'&&title!=='踪迹'&&billSearch.wsBusinessType=='C'&&!historicalBill">
           <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
         </el-form-item>
-        <el-form-item label="原流程编号" :prop="!historicalBill&&title==='手工创建'&& billSearch.wsBusinessType=='C'?'parentProcessId':''" v-show="title==='手工创建'&& billSearch.wsBusinessType=='C'&&!historicalBill">
-          <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
-        </el-form-item>
-        <el-form-item label="收到邮件更正期" v-show="title==='手工创建'&& billSearch.wsBusinessType=='C' && billSearch.wsBusinessType">
+        <el-form-item label="收到邮件更正期" v-show="title!=='流程提交'&&title!=='踪迹'&&billSearch.wsBusinessType=='C'">
           <el-date-picker value-format="timestamp" v-model="billSearch.correctMailDate" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item label="收到邮件更正期" :prop="title==='编辑'&& billSearch.wsBusinessType=='C'?'correctMailDate':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'&&billSearch.wsBusinessType">
-          <el-date-picker value-format="timestamp" v-model="billSearch.correctMailDate" type="date" placeholder="选择日期"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="更正原因" v-show="title==='手工创建'&&billSearch.wsBusinessType=='C'">
+        <el-form-item label="更正原因" :prop="title==='编辑'&&billSearch.wsBusinessType=='C'?'correctMailReason':''" v-show="title!=='流程提交'&&title!=='踪迹'&&billSearch.wsBusinessType=='C'&&billSearch.wsBusinessType">
           <el-input v-model.trim="billSearch.correctMailReason" placeholder="请输入更正原因"></el-input>
         </el-form-item>
-        <el-form-item label="更正原因" :prop="title==='编辑'&&billSearch.wsBusinessType=='C'?'correctMailReason':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='C'&&billSearch.wsBusinessType">
-          <el-input v-model.trim="billSearch.correctMailReason" placeholder="请输入更正原因"></el-input>
-        </el-form-item>
-        <el-form-item label="母合同编号" :prop="title==='编辑'&&billSearch.wsBusinessType=='O'?'occId':''" v-show="title==='编辑'&& billSearch.wsBusinessType=='O'">
-          <el-input v-model.trim="billSearch.occId" placeholder="请输入母合同编号"></el-input>
-        </el-form-item>
-        <el-form-item label="母合同编号" v-show="title==='手工创建'&& billSearch.wsBusinessType=='O'">
+        <el-form-item label="母合同编号" :prop="billSearch.wsBusinessType=='O'?'occId':''" v-show="title!=='流程提交'&&title!=='踪迹'&&billSearch.wsBusinessType=='O'">
           <el-input v-model.trim="billSearch.occId" placeholder="请输入母合同编号"></el-input>
         </el-form-item>
         <el-form-item label="附件上传" v-show="title==='编辑'">
@@ -726,6 +707,7 @@ export default {
         wsBrokerName:null,
       },
       billSearch: {
+        brokerModel: '',
         occId:'',
         correctMailDate:'',
         correctMailReason:'',
@@ -766,7 +748,6 @@ export default {
       picture: "",
       cedentList: [],
       brokerList: [],
-      brokerModel: '',
       cedentModel: '',
       ZJObj: {
         total: 50,
@@ -782,6 +763,7 @@ export default {
         reason: [{ required: true, message: '请输入拆分理由', trigger: 'blur' }],
         cedentModel:[{ required: true, message: "请选择分出公司", trigger: "blur" }],
         wsReceiptDate:[{ type: 'date', required: true, message: '请选择账单收到期', trigger: 'blur' }],
+        brokerModel:[{ required: true, message: "请选择经纪公司", trigger: "blur" }],
         correctMailDate:[{ type: 'date', required: true, message: '请选择收到邮件更正期', trigger: 'blur' }],
         occId: [{ required: true, message: '请输入母合同编号', trigger: 'blur' }],
         parentProcessId: [{ required: true, message: '请输入原流程编号', trigger: 'blur' }],
@@ -1038,8 +1020,8 @@ export default {
         this.billSearch.wsCedentCode = '';
         this.billSearch.wsCedentName = '';
       }
-      if (this.brokerModel != null && this.brokerModel != '') {
-        let obj = this.brokerList[this.brokerModel];
+      if (this.billSearch.brokerModel != null && this.billSearch.brokerModel != '') {
+        let obj = this.brokerList[this.billSearch.brokerModel];
         // this.brokerList.unshift({codeName: "无",codeType: null,codecode: "无"});
         if(obj.codeType == null){
           this.billSearch.wsBrokerCode = null;
@@ -1215,8 +1197,6 @@ export default {
       }
       this.zq2 = null;
       this.zq1 = null;
-      this.querySearch.brokerModel = null;
-      this.querySearch.cedentModel = null;
     },
     handleClick(tag, row) {
       this.dialogState = tag;
@@ -1231,8 +1211,6 @@ export default {
           }
           this.zq2 = null;
           this.zq1 = null;
-          this.brokerModel = null;
-          this.cedentModel = null;
           this.dialogFormVisible = true;
           this.title = "手工创建";
           break;
@@ -1290,11 +1268,11 @@ export default {
           if (row.wsBrokerCode) {
             this.brokerList.forEach((el, i) => {
               if (el.codecode == row.wsBrokerCode) {
-                this.brokerModel = i;
+                this.billSearch.brokerModel = i;
               }
             });
           } else {
-            this.brokerModel = '';
+            this.billSearch.brokerModel = '';
           }
           // Business Origin
          if(row.businessOrigin){
