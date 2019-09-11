@@ -2,7 +2,7 @@
   <div class="billPrint">
     <div class="area">
       <span>账单号：</span>
-      <el-input placeholder="请输入账单号" v-model.trim="inputbox"></el-input>
+      <el-input placeholder="请输入账单号" style="width:300px" v-model.trim="inputbox"></el-input>
       <div class="do">操作： <p class="btn" @click="downLoad">生成账单</p></div>
     </div>
   </div>
