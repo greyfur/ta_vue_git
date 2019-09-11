@@ -341,12 +341,7 @@
         </el-form-item>
         <el-form-item label="账单类型" v-show="title==='手工创建' || title==='编辑' || title==='查询'">
           <el-select clearable v-model="billSearch.wsType" placeholder="请选择账单类型">
-            <el-option
-              v-for="item in ZDoptions"
-              :key="item.code"
-              :label="item.name"
-              :value="item.code"
-            ></el-option>
+            <el-option v-for="item in ZDoptions" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="Business Origin" prop="businessOrigin" v-show="title==='手工创建' || title==='编辑'">
@@ -883,17 +878,6 @@ export default {
     },
     split() {
       let arr = document.querySelectorAll(".itemNum");
-      // let subProcessArr = [];
-      // arr.forEach(el=>{
-      //   let obj = {'rmAmount':el.value};
-      //   subProcessArr.push(obj);
-      // })
-      // if(!subProcessArr.length){
-      //   this.$message.error('请填写拆分金额');
-      //   return;
-      // }
-      console.log(this.subProcess)
-
       if (!this.subProcess) {
         this.$message.error("请填写拆分数量");
         return;
@@ -906,8 +890,7 @@ export default {
         return;
       }
       let that=this;
-      this.$http
-        .post("api/worksheet/wSEntry/processSplit", {
+      this.$http.post("api/worksheet/wSEntry/processSplit", {
           processId: that.splitId,
           // subProcess:subProcessArr,
           subProcess: +this.subProcess,
