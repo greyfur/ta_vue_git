@@ -2,7 +2,7 @@
   <div class="billProcess">
     <div :class="searchFlag===true?'searchNew':''" >
       <!-- @click="searchFlag = !searchFlag" <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i>  9.9查询永久展开 -->
-      <div class="titleSearch">查询</div>
+      <!-- <div class="titleSearch">查询</div> -->
        <el-collapse-transition>
       <div v-show="searchFlag">
         <el-row :gutter="10" class="billRow" class-name="transition-box">
@@ -113,7 +113,7 @@
          </el-col>
          
       </el-row>
-      <el-row :gutter="10" class="billRow" class-name="transition-box">
+      <el-row :gutter="10" class="billRow Futop" class-name="transition-box">
         <el-col :span="8">
             <span class="slable">收到日期 &nbsp;&nbsp;</span>
             <el-date-picker
@@ -1015,7 +1015,10 @@ export default {
   border-radius: 2px;
 }
 .searchNew .el-row .slable{ color: #666; }
-.billRow { padding:17px 0; }
+/* .billRow { padding:17px 0; } 9.11注销 */
+.Futop{
+  margin-top: -8px;
+}
 .searchNew .el-col-24{
   margin-bottom: 12px;
   text-align: right;

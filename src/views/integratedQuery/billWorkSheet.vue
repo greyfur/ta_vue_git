@@ -2,7 +2,7 @@
   <div class="billWorkSheet" style="padding-right:30px;">
     <div :class="searchFlag===true?'searchNew':''" >
       <!-- @click="searchFlag = !searchFlag"  <i style="margin-right:8px;" :class="searchFlag===false?'el-icon-arrow-down':'el-icon-arrow-up'"></i> 9.9永久展开 -->
-      <div class="titleSearch">查询</div>
+      <!-- <div class="titleSearch">查询</div> -->
        <el-collapse-transition>
       <div v-show="searchFlag">
         <el-row :gutter="10" class="billRow" class-name="transition-box">
@@ -105,7 +105,7 @@
             <el-input placeholder="请输入账单号" v-model.trim="billSearch.wsId"></el-input>
           </el-col>
         </el-row>
-        <el-row :gutter="10" class="billRow" class-name="transition-box">
+        <el-row :gutter="10" class="billRow Futop" class-name="transition-box">
           <el-col :span="8">
               <span class="slable">收到日期 &nbsp;&nbsp;</span>
               <el-date-picker
@@ -944,5 +944,8 @@ export default {
 .smallHand {
   cursor: pointer;
   color: #409eff;
+}
+.Futop{
+  margin-top: -8px;
 }
 </style>
