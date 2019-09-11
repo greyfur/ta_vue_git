@@ -992,9 +992,9 @@
      <el-dialog title="WILLIS" :visible.sync="dialogFormVisibleWillis" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="130px" :model="willis" ref="willis" :rules="willisRules">
         <el-form-item label="currentDate" prop="currentDate"><el-date-picker v-model="willis.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-        <el-form-item label="币制" prop="rmCurrency"><el-select filterable v-model="whole.rmCurrency" placeholder="请选择" @change="zheTypeChange">
+        <el-form-item label="币制" prop="rmCurrency"><el-select filterable v-model="willis.rmCurrency" placeholder="请选择" @change="zheTypeChange">
         <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option></el-select></el-form-item>
-        <el-form-item label="金额1" prop="orgAmount1"><el-input  placeholder="请输入" v-model="willis.orgAmount1"></el-input></el-form-item>
+        <el-form-item label="金额1" prop="orgAmount1"><el-input  placeholder="请输入" v-model="willis.orgAmount1" @input="moneyBig"></el-input></el-form-item>
         <el-form-item label="金额（大写）" prop="chineseAmount"><el-input  placeholder="请输入" v-model="willis.chineseAmount"></el-input></el-form-item>
         <!-- <el-form-item label="orgAmount2" prop="orgAmount2"><el-input  placeholder="请输入" v-model="willis.orgAmount2"></el-input></el-form-item> -->
         <el-form-item label="param1" prop="param1"><el-input  placeholder="请输入" v-model="willis.param1"></el-input></el-form-item>
@@ -1017,7 +1017,7 @@
         <el-form-item label="电话" prop="telephone"><el-input  placeholder="请输入" v-model="willis.telephone"></el-input></el-form-item>
         <el-form-item>
           <el-button size="small" @click="fourPopUps(0,'willis')">取消</el-button>
-          <el-button size="small" type="primary" plain @click="fourPopUps(5,'willis')" style="padding:0 16px;">确定</el-button>
+          <el-button size="small" type="primary" plain @click="fourPopUps(3,'willis')" style="padding:0 16px;">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -1795,6 +1795,20 @@ export default {
     this.mailSend(2,'',1);
   },
   methods: {
+    TextCapitalization(){
+      this.$http.post("api/docCreate/getChineseAmount", { //金额转大写
+        oriCurrency:this.willis.rmCurrency,
+        orgAmount:Number(this.willis.orgAmount1).toFixed(0)
+      }).then(res=>{
+        console.log(res)
+        if(res.status===200&&res.statusText==='OK'){
+          this.willis.chineseAmount=res.data;
+        }
+      });
+    },
+    moneyBig(){
+        this.TextCapitalization();
+    },
     getJson(){
       // console.log('getJson')
       // console.log(JSON.parse(this.$route.query.row.replace(/sortOperation/g,''))) 9.3解决刷新
@@ -1827,12 +1841,9 @@ export default {
     EchoDisplay(){
         this.$http.post("api/othersDO/bscBankInfo/list",{})//9.9境外 全额初始化回显
         .then(res => {
-          console.log(this.row)
-          console.log(this.row.recComId)
           var detail=res.data.rows.filter(item=>{
             return item.id==this.row.recComId;
           })
-          console.log(detail)
           if(detail.length>0){
             //2 币制
             this.risk.businessAmount=this.listData[4].b;
@@ -1852,6 +1863,7 @@ export default {
             this.willis.compAddr=detail[0].compAddr;
             this.willis.bankInfo=detail[0].bankInfo;
             this.willis.bankAddr=detail[0].bankAddr;
+            this.TextCapitalization();
           }
         })
     },
@@ -1878,6 +1890,7 @@ export default {
 
         this.dialogFormVisibleWillis=true;
         this.EchoDisplay();
+        console.log(this.willis.rmCurrency,this.willis.orgAmount1)
         // this.$http.post("api/------", {processId: this.row.processId})
         // .then(res => {
 
@@ -1985,10 +1998,10 @@ export default {
           });
           console.log('境外人民币确定')
         break;
-        case 3: // WILLIS
+        case 3: // 转账模板
+        console.log(this.willis.rmCurrency,this.willis.orgAmount1)
              this.$refs[formName].validate((valid) => {
-            console.log(valid)
-            if (valid) {
+              if (valid) {
                 this.$http.post("api/docCreate/createWillisDoc", {
                   processId: this.row.processId,
                   actOperator: this.row.curOperator,
@@ -3375,6 +3388,9 @@ export default {
       }
     },
     zheTypeChange(){  // 折币币制改变 --- 改总折币金额 --- 改原币制的汇率
+
+     this.TextCapitalization();//金额转大写
+
       console.log(this.makeDocListEctype.yuanNum,'this.makeDocListEctype.yuanNum');
       // 当原币币制不是CNY或者USD,都要转先转成美元，再转成折币的小币种
       if(this.makeDocListEctype.yuanType.length){
