@@ -917,13 +917,14 @@
 
     <!-- 高风险地区 -->
     <el-dialog title="高风险地区" :visible.sync="dialogFormVisibleRisk" :close-on-click-modal="modal">
-      <el-form :label-position="labelPosition" :model="risk" :rules="RiskAreasRules" label-width="100px" ref="risk">
-        <el-form-item label="汇款编号" prop="remittanceNumber" required><el-input  placeholder="请输入" v-model="risk.remittanceNumber"></el-input></el-form-item>
-        <el-form-item label="发票号" prop="invoiceNumber" required><el-input  placeholder="请输入" v-model="risk.invoiceNumber"></el-input></el-form-item>
+      <!-- required :rules="RiskAreasRules"-->
+      <el-form :label-position="labelPosition" :model="risk"  label-width="100px" ref="risk">
+        <el-form-item label="汇款编号" prop="remittanceNumber" ><el-input  placeholder="请输入" v-model="risk.remittanceNumber"></el-input></el-form-item>
+        <el-form-item label="发票号" prop="invoiceNumber" ><el-input  placeholder="请输入" v-model="risk.invoiceNumber"></el-input></el-form-item>
         <el-form-item label="币制" prop="rmCurrency"><el-select filterable v-model="risk.rmCurrency" placeholder="请选择" @change="zheTypeChange">
         <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option></el-select></el-form-item>
-        <el-form-item label="业务金额" prop="businessAmount" required><el-input  placeholder="请输入" v-model="risk.businessAmount"></el-input></el-form-item>
-        <el-form-item label="日期" prop="currentDate" required><el-date-picker v-model="risk.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="业务金额" prop="businessAmount" ><el-input  placeholder="请输入" v-model="risk.businessAmount"></el-input></el-form-item>
+        <el-form-item label="日期" prop="currentDate" ><el-date-picker v-model="risk.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
         <el-form-item>
           <el-button size="small" @click="fourPopUps(0,'risk')">取消</el-button>
           <el-button size="small" type="primary" plain @click="fourPopUps(1,'risk')" style="padding:0 16px;">确定</el-button>
@@ -933,7 +934,8 @@
 
     <!-- 境外人民币 -->
     <el-dialog title="境外人民币" :visible.sync="dialogFormVisibleOversea" :close-on-click-modal="modal">
-      <el-form :label-position="labelPosition" label-width="120px" :model="oversea" ref="oversea" :rules="overseaRules">
+      <!-- :rules="overseaRules" -->
+      <el-form :label-position="labelPosition" label-width="120px" :model="oversea" ref="oversea" >
         <el-form-item label="付款日期" prop="payDate"><el-date-picker v-model="oversea.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
         <el-form-item label="付款企业名称" prop="rmSettleCompanyName"><el-input  placeholder="请输入" v-model="oversea.rmSettleCompanyName"></el-input></el-form-item>
         <el-form-item label="组织机构代码" prop="orgCode"><el-input  placeholder="请输入" v-model="oversea.orgCode"></el-input></el-form-item>
@@ -951,24 +953,11 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
-      <!-- 转账模板 -->
-     <el-dialog title="转账模板" :visible.sync="dialogFormVisibleTransfer" :close-on-click-modal="modal">
-      <!-- <el-form :label-position="labelPosition" :model="transfer" :rules="transferRules" label-width="100px" ref="transfer">
-        <el-form-item label="汇款编号" prop="remittanceNumber" required><el-input  placeholder="请输入" v-model="risk.remittanceNumber"></el-input></el-form-item>
-        <el-form-item label="发票号" prop="invoiceNumber" required><el-input  placeholder="请输入" v-model="risk.invoiceNumber"></el-input></el-form-item>
-        <el-form-item label="业务金额" prop="businessAmount" required><el-input  placeholder="请输入" v-model="risk.businessAmount"></el-input></el-form-item>
-        <el-form-item label="日期" prop="currentDate" required><el-date-picker v-model="risk.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-        <el-form-item>
-          <el-button size="small" @click="fourPopUps(0,'transfer')">取消</el-button>
-          <el-button size="small" type="primary" plain @click="fourPopUps(1,'transfer')" style="padding:0 16px;">确定</el-button>
-        </el-form-item>
-      </el-form> -->
-    </el-dialog>
     
     <!-- 全额 -->
     <el-dialog title="全额" :visible.sync="dialogFormVisibleWhole" :close-on-click-modal="modal">
-      <el-form :label-position="labelPosition" label-width="120px" :model="whole" ref="whole" :rules="wholeRules">
+      <!-- :rules="wholeRules" -->
+      <el-form :label-position="labelPosition" label-width="120px" :model="whole" ref="whole" >
         <el-form-item label="付款银行名称" prop="rmAccountbankName"><el-input  placeholder="请输入" v-model="whole.rmAccountbankName"></el-input></el-form-item>
         <el-form-item label="汇款日期" prop="payDate"><el-date-picker v-model="whole.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
         <el-form-item label="币制" prop="rmCurrency"><el-select filterable v-model="whole.rmCurrency" placeholder="请选择" @change="zheTypeChange">
@@ -989,8 +978,9 @@
     </el-dialog>
 
     <!-- WILLIS -->
-     <el-dialog title="WILLIS" :visible.sync="dialogFormVisibleWillis" :close-on-click-modal="modal">
-      <el-form :label-position="labelPosition" label-width="130px" :model="willis" ref="willis" :rules="willisRules">
+     <el-dialog title="转账模板" :visible.sync="dialogFormVisibleWillis" :close-on-click-modal="modal">
+       <!-- :rules="willisRules" -->
+      <el-form :label-position="labelPosition" label-width="130px" :model="willis" ref="willis" >
         <el-form-item label="currentDate" prop="currentDate"><el-date-picker v-model="willis.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
         <el-form-item label="币制" prop="rmCurrency"><el-select filterable v-model="willis.rmCurrency" placeholder="请选择" @change="zheTypeChange">
         <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option></el-select></el-form-item>
@@ -1565,161 +1555,162 @@ export default {
             { required: true, message: '请输入手续费金额', trigger: 'blur' }
           ],
         },
-        RiskAreasRules:{
-          rmCurrency:[{
-            required: true, message: '请选择币制', trigger: 'blur' 
-          }],
-          remittanceNumber: [
-            { required: true, message: '请输入汇款账号', trigger: 'blur' }
-          ],
-          invoiceNumber: [
-            { required: true, message: '请输入发票号', trigger: 'blur' }
-          ],
-          businessAmount: [
-            { required: true, message: '请输入业务金额', trigger: 'blur' }
-          ],
-          currentDate: [
-            { required: true, message: '请选择日期', trigger: 'blur' }
-          ],
-        },
-        overseaRules:{
-          payDate: [
-            { required: true, message: '请选择付款日期', trigger: 'blur' }
-          ],
-          rmSettleCompanyName: [
-            { required: true, message: '请输入付款企业名称', trigger: 'blur' }
-          ],
-          orgCode: [
-            { required: true, message: '请输入组织机构代码', trigger: 'blur' }
-          ],
-          compName: [
-            { required: true, message: '请输入收款人名称', trigger: 'blur' }
-          ],
-         rmCurrency:[{
-            required: true, message: '请选择币制', trigger: 'blur' 
-         }],
-          toltalAmount: [
-            { required: true, message: '请输入付款金额合计', trigger: 'blur' }
-          ],
-          tradeAmount: [
-            { required: true, message: '请输入服务贸易', trigger: 'blur' }
-          ],
-          operator: [
-            { required: true, message: '请输入填报人', trigger: 'blur' }
-          ],
-          telephone: [
-            { required: true, message: '请输入联系电话', trigger: 'blur' }
-          ],
-          country: [
-            { required: true, message: '请输入收款人国别', trigger: 'blur' }
-          ],
-        },
-        wholeRules:{
-          rmAccountbankName: [
-            { required: true, message: '请输入付款银行', trigger: 'blur' }
-          ],
-          payDate: [
-            { required: true, message: '请选择日期', trigger: 'blur' }
-          ],
-           rmCurrency:[{
-            required: true, message: '请选择币制', trigger: 'blur' 
-         }],
-          rmAmount: [
-            { required: true, message: '请输入汇款币别/金额', trigger: 'blur' }
-          ],
-          compName: [
-            { required: true, message: '请输入收款人名称', trigger: 'blur' }
-          ],
-          bankName: [
-            { required: true, message: '请输入收款人开户银行号', trigger: 'blur' }
-          ],
-          bankAcnt: [
-            { required: true, message: '请输入借记账号', trigger: 'blur' }
-          ],
-          rmOriSettleCompanyName: [
-            { required: true, message: '请输入授权公司', trigger: 'blur' }
-          ],
-          operator: [
-            { required: true, message: '请输入经办人姓名', trigger: 'blur' }
-          ],
-          telephone: [
-            { required: true, message: '请输入联系电话', trigger: 'blur' }
-          ],
-           currentDate: [
-            { required: true, message: '请选择日期', trigger: 'blur' }
-          ],
-        },
-        willisRules:{
-          rmCurrency:[{
-              required: true, message: '请选择币制', trigger: 'blur' 
-          }],
-          payDate: [
-            { required: true, message: '请选择日期', trigger: 'blur' }
-          ],
-          currentDate: [
-            { required: true, message: '请选择日期', trigger: 'blur' }
-          ],
-          operator: [
-            { required: true, message: '请输入operator', trigger: 'blur' }
-          ],
-          telephone: [
-            { required: true, message: '请输入telephone', trigger: 'blur' }
-          ],
-          param1:[{
-            required: true, message: '请输入param1', trigger: 'blur' 
-         }],
-          param2: [
-            { required: true, message: '请输入param2', trigger: 'blur' }
-          ],
-          param3: [
-            { required: true, message: '请输入param3', trigger: 'blur' }
-          ],
-          param4: [
-            { required: true, message: '请输入param4', trigger: 'blur' }
-          ],
-          param5: [
-            { required: true, message: '请输入param5', trigger: 'blur' }
-          ],
-          param6: [
-            { required: true, message: '请输入param6', trigger: 'blur' }
-          ],
-          param7: [
-            { required: true, message: '请输入param7', trigger: 'blur' }
-          ],
-          param8: [
-            { required: true, message: '请输入param8', trigger: 'blur' }
-          ],
-          orgAmount1:[{
-            required: true, message: '请输入orgAmount1', trigger: 'blur' 
-         }],
-          orgAmount2: [
-            { required: true, message: '请输入orgAmount2', trigger: 'blur' }
-          ],
-          orgAmount3: [
-            { required: true, message: '请输入orgAmount3', trigger: 'blur' }
-          ],
-          chineseAmount: [
-            { required: true, message: '请输入chineseAmount', trigger: 'blur' }
-          ],
-          bankAddr:[{
-            required: true, message: '请输入bankAddr', trigger: 'blur' 
-         }],
-          bankInfo: [
-            { required: true, message: '请输入bankInfo', trigger: 'blur' }
-          ],
-          compName: [
-            { required: true, message: '请输入compName', trigger: 'blur' }
-          ],
-          compAddr: [
-            { required: true, message: '请输入compAddr', trigger: 'blur' }
-          ],
-          mark1:[
-            { required: true, message: '请输入mark1', trigger: 'blur' }
-          ],
-          mark2:[
-            { required: true, message: '请输入mark2', trigger: 'blur' }
-          ],
-        },
+        // 9.14表单改为不必填
+        // RiskAreasRules:{
+        //   rmCurrency:[{
+        //     required: true, message: '请选择币制', trigger: 'blur' 
+        //   }],
+        //   remittanceNumber: [
+        //     { required: true, message: '请输入汇款账号', trigger: 'blur' }
+        //   ],
+        //   invoiceNumber: [
+        //     { required: true, message: '请输入发票号', trigger: 'blur' }
+        //   ],
+        //   businessAmount: [
+        //     { required: true, message: '请输入业务金额', trigger: 'blur' }
+        //   ],
+        //   currentDate: [
+        //     { required: true, message: '请选择日期', trigger: 'blur' }
+        //   ],
+        // },
+        // overseaRules:{
+        //   payDate: [
+        //     { required: true, message: '请选择付款日期', trigger: 'blur' }
+        //   ],
+        //   rmSettleCompanyName: [
+        //     { required: true, message: '请输入付款企业名称', trigger: 'blur' }
+        //   ],
+        //   orgCode: [
+        //     { required: true, message: '请输入组织机构代码', trigger: 'blur' }
+        //   ],
+        //   compName: [
+        //     { required: true, message: '请输入收款人名称', trigger: 'blur' }
+        //   ],
+        //  rmCurrency:[{
+        //     required: true, message: '请选择币制', trigger: 'blur' 
+        //  }],
+        //   toltalAmount: [
+        //     { required: true, message: '请输入付款金额合计', trigger: 'blur' }
+        //   ],
+        //   tradeAmount: [
+        //     { required: true, message: '请输入服务贸易', trigger: 'blur' }
+        //   ],
+        //   operator: [
+        //     { required: true, message: '请输入填报人', trigger: 'blur' }
+        //   ],
+        //   telephone: [
+        //     { required: true, message: '请输入联系电话', trigger: 'blur' }
+        //   ],
+        //   country: [
+        //     { required: true, message: '请输入收款人国别', trigger: 'blur' }
+        //   ],
+        // },
+        // wholeRules:{
+        //   rmAccountbankName: [
+        //     { required: true, message: '请输入付款银行', trigger: 'blur' }
+        //   ],
+        //   payDate: [
+        //     { required: true, message: '请选择日期', trigger: 'blur' }
+        //   ],
+        //    rmCurrency:[{
+        //     required: true, message: '请选择币制', trigger: 'blur' 
+        //  }],
+        //   rmAmount: [
+        //     { required: true, message: '请输入汇款币别/金额', trigger: 'blur' }
+        //   ],
+        //   compName: [
+        //     { required: true, message: '请输入收款人名称', trigger: 'blur' }
+        //   ],
+        //   bankName: [
+        //     { required: true, message: '请输入收款人开户银行号', trigger: 'blur' }
+        //   ],
+        //   bankAcnt: [
+        //     { required: true, message: '请输入借记账号', trigger: 'blur' }
+        //   ],
+        //   rmOriSettleCompanyName: [
+        //     { required: true, message: '请输入授权公司', trigger: 'blur' }
+        //   ],
+        //   operator: [
+        //     { required: true, message: '请输入经办人姓名', trigger: 'blur' }
+        //   ],
+        //   telephone: [
+        //     { required: true, message: '请输入联系电话', trigger: 'blur' }
+        //   ],
+        //    currentDate: [
+        //     { required: true, message: '请选择日期', trigger: 'blur' }
+        //   ],
+        // },
+        // willisRules:{
+        //   rmCurrency:[{
+        //       required: true, message: '请选择币制', trigger: 'blur' 
+        //   }],
+        //   payDate: [
+        //     { required: true, message: '请选择日期', trigger: 'blur' }
+        //   ],
+        //   currentDate: [
+        //     { required: true, message: '请选择日期', trigger: 'blur' }
+        //   ],
+        //   operator: [
+        //     { required: true, message: '请输入operator', trigger: 'blur' }
+        //   ],
+        //   telephone: [
+        //     { required: true, message: '请输入telephone', trigger: 'blur' }
+        //   ],
+        //   param1:[{
+        //     required: true, message: '请输入param1', trigger: 'blur' 
+        //  }],
+        //   param2: [
+        //     { required: true, message: '请输入param2', trigger: 'blur' }
+        //   ],
+        //   param3: [
+        //     { required: true, message: '请输入param3', trigger: 'blur' }
+        //   ],
+        //   param4: [
+        //     { required: true, message: '请输入param4', trigger: 'blur' }
+        //   ],
+        //   param5: [
+        //     { required: true, message: '请输入param5', trigger: 'blur' }
+        //   ],
+        //   param6: [
+        //     { required: true, message: '请输入param6', trigger: 'blur' }
+        //   ],
+        //   param7: [
+        //     { required: true, message: '请输入param7', trigger: 'blur' }
+        //   ],
+        //   param8: [
+        //     { required: true, message: '请输入param8', trigger: 'blur' }
+        //   ],
+        //   orgAmount1:[{
+        //     required: true, message: '请输入orgAmount1', trigger: 'blur' 
+        //  }],
+        //   orgAmount2: [
+        //     { required: true, message: '请输入orgAmount2', trigger: 'blur' }
+        //   ],
+        //   orgAmount3: [
+        //     { required: true, message: '请输入orgAmount3', trigger: 'blur' }
+        //   ],
+        //   chineseAmount: [
+        //     { required: true, message: '请输入chineseAmount', trigger: 'blur' }
+        //   ],
+        //   bankAddr:[{
+        //     required: true, message: '请输入bankAddr', trigger: 'blur' 
+        //  }],
+        //   bankInfo: [
+        //     { required: true, message: '请输入bankInfo', trigger: 'blur' }
+        //   ],
+        //   compName: [
+        //     { required: true, message: '请输入compName', trigger: 'blur' }
+        //   ],
+        //   compAddr: [
+        //     { required: true, message: '请输入compAddr', trigger: 'blur' }
+        //   ],
+        //   mark1:[
+        //     { required: true, message: '请输入mark1', trigger: 'blur' }
+        //   ],
+        //   mark2:[
+        //     { required: true, message: '请输入mark2', trigger: 'blur' }
+        //   ],
+        // },
         AllBankAccountList:[],
         flagJ:null,
         reverseRow:{},
@@ -1933,7 +1924,7 @@ export default {
                  actOperator: this.row.curOperator , 
                  remittanceNumber: this.risk.remittanceNumber,
                  invoiceNumber: this.risk.invoiceNumber,
-                 businessAmount:this.risk.rmCurrency+Number(this.risk.businessAmount).toFixed(2),
+                 businessAmount:this.risk.businessAmount!==''?this.risk.rmCurrency+Number(this.risk.businessAmount).toFixed(2):null,
                  currentDate:this.risk.currentDate,
                })
               .then(res => {
@@ -1959,8 +1950,9 @@ export default {
           console.log('高风险地区确定')
         break;
         case 2: // 境外人民币
+        console.log(this.oversea.toltalAmount)
+        console.log(this.oversea.toltalAmount!==''?Number(this.oversea.toltalAmount).toFixed(2):null)
           this.$refs[formName].validate((valid) => {
-            console.log(valid)
             if (valid) {
                 this.$http.post("api/docCreate/createCBB", {
                   processId: this.row.processId,
@@ -1969,9 +1961,9 @@ export default {
                   rmSettleCompanyName: this.oversea.rmSettleCompanyName,
                   orgCode: this.oversea.orgCode,
                   compName: this.oversea.compName,
-                  totalAmount: Number(this.oversea.toltalAmount).toFixed(2),
+                  totalAmount:this.oversea.toltalAmount!==''?Number(this.oversea.toltalAmount).toFixed(2):null,
                   // toltalAmount: this.oversea.rmCurrency+this.oversea.toltalAmount,
-                  tradeAmount: Number(this.oversea.tradeAmount).toFixed(2),
+                  tradeAmount:this.oversea.tradeAmount!==''?Number(this.oversea.tradeAmount).toFixed(2):null,
                   operator: this.oversea.operator,
                   telephone: this.oversea.telephone,
                   country: this.oversea.country,
@@ -2020,7 +2012,7 @@ export default {
                   mark1: this.willis.mark1,
                   mark2: this.willis.mark2,
                   orgCurrency:this.willis.rmCurrency,
-                  orgAmount1:Number(this.willis.orgAmount1).toFixed(2),
+                  orgAmount1:this.willis.orgAmount1!==''?Number(this.willis.orgAmount1).toFixed(2):null,
                   // orgAmount2: this.willis.orgAmount2,
                   // orgAmount3: this.willis.orgAmount3,
                   chineseAmount: this.willis.chineseAmount,
@@ -2059,7 +2051,7 @@ export default {
                 actOperator: this.row.curOperator , 
                 rmAccountbankName: this.whole.rmAccountbankName,
                 payDate: this.whole.payDate,
-                rmAmount:this.whole.rmCurrency+Number(this.whole.rmAmount).toFixed(2),
+                rmAmount:this.whole.rmAmount!==''?this.whole.rmCurrency+Number(this.whole.rmAmount).toFixed(2):null,
                 compName: this.whole.compName,
                 bankName: this.whole.bankName,
                 bankAcnt: this.whole.bankAcnt,
