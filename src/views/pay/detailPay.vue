@@ -1565,161 +1565,162 @@ export default {
             { required: true, message: '请输入手续费金额', trigger: 'blur' }
           ],
         },
-        RiskAreasRules:{
-          rmCurrency:[{
-            required: true, message: '请选择币制', trigger: 'blur' 
-          }],
-          remittanceNumber: [
-            { required: true, message: '请输入汇款账号', trigger: 'blur' }
-          ],
-          invoiceNumber: [
-            { required: true, message: '请输入发票号', trigger: 'blur' }
-          ],
-          businessAmount: [
-            { required: true, message: '请输入业务金额', trigger: 'blur' }
-          ],
-          currentDate: [
-            { required: true, message: '请选择日期', trigger: 'blur' }
-          ],
-        },
-        overseaRules:{
-          payDate: [
-            { required: true, message: '请选择付款日期', trigger: 'blur' }
-          ],
-          rmSettleCompanyName: [
-            { required: true, message: '请输入付款企业名称', trigger: 'blur' }
-          ],
-          orgCode: [
-            { required: true, message: '请输入组织机构代码', trigger: 'blur' }
-          ],
-          compName: [
-            { required: true, message: '请输入收款人名称', trigger: 'blur' }
-          ],
-         rmCurrency:[{
-            required: true, message: '请选择币制', trigger: 'blur' 
-         }],
-          toltalAmount: [
-            { required: true, message: '请输入付款金额合计', trigger: 'blur' }
-          ],
-          tradeAmount: [
-            { required: true, message: '请输入服务贸易', trigger: 'blur' }
-          ],
-          operator: [
-            { required: true, message: '请输入填报人', trigger: 'blur' }
-          ],
-          telephone: [
-            { required: true, message: '请输入联系电话', trigger: 'blur' }
-          ],
-          country: [
-            { required: true, message: '请输入收款人国别', trigger: 'blur' }
-          ],
-        },
-        wholeRules:{
-          rmAccountbankName: [
-            { required: true, message: '请输入付款银行', trigger: 'blur' }
-          ],
-          payDate: [
-            { required: true, message: '请选择日期', trigger: 'blur' }
-          ],
-           rmCurrency:[{
-            required: true, message: '请选择币制', trigger: 'blur' 
-         }],
-          rmAmount: [
-            { required: true, message: '请输入汇款币别/金额', trigger: 'blur' }
-          ],
-          compName: [
-            { required: true, message: '请输入收款人名称', trigger: 'blur' }
-          ],
-          bankName: [
-            { required: true, message: '请输入收款人开户银行号', trigger: 'blur' }
-          ],
-          bankAcnt: [
-            { required: true, message: '请输入借记账号', trigger: 'blur' }
-          ],
-          rmOriSettleCompanyName: [
-            { required: true, message: '请输入授权公司', trigger: 'blur' }
-          ],
-          operator: [
-            { required: true, message: '请输入经办人姓名', trigger: 'blur' }
-          ],
-          telephone: [
-            { required: true, message: '请输入联系电话', trigger: 'blur' }
-          ],
-           currentDate: [
-            { required: true, message: '请选择日期', trigger: 'blur' }
-          ],
-        },
-        willisRules:{
-          rmCurrency:[{
-              required: true, message: '请选择币制', trigger: 'blur' 
-          }],
-          payDate: [
-            { required: true, message: '请选择日期', trigger: 'blur' }
-          ],
-          currentDate: [
-            { required: true, message: '请选择日期', trigger: 'blur' }
-          ],
-          operator: [
-            { required: true, message: '请输入operator', trigger: 'blur' }
-          ],
-          telephone: [
-            { required: true, message: '请输入telephone', trigger: 'blur' }
-          ],
-          param1:[{
-            required: true, message: '请输入param1', trigger: 'blur' 
-         }],
-          param2: [
-            { required: true, message: '请输入param2', trigger: 'blur' }
-          ],
-          param3: [
-            { required: true, message: '请输入param3', trigger: 'blur' }
-          ],
-          param4: [
-            { required: true, message: '请输入param4', trigger: 'blur' }
-          ],
-          param5: [
-            { required: true, message: '请输入param5', trigger: 'blur' }
-          ],
-          param6: [
-            { required: true, message: '请输入param6', trigger: 'blur' }
-          ],
-          param7: [
-            { required: true, message: '请输入param7', trigger: 'blur' }
-          ],
-          param8: [
-            { required: true, message: '请输入param8', trigger: 'blur' }
-          ],
-          orgAmount1:[{
-            required: true, message: '请输入orgAmount1', trigger: 'blur' 
-         }],
-          orgAmount2: [
-            { required: true, message: '请输入orgAmount2', trigger: 'blur' }
-          ],
-          orgAmount3: [
-            { required: true, message: '请输入orgAmount3', trigger: 'blur' }
-          ],
-          chineseAmount: [
-            { required: true, message: '请输入chineseAmount', trigger: 'blur' }
-          ],
-          bankAddr:[{
-            required: true, message: '请输入bankAddr', trigger: 'blur' 
-         }],
-          bankInfo: [
-            { required: true, message: '请输入bankInfo', trigger: 'blur' }
-          ],
-          compName: [
-            { required: true, message: '请输入compName', trigger: 'blur' }
-          ],
-          compAddr: [
-            { required: true, message: '请输入compAddr', trigger: 'blur' }
-          ],
-          mark1:[
-            { required: true, message: '请输入mark1', trigger: 'blur' }
-          ],
-          mark2:[
-            { required: true, message: '请输入mark2', trigger: 'blur' }
-          ],
-        },
+        // 9.14表单改为不必填
+        // RiskAreasRules:{
+        //   rmCurrency:[{
+        //     required: true, message: '请选择币制', trigger: 'blur' 
+        //   }],
+        //   remittanceNumber: [
+        //     { required: true, message: '请输入汇款账号', trigger: 'blur' }
+        //   ],
+        //   invoiceNumber: [
+        //     { required: true, message: '请输入发票号', trigger: 'blur' }
+        //   ],
+        //   businessAmount: [
+        //     { required: true, message: '请输入业务金额', trigger: 'blur' }
+        //   ],
+        //   currentDate: [
+        //     { required: true, message: '请选择日期', trigger: 'blur' }
+        //   ],
+        // },
+        // overseaRules:{
+        //   payDate: [
+        //     { required: true, message: '请选择付款日期', trigger: 'blur' }
+        //   ],
+        //   rmSettleCompanyName: [
+        //     { required: true, message: '请输入付款企业名称', trigger: 'blur' }
+        //   ],
+        //   orgCode: [
+        //     { required: true, message: '请输入组织机构代码', trigger: 'blur' }
+        //   ],
+        //   compName: [
+        //     { required: true, message: '请输入收款人名称', trigger: 'blur' }
+        //   ],
+        //  rmCurrency:[{
+        //     required: true, message: '请选择币制', trigger: 'blur' 
+        //  }],
+        //   toltalAmount: [
+        //     { required: true, message: '请输入付款金额合计', trigger: 'blur' }
+        //   ],
+        //   tradeAmount: [
+        //     { required: true, message: '请输入服务贸易', trigger: 'blur' }
+        //   ],
+        //   operator: [
+        //     { required: true, message: '请输入填报人', trigger: 'blur' }
+        //   ],
+        //   telephone: [
+        //     { required: true, message: '请输入联系电话', trigger: 'blur' }
+        //   ],
+        //   country: [
+        //     { required: true, message: '请输入收款人国别', trigger: 'blur' }
+        //   ],
+        // },
+        // wholeRules:{
+        //   rmAccountbankName: [
+        //     { required: true, message: '请输入付款银行', trigger: 'blur' }
+        //   ],
+        //   payDate: [
+        //     { required: true, message: '请选择日期', trigger: 'blur' }
+        //   ],
+        //    rmCurrency:[{
+        //     required: true, message: '请选择币制', trigger: 'blur' 
+        //  }],
+        //   rmAmount: [
+        //     { required: true, message: '请输入汇款币别/金额', trigger: 'blur' }
+        //   ],
+        //   compName: [
+        //     { required: true, message: '请输入收款人名称', trigger: 'blur' }
+        //   ],
+        //   bankName: [
+        //     { required: true, message: '请输入收款人开户银行号', trigger: 'blur' }
+        //   ],
+        //   bankAcnt: [
+        //     { required: true, message: '请输入借记账号', trigger: 'blur' }
+        //   ],
+        //   rmOriSettleCompanyName: [
+        //     { required: true, message: '请输入授权公司', trigger: 'blur' }
+        //   ],
+        //   operator: [
+        //     { required: true, message: '请输入经办人姓名', trigger: 'blur' }
+        //   ],
+        //   telephone: [
+        //     { required: true, message: '请输入联系电话', trigger: 'blur' }
+        //   ],
+        //    currentDate: [
+        //     { required: true, message: '请选择日期', trigger: 'blur' }
+        //   ],
+        // },
+        // willisRules:{
+        //   rmCurrency:[{
+        //       required: true, message: '请选择币制', trigger: 'blur' 
+        //   }],
+        //   payDate: [
+        //     { required: true, message: '请选择日期', trigger: 'blur' }
+        //   ],
+        //   currentDate: [
+        //     { required: true, message: '请选择日期', trigger: 'blur' }
+        //   ],
+        //   operator: [
+        //     { required: true, message: '请输入operator', trigger: 'blur' }
+        //   ],
+        //   telephone: [
+        //     { required: true, message: '请输入telephone', trigger: 'blur' }
+        //   ],
+        //   param1:[{
+        //     required: true, message: '请输入param1', trigger: 'blur' 
+        //  }],
+        //   param2: [
+        //     { required: true, message: '请输入param2', trigger: 'blur' }
+        //   ],
+        //   param3: [
+        //     { required: true, message: '请输入param3', trigger: 'blur' }
+        //   ],
+        //   param4: [
+        //     { required: true, message: '请输入param4', trigger: 'blur' }
+        //   ],
+        //   param5: [
+        //     { required: true, message: '请输入param5', trigger: 'blur' }
+        //   ],
+        //   param6: [
+        //     { required: true, message: '请输入param6', trigger: 'blur' }
+        //   ],
+        //   param7: [
+        //     { required: true, message: '请输入param7', trigger: 'blur' }
+        //   ],
+        //   param8: [
+        //     { required: true, message: '请输入param8', trigger: 'blur' }
+        //   ],
+        //   orgAmount1:[{
+        //     required: true, message: '请输入orgAmount1', trigger: 'blur' 
+        //  }],
+        //   orgAmount2: [
+        //     { required: true, message: '请输入orgAmount2', trigger: 'blur' }
+        //   ],
+        //   orgAmount3: [
+        //     { required: true, message: '请输入orgAmount3', trigger: 'blur' }
+        //   ],
+        //   chineseAmount: [
+        //     { required: true, message: '请输入chineseAmount', trigger: 'blur' }
+        //   ],
+        //   bankAddr:[{
+        //     required: true, message: '请输入bankAddr', trigger: 'blur' 
+        //  }],
+        //   bankInfo: [
+        //     { required: true, message: '请输入bankInfo', trigger: 'blur' }
+        //   ],
+        //   compName: [
+        //     { required: true, message: '请输入compName', trigger: 'blur' }
+        //   ],
+        //   compAddr: [
+        //     { required: true, message: '请输入compAddr', trigger: 'blur' }
+        //   ],
+        //   mark1:[
+        //     { required: true, message: '请输入mark1', trigger: 'blur' }
+        //   ],
+        //   mark2:[
+        //     { required: true, message: '请输入mark2', trigger: 'blur' }
+        //   ],
+        // },
         AllBankAccountList:[],
         flagJ:null,
         reverseRow:{},
