@@ -21,7 +21,7 @@ export default {
   },
   methods:{
     downLoad(){
-      this.$http.post("api/",{inputbox:this.inputbox},{responseType: "blob"}).then(res => {
+      this.$http.get(`api/reportform/Printbills/${this.inputbox}`,{responseType: "blob"}).then(res => {
           if (res.status === 200) {
             this.path2 = this.getObjectURL(res.data);
             if (res.data) {
