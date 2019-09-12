@@ -1852,6 +1852,8 @@ export default {
             this.willis. orgAmount1=this.listData[4].b;
             this.willis.compName=detail[0].compName;
             this.willis.compAddr=detail[0].compAddr;
+            console.log(detail[0])
+            console.log(detail[0].compAddr)
             this.willis.bankInfo=detail[0].bankInfo;
             this.willis.bankAddr=detail[0].bankAddr;
             this.TextCapitalization();

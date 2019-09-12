@@ -255,7 +255,7 @@
       :total="mustData.total">      
     </el-pagination>
     <!-- 弹窗 -->
-    <el-dialog title="踪迹" width="720px" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
+    <el-dialog title="踪迹" width="1160px" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
       <el-collapse v-show="title=='踪迹'">
         <el-collapse-item title="状态流转图">
           <img :src="picture" style="width:100%" @click="dialogFormVisible1=true">

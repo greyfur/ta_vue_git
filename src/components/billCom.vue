@@ -56,7 +56,7 @@
               </div>
             </el-col>
           </el-row>
-           <el-row :gutter="10" class="billRow"> 
+           <el-row :gutter="10" class="billRow Futop"> 
             <el-col :span="8" v-if="urlName!=='sortOperation'">
               <span class="slable">录入人 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
               <!-- <el-input placeholder="请输入录入人查询" v-model.trim="billSearch.registBy"></el-input> -->
@@ -1681,5 +1681,8 @@ export default {
   }
   .wsDate::-webkit-input-placeholder{
     color: #ccc;
+  }
+  .Futop{
+    margin-top: -8px;
   }
 </style>
