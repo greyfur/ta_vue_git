@@ -106,13 +106,15 @@ body .el-table colgroup.gutter {
 }
 .el-button--primary.is-plain{
   height: 32px;
-  background-color: #005C8D;
-  background: #005C8D;
+  background-color: #005C8D !important;
+  background: #005C8D !important;
+  border: 1px solid #005C8D !important;
   line-height: 8px;
   color: #fff;
   font-weight: 400;
   border: none;
   font-size: 12px;
+  margin-left: 5px;
 }
 .el-button--primary.is-plain .iconfont{
   margin-right: 8px;
@@ -231,7 +233,7 @@ table th{
   margin-top: 10px;
 }
 .wrapInput .huilvInput input.el-input__inner,.wrapInput .singleInput  input.el-input__inner{text-align: right;}
-.borderBtn{
+.btn .borderBtn{
   background: #fff !important;
   border: 1px solid #D9D9D9 !important;
   color: #000 !important;

@@ -27,10 +27,10 @@
           </el-col>
         </el-row>
         <el-row :gutter="10" class="billRow">
-          <el-col :span="8">
+          <!-- <el-col :span="8">
             <span class="slable">到账日期</span>
               <el-date-picker value-format="timestamp" v-model="formLabelAlign.rmReceiptDate" type="date" placeholder="选择日期"></el-date-picker>
-          </el-col>
+          </el-col> -->
           <el-col :span="8">
             <span class="slable">收/付款 &nbsp;</span>
             <el-select clearable v-model="formLabelAlign.processType" placeholder="请选择">
@@ -52,18 +52,19 @@
                 </el-option>
               </el-select>
           </el-col>
+          <el-col :span="8">
+            <span class="slable">复核人 &nbsp;&nbsp;</span>
+            <el-select clearable v-model="formLabelAlign.closedBy" placeholder="请选择复核人">
+              <el-option v-for="(item,index) in nameList" :key="index" :label="item" :value="index"></el-option>
+            </el-select>
+          </el-col>
         </el-row>
         <el-row :gutter="10" class="billRow">
         <!-- <el-col :span="8">
           <span class="slable">复核人 &nbsp;&nbsp;</span>
           <el-input placeholder="请输入复核人" v-model.trim="formLabelAlign.closedBy"></el-input>
         </el-col> -->
-        <el-col :span="8">
-            <span class="slable">复核人 &nbsp;&nbsp;</span>
-            <el-select clearable v-model="formLabelAlign.closedBy" placeholder="请选择复核人">
-              <el-option v-for="(item,index) in nameList" :key="index" :label="item" :value="index"></el-option>
-            </el-select>
-          </el-col>
+        
           <el-col :span="8">
             <span class="slable">操作时间</span>
             <el-date-picker value-format="timestamp" v-model="formLabelAlign.createdAt" type="date" placeholder="选择日期"></el-date-picker>

@@ -312,7 +312,7 @@
                     </el-tooltip>
                   </template>
                 </el-table-column>
-                <el-table-column prop="wsCurrency" label="币制" width="50" align="center"></el-table-column>
+                <el-table-column prop="wsCurrency" label="币制" width="60" align="center"></el-table-column>
                 <el-table-column label="金额" align="right">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')" placement="top-start">
@@ -529,7 +529,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="wsCurrency" label="币制" width="50" align="center"></el-table-column>
+            <el-table-column prop="wsCurrency" label="币制" width="60" align="center"></el-table-column>
             <el-table-column label="金额" align="right">
               <template slot-scope="scope">
                 <el-tooltip
@@ -572,7 +572,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="wsPeriod" label="账单期" align="center"></el-table-column>
+            <el-table-column prop="wsPeriod" label="账单期" align="center" width="100"></el-table-column>
             <el-table-column label="账单标题" align="center">
               <template slot-scope="scope">
                 <el-tooltip
@@ -589,7 +589,18 @@
               <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
             </el-table-column>
             <el-table-column prop="registBy" label="录入人" width="80" align="center"></el-table-column>
-            <el-table-column prop="registAt" label="录入时间" width="100" align="center"></el-table-column>
+            <el-table-column prop="registAt" label="录入时间" width="150" align="center">
+                <template slot-scope="scope">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="scope.row.registAt"
+                  placement="top-start"
+                >
+                  <span class="abbreviate">{{scope.row.registAt}}</span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
             <el-table-column label="附件名称" align="center">
               <template slot-scope="scope">
                 <el-tooltip
@@ -1830,8 +1841,11 @@ export default {
       this.downDialogFlag=false;
     },
     EchoDisplay(){
+      
         this.$http.post("api/othersDO/bscBankInfo/list",{})//9.9境外 全额初始化回显
         .then(res => {
+          console.log(this.row)
+          console.log(this.listData)
           var detail=res.data.rows.filter(item=>{
             return item.id==this.row.recComId;
           })
@@ -1849,7 +1863,7 @@ export default {
             this.whole.rmCurrency=this.listData[2].b;
             this.willis.operator=this.approvalName;
             this.willis.rmCurrency=this.listData[2].b;
-            this.willis. orgAmount1=this.listData[4].b;
+            this.willis.orgAmount1=this.listData[4].b;
             this.willis.compName=detail[0].compName;
             this.willis.compAddr=detail[0].compAddr;
             console.log(detail[0])
@@ -1857,6 +1871,18 @@ export default {
             this.willis.bankInfo=detail[0].bankInfo;
             this.willis.bankAddr=detail[0].bankAddr;
             this.TextCapitalization();
+          }else{
+            this.risk.businessAmount=this.row.rmAmount;
+            this.risk.rmCurrency=this.row.rmCurrency;
+            this.oversea.operator=this.approvalName;
+            this.oversea.toltalAmount=this.row.rmAmount;
+            this.oversea.rmCurrency=this.row.rmCurrency;
+            this.whole.operator=this.approvalName;
+            this.whole.rmAmount=this.row.rmAmount;
+            this.whole.rmCurrency=this.row.rmCurrency;
+            this.willis.operator=this.approvalName;
+            this.willis.rmCurrency=this.row.rmCurrency;
+            this.willis.orgAmount1=this.row.rmAmount;
           }
         })
     },

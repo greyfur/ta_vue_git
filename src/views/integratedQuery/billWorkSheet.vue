@@ -110,7 +110,7 @@
               <span class="slable">收到日期 &nbsp;&nbsp;</span>
               <el-date-picker
                 value-format="timestamp"
-                v-model="billSearch.wsReceiptDate"
+                v-model="billSearch.receiptDate"
                 type="date"
                 placeholder="选择日期"
               ></el-date-picker>
@@ -536,6 +536,7 @@ export default {
           wsBrokerCode:null,
           wsBrokerName:null,
           wsReceiptDate:null,
+          receiptDate:null,
           businessOrigin:null,
           baseCompany:null,
           reportUnit:null,

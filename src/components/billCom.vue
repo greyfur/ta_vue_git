@@ -15,13 +15,21 @@
               <span class="slable">流程名称 &nbsp;&nbsp;</span>
               <el-input placeholder="请输入流程名称" v-model.trim="querySearch.processName"></el-input>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" v-if="urlName!=='billCheck'&&urlName!=='billSignBack'">
               <span class="slable">流程状态 &nbsp;&nbsp;</span>
               <el-select clearable v-model="querySearch.processStatus" placeholder="请选择流程状态">
                 <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-col>
-            
+            <el-col :span="8" v-if="urlName!=='sortOperation'&&urlName!=='billEntry'">
+              <span class="slable">收到日期 &nbsp;&nbsp;</span>
+              <el-date-picker
+                value-format="timestamp"
+                v-model="querySearch.wsReceiptDate"
+                type="date"
+                placeholder="选择日期"
+              ></el-date-picker>
+            </el-col>
           </el-row>
           <el-row :gutter="10" class="billRow">
             <el-col :span="8">
@@ -125,7 +133,7 @@
                 </el-option>
               </el-select>
             </el-col>
-            <el-col :span="8" v-if="urlName!=='sortOperation'">
+           <el-col :span="8" v-if="urlName==='billEntry'">
               <span class="slable">收到日期 &nbsp;&nbsp;</span>
               <el-date-picker
                 value-format="timestamp"
@@ -134,9 +142,15 @@
                 placeholder="选择日期"
               ></el-date-picker>
             </el-col>
-            <el-col :span="8" v-show="urlName === 'billSignBack'">
+            <el-col :span="8" v-if="urlName === 'billSignBack'">
               <span class="slable">是否需签回</span>
               <el-select clearable v-model="querySearch.wsSignbackFlag" placeholder="请选择">
+                <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="8" v-if="urlName === 'billSignBack'">
+              <span class="slable">是否已签回</span>
+              <el-select clearable v-model="querySearch.wsHasSignback" placeholder="请选择">
                 <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
               </el-select>
             </el-col>
@@ -148,14 +162,7 @@
               </el-select>
             </el-col> -->
           </el-row>
-          <el-row :gutter="10" class="billRow" v-if="urlName === 'billSignBack'">
-            <el-col :span="8" v-show="urlName === 'billSignBack'">
-              <span class="slable">是否已签回</span>
-              <el-select clearable v-model="querySearch.wsHasSignback" placeholder="请选择">
-                <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
-              </el-select>
-            </el-col>
-          </el-row>
+ 
            <el-row :gutter="10">
             <el-col :span="24">
               <el-button type="primary" plain @click="handleClick(1)" style="text-align:center;">
@@ -1637,7 +1644,7 @@ export default {
     border-radius:4px;
     margin-top: 20px;
     position: absolute;
-    left: 0;
+    left: 20px;
     top: 24px;
     z-index: 999;
   }
