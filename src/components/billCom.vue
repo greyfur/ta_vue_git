@@ -1265,7 +1265,7 @@ export default {
           for(let k in this.billSearch){
             this.billSearch[k] = row[k];
           }
-          this.RWFlag = row.processId.indexOf('RW')>0;
+          this.RWFlag = row.processId.indexOf('RV')>0;
           this.fileData = [];
           this.billSearch.wsPeriod=row.wsPeriod;
             if (row.wsType) {
