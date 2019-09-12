@@ -1,12 +1,13 @@
 <template>
   <div class="billReportForms">
+      <p class="title">账单流程汇总报表</p>
       <div class="area">
-        <span>账单报表：</span>
-          <el-select clearable filterable v-model="reportType" placeholder="请选择">
-            <el-option v-for="(item,index) in ReportFormArr" :key="'h'+index" :label="item.name" :value="item.type">
-              <span>{{ item.name }}</span>
-            </el-option>
-          </el-select>
+        <!-- <span>账单报表：</span>
+        <el-select clearable filterable v-model="reportType" placeholder="请选择">
+          <el-option v-for="(item,index) in ReportFormArr" :key="'h'+index" :label="item.name" :value="item.type">
+            <span>{{ item.name }}</span>
+          </el-option>
+        </el-select> -->
         <span>请选择年月：</span>
         <el-date-picker
             value-format="timestamp"
@@ -108,7 +109,8 @@
       sure(str){
         if(str==='one'){
           this.$http.post(`api/reportform`,{
-            reportType:this.reportType,
+            // reportType:this.reportType,
+            reportType:7,
             wsUwYear:this.oYearMonth
           }, { responseType: "blob" }).then(res=>{
             if(res.status===200){
@@ -227,5 +229,10 @@
   cursor: pointer;
   text-align: center;
   line-height: 30px;
+}
+.title{
+  color: #409EFF;
+  padding: 20px;
+  font-size: 20px;
 }
 </style>

@@ -290,6 +290,12 @@ let data = [
         name: 'settlementReport',
         component: () => import("@/views/integratedQuery/settlementReport"), 
       },
+      {  //  9.10 TA-840  
+        title:'报表查询',
+        path: '/billReportForms',
+        name: 'billReportForms',
+        component: () => import("@/views/integratedQuery/billReportForms"), 
+      },
     ]
   },
   // Tab页-管理员
@@ -325,12 +331,12 @@ let data = [
         name: 'reportForms',
         component: () => import("@/views/admin/reportForms"), 
       },
-      {  //  9.10 TA-840  
-        title:'报表查询',
-        path: '/billReportForms',
-        name: 'billReportForms',
-        component: () => import("@/views/admin/billReportForms"), 
-      },
+      // {  //  9.10 TA-840  
+      //   title:'报表查询',
+      //   path: '/billReportForms',
+      //   name: 'billReportForms',
+      //   component: () => import("@/views/admin/billReportForms"), 
+      // },
     ]
   },
 ]
