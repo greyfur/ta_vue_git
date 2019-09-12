@@ -107,10 +107,10 @@
         </el-row>
         <el-row :gutter="10" class="billRow Futop" class-name="transition-box">
           <el-col :span="8">
-              <span class="slable">收到日期 &nbsp;&nbsp;</span>
+              <span class="slable">收到日期是素数 &nbsp;&nbsp;</span>
               <el-date-picker
                 value-format="timestamp"
-                v-model="billSearch.wsReceiptDate"
+                v-model="billSearch.receiptDate"
                 type="date"
                 placeholder="选择日期"
               ></el-date-picker>
@@ -536,6 +536,7 @@ export default {
           wsBrokerCode:null,
           wsBrokerName:null,
           wsReceiptDate:null,
+          receiptDate:null,
           businessOrigin:null,
           baseCompany:null,
           reportUnit:null,
