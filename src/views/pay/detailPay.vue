@@ -1841,8 +1841,11 @@ export default {
       this.downDialogFlag=false;
     },
     EchoDisplay(){
+      
         this.$http.post("api/othersDO/bscBankInfo/list",{})//9.9境外 全额初始化回显
         .then(res => {
+          console.log(this.row)
+          console.log(this.listData)
           var detail=res.data.rows.filter(item=>{
             return item.id==this.row.recComId;
           })
@@ -1860,7 +1863,7 @@ export default {
             this.whole.rmCurrency=this.listData[2].b;
             this.willis.operator=this.approvalName;
             this.willis.rmCurrency=this.listData[2].b;
-            this.willis. orgAmount1=this.listData[4].b;
+            this.willis.orgAmount1=this.listData[4].b;
             this.willis.compName=detail[0].compName;
             this.willis.compAddr=detail[0].compAddr;
             console.log(detail[0])
@@ -1868,6 +1871,18 @@ export default {
             this.willis.bankInfo=detail[0].bankInfo;
             this.willis.bankAddr=detail[0].bankAddr;
             this.TextCapitalization();
+          }else{
+            this.risk.businessAmount=this.row.rmAmount;
+            this.risk.rmCurrency=this.row.rmCurrency;
+            this.oversea.operator=this.approvalName;
+            this.oversea.toltalAmount=this.row.rmAmount;
+            this.oversea.rmCurrency=this.row.rmCurrency;
+            this.whole.operator=this.approvalName;
+            this.whole.rmAmount=this.row.rmAmount;
+            this.whole.rmCurrency=this.row.rmCurrency;
+            this.willis.operator=this.approvalName;
+            this.willis.rmCurrency=this.row.rmCurrency;
+            this.willis.orgAmount1=this.row.rmAmount;
           }
         })
     },
