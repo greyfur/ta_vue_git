@@ -116,6 +116,9 @@ body .el-table colgroup.gutter {
   font-size: 12px;
   margin-left: 5px;
 }
+.el-button--primary.is-plain:first-child{
+  margin-left: 0;
+}
 .el-button--primary.is-plain .iconfont{
   margin-right: 8px;
 }
@@ -265,4 +268,16 @@ table th{
 }
 .el-tabs__nav-scroll{
   padding-left: 10px;
+}
+.el-pagination.is-background .el-pager li:not(.disabled).active{
+  background: #01517C;
+}
+.el-tabs__active-bar{
+  background: #01517C;
+}
+.el-tabs__item.is-active{
+  color: #01517C;
+}
+.el-tabs__item:hover{
+  color: #01517C;
 }

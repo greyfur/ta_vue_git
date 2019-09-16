@@ -5,7 +5,7 @@
       :class="this.$store.state.flod?'leftBack':'rightBack'">
       <i class="iconfont iconleft-circle-o" style="color:#000;"></i>
     </router-link> -->
-    <el-row style="padding-bottom:10px;background:#f5f5f5;" :class="changeLayoutflag?'':'changeLayoutflags'">
+    <el-row style="padding-bottom:10px;background:#fff;" :class="changeLayoutflag?'':'changeLayoutflags'">
       <el-col :span="8" :class="changeLayoutflag?'':'changeLayoutflags'">
         <!-- 签回 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'billSignBack'">
@@ -40,7 +40,7 @@
           <!-- <el-button plain :disabled="isHover" size="small" @click="onCleanCut()">Clean-Cut</el-button> -->
         </div>
         <div class="left" style="height:100%;width:98%;">
-          <div class="leftTop" style="background:#fff;margin-bottom:10px;padding:0 10px 10px 0;">
+          <div class="leftTop" style="background:#fff;margin-bottom:10px;padding:0 0 10px 0;">
             <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
                 <div>
                   <i style="margin-right:8px;" class="el-icon-arrow-down"></i>详情
@@ -132,7 +132,7 @@
             <el-pagination
               background
               layout="prev, pager, next"
-              style="padding:4px 0;margin-top:10px;"
+              style="padding:4px 0;margin-top:10px;float:right;"
               :page-size="3"
               :current-page="currentPage"
               @current-change="handleCurrentChange"
@@ -143,6 +143,11 @@
       </el-col>
       <!-- padding-bottom:10px; -->
       <el-col :span="16" :class="changeLayoutflag?'':'changeLayoutflags'">
+          <ul class="rotuta" style="background:#fff;" v-if="activeName==='first'">
+            <a href="../../../static/Preview/index.html" target="_blank"><li><i class="iconfont iconquanping" style="color:#000;font-size:18px;"></i></li></a>
+            <li @click="rotateMua"><i class="iconfont iconshunshizhenxuanzhuan" style="color:#000;font-size:18px;"></i></li>
+            <li @click="rotateMuas"><i class="iconfont iconnishizhenxuanzhuan" style="color:#000;font-size:18px;"></i></li>
+          </ul>
           <el-tabs v-model="activeName" :class="changeLayoutflag?'':'changeLayoutflags'" style="background:#fff;">
             <el-tab-pane
               label="文档预览"
@@ -150,7 +155,7 @@
               style="padding-left:10px;"
             >
             <div class="right" :class="changeLayoutflag?'':'changeLayoutflags'">
-            <div class="titleSearch detailSearch" style="background:#fff;">
+            <!-- <div class="titleSearch detailSearch" style="background:#fff;">
               <p>
                 <el-dropdown placement="top-start">
                   <span class="el-dropdown-link" style="margin-right:20px"><i class="iconfont iconcaozuoliebiao"></i></span>
@@ -167,7 +172,7 @@
                   </el-dropdown-menu>
                 </el-dropdown>
               </p>
-            </div>
+            </div> -->
             <div class="browseDoc browseDocs" :class="changeLayoutflag?'':'changeLayoutflags'">
               <iframe src="../../../static/Preview/index.html" id="iframeId" name="ifrmname" ref="mapFrame" style="width:100%;height:100%" frameborder="0"></iframe>
             </div>
@@ -2779,7 +2784,7 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
 }
 .left {
   width: 100%;
-  background: #F5F5F5;
+  /* background: #F5F5F5; */
   /* box-shadow:4px 0px 10px 0px rgba(169,169,169,0.5); */
   /* padding: 20px; */
   /* padding-right: 10px; */
@@ -2891,12 +2896,27 @@ li.detail-item {
 }
 .changeLayoutflag{
   height: 680px;
+  position: relative;
 }
 .changeLayoutflags{
   height: 100%;
   padding-bottom: 0;
+  position: relative;
 }
 .heigh{
   height: 100%;
+}
+.rotuta{
+  position: absolute;
+  right:0;
+  z-index: 999;
+  display: flex;
+}
+.rotuta li{
+  height: 36px;
+  width: 36px;
+  text-align: center;
+  line-height: 36px;
+  cursor: pointer;
 }
 </style>

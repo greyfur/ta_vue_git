@@ -68,16 +68,16 @@
       </el-collapse-transition>
     </div>
     <div class="btn">
-      <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'financialCreat'">
+      <el-button type="primary" plain @click="handleClick(1)" v-if="urlName === 'financialCreat'">
         <i class="iconfont iconGroup91" style="font-size:12px;"></i>创建
       </el-button>
-      <el-button type="primary" plain @click="handleClick(2)" v-show="urlName === 'financialCreat'">
+      <el-button type="primary" plain @click="handleClick(2)" v-if="urlName === 'financialCreat'">
         <i class="iconfont iconGroup91" style="font-size:12px;"></i>批量创建
       </el-button>
-      <el-button type="primary" plain @click="handleClick(14)" v-show="urlName === 'financialCreat'" class="borderBtn">
+      <el-button type="primary" plain @click="handleClick(14)" v-if="urlName === 'financialCreat'" class="borderBtn">
         <i class="iconfont iconGroup91" style="font-size:12px;"></i>批量提交
       </el-button>
-      <el-button type="primary" plain @click="handleClick(13)" v-show="urlName === 'taskClaim'" class="borderBtn">
+      <el-button type="primary" plain @click="handleClick(13)" v-if="urlName === 'taskClaim'" class="borderBtn">
         <i class="iconfont iconpaperclip" style="font-size:12px;"></i>任务认领
       </el-button>
       <el-button type="primary" plain @click="init(0)" class="borderBtn">
