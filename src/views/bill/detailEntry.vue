@@ -879,126 +879,132 @@
     <el-dialog title="巨灾录入" :visible.sync="dialogFormVisibleCatastrophe" :close-on-click-modal="modal" width="1300px">
       <el-tabs v-model="tabsFlag">
         <el-tab-pane label="NEW CLAIM" name="1">
-          <el-form label-width="180px" :label-position="labelPosition" class="catastrophe">
-            <el-form-item label="Business ID">
-              <el-select v-model="bigDisaster.businessId" filterable placeholder="请选择" @change="businessChange('1',bigDisaster.businessId)">
+          <el-form label-width="190px" :model="bigDisaster" ref="bigDisaster" :rules="rules1" :label-position="labelPosition" class="catastrophe">
+            <el-form-item prop="businessId" label="Business ID">
+              <el-select v-model="bigDisaster.businessId" filterable placeholder="please choose" @change="businessChange('1',bigDisaster.businessId)">
                 <el-option v-for="(item,i) in businessList" :key="i" :label="item.indentifier" :value="i"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Insured Period">
-              <el-select v-model="bigDisaster.insuredPeriod" filterable placeholder="请选择">
+            <el-form-item prop="insuredPeriod" label="Insured Period">
+              <el-select v-model="bigDisaster.insuredPeriod" filterable placeholder="please choose">
                 <el-option v-for="(item,i) in insuredPeriodList" :key="i" :label="item.insrdPeriodStart+'—'+item.insrdPeriodEnd" :value="i"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Section">
-              <el-select v-model="bigDisaster.section" filterable placeholder="请选择">
+            <el-form-item prop="section" label="Section">
+              <el-select v-model="bigDisaster.section" filterable placeholder="please choose">
                 <el-option v-for="(item,i) in businessList" :key="i" :label="item.section" :value="item.section"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Claim's Name"><el-input v-model="bigDisaster.claimName" placeholder="请输入"></el-input></el-form-item>
-            <el-form-item label="Date of Loss From"><el-date-picker v-model="bigDisaster.lossDateStart" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-            <el-form-item label="Date of Loss To"><el-date-picker v-model="bigDisaster.lossDateEnd" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-            <el-form-item label="Original Policy Period From"><el-date-picker v-model="bigDisaster.plcyStartDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-            <el-form-item label="Original Policy Period To"><el-date-picker v-model="bigDisaster.plcyEndDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-            <el-form-item label="Claim Cause Of Loss Group">
-              <el-select v-model="bigDisaster.causeOfLossGroup" filterable placeholder="请选择" @change="lossGroupChange">
+            <el-form-item prop="claimName" label="Claim's Name"><el-input v-model="bigDisaster.claimName" placeholder="please enter"></el-input></el-form-item>
+            <el-form-item prop="lossDateStart" label="Date of Loss From"><el-date-picker value-format="timestamp" v-model="bigDisaster.lossDateStart" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+            <el-form-item prop="lossDateEnd" label="Date of Loss To"><el-date-picker value-format="timestamp" v-model="bigDisaster.lossDateEnd" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+            <el-form-item prop="plcyStartDate" label="Original Policy Period From"><el-date-picker value-format="timestamp" v-model="bigDisaster.plcyStartDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+            <el-form-item prop="plcyEndDate" label="Original Policy Period To"><el-date-picker value-format="timestamp" v-model="bigDisaster.plcyEndDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+            <el-form-item prop="causeOfLossGroup" label="Claim Cause Of Loss Group">
+              <el-select v-model="bigDisaster.causeOfLossGroup" filterable placeholder="please choose" @change="lossGroupChange">
                 <el-option v-for="item in [{a:'Accident',b:'ACCIDENT'},{a:'Act of God',b:'ACTOFGOD'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Cause Of Loss">
-              <el-select v-model="bigDisaster.causeOfLoss" filterable placeholder="请选择">
+            <el-form-item prop="causeOfLoss" label="Cause Of Loss">
+              <el-select v-model="bigDisaster.causeOfLoss" filterable placeholder="please choose">
                 <el-option v-for="(item,i) in causeOfLossList" :key="i" :label="item.name" :value="item.code"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Advise Date"><el-date-picker v-model="bigDisaster.advisedDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-            <el-form-item label="Claim Risk Event Indicator">
-              <!-- R  E -->
-              <el-select v-model="bigDisaster.riskEvnt" filterable placeholder="请选择">
+            <el-form-item prop="advisedDate" label="Advise Date"><el-date-picker value-format="timestamp" v-model="bigDisaster.advisedDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+            <el-form-item prop="riskEvnt" label="Claim Risk Event Indicator"><!-- R  E -->
+              <el-select v-model="bigDisaster.riskEvnt" filterable placeholder="please choose">
                 <el-option v-for="item in [{a:'Risk',b:'R'},{a:'Event',b:'E'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Headline Loss ID">
-              <el-select v-model="bigDisaster.headlinelossIndex" filterable placeholder="请选择" @change="headlinelossChange('1',bigDisaster.headlinelossIndex)">
+              <el-select v-model="bigDisaster.headlinelossIndex" filterable placeholder="please choose" @change="headlinelossChange('1',bigDisaster.headlinelossIndex)">
                 <el-option v-for="(item,i) in headlinelossList" :key="i" :label="item.lossCode" :value="i"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Headline Loss Name">
-              <el-select v-model="bigDisaster.headlinelossIndex" filterable placeholder="请选择" disabled>
+              <el-select v-model="bigDisaster.headlinelossIndex" filterable placeholder="please choose" disabled>
                 <el-option v-for="(item,i) in headlinelossList" :key="i" :label="item.lossName" :value="i"></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item style="width: 100%;text-align: right;padding-right: 50px;">
+              <el-button size="small" @click="reset('bigDisaster')">重置</el-button>
+              <el-button type="primary" plain @click="catastropheSubmite1('bigDisaster')">提交复核</el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="INCURRED CLAIM" name="2">
-          <el-form label-width="140px" :inline="true" class="catastrophe">
-            <!-- 这个值从 businessid 带出-->
-            <el-form-item label="Claim ID">
-              <el-select v-model="bigDisaster2.refClaimIdentifier" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+          <el-form label-width="140px" :model="bigDisaster2" ref="bigDisaster2" :rules="rules2" :inline="true" class="catastrophe">
+            <el-form-item label="Claim ID" prop="claimIndex">
+              <el-select v-model="bigDisaster2.claimIndex" filterable placeholder="please choose" @change="claimChange(bigDisaster2.claimIndex)">
+                <el-option v-for="(item,i) in claimList" :key="i" :label="item.lossNo" :value="i"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Claim Name">
-              <el-select v-model="bigDisaster2.claimName" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+            <el-form-item label="Claim Name" prop="claimIndex">
+              <el-select v-model="bigDisaster2.claimIndex" disabled filterable placeholder="please choose">
+                <el-option v-for="(item,i) in claimList" :key="i" :label="item.lossName" :value="i"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Headline Loss ID">
-              <el-select v-model="bigDisaster2.headlinelossIndex" filterable placeholder="请选择" @change="headlinelossChange('2',bigDisaster2.headlinelossIndex)">
-                <el-option v-for="(item,i) in headlinelossList" :key="i" :label="item.lossCode" :value="i"></el-option>
+              <el-select v-model="bigDisaster2.headlinelossIndex" filterable placeholder="please choose" @change="headlinelossChange('2',bigDisaster2.headlinelossIndex)">
+                <el-option v-for="(item,i) in headlinelossList2" :key="i" :label="item.lossCode" :value="i"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Headline Loss Name">
-              <el-select v-model="bigDisaster2.headlinelossIndex" filterable placeholder="请选择" disabled>
-                <el-option v-for="(item,i) in headlinelossList" :key="i" :label="item.lossName" :value="i"></el-option>
+              <el-select v-model="bigDisaster2.headlinelossIndex" filterable placeholder="please choose" disabled>
+                <el-option v-for="(item,i) in headlinelossList2" :key="i" :label="item.lossName" :value="i"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Business ID">
-              <el-select v-model="bigDisaster2.businessId" filterable placeholder="请选择" @change="businessChange('2',bigDisaster2.businessId)">
-                <el-option v-for="(item,i) in businessList" :key="i" :label="item.indentifier" :value="i"></el-option>
+            <el-form-item label="Business ID" prop="businessId">
+              <el-select v-model="bigDisaster2.businessId" filterable placeholder="please choose" @change="businessChange('2',bigDisaster2.businessId)">
+                <el-option v-for="(item,i) in businessList2" :key="i" :label="item.identifier" :value="item.indentifier"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Insured Period">
-              <el-select v-model="bigDisaster2.insuredPeriod" filterable placeholder="请选择">
-                <el-option v-for="(item,i) in insuredPeriodList" :key="i" :label="item.insrdPeriodStart+'——'+item.insrdPeriodEnd" :value="i"></el-option>
+            <el-form-item label="Insured Period" prop="insuredPeriod">
+              <el-select v-model="bigDisaster2.insuredPeriod" filterable placeholder="please choose">
+                <el-option v-for="(item,i) in businessList2" :key="i" :label="item.insrdPeriodStart+'——'+item.insrdPeriodEnd" :value="i"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Section">
-              <el-select v-model="bigDisaster2.section" filterable placeholder="请选择">
-                <el-option v-for="(item,i) in businessList" :key="i" :label="item.section" :value="item.section"></el-option>
+            <el-form-item label="Section" prop="section">
+              <el-select v-model="bigDisaster2.section" filterable placeholder="please choose">
+                <el-option v-for="(item,i) in businessList2" :key="i" :label="item.sectionName" :value="item.sectionName"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="To be booked in B/L">
-              <el-select v-model="bigDisaster2.BL" filterable placeholder="请选择">
+              <el-select v-model="bigDisaster2.BL" filterable placeholder="please choose">
                 <el-option v-for="item in [{a:'NO',b:'0'},{a:'YES',b:'1'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="As Of Date"><el-date-picker v-model="bigDisaster2.accAsOfDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-            <el-form-item label="Receive Date"><el-date-picker v-model="bigDisaster2.registTimestamp" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-            <el-form-item label="BP Reference"><el-input v-model="bigDisaster2.bpRef" placeholder="请输入"></el-input></el-form-item>
-            <el-form-item label="Currency">
-              <el-select v-model="bigDisaster2.fkCurr" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+            <el-form-item label="As Of Date" prop="accAsOfDate"><el-date-picker v-model="bigDisaster2.accAsOfDate" value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+            <el-form-item label="Receive Date"><el-date-picker v-model="bigDisaster2.registTimestamp" value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+            <el-form-item label="BP Reference"><el-input @blur="onCheck('bpRef')" v-model="bigDisaster2.bpRef" placeholder="please enter"></el-input></el-form-item>
+            <el-form-item label="Currency" prop="fkCurr">
+              <el-select v-model="bigDisaster2.fkCurr" filterable placeholder="please choose">
+                <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="To be Paid"><el-input v-model="bigDisaster2.paid" placeholder="请输入"></el-input></el-form-item>
-            <el-form-item label="Outstanding"><el-input v-model="bigDisaster2.outStanding" placeholder="请输入"></el-input></el-form-item>
-            <el-form-item label="IBNR"><el-input v-model="bigDisaster2.ibnr" placeholder="请输入"></el-input></el-form-item>
+            <el-form-item label="To be Paid"><el-input v-model="bigDisaster2.paid" placeholder="please enter"></el-input></el-form-item>
+            <el-form-item label="Outstanding"><el-input v-model="bigDisaster2.outStanding" placeholder="please enter"></el-input></el-form-item>
+            <el-form-item label="IBNR"><el-input v-model="bigDisaster2.ibnr" placeholder="please enter"></el-input></el-form-item>
+            <el-form-item style="width: 100%;text-align: right;padding-right: 50px;">
+              <el-button size="small" @click="reset('bigDisaster')">重置</el-button>
+              <el-button type="primary" plain @click="catastropheSubmite2('bigDisaster2')">提交复核</el-button>
+            </el-form-item>
           </el-form>
         </el-tab-pane>
       </el-tabs>
-      <div slot="footer" v-show="$route.query.tag === 'billEntry'" class="dialog-footer" style="margin-top:10px;">
+      <!-- <div slot="footer" v-show="$route.query.tag === 'billEntry'" class="dialog-footer" style="margin-top:10px;">
         <el-button size="small" @click="reset('bigDisaster')">重置</el-button>
-        <el-button type="primary" plain @click="catastropheSubmite('提交复核')">提交复核</el-button>
+        <el-button type="primary" plain @click="catastropheSubmite('bigDisaster','提交复核')">提交复核</el-button>
       </div>
       <div slot="footer" v-show="$route.query.tag === 'billCheck'" class="dialog-footer" style="margin-top:10px;">
         <el-button size="small" @click="catastropheSubmite('驳回')">驳回</el-button>
         <el-button type="primary" plain @click="catastropheSubmite('通过')">通过</el-button>
-      </div>
+      </div> -->
     </el-dialog>
 
     <!-- <el-dialog title="Clean-Cut" :visible.sync="dialogFormVisiblecleanCut" :close-on-click-modal="modal" width="1200px">
       <el-form label-width="130px" :label-position="labelPosition" class="catastrophe">
-        <el-form-item label="赔案编号"><el-input v-model="cleanCut." placeholder="请输入"></el-input></el-form-item>
+        <el-form-item label="赔案编号"><el-input v-model="cleanCut." placeholder="please enter"></el-input></el-form-item>
         <el-form-item label="是否转已决">
           <el-radio-group v-model="cleanCut.">
             <el-radio :label="1">是</el-radio>
@@ -1006,14 +1012,14 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="合同编号">
-          <el-select v-model="cleanCut." filterable placeholder="请选择">
+          <el-select v-model="cleanCut." filterable placeholder="please choose">
             <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="合同起期"><el-date-picker v-model="cleanCut." value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-        <el-form-item label="合同止期"><el-date-picker v-model="cleanCut." value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="合同起期"><el-date-picker v-model="cleanCut." value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+        <el-form-item label="合同止期"><el-date-picker v-model="cleanCut." value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
         <el-form-item label="Section">
-          <el-select v-model="cleanCut." filterable placeholder="请选择">
+          <el-select v-model="cleanCut." filterable placeholder="please choose">
             <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
@@ -1037,12 +1043,18 @@ export default {
   name: "detailEntry",
   data() { 
     return {
+      claimInfoDO:{},//这个数据是用来提交的时候，传给后端用bigDisaster2  
+      headlinelossList2:[],
+      businessList2:[],
+      rmCurrencyList:[],
+      claimList:[],
       causeOfLossList:[],
       businessList:[],
       insuredPeriodList:[],
       headlinelossList:[],
       bigArr:[],
       bigDisaster:{
+        taWorksheetDO:{},
         fkSoc:null,
         headlinelossIndex:null,
         claimName:null,
@@ -1063,7 +1075,25 @@ export default {
         insuredPeriod:null,
         section:null,
       },
+      // ----------bigDisaster2中，以下字段没有在页面上显示------
+      // lossDateStart
+      // lossDateEnd
+      // causeOfLossGroup
+      // causeOfLossName
+      // causeOfLoss
+      // riskEvnt
+      // plcyStartDate
+      // plcyEndDate
+      // advisedDate
+      // ------------bigDisaster2中，以下字段存在-------------
+      // fkSoc
+      // refClaimIdentifier
+      // claimName
+      // headlinelossCode
+      // headlinelossName
+      // taWorksheetDO
       bigDisaster2:{
+        fkSoc:null,
         headlinelossIndex:null,
         refClaimIdentifier:null,
         headlinelossCode:null,
@@ -1075,17 +1105,44 @@ export default {
         paid:null,
         outStanding:null,
         ibnr:null,
-        // 一下为不给后端传的字段
         businessId:null,
         insuredPeriod:null,
         section:null,
         claimName:null,
         BL:'0',
+        taWorksheetDO:{},
       },
       cleanCut:{
 
       },
-      tabsFlag:'1',
+      rules2:{
+        // select
+        businessId:[{ required: true, message: "please choose Business ID", trigger: "change" }],
+        insuredPeriod:[{ required: true, message: "please choose Insured Period", trigger: "change" }],
+        section:[{ required: true, message: "please choose Section", trigger: "change" }],
+        claimIndex:[{ required: true, message: "please choose Claim ID", trigger: "change" }],
+        fkCurr:[{ required: true, message: "please choose Currency", trigger: "change" }],
+        // date 
+        accAsOfDate:[{ type: 'date', required: true, message: 'please choose As Of Date', trigger: 'change' }],
+      },
+      rules1:{
+        // select
+        businessId:[{ required: true, message: "please choose Business ID", trigger: "change" }],
+        insuredPeriod:[{ required: true, message: "please choose Insured Period", trigger: "change" }],
+        section:[{ required: true, message: "please choose Section", trigger: "change" }],
+        causeOfLossGroup:[{ required: true, message: "please choose Claim Cause Of Loss Group", trigger: "change" }],
+        causeOfLoss:[{ required: true, message: "please choose Cause Of Loss", trigger: "change" }],
+        riskEvnt:[{ required: true, message: "please choose riskEvnt", trigger: "change" }],
+        // date 
+        lossDateStart:[{ type: 'date', required: true, message: 'please choose Date of Loss From', trigger: 'change' }],
+        lossDateEnd:[{ type: 'date', required: true, message: 'please choose Date of Loss To', trigger: 'change' }],
+        plcyStartDate:[{ type: 'date', required: true, message: 'please choose Original Policy Period From', trigger: 'change' }],
+        plcyEndDate:[{ type: 'date', required: true, message: 'please choose Original Policy Period To', trigger: 'change' }],
+        advisedDate:[{ type: 'date', required: true, message: 'please choose Advise Date', trigger: 'change' }],
+        // input
+        claimName:[{ required: true, message: "please enter Claim's Name", trigger: 'change' }],
+      },
+      tabsFlag:'2',
       activeName: 'first',
       changeLayoutflag:true,
       changeLayoutflags:false,
@@ -1195,9 +1252,7 @@ export default {
       },
       ocrRow: null,
       file: [],
-      head: {
-        "Content-Type": "application/json;charset=UTF-8"
-      },
+      head: {"Content-Type": "application/json;charset=UTF-8"},
       chooseRow: {},
       TJRoptions: [],
       recognize_service: "",
@@ -1229,6 +1284,8 @@ export default {
       this.uploadType = 1;
     }
     this.chooseRow = JSON.parse(this.$route.query.row);
+    //获取币制
+    this.rmCurrencyList = JSON.parse(sessionStorage.getItem('CurrencyList'));
     // this.$http.get(`api/worksheet/wSEntry/checkRobortUser`,{params:{processId:this.chooseRow.processId}}).then(res => {
     //   this.checkRobortUser = res.data;
     //   // 0 需要屏蔽自己，1不需要
@@ -1251,11 +1308,79 @@ export default {
       // title: "Zhonglu Non-Marine QS & Surplus Treaty"
       // typeOfBus: "PROPTTY"
       // underwritingYear: 2019
+
       this.$http.post("api/claim/getBusinessMessage",{}).then(res => {
           if(res.status == 200 && res.data.code==200){
             this.businessList=res.data.data.rows;
           }  
       });
+      // 获取赔案列表Claim ID
+      this.claimList = [
+        {
+          currName: "CHINA PACIFIC INS",
+          currNo: "BP52950",
+          fkSoc: "255741D859394901B9C2797B52401164",
+          indentifier: "PIPF31802A",
+          lossDate: "2019-07-01 00:00:00",
+          lossName: "122112",
+          lossNo: "IC201910138222",
+          objectId: "84A80D5740144BC0A586371841FD1996",
+          refName: "Property",
+          section: "Main Section",
+          title: "运营 PV 2x612MW Coal Fired Thermal Power Plant at Bangladesh",
+          typeOfBus: "PROPFAC",
+          underwritingYear: 2022,
+        },
+        {
+          currName: "NNI.",
+          currNo: "BP60225",
+          fkSoc: "7300208297A9497A9F9916567B57FAFF",
+          indentifier: "NIPF847A",
+          lossDate: "2019-05-05 00:00:00",
+          lossName: "RINGHALS NPS",
+          lossNo: "IC201910138343",
+          objectId: "365626D6192C4F618AE7DE612FBCECEC",
+          refName: "Nuclear",
+          section: "NF11182517-RINGHALS NPS",
+          title: "RINGHALS NPS",
+          typeOfBus: "PROPFAC",
+          underwritingYear: 2019,
+        },
+      ];
+      // this.$http.post("api/claim/getClaimId",{}).then(res => {
+      //     console.log(res,'getClaimId');
+      //     if(res.status == 200 && res.data.code==200){
+      //       this.claimList=res.data.data.rows;
+      //     }  
+      // });
+      // getHeadlineId获取巨灾代码
+      this.$http.post("api/claim/getHeadlineId",{}).then(res => {
+          console.log(res,'getHeadlineId');
+          if(res.status == 200 && res.data.code==200){
+            this.headlinelossList2=res.data.data.rows;
+          }  
+      });
+     
+    },
+    claimChange(val){
+      if(val!==null && val!==''){
+        // 根据claimId 带出InsuredPeriod的值
+        let fkSoc = this.claimList[val]['fkSoc'];
+        this.bigDisaster2.fkSoc = fkSoc;
+        this.bigDisaster2.refClaimIdentifier = this.claimList[val]['lossNo'];
+        this.bigDisaster2.claimName = this.claimList[val]['lossName'];
+        // 显示赔案编号下关联的合同编号下拉项；显示合同编号相关的合同起期-止期下拉项；显示合同编号下相关的Section下拉项；
+        this.$http.get("api/claim/findClaimAndBusinessInfo",{params:{refClaimIdentifier:this.bigDisaster2.refClaimIdentifier}}).then(res => { 
+          if(res.status == 200 && res.data.code==200){
+            // 获取businessInfo------缺insuredPeriod的信息
+            this.businessList2 = res.data.data.businessInfoDO;
+            this.claimInfoDO = res.data.data.claimInfoDO; // 这个数据是用来提交的时候，传给后端用
+            this.bigDisaster2.businessId=this.businessList2[0]['identifier'];
+            this.bigDisaster2.section=this.businessList2[0]['sectionName'];
+            // this.insuredPeriodList=res.data.data;          缺insuredPeriod的信息
+          }  
+        });
+      }
     },
     lossGroupChange(){
       if(this.bigDisaster.causeOfLossGroup){
@@ -1279,16 +1404,19 @@ export default {
       }
     },
     headlinelossChange(i,val){
-      let obj = {};
       if(val!==null && val!==''){
-        obj = this.headlinelossList[val];
-      }
-      if(i==1){
-        this.bigDisaster.headlinelossCode = obj.headlinelossCode;
-        this.bigDisaster.headlinelossName = obj.headlinelossName;
-      } else{
-        this.bigDisaster2.headlinelossCode = obj.headlinelossCode;
-        this.bigDisaster2.headlinelossName = obj.headlinelossName;
+        if(i=='1'){
+          this.bigDisaster.headlinelossCode = this.headlinelossList[val].lossCode;
+          this.bigDisaster.headlinelossName = this.headlinelossList[val].lossName;
+        } else{
+          this.bigDisaster2.headlinelossCode = this.headlinelossList2[val].lossCode;
+          this.bigDisaster2.headlinelossName = this.headlinelossList2[val].lossName;
+          // this.$http.get("api/claim/getHeadlineName",{params:{lossCode:this.bigDisaster2.headlinelossCode}}).then(res => {
+          //     if(res.status == 200 && res.data.code==200){
+          //       // this.businessList=res.data.data.rows;
+          //     }  
+          // });
+        }
       }
     },
     businessChange(tag,val){
@@ -1301,7 +1429,7 @@ export default {
         this.$http.post("api/claim/getInsuredPeriod",{fkSoc:fkSoc}).then(res => { 
           if(res.status == 200 && res.data.code==200){
             this.bigDisaster.insuredPeriod=0;
-            this.bigDisaster2.insuredPeriod=0;
+            // this.bigDisaster2.insuredPeriod=0;
             this.insuredPeriodList=res.data.data;
           }  
         });
@@ -1316,20 +1444,65 @@ export default {
     catastrophe(tag){ 
       if(this.$route.query.tag === 'billEntry'){   // 操作页面
         this.dialogFormVisibleCatastrophe = true;
+        this.bigDisaster2.registTimestamp = new Date().getTime();
       } else{  // 
 
       }
     },
-    catastropheSubmite(tag){
-      switch(tag){    
-        case '提交复核':
-          console.log(this.bigDisaster,'bigDisaster');
+    catastropheSubmite1(formName){
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
           this.$http.post("api/claim/createClaim",Object.assign({processId:this.chooseRow.processId},this.bigDisaster)).then(res => {
             console.log(res);
-            // if(res.status == 200 && res.data.code==200){
+            if(res.status == 200 && res.data.code==200){
             //   this.businessList=res.data.data.rows;
-            // }  
+            } 
+            // else if(res.data.code==500){
+            //   this.$message.error(res.data.data.errorMsg);
+            // }
           });
+        } 
+      })
+    },
+    catastropheSubmite2(formName){
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          // 普通的字符的校验 bpRef
+          let str = this.bigDisaster2.bpRef;
+          if(str.length){
+            let i,n=0;
+            for (i = 0;i < str.length;i++){
+              if(str.charCodeAt(i)<=256){ n+=2; }else{ n+=1; }
+              if(n>20){
+                this.$message.error('BP备注信息不能超过20个字符，中文为2个字符');
+                return false;
+              }
+            }
+          }
+          this.$http.post("api/claim/createWorksheet",Object.assign({processId:this.chooseRow.processId},this.claimInfoDO,this.bigDisaster2)).then(res => {
+            console.log(res,'createWorksheet');
+            if(res.status == 200 && res.data.code==200){
+              // todo
+            } else if(res.data.code==500){
+              
+            }
+          });
+        } 
+      })
+    },
+    catastropheSubmite(tag){
+      switch(tag){    
+        case '提交复核': 
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              this.$http.post("api/claim/createClaim",Object.assign({processId:this.chooseRow.processId},this.bigDisaster)).then(res => {
+                console.log(res);
+                // if(res.status == 200 && res.data.code==200){
+                //   this.businessList=res.data.data.rows;
+                // }  
+              });
+            } 
+          })
         break;
         case '驳回':
 
@@ -1343,6 +1516,7 @@ export default {
       if(tag=='bigDisaster'){  // 巨灾重置
         if(this.tabsFlag==1){
           for(let k in this.bigDisaster){this.bigDisaster[k]=null;}
+          this.bigDisaster.taWorksheetDO = {};
         } else{
           for(let k in this.bigDisaster2){this.bigDisaster2[k]=null;}
         }
@@ -1612,9 +1786,9 @@ export default {
         // 显示内容模板---------格式不要动，不要空出空格
         if(this.chooseRow.businessOrigin=="International"){ // 国际
 this.emailContent=`Dear Sir/Madam:
-Here attached our signed copy for your good record.
-Please note this is Automated report delivery email - please do not reply. If any errors or other issues are found with the attachment, please contact the sender below.
-Thanks & Regards
+Attached please find our signed copy of the SOA for your record.  Please note this is an automated delivery email - please do not reply directly.  
+Should you have any questions concerning to the attachment,  please feel free to contact the designated technical accountant whose contact info provided as below.
+Thanks & Best Regards，
 
 Xiaoyun Li (李晓昀)
 Accounting Service Center
@@ -2424,6 +2598,9 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
   display: inline-block;
 }
 .catastrophe .el-form-item .el-select{
+  width: 220px;
+}
+.catastrophe .el-form-item .el-input{
   width: 220px;
 }
 .mua1{

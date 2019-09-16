@@ -1519,7 +1519,8 @@ export default {
       // 分出人+经济人all
       let fcArr = JSON.parse(sessionStorage.getItem("CedentType"));
       let jArr = JSON.parse(sessionStorage.getItem("BrokerType"));
-      this.brokerList = jArr.concat(fcArr);
+      let zbxr = JSON.parse(sessionStorage.getItem("ReinsurerList"));
+      this.brokerList = [...fcArr,...jArr,...zbxr];
       // 分出人+经济人part
       let bList = JSON.parse(sessionStorage.getItem('BrokerBankList'));
       let cList = JSON.parse(sessionStorage.getItem('CedentBankList'));

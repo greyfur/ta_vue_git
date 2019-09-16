@@ -167,7 +167,7 @@ import { mapState } from "vuex";
         this.$http.post('api/sics/basis/getCedentListByReceiptBank',{codeType:'BrokerType'}).then(res =>{
           if(res.status === 200){
             sessionStorage.setItem('BrokerBankList',JSON.stringify(res.data));
-          }
+          } 
         })
       }
       // 获取再保险人

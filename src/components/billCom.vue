@@ -826,9 +826,7 @@ export default {
     sessionStorage.setItem("data", JSON.stringify({}));
   },
   mounted() {
-    window.onclick=()=>{
-      this.zq1Flag=false;
-    }
+    window.onclick=()=>{this.zq1Flag=false;}
     this.mustData.actOperator = this.$store.state.userName;
     if (this.urlName === "sortOperation" || this.urlName === "billEntry") {
       this.$http.get("api/sics/basis/getReportUnitsForPC").then(res => {
@@ -852,10 +850,13 @@ export default {
         } 
       });
     setTimeout(() => {
+      let fcr = JSON.parse(sessionStorage.getItem("CedentType"));
+      let jjr = JSON.parse(sessionStorage.getItem("BrokerType"));
+      let zbxr = JSON.parse(sessionStorage.getItem("ReinsurerList"));
       // 分出人
-      this.cedentList = JSON.parse(sessionStorage.getItem("CedentType"));
+      this.cedentList = [...fcr,...zbxr];
       // 经纪人
-      this.brokerList = JSON.parse(sessionStorage.getItem("BrokerType"));
+      this.brokerList = [...jjr,...zbxr];
       // 账单类型
       this.ZDoptions = JSON.parse(sessionStorage.getItem("wsType"));
       let objbc = JSON.parse(sessionStorage.getItem("baseCompany"));
@@ -863,9 +864,7 @@ export default {
         return el.code != "Both";
       });
       // 国际国内
-      this.businessOriginList = JSON.parse(
-        sessionStorage.getItem("businessOrigin")
-      );
+      this.businessOriginList = JSON.parse(sessionStorage.getItem("businessOrigin"));
       this.brokerList.unshift({codeName: "无",codeType: null,codecode: "无"});
     }, 1000);
     // 判断是否是管理员   66
