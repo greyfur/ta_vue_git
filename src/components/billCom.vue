@@ -15,13 +15,13 @@
               <span class="slable">流程名称 &nbsp;&nbsp;</span>
               <el-input placeholder="请输入流程名称" v-model.trim="querySearch.processName"></el-input>
             </el-col>
-            <el-col :span="8" v-if="urlName!=='billCheck'&&urlName!=='billSignBack'">
+            <el-col :span="8" v-if="urlName!=='billCheck'&&urlName!=='billSignBack'&&urlName!=='sortOperation'">
               <span class="slable">流程状态 &nbsp;&nbsp;</span>
               <el-select clearable v-model="querySearch.processStatus" placeholder="请选择流程状态">
                 <el-option v-for="item in ['待处理','已悬停']" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-col>
-            <el-col :span="8" v-if="urlName!=='sortOperation'&&urlName!=='billEntry'">
+            <el-col :span="8" v-if="urlName!=='billEntry'">
               <span class="slable">收到日期 &nbsp;&nbsp;</span>
               <el-date-picker
                 value-format="timestamp"
@@ -107,15 +107,6 @@
                 </el-option>
               </el-select>
             </el-col>
-            <el-col :span="8" v-if="urlName==='sortOperation'">
-              <span class="slable">收到日期 &nbsp;&nbsp;</span>
-              <el-date-picker
-                value-format="timestamp"
-                v-model="querySearch.wsReceiptDate"
-                type="date"
-                placeholder="选择日期"
-              ></el-date-picker>
-            </el-col>
           </el-row>
           <el-row :gutter="10" class="billRow"> 
             <!-- v-show="urlName === 'billEntry'" -->
@@ -177,7 +168,7 @@
       </el-collapse-transition>
     </div>
     <div class="btn">
-      <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)">
+      <el-button type="primary" v-if="urlName === 'sortOperation'" plain @click="handleClick(0)">
         <i class="iconfont iconGroup91" style="font-size:12px;"></i>手工创建
       </el-button>
       <el-button type="primary" plain @click="init" class="borderBtn">

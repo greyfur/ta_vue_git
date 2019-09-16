@@ -4,7 +4,7 @@
    <!-- <router-link :to="{name:$route.query.tag}" :class="this.$store.state.flod?'leftBack':'rightBack'">
       <i class="iconfont iconleft-circle-o"></i>
     </router-link>  -->
-    <el-row style="background:#f5f5f5;padding-bottom:10px;">
+    <el-row style="background:#fff;padding-bottom:10px;">
       <el-col :span="11" style="height:680px;">
          <!-- 完结 -->
         <div class="btn" v-if="$route.query.tag === 'payEnd'">
@@ -156,7 +156,7 @@
               </el-table-column>
             </el-table>
               <el-pagination
-              style="background:#fff"
+              style="background:#fff;float:right;"
               layout="prev, pager, next"
               background
               :page-size="3"
@@ -2853,7 +2853,7 @@ export default {
             this.$message.error('请选择驳回原因');
             return;
           }
-          if(this.opinion == '其它' && !this.rebut){
+          if(!this.rebut){
             this.$message.error('请填写驳回原因');
             return;
           }
@@ -3804,7 +3804,7 @@ export default {
 .right {
   width: 100%;
   height:100%;
-  background-color: #EEEEEE;
+  /* background-color: #EEEEEE; */
   padding-left: 10px;
   box-sizing: border-box;
 }

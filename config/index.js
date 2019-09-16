@@ -10,10 +10,10 @@ module.exports = {
       "/api": {
         // target: "http://asc.cpcr.com.cn:9999", //投产---旧版本
         // target: "http://172.23.10.155:9999", //lm
-        // target: "http://172.16.19.139:9999", //fwq  
+        target: "http://172.16.19.139:9999", //fwq  
         // target: "http://172.16.19.138:9999", //UAT 
         // target: "http://172.17.106.24:9999", //lzw
-        target: "http://172.17.106.2:9999", //wangtengda
+        // target: "http://172.17.106.2:9999", //wangtengda
         // target: "http://172.17.106.69:9999", //fanzhiyuan
         // target: "http://172.17.106.129:9999", //ligang
         // target: cip.apiUrl,

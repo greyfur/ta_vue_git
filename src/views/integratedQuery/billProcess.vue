@@ -99,7 +99,7 @@
             <el-option v-for="(v,k) of {'是':'1','否':'0'}" :key="v" :label="k" :value="v"></el-option>
           </el-select>
         </el-col>
-          <el-col :span="8">
+        <el-col :span="8">
           <span class="slable">录入时间段</span>
             <el-date-picker
               style="width:224px"
@@ -111,7 +111,6 @@
               end-placeholder="结束日期">
             </el-date-picker>
          </el-col>
-         
       </el-row>
       <el-row :gutter="10" class="billRow Futop" class-name="transition-box">
         <el-col :span="8">
@@ -123,6 +122,18 @@
               placeholder="选择日期"
             ></el-date-picker>
         </el-col>
+        <el-col :span="8">
+          <span class="slable">复核时间段</span>
+            <el-date-picker
+              style="width:224px"
+              value-format="timestamp"
+              v-model="billSearch.closedAt"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
+         </el-col>
       </el-row>
       <el-row><el-col :span="24">
         <el-button type="primary" plain @click="reset" class="borderBtn"><i class="iconfont iconGroup39" ></i>重置</el-button>
@@ -448,6 +459,7 @@ export default {
           wsBusinessType:null,
           processName:null,
           closedBy:null,
+          closedAt:null,
           wsSignbackFlag:null,
           wsHasSignback:null,
           // hasRecheckFlag:null,
