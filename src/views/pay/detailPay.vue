@@ -988,32 +988,32 @@
       </el-form>
     </el-dialog>
 
-    <!-- WILLIS -->
+    <!-- 转账模板 -->
      <el-dialog title="转账模板" :visible.sync="dialogFormVisibleWillis" :close-on-click-modal="modal">
        <!-- :rules="willisRules" -->
       <el-form :label-position="labelPosition" label-width="130px" :model="willis" ref="willis" >
-        <el-form-item label="currentDate" prop="currentDate"><el-date-picker v-model="willis.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-        <el-form-item label="币制" prop="rmCurrency"><el-select filterable v-model="willis.rmCurrency" placeholder="请选择" @change="zheTypeChange">
+        <el-form-item label="日期" prop="currentDate"><el-date-picker v-model="willis.currentDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="汇款币种" prop="rmCurrency"><el-select filterable v-model="willis.rmCurrency" placeholder="请选择" @change="zheTypeChange">
         <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option></el-select></el-form-item>
-        <el-form-item label="金额1" prop="orgAmount1"><el-input  placeholder="请输入" v-model="willis.orgAmount1" @input="moneyBig"></el-input></el-form-item>
-        <el-form-item label="金额（大写）" prop="chineseAmount"><el-input  placeholder="请输入" v-model="willis.chineseAmount"></el-input></el-form-item>
+        <el-form-item label="汇款金额" prop="orgAmount1"><el-input  placeholder="请输入" v-model="willis.orgAmount1" @input="moneyBig"></el-input></el-form-item>
+        <el-form-item label="金额大写" prop="chineseAmount"><el-input  placeholder="请输入" v-model="willis.chineseAmount"></el-input></el-form-item>
         <!-- <el-form-item label="orgAmount2" prop="orgAmount2"><el-input  placeholder="请输入" v-model="willis.orgAmount2"></el-input></el-form-item> -->
-        <el-form-item label="param1" prop="param1"><el-input  placeholder="请输入" v-model="willis.param1"></el-input></el-form-item>
-        <el-form-item label="param2" prop="param2"><el-input  placeholder="请输入" v-model="willis.param2"></el-input></el-form-item>
-        <el-form-item label="param3" prop="param3"><el-input  placeholder="请输入" v-model="willis.param3"></el-input></el-form-item>
-        <el-form-item label="param4" prop="param4"><el-input  placeholder="请输入" v-model="willis.param4"></el-input></el-form-item>
+        <el-form-item label="现汇金额账号" prop="accountNo1"><el-input  placeholder="请输入" v-model="willis.accountNo1"></el-input></el-form-item>
+        <el-form-item label="其他金额账号" prop="accountNo2"><el-input  placeholder="请输入" v-model="willis.accountNo2"></el-input></el-form-item>
+        <el-form-item label="汇款人名称及地址" prop="remmiterInfo"><el-input  placeholder="请输入" v-model="willis.remmiterInfo"></el-input></el-form-item>
+        <!-- <el-form-item label="组织机构代码" prop="orgCode"><el-input  placeholder="请输入" v-model="willis.orgCode"></el-input></el-form-item> -->
         <el-form-item label="银行地址" prop="bankAddr"><el-input  placeholder="请输入" v-model="willis.bankAddr"></el-input></el-form-item>
         <el-form-item label="银行相关信息" prop="bankInfo"><el-input  placeholder="请输入" v-model="willis.bankInfo"></el-input></el-form-item>
         <el-form-item label="受款公司名称" prop="compName"><el-input  placeholder="请输入" v-model="willis.compName"></el-input></el-form-item>
         <el-form-item label="受款公司地址" prop="compAddr"><el-input  placeholder="请输入" v-model="willis.compAddr"></el-input></el-form-item>
-        <el-form-item label="汇款日期" prop="payDate"><el-date-picker v-model="willis.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-        <el-form-item label="备注1" prop="mark1"><el-input  placeholder="请输入" v-model="willis.mark1"></el-input></el-form-item>
-        <el-form-item label="备注2" prop="mark2"><el-input  placeholder="请输入" v-model="willis.mark2"></el-input></el-form-item>
-        <el-form-item label="param5" prop="param5"><el-input  placeholder="请输入" v-model="willis.param5"></el-input></el-form-item>
-        <el-form-item label="param6" prop="param6"><el-input  placeholder="请输入" v-model="willis.param6"></el-input></el-form-item>
-        <el-form-item label="param7" prop="param7"><el-input  placeholder="请输入" v-model="willis.param7"></el-input></el-form-item>
+        <!-- <el-form-item label="汇款日期" prop="payDate"><el-date-picker v-model="willis.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item> -->
+        <el-form-item label="汇款附言" prop="mark1"><el-input  placeholder="请输入" v-model="willis.mark1"></el-input></el-form-item>
+        <el-form-item label="收款人国家/地区" prop="areaName"><el-input  placeholder="请输入" v-model="willis.areaName"></el-input></el-form-item>
+        <!-- <el-form-item label="areaCode" prop="areaCode"><el-input  placeholder="请输入" v-model="willis.areaCode"></el-input></el-form-item> 9.17改-->
+        <el-form-item label="交易编码" prop="transacCode"><el-input  placeholder="请输入" v-model="willis.transacCode"></el-input></el-form-item>
         <!-- <el-form-item label="orgAmount3" prop="orgAmount3"><el-input  placeholder="请输入" v-model="willis.orgAmount3"></el-input></el-form-item> -->
-        <el-form-item label="param8" prop="param8"><el-input  placeholder="请输入" v-model="willis.param8"></el-input></el-form-item>
+        <!-- <el-form-item label="备注2" prop="mark2"><el-input  placeholder="请输入" v-model="willis.mark2"></el-input></el-form-item> -->
+        <el-form-item label="交易附言" prop="mark2"><el-input  placeholder="请输入" v-model="willis.mark2"></el-input></el-form-item>
         <el-form-item label="经办人姓名" prop="operator"><el-input  placeholder="请输入" v-model="willis.operator"></el-input></el-form-item>
         <el-form-item label="电话" prop="telephone"><el-input  placeholder="请输入" v-model="willis.telephone"></el-input></el-form-item>
         <el-form-item>
@@ -1302,16 +1302,16 @@ export default {
           orgAmount2:null,
           orgAmount3:null,
           chineseAmount:null,
-          param1:null,
-          param2:null,
-          param3:null,
-          param4:null,
-          param5:'英 国',
-          param6:null,
-          param7:null,
-          param8:'再保险支出',
+          accountNo1:null,
+          accountNo2:null,
+          remmiterInfo:null,
+          orgCode:null,
+          areaName:'英 国',
+          areaCode:null,
+          transacCode:null,
+          mark2:'再保险支出',
           maek1:null,
-          mark2:null,
+          // mark2:null,
           bankAddr:null,
           bankInfo:null,
           compName:null,
@@ -2025,18 +2025,18 @@ export default {
                 this.$http.post("api/docCreate/createWillisDoc", {
                   processId: this.row.processId,
                   actOperator: this.row.curOperator,
-                  payDate: this.willis.payDate,
+                  // payDate: this.willis.payDate,
                   currentDate: this.willis.currentDate,
                   operator: this.willis.operator,
                   telephone: this.willis.telephone,
-                  param1: this.willis.param1,
-                  param2: this.willis.param2,
-                  param3: this.willis.param3,
-                  param4: this.willis.param4,
-                  param5: this.willis.param5,
-                  param6: this.willis.param6,
-                  param7: this.willis.param7,
-                  param8: this.willis.param8,
+                  accountNo1: this.willis.accountNo1,
+                  accountNo2: this.willis.accountNo2,
+                  remmiterInfo: this.willis.remmiterInfo,
+                  // orgCode: this.willis.orgCode,
+                  areaName: this.willis.areaName,
+                  areaCode: this.willis.areaCode,
+                  transacCode: this.willis.transacCode,
+                  // param8: this.willis.param8,
                   mark1: this.willis.mark1,
                   mark2: this.willis.mark2,
                   orgCurrency:this.willis.rmCurrency,
@@ -3459,7 +3459,7 @@ export default {
         this.makeDocListEctype.zheNum = allNum>0?Number(allNum).toFixed(2):null;
       }
     },
-    makeDoc(tag,name){    // 生成审批文档
+    makeDoc(tag,name){    // 生成审批文档 666666
     console.log(this.makeDocListEctype)
       if(tag == 'a'){  // 是操作页面，弹窗，S0,
         if(this.row.rmCurrency){
@@ -3477,13 +3477,14 @@ export default {
         if (tag == 2) {
          if(this.makeDocListEctype.zheNum!==null&&this.makeDocListEctype.yuanType.length>0){
             // 是操作页面,2为点击确定---------------------生成审批文档提交hyd
-             if((this.makeDocListEctype.cedentModel[0]==undefined||(this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null))||(this.makeDocListEctype.cedentModel[1]==undefined||(this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null))||(this.makeDocListEctype.cedentModel[2]==undefined||(this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==undefined))){
-              
+          if((this.makeDocListEctype.cedentModel[0]==undefined||(this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null))||(this.makeDocListEctype.cedentModel[1]==undefined||(this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null))||(this.makeDocListEctype.cedentModel[2]==undefined||(this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==undefined))){
+              console.log(this.makeDocListEctype.cedentModel,this.makeDocListEctype.cedentModel.length)
+          // if(this.makeDocListEctype.cedentModel.length===1){}
           if (this.makeDocListEctype.cedentModel &&this.makeDocListEctype.cedentModel.length) {
             if(this.checked){
-              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'')+';various';
+              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName+';':'')+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName+';':'')+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName+';':'')+'various';
             }else{
-              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName:'')+';'+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'');
+              this.makeDocList.rmCedentName = ((this.makeDocListEctype.cedentModel[0]!==undefined&&this.makeDocListEctype.cedentModel[0]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[0]].codeName+';':'')+((this.makeDocListEctype.cedentModel[1]!==undefined&&this.makeDocListEctype.cedentModel[1]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[1]].codeName+';':'')+((this.makeDocListEctype.cedentModel[2]!==undefined&&this.makeDocListEctype.cedentModel[2]!==null)?this.cedentList[this.makeDocListEctype.cedentModel[2]].codeName:'');
             }
           }
           if(this.makeDocListEctype.shoukuanMode != null){
