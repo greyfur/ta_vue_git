@@ -881,60 +881,62 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="巨灾录入" :visible.sync="dialogFormVisibleCatastrophe" :close-on-click-modal="modal" width="1200px">
+    <el-dialog title="巨灾录入" :visible.sync="dialogFormVisibleCatastrophe" :close-on-click-modal="modal" width="1300px">
       <el-tabs v-model="tabsFlag">
         <el-tab-pane label="NEW CLAIM" name="1">
-          <el-form label-width="130px" :label-position="labelPosition" class="catastrophe">
+          <el-form label-width="180px" :label-position="labelPosition" class="catastrophe">
             <el-form-item label="Business ID">
-              <el-select v-model="bigDisaster.businessId" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster.businessId" filterable placeholder="请选择" @change="businessChange('1',bigDisaster.businessId)">
+                <el-option v-for="(item,i) in businessList" :key="i" :label="item.indentifier" :value="i"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Insured Period">
               <el-select v-model="bigDisaster.insuredPeriod" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="(item,i) in insuredPeriodList" :key="i" :label="item.insrdPeriodStart+'—'+item.insrdPeriodEnd" :value="i"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Section">
               <el-select v-model="bigDisaster.section" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="(item,i) in businessList" :key="i" :label="item.section" :value="item.section"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Claim's Name"><el-input v-model="bigDisaster.claimName" placeholder="请输入"></el-input></el-form-item>
-            <el-form-item label="Date of Loss From"><el-date-picker v-model="bigDisaster.lossDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-            <el-form-item label="Date of Loss To"><el-date-picker v-model="bigDisaster.lossDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Date of Loss From"><el-date-picker v-model="bigDisaster.lossDateStart" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+            <el-form-item label="Date of Loss To"><el-date-picker v-model="bigDisaster.lossDateEnd" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
             <el-form-item label="Original Policy Period From"><el-date-picker v-model="bigDisaster.plcyStartDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
             <el-form-item label="Original Policy Period To"><el-date-picker v-model="bigDisaster.plcyEndDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
             <el-form-item label="Claim Cause Of Loss Group">
-              <el-select v-model="bigDisaster.causeOfLossGroup" filterable placeholder="请选择">
+              <el-select v-model="bigDisaster.causeOfLossGroup" filterable placeholder="请选择" @change="lossGroupChange">
                 <el-option v-for="item in [{a:'Accident',b:'ACCIDENT'},{a:'Act of God',b:'ACTOFGOD'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Cause Of Loss">
               <el-select v-model="bigDisaster.causeOfLoss" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="(item,i) in causeOfLossList" :key="i" :label="item.name" :value="item.code"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Advise Date"><el-date-picker v-model="bigDisaster.advisedDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
             <el-form-item label="Claim Risk Event Indicator">
+              <!-- R  E -->
               <el-select v-model="bigDisaster.riskEvnt" filterable placeholder="请选择">
-                <el-option v-for="item in [{a:'Risk',b:'0'},{a:'Event',b:'1'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
+                <el-option v-for="item in [{a:'Risk',b:'R'},{a:'Event',b:'E'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Headline Loss ID">
-              <el-select v-model="bigDisaster.headlinelossCode" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster.headlinelossIndex" filterable placeholder="请选择" @change="headlinelossChange('1',bigDisaster.headlinelossIndex)">
+                <el-option v-for="(item,i) in headlinelossList" :key="i" :label="item.lossCode" :value="i"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Headline Loss Name">
-              <el-select v-model="bigDisaster.headlinelossName" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster.headlinelossIndex" filterable placeholder="请选择" disabled>
+                <el-option v-for="(item,i) in headlinelossList" :key="i" :label="item.lossName" :value="i"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="INCURRED CLAIM" name="2">
-          <el-form label-width="120px" :inline="true" class="catastrophe">
+          <el-form label-width="140px" :inline="true" class="catastrophe">
+            <!-- 这个值从 businessid 带出-->
             <el-form-item label="Claim ID">
               <el-select v-model="bigDisaster2.refClaimIdentifier" filterable placeholder="请选择">
                 <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
@@ -946,28 +948,28 @@
               </el-select>
             </el-form-item>
             <el-form-item label="Headline Loss ID">
-              <el-select v-model="bigDisaster2.headlinelossCode" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster2.headlinelossIndex" filterable placeholder="请选择" @change="headlinelossChange('2',bigDisaster2.headlinelossIndex)">
+                <el-option v-for="(item,i) in headlinelossList" :key="i" :label="item.lossCode" :value="i"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Headline Loss Name">
-              <el-select v-model="bigDisaster2.headlinelossName" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster2.headlinelossIndex" filterable placeholder="请选择" disabled>
+                <el-option v-for="(item,i) in headlinelossList" :key="i" :label="item.lossName" :value="i"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Business ID">
-              <el-select v-model="bigDisaster2.businessId" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+              <el-select v-model="bigDisaster2.businessId" filterable placeholder="请选择" @change="businessChange('2',bigDisaster2.businessId)">
+                <el-option v-for="(item,i) in businessList" :key="i" :label="item.indentifier" :value="i"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Insured Period">
               <el-select v-model="bigDisaster2.insuredPeriod" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="(item,i) in insuredPeriodList" :key="i" :label="item.insrdPeriodStart+'——'+item.insrdPeriodEnd" :value="i"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Section">
               <el-select v-model="bigDisaster2.section" filterable placeholder="请选择">
-                <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="(item,i) in businessList" :key="i" :label="item.section" :value="item.section"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="To be booked in B/L">
@@ -993,7 +995,7 @@
         <el-button size="small" @click="reset('bigDisaster')">重置</el-button>
         <el-button type="primary" plain @click="catastropheSubmite('提交复核')">提交复核</el-button>
       </div>
-      <div slot="footer"  class="dialog-footer" style="margin-top:10px;">
+      <div slot="footer" v-show="$route.query.tag === 'billCheck'" class="dialog-footer" style="margin-top:10px;">
         <el-button size="small" @click="catastropheSubmite('驳回')">驳回</el-button>
         <el-button type="primary" plain @click="catastropheSubmite('通过')">通过</el-button>
       </div>
@@ -1025,7 +1027,7 @@
         <el-button size="small" @click="reset('cleanCut')">重置</el-button>
         <el-button type="primary" plain @click="cleanCutSubmite('提交复核')">提交复核</el-button>
       </div>
-      <div slot="footer"  class="dialog-footer" style="margin-top:10px;">
+      <div slot="footer" v-show="$route.query.tag === 'billCheck'" class="dialog-footer" style="margin-top:10px;">
         <el-button size="small" @click="cleanCutSubmite('驳回')">驳回</el-button>
         <el-button type="primary" plain @click="cleanCutSubmite('通过')">通过</el-button>
       </div>
@@ -1040,10 +1042,18 @@ export default {
   name: "detailEntry",
   data() { 
     return {
+      causeOfLossList:[],
+      businessList:[],
+      insuredPeriodList:[],
+      headlinelossList:[],
       bigArr:[],
       bigDisaster:{
+        fkSoc:null,
+        headlinelossIndex:null,
         claimName:null,
+        refClaimIdentifier:null,
         causeOfLossGroup:null,
+        causeOfLossName:null,
         causeOfLoss:null,
         advisedDate:null,
         riskEvnt:null,
@@ -1051,13 +1061,15 @@ export default {
         headlinelossName:null,
         plcyStartDate:null,
         plcyEndDate:null,
-        lossDate:null,
+        lossDateStart:null,
+        lossDateEnd:null,
         // 一下为不给后端传的字段
         businessId:null,
         insuredPeriod:null,
         section:null,
       },
       bigDisaster2:{
+        headlinelossIndex:null,
         refClaimIdentifier:null,
         headlinelossCode:null,
         headlinelossName:null,
@@ -1227,8 +1239,85 @@ export default {
     //   // 0 需要屏蔽自己，1不需要
     // })
     this.getBillInfo();
+
+    // 以下调用理赔接口，获取数据
+    this.getClaimInfo();
   },
   methods: {
+    getClaimInfo(){
+      // currName: "中路交通财险"
+      // currNo: "BP50276"
+      // fkSoc: "711568A017974EED86D0493215DBECF8"
+      // indentifier: "PIPT1183A"
+      // objectId: "54896F629420459398D8A221D33EDF59"
+      // refName: "Engineering, Liability, Property"
+      // section: "Non-Marine QS & Surplus Treaty 2019"
+      // socIsLeaf: "N"
+      // title: "Zhonglu Non-Marine QS & Surplus Treaty"
+      // typeOfBus: "PROPTTY"
+      // underwritingYear: 2019
+      this.$http.post("api/claim/getBusinessMessage",{}).then(res => {
+          if(res.status == 200 && res.data.code==200){
+            this.businessList=res.data.data.rows;
+          }  
+      });
+    },
+    lossGroupChange(){
+      if(this.bigDisaster.causeOfLossGroup){
+        // 巨灾代码&名称
+        this.$http.post("api/claim/findHeadlinelossList",{groupBy:this.bigDisaster.causeOfLossGroup}).then(res => {
+          console.log(res,'findHeadlinelossList');
+          if(res.status == 200 && res.data.code==200){
+            this.headlinelossList=res.data.data.rows;
+          }   
+        });
+        // Cause Of Loss 出险原因 causeOfLossList
+        this.$http.post("api/claim/getlistCauseOfLoss",{groupBy:this.bigDisaster.causeOfLossGroup}).then(res => {
+          console.log(res,'getlistCauseOfLoss');
+            if(res.status == 200 && res.data.code==200){
+              this.causeOfLossList=res.data.data.rows;
+            }  
+        });
+        if(this.bigDisaster.causeOfLossGroup=='ACCIDENT'){
+          this.bigDisaster.causeOfLossName = 'Accident';
+        } else{ this.bigDisaster.causeOfLossName = 'Act of God' }
+      }
+    },
+    headlinelossChange(i,val){
+      let obj = {};
+      if(val!==null && val!==''){
+        obj = this.headlinelossList[val];
+      }
+      if(i==1){
+        this.bigDisaster.headlinelossCode = obj.headlinelossCode;
+        this.bigDisaster.headlinelossName = obj.headlinelossName;
+      } else{
+        this.bigDisaster2.headlinelossCode = obj.headlinelossCode;
+        this.bigDisaster2.headlinelossName = obj.headlinelossName;
+      }
+    },
+    businessChange(tag,val){
+      console.log(val,'val');
+      if(val!==null && val!==''){
+        // 根据businessId 带出InsuredPeriod的值
+        let fkSoc = this.businessList[val]['fkSoc'];
+        this.bigDisaster.fkSoc = fkSoc;
+        this.bigDisaster.refClaimIdentifier = this.businessList[val]['indentifier'];
+        this.$http.post("api/claim/getInsuredPeriod",{fkSoc:fkSoc}).then(res => { 
+          if(res.status == 200 && res.data.code==200){
+            this.bigDisaster.insuredPeriod=0;
+            this.bigDisaster2.insuredPeriod=0;
+            this.insuredPeriodList=res.data.data;
+          }  
+        });
+      }
+      // if(tag==1){  
+      //   // bigDisaster
+
+      // } else{  
+      //   // bigDisaster2
+      // }
+    },
     catastrophe(tag){ 
       if(this.$route.query.tag === 'billEntry'){   // 操作页面
         this.dialogFormVisibleCatastrophe = true;
@@ -1237,9 +1326,15 @@ export default {
       }
     },
     catastropheSubmite(tag){
-      switch(tag){
+      switch(tag){    
         case '提交复核':
-          
+          console.log(this.bigDisaster,'bigDisaster');
+          this.$http.post("api/claim/createClaim",Object.assign({processId:this.chooseRow.processId},this.bigDisaster)).then(res => {
+            console.log(res);
+            // if(res.status == 200 && res.data.code==200){
+            //   this.businessList=res.data.data.rows;
+            // }  
+          });
         break;
         case '驳回':
 
@@ -1251,7 +1346,11 @@ export default {
     },
     reset(tag){   
       if(tag=='bigDisaster'){  // 巨灾重置
-
+        if(this.tabsFlag==1){
+          for(let k in this.bigDisaster){this.bigDisaster[k]=null;}
+        } else{
+          for(let k in this.bigDisaster2){this.bigDisaster2[k]=null;}
+        }
       } else{  // cleanCut重置
 
       }
@@ -2328,6 +2427,9 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
 .catastrophe .el-form-item{
   width: 32%;
   display: inline-block;
+}
+.catastrophe .el-form-item .el-select{
+  width: 220px;
 }
 .mua1{
  animation:rotateMua1 linear 0s;
