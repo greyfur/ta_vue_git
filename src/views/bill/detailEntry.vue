@@ -1009,7 +1009,7 @@
 
     <el-dialog title="Clean-Cut" :visible.sync="dialogFormVisiblecleanCut" :close-on-click-modal="modal" width="1200px">
       <el-form label-width="130px" :label-position="labelPosition" class="catastrophe">
-        <el-form-item label="赔案编号"><el-input v-model="cleanCut.refClaimIdentifier" placeholder="please enter"></el-input></el-form-item>
+        <el-form-item label="赔案编号"><el-input v-model="cleanCut.refClaimIdentifier" placeholder="请输入"></el-input></el-form-item>
         <el-form-item label="是否转已决">
           <el-radio-group v-model="cleanCut.isPending">
             <el-radio :label="1">是</el-radio>
@@ -1017,30 +1017,29 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="合同编号">
-          <el-select v-model="cleanCut.identifier" filterable placeholder="please choose">
+          <el-select v-model="cleanCut.identifier" filterable placeholder="请选择">
             <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="合同起期"><el-date-picker v-model="cleanCut.plcyStartDate" value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-        <el-form-item label="合同止期"><el-date-picker v-model="cleanCut.plcyEndDate" value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+        <el-form-item label="合同起期"><el-date-picker v-model="cleanCut.plcyStartDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="合同止期"><el-date-picker v-model="cleanCut.plcyEndDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
         <el-form-item label="Section">
-          <el-select v-model="cleanCut.fkSoc" filterable placeholder="please choose">
+          <el-select v-model="cleanCut.fkSoc" filterable placeholder="请选择">
             <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="未决赔款转已决" style="width:100%">
-          <el-card>
+        <el-form-item label="未决赔款转已决" style="width:100%" v-show="cleanCut.isPending==1">
+          <el-card style="width: calc(100% - 60px);">
             <el-form-item style="width:100%;dispaly:block;">
-              <span>币制</span>
-              <el-select filterable placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount" @change="selectChange">
+              <span>币制 </span>
+              <el-select style="height:40px;line-height:40px;width:calc(100% - 50px);" filterable placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount">
                 <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item style="width:100%;dispaly:block;">
               <div class="wrapInput" v-for="(item,i) in makeDocNum" :key='i'>
-                <span class="bizhi">{{makeDocListEctype.yuanType[i]}}：</span>&nbsp;
-                <el-input type="number" v-model="makeDocListEctype.yuanNum[i]" placeholder="请输入金额" size="small"></el-input>
-                <!-- <el-input class="singleInput" type="number" v-model="makeDocListEctype.yuanNum[i]" placeholder="请输入金额" size="small"></el-input> -->
+                <span class="bizhi">{{makeDocListEctype.yuanType[i]}} </span>&nbsp;
+                <el-input type="number" style="width:calc(100% - 50px);" v-model="makeDocListEctype.yuanNum[i]" placeholder="请输入金额" size="small"></el-input>
               </div>
             </el-form-item>
           </el-card>
@@ -1067,20 +1066,15 @@ export default {
     return {
       cleanCut:{
         refClaimIdentifier:null,
-        isPending:null,
+        isPending:1,
         identifier:null,
         plcyStartDate:null,
         plcyEndDate:null,
         fkSoc:null,
       },
       makeDocListEctype:{
-        zheNum:null,
-        zheType:null,
         yuanType:[],
         yuanNum:[],
-        yuanHuiLv:[],
-        cedentModel:[],
-        shoukuanMode:null,
       },
       makeDocNum:0,
       claimInfoDO:{},//这个数据是用来提交的时候，传给后端用bigDisaster2  
@@ -1313,7 +1307,7 @@ export default {
     this.getBillInfo();
 
     // 以下调用理赔接口，获取数据
-    this.getClaimInfo();
+    // this.getClaimInfo();
   },
   methods: {
     getClaimInfo(){
@@ -1606,91 +1600,6 @@ export default {
             } 
           }
         });
-    },
-    selectChange(){
-      // this.makeDocListEctype.yuanType.length==1?this.yuanTypeFlag=true:this.yuanTypeFlag=false;8.27
-      // this.makeDocListEctype.zheType=this.makeDocListEctype.yuanType[0];//只有一个的时候默认为这个 8.26
-      if(this.makeDocListEctype.yuanType.length){ 8.27
-        // this.zheTypeChange();
-      } else{ this.makeDocListEctype.zheNum = null; }
-      // if(this.makeDocListEctype.yuanType.length==0){
-      //   this.makeDocListEctype.zheNum='';
-      // }
-    },
-    // zheTypeChange(){  // 折币币制改变 --- 改总折币金额 --- 改原币制的汇率
-    //   // 当原币币制不是CNY或者USD,都要转先转成美元，再转成折币的小币种
-    //   if(this.makeDocListEctype.yuanType.length){
-    //     let allNum = 0;
-    //     this.makeDocListEctype.yuanNum.forEach((el,i)=>{
-    //       console.log(el)
-    //       // 遍历原币金额。。。
-    //       if(el){
-    //         let curType = this.makeDocListEctype.yuanType[i];
-    //         console.log(curType)
-    //         if(curType!='CNY' && curType!='USD'){ 
-    //           // 先把小汇率转为美元
-    //           let val = this.filterCurrencyRateList('USD',curType);
-    //           console.log(val)
-    //           if(val){
-    //             let USD = 1/val;
-    //             console.log(USD)
-    //             // 再把美元转为另一个小汇率
-    //             let val2 = this.filterCurrencyRateList('USD',this.makeDocListEctype.zheType);
-    //             if(val2){ 
-    //               //如果是一个类型 这两个都是两个小数点
-    //               // if(curType==this.makeDocListEctype.zheType){
-    //               //    this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(2):null;
-    //               // }else{
-    //               //    this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(4):null;
-    //               // }
-    //               // console.log(this.makeDocListEctype.yuanHuiLv[i],999);
-    //               this.makeDocListEctype.yuanHuiLv[i] = Number(val2*USD)>0?Number(val2*USD).toFixed(4):null;
-    //               if(this.makeDocListEctype.yuanHuiLv[i] != null){
-    //                 allNum += this.makeDocListEctype.yuanNum[i]/Number(1*this.makeDocListEctype.yuanHuiLv[i]);
-    //               }
-    //             }
-    //           }
-    //         } else{  // 直接转换、、、
-    //         console.log('else')
-    //           let val3 = Number(this.filterCurrencyRateList(curType,this.makeDocListEctype.zheType))
-    //           // console.log(val3)
-    //           // console.log(this.makeDocListEctype.yuanHuiLv[i],999);
-    //           this.makeDocListEctype.yuanHuiLv[i] = Number(val3)>0?Number(val3).toFixed(4):null;
-    //           if(this.makeDocListEctype.yuanHuiLv[i] != null){
-    //             allNum += Number(this.makeDocListEctype.yuanNum[i])/Number(1*this.makeDocListEctype.yuanHuiLv[i]);
-    //           }
-    //         }
-    //       }
-    //     }) 
-    //     this.makeDocListEctype.zheNum = allNum>0?Number(allNum).toFixed(2):null;
-    //   }
-    // },
-    makeDoc(tag,name){    // 生成审批文档 666666
-      if(tag == 'a'){  // 是操作页面，弹窗，S0,
-        this.makeDocListEctype.cedentModel = [];
-        this.dialogFormVisible2 = true;
-      } else {
-        if (tag == 2) {
-         if(this.makeDocListEctype.zheNum!==null&&this.makeDocListEctype.yuanType.length>0){
-          if(this.makeDocListEctype.shoukuanMode != null){
-            this.makeDocList = Object.assign({},this.bscBankList[this.makeDocListEctype.shoukuanMode],this.makeDocList);
-          }
-          if(this.makeDocListEctype.zheNum){
-            this.makeDocList.convertAmount = `${this.makeDocListEctype.zheType} ${this.makeDocListEctype.zheNum}`;
-            this.makeDocList.rmAmount = `${this.makeDocListEctype.zheNum}`;
-            this.makeDocList.rmCurrency = `${this.makeDocListEctype.zheType}`;
-          }
-          if(this.makeDocListEctype.yuanType.length){
-            let arr = [];
-            this.makeDocListEctype.yuanType.forEach((el,i)=>{
-              let str = `${el} ${Number(this.makeDocListEctype.yuanNum[i]).toFixed(2)}`;
-              arr.push(str);
-            })
-            this.makeDocList.primitiveAmount = arr.join(';');
-          }
-         }
-        } 
-      }    
     },
     yijian(){if(this.opinion!='其它'){ this.textareaOpinion=null;}},
     getBillInfo(){
@@ -2703,36 +2612,12 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
           o.forEach((el,i)=>{
             if(n.indexOf(el) == -1){
               this.makeDocListEctype.yuanNum.splice(i,1);
-              // this.makeDocListEctype.yuanHuiLv.splice(i,1);
-              // this.makeDocListEctype.zheNum = this.makeDocListEctype.zheNum
             }
           })
           this.makeDocNum-=1;
         }
       }
     },
-    // 监听原币金额
-    // 'makeDocListEctype.yuanNum':{
-    //   handler:function(n,o){
-    //     this.zheTypeChange();
-    //   }
-    // },
-    // 监听汇率
-    // 'makeDocListEctype.yuanHuiLv':{
-    //   handler:function(n,o){
-    //     if(this.makeDocListEctype.yuanNum.length){
-    //       let all = 0;
-    //       this.makeDocListEctype.yuanNum.forEach((el,i)=>{
-    //         console.log(this.makeDocListEctype.yuanHuiLv[i],999);
-    //         // this.makeDocListEctype.yuanHuiLv[i]汇率
-    //         // el 是金额
-    //         all += Number(Number(el)/this.makeDocListEctype.yuanHuiLv[i]) ;
-    //       })
-    //       this.makeDocListEctype.zheNum = all>0?Number(all).toFixed(2):null;
-    //     }
-        
-    //   }
-    // },
   },
 };
 </script>
