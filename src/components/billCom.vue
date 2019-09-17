@@ -816,7 +816,7 @@ export default {
   created() {
     sessionStorage.setItem("data", JSON.stringify({}));
   },
-  mounted() {
+  mounted(){
     window.onclick=()=>{this.zq1Flag=false;}
     this.mustData.actOperator = this.$store.state.userName;
     if (this.urlName === "sortOperation" || this.urlName === "billEntry") {
