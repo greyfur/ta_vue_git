@@ -1008,26 +1008,42 @@
       </div> -->
     </el-dialog>
 
-    <!-- <el-dialog title="Clean-Cut" :visible.sync="dialogFormVisiblecleanCut" :close-on-click-modal="modal" width="1200px">
+    <el-dialog title="Clean-Cut" :visible.sync="dialogFormVisiblecleanCut" :close-on-click-modal="modal" width="1200px">
       <el-form label-width="130px" :label-position="labelPosition" class="catastrophe">
-        <el-form-item label="赔案编号"><el-input v-model="cleanCut." placeholder="please enter"></el-input></el-form-item>
+        <el-form-item label="赔案编号"><el-input v-model="cleanCut.refClaimIdentifier" placeholder="请输入"></el-input></el-form-item>
         <el-form-item label="是否转已决">
-          <el-radio-group v-model="cleanCut.">
+          <el-radio-group v-model="cleanCut.isPending">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="合同编号">
-          <el-select v-model="cleanCut." filterable placeholder="please choose">
+          <el-select v-model="cleanCut.identifier" filterable placeholder="请选择">
             <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="合同起期"><el-date-picker v-model="cleanCut." value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-        <el-form-item label="合同止期"><el-date-picker v-model="cleanCut." value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+        <el-form-item label="合同起期"><el-date-picker v-model="cleanCut.plcyStartDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="合同止期"><el-date-picker v-model="cleanCut.plcyEndDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
         <el-form-item label="Section">
-          <el-select v-model="cleanCut." filterable placeholder="please choose">
+          <el-select v-model="cleanCut.fkSoc" filterable placeholder="请选择">
             <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="未决赔款转已决" style="width:100%" v-show="cleanCut.isPending==1">
+          <el-card style="width: calc(100% - 60px);">
+            <el-form-item style="width:100%;dispaly:block;">
+              <span>币制 </span>
+              <el-select style="height:40px;line-height:40px;width:calc(100% - 50px);" filterable placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount">
+                <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item style="width:100%;dispaly:block;">
+              <div class="wrapInput" v-for="(item,i) in makeDocNum" :key='i'>
+                <span class="bizhi">{{makeDocListEctype.yuanType[i]}} </span>&nbsp;
+                <el-input type="number" style="width:calc(100% - 50px);" v-model="makeDocListEctype.yuanNum[i]" placeholder="请输入金额" size="small"></el-input>
+              </div>
+            </el-form-item>
+          </el-card>
         </el-form-item>
       </el-form>
       <div slot="footer" v-show="$route.query.tag === 'billEntry'" class="dialog-footer" style="margin-top:10px;">
@@ -1038,7 +1054,7 @@
         <el-button size="small" @click="cleanCutSubmite('驳回')">驳回</el-button>
         <el-button type="primary" plain @click="cleanCutSubmite('通过')">通过</el-button>
       </div>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 
@@ -1049,6 +1065,19 @@ export default {
   name: "detailEntry",
   data() { 
     return {
+      cleanCut:{
+        refClaimIdentifier:null,
+        isPending:1,
+        identifier:null,
+        plcyStartDate:null,
+        plcyEndDate:null,
+        fkSoc:null,
+      },
+      makeDocListEctype:{
+        yuanType:[],
+        yuanNum:[],
+      },
+      makeDocNum:0,
       claimInfoDO:{},//这个数据是用来提交的时候，传给后端用bigDisaster2  
       headlinelossList2:[],
       businessList2:[],
@@ -1081,23 +1110,6 @@ export default {
         insuredPeriod:null,
         section:null,
       },
-      // ----------bigDisaster2中，以下字段没有在页面上显示------
-      // lossDateStart
-      // lossDateEnd
-      // causeOfLossGroup
-      // causeOfLossName
-      // causeOfLoss
-      // riskEvnt
-      // plcyStartDate
-      // plcyEndDate
-      // advisedDate
-      // ------------bigDisaster2中，以下字段存在-------------
-      // fkSoc
-      // refClaimIdentifier
-      // claimName
-      // headlinelossCode
-      // headlinelossName
-      // taWorksheetDO
       bigDisaster2:{
         fkSoc:null,
         headlinelossIndex:null,
@@ -1117,9 +1129,6 @@ export default {
         claimName:null,
         BL:'0',
         taWorksheetDO:{},
-      },
-      cleanCut:{
-
       },
       rules2:{
         // select
@@ -1299,7 +1308,7 @@ export default {
     this.getBillInfo();
 
     // 以下调用理赔接口，获取数据
-    this.getClaimInfo();
+    // this.getClaimInfo();
   },
   methods: {
     getClaimInfo(){
@@ -2598,11 +2607,27 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
       console.log(`当前页: ${val}`);
     }
   },
-  // watch:{
-  //   subProcess(n,o){
-  //     this.subProcessFlag = n?true:false;
-  //   }
-  // },
+  watch:{
+    // 监听原币币制
+    'makeDocListEctype.yuanType':{
+      handler:function(n,o){
+        let nlength = 0,olength = 0;
+        nlength = n?n.length:0;
+        olength = o?o.length:0;
+        if(nlength>olength){ //加
+          this.makeDocNum+=1;
+        } else if(nlength<olength){  // 减
+          // 要删除掉 删除元素对应索引的金额
+          o.forEach((el,i)=>{
+            if(n.indexOf(el) == -1){
+              this.makeDocListEctype.yuanNum.splice(i,1);
+            }
+          })
+          this.makeDocNum-=1;
+        }
+      }
+    },
+  },
 };
 </script>
 

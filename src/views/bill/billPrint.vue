@@ -8,20 +8,16 @@
   </div>
 </template>
 <script>
-// import billCom from '@/components/billCom.vue'
 export default {
-  // components:{
-  //   billCom
-  // },
   data() {
     return {
       inputbox:null,
       path2:null,
     }
   },
-  methods:{
+  methods:{    
     downLoad(){
-      this.$http.get(`api/reportform/Printbills/${this.inputbox}`,{responseType: "blob"}).then(res => {
+      this.$http.post(`api/reportform/Printbills`,{wsId:this.inputbox},{responseType: "blob"}).then(res => {
           if (res.status === 200) {
             this.path2 = this.getObjectURL(res.data);
             if (res.data) {
