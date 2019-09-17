@@ -1018,7 +1018,7 @@
         <el-form-item label="汇款人地址" prop="remmiterAddr"><el-input  placeholder="请输入" v-model="willis.remmiterAddr"></el-input></el-form-item>
         <!-- <el-form-item label="组织机构代码" prop="orgCode"><el-input  placeholder="请输入" v-model="willis.orgCode"></el-input></el-form-item> -->
         <el-form-item label="银行地址" prop="bankAddr"><el-input  placeholder="请输入" v-model="willis.bankAddr"></el-input></el-form-item>
-        <el-form-item label="银行相关信息" prop="bankInfo"><el-input  placeholder="请输入" v-model="willis.bankInfo"></el-input></el-form-item>
+        <el-form-item label="银行相关信息" prop="bankName"><el-input  placeholder="请输入" v-model="willis.bankName"></el-input></el-form-item>
         <el-form-item label="受款公司名称" prop="compName"><el-input  placeholder="请输入" v-model="willis.compName"></el-input></el-form-item>
         <el-form-item label="受款公司地址" prop="compAddr"><el-input  placeholder="请输入" v-model="willis.compAddr"></el-input></el-form-item>
         <!-- <el-form-item label="汇款日期" prop="payDate"><el-date-picker v-model="willis.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item> -->
@@ -1340,7 +1340,7 @@ export default {
           maek1:null,
           // mark2:null,
           bankAddr:null,
-          bankInfo:null,
+          bankName:null,
           compName:null,
           compAddr:null,
         },
@@ -1909,7 +1909,7 @@ export default {
             this.willis.orgAmount1=this.listData[4].b;
             this.willis.compName=detail[0].compName;
             this.willis.compAddr=detail[0].compAddr;
-            this.willis.bankInfo=detail[0].bankInfo;
+            this.willis.bankName=detail[0].bankInfo;
             this.willis.bankAddr=detail[0].bankAddr;
             this.TextCapitalization();
           }else{
@@ -2088,7 +2088,7 @@ export default {
                   // orgAmount3: this.willis.orgAmount3,
                   chineseAmount: this.willis.chineseAmount,
                   bankAddr: this.willis.bankAddr,
-                  bankInfo: this.willis.bankInfo,
+                  bankName: this.willis.bankName,
                   compName: this.willis.compName,
                   compAddr: this.willis.compAddr,
                   })
