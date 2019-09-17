@@ -1000,7 +1000,8 @@
         <!-- <el-form-item label="orgAmount2" prop="orgAmount2"><el-input  placeholder="请输入" v-model="willis.orgAmount2"></el-input></el-form-item> -->
         <el-form-item label="现汇金额账号" prop="accountNo1"><el-input  placeholder="请输入" v-model="willis.accountNo1"></el-input></el-form-item>
         <el-form-item label="其他金额账号" prop="accountNo2"><el-input  placeholder="请输入" v-model="willis.accountNo2"></el-input></el-form-item>
-        <el-form-item label="汇款人名称及地址" prop="remmiterInfo"><el-input  placeholder="请输入" v-model="willis.remmiterInfo"></el-input></el-form-item>
+        <el-form-item label="汇款人名称" prop="remmiterName"><el-input  placeholder="请输入" v-model="willis.remmiterName"></el-input></el-form-item>
+        <el-form-item label="汇款人地址" prop="remmiterAddr"><el-input  placeholder="请输入" v-model="willis.remmiterAddr"></el-input></el-form-item>
         <!-- <el-form-item label="组织机构代码" prop="orgCode"><el-input  placeholder="请输入" v-model="willis.orgCode"></el-input></el-form-item> -->
         <el-form-item label="银行地址" prop="bankAddr"><el-input  placeholder="请输入" v-model="willis.bankAddr"></el-input></el-form-item>
         <el-form-item label="银行相关信息" prop="bankInfo"><el-input  placeholder="请输入" v-model="willis.bankInfo"></el-input></el-form-item>
@@ -1008,7 +1009,18 @@
         <el-form-item label="受款公司地址" prop="compAddr"><el-input  placeholder="请输入" v-model="willis.compAddr"></el-input></el-form-item>
         <!-- <el-form-item label="汇款日期" prop="payDate"><el-date-picker v-model="willis.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item> -->
         <el-form-item label="汇款附言" prop="mark1"><el-input  placeholder="请输入" v-model="willis.mark1"></el-input></el-form-item>
-        <el-form-item label="收款人国家/地区" prop="areaName"><el-input  placeholder="请输入" v-model="willis.areaName"></el-input></el-form-item>
+        <el-form-item label="收款人国家/地区" prop="areaName">
+          <el-select clearable filterable v-model="willis.areaName" placeholder="收款人国家/地区">
+                <el-option
+                  v-for="(item,index) in areaNameList"
+                  :key="index"
+                  :label="item.areaCode+' - '+item.areaName"
+                  :value="item.areaCode+'-'+item.areaName">
+                  <span style="float:left">{{ item.areaCode }}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{ item.areaName }}</span>
+                </el-option>
+              </el-select>
+        </el-form-item>
         <!-- <el-form-item label="areaCode" prop="areaCode"><el-input  placeholder="请输入" v-model="willis.areaCode"></el-input></el-form-item> 9.17改-->
         <el-form-item label="交易编码" prop="transacCode"><el-input  placeholder="请输入" v-model="willis.transacCode"></el-input></el-form-item>
         <!-- <el-form-item label="orgAmount3" prop="orgAmount3"><el-input  placeholder="请输入" v-model="willis.orgAmount3"></el-input></el-form-item> -->
@@ -1304,7 +1316,8 @@ export default {
           chineseAmount:null,
           accountNo1:null,
           accountNo2:null,
-          remmiterInfo:null,
+          remmiterName:'CHINA REINSURANCE (GROUP) CORPORATION',
+          remmiterAddr:'No.11, JinRong Avenue , XiCheng District, Beijing ,China',
           orgCode:null,
           areaName:'英 国',
           areaCode:null,
@@ -1726,6 +1739,7 @@ export default {
         flagJ:null,
         reverseRow:{},
         row:{},
+        areaNameList:[],
       };
     },
   created(){
@@ -1795,8 +1809,18 @@ export default {
     }
     this.dataBaseSG();
     this.mailSend(2,'',1);
+    this.getAreaName();
   },
   methods: {
+    getAreaName(){
+      this.$http.post("api//othersDO/bscAreaInfo/list", {}).then(res=>{
+        console.log(res)
+        if(res.status===200&&res.statusText==='OK'){
+          this.areaNameList=res.data.rows;
+        }
+        console.log(this.areaNameList)
+      });
+    },
     TextCapitalization(){
       this.$http.post("api/docCreate/getChineseAmount", { //金额转大写
         oriCurrency:this.willis.rmCurrency,
@@ -2031,10 +2055,11 @@ export default {
                   telephone: this.willis.telephone,
                   accountNo1: this.willis.accountNo1,
                   accountNo2: this.willis.accountNo2,
-                  remmiterInfo: this.willis.remmiterInfo,
+                  remmiterName: this.willis.remmiterName,
+                  remmiterAddr: this.willis.remmiterAddr,
                   // orgCode: this.willis.orgCode,
-                  areaName: this.willis.areaName,
-                  areaCode: this.willis.areaCode,
+                  areaName: this.willis.areaName.split('-')[1],
+                  areaCode: this.willis.areaName.split('-')[0],
                   transacCode: this.willis.transacCode,
                   // param8: this.willis.param8,
                   mark1: this.willis.mark1,
