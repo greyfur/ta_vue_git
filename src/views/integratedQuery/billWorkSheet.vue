@@ -533,8 +533,8 @@ export default {
           wsBusinessType:null,
           wsCedentCode:null,
           wsCedentName:null,
-          wsBrokerCode:null,
-          wsBrokerName:null,
+          brokerCode:null,
+          brokerName:null,
           wsReceiptDate:null,
           receiptDate:null,
           businessOrigin:null,
@@ -682,8 +682,8 @@ export default {
       } 
       if(this.brokerModel != null){
         let obj = this.brokerList[this.brokerModel];
-        this.billSearch.wsBrokerCode = obj.codecode;
-        this.billSearch.wsBrokerName = obj.codeName;
+        this.billSearch.brokerCode = obj.codecode;
+        this.billSearch.brokerName = obj.codeName;
       } 
       switch(this.dialogState){
         case 0:    // 创建
@@ -798,9 +798,9 @@ export default {
             })
            } else{ this.cedentModel = null; }
           // 经纪人brokerModel   brokerList
-          if(row.wsBrokerCode){
+          if(row.brokerCode){
             this.brokerList.forEach((el,i)=>{
-              if(el.codecode == row.wsBrokerCode){
+              if(el.codecode == row.brokerCode){
                 this.brokerModel = i;
               }
             })

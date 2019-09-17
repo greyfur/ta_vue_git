@@ -91,7 +91,8 @@
                 <template slot-scope="scope">
                   <el-tooltip class="item" effect="dark" placement="top">
                     <div slot="content">{{scope.row.docName}}<br/>{{scope.row.remark}}</div>
-                    <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                    <!-- <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)" v-if="!scope.row.suffixFlag">{{scope.row.docName}}</span> -->
+                    <span :class="scope.row.suffixFlag?'smallHand':''" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                   </el-tooltip>
                 </template>
               </el-table-column>
@@ -433,12 +434,12 @@
             </el-checkbox-group>
           </div>
         </div>
+          <!-- height="400" 9.17详情的部分列表去掉死高 -->
         <el-table
           v-show="searchFlag3"
           :data="SICSData"
           border
           width="100%"
-          height="400"
           :header-row-class-name="StableClass">
           <el-table-column type="index" width="50" align="center"></el-table-column>
           <el-table-column label="账单号" width="160" align="center">
@@ -449,7 +450,7 @@
                 :content="scope.row.wsId"
                 placement="top-start"
               >
-                <span class="abbreviate">{{scope.row.wsId}}</span>
+                <span :class="scope.row.wsStatus==='Closed'?'abbreviate abbreviateRed':'abbreviate'">{{scope.row.wsId}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1681,6 +1682,10 @@ export default {
               }
             })
           this.tableData = arr;
+          this.tableData.map(item=>{
+            return item.redFlag=false;
+          })
+          console.log(this.tableData)
           let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
           setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
         }
@@ -2368,8 +2373,12 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
       if (row) {
         let arrr = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT','XLS','xls','ppt','PPT','pptx','PPTX'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
+        // console.log(this)
+        // console.log(this.suffixFlag)
         if(row.suffix && !this.suffixFlag){ return false; }
         this.docViewRow = row;
+         row.redFlag=true;
+      console.log(row)
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
             document.getElementById("iframeId").contentWindow.postMessage(
