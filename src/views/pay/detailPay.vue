@@ -1778,9 +1778,10 @@ export default {
       this.brokerList = [...bList,...cList,...rArr];
       let fcArr = JSON.parse(sessionStorage.getItem('CedentType'));
       let jArr = JSON.parse(sessionStorage.getItem('BrokerType'));
-      this.brokerListHK = fcArr.concat(jArr);
-      this.cedentList = fcArr;
-      this.brokerListS = jArr;
+      let zbxr = JSON.parse(sessionStorage.getItem("ReinsurerList"));
+      this.brokerListHK = [...fcArr,...jArr,...zbxr];
+      this.cedentList = [...fcArr,...zbxr];
+      this.brokerListS = [...jArr,...zbxr];
       //获取币制
       this.rmCurrencyList = JSON.parse(sessionStorage.getItem('CurrencyList'));
       // 集团产再

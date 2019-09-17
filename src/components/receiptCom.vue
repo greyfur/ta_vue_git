@@ -916,7 +916,6 @@ export default {
     }else{
       this.changeClientHight=document.body.clientHeight-278-document.querySelector('.el-table').offsetTop;
     }
-    console.log(this.changeClientHight)
     this.changeWindow();
     this.mustData.actOperator = this.$store.state.userName;
     this.formLabelAlign.modifiedBy = this.$store.state.userName;
@@ -924,7 +923,8 @@ export default {
       // 分出人+经济人
       let fcArr = JSON.parse(sessionStorage.getItem("CedentType"));
       let jArr = JSON.parse(sessionStorage.getItem("BrokerType"));
-      this.cedentList = jArr.concat(fcArr);
+      let zbxr = JSON.parse(sessionStorage.getItem("ReinsurerList"));
+      this.cedentList = [...fcArr,...jArr,...zbxr];
       //获取币制
       this.rmCurrencyList = JSON.parse(sessionStorage.getItem("CurrencyList"));
       // 集团产再
@@ -934,9 +934,7 @@ export default {
         return el.code != "Both";
       });
       // 国际国内
-      this.businessOriginList = JSON.parse(
-        sessionStorage.getItem("businessOrigin")
-      );
+      this.businessOriginList = JSON.parse(sessionStorage.getItem("businessOrigin"));
     }, 1000);
     // 判断是否是管理员   66
       let admArr = JSON.parse(sessionStorage.getItem('roleIdList'));
