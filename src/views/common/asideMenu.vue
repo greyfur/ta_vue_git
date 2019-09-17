@@ -304,9 +304,6 @@ div.asideMenu::-webkit-scrollbar-thumb:hover{
 div.asideMenu::-webkit-scrollbar-corner{
   background: #bfbfbf;
 }
-
-
-
 div::-webkit-scrollbar{
   width:15px;
   height:15px;
@@ -446,6 +443,6 @@ div::-webkit-scrollbar-corner{
     cursor: pointer;
   }
   .el-submenu:nth-child(1) .el-submenu__title{
-    box-shadow:0 2px 4px inset rgba(0,0,0,.4);
+    box-shadow:0 1px 3px inset rgba(0,0,0,.4);
   }
 </style>
