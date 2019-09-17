@@ -1319,7 +1319,7 @@ export default {
           remmiterName:'CHINA REINSURANCE (GROUP) CORPORATION',
           remmiterAddr:'No.11, JinRong Avenue , XiCheng District, Beijing ,China',
           orgCode:null,
-          areaName:'英 国',
+          areaName:null,
           areaCode:null,
           transacCode:null,
           mark2:'再保险支出',
@@ -1819,6 +1819,9 @@ export default {
         if(res.status===200&&res.statusText==='OK'){
           this.areaNameList=res.data.rows;
         }
+        this.areaNameList=this.areaNameList.sort((a,b)=>{
+          return a.id-b.id
+        })
         console.log(this.areaNameList)
       });
     },

@@ -41,7 +41,7 @@
         </div>
         <div class="left" style="height:100%;width:98%;">
           <div class="leftTop" style="background:#fff;margin-bottom:10px;padding:0 0 10px 0;">
-            <div class="titleSearch detailSearch" @click="searchFlag1 = !searchFlag1">
+            <div class="titleSearch detailSearch searchNewss" @click="searchFlag1 = !searchFlag1">
                 <div>
                   <i style="margin-right:8px;" class="el-icon-arrow-down"></i>详情
                 </div>
@@ -84,7 +84,7 @@
               height="240px"
               max-height="240px"
               :data="tableData.slice((currentPage-1)*3,currentPage*3)"
-              style="width: 100%;margin-top:10px;"
+              style="width: 100%;"
               class="document">
               <!-- .slice((1-1)*3,3) -->
               <el-table-column label="文件名" align="center">
@@ -148,7 +148,14 @@
             <li @click="rotateMua"><i class="iconfont iconshunshizhenxuanzhuan" style="color:#000;font-size:18px;"></i></li>
             <li @click="rotateMuas"><i class="iconfont iconnishizhenxuanzhuan" style="color:#000;font-size:18px;"></i></li>
           </ul>
-          <el-tabs v-model="activeName" :class="changeLayoutflag?'':'changeLayoutflags'" style="background:#fff;">
+            <div class="rotuta" v-if="activeName==='second'">
+              <el-checkbox-group v-model="wsCheckList" @change="onWsCheck" :disabled="isHover" class="rotuta">
+                <el-checkbox label="C">Closed</el-checkbox>
+                <el-checkbox label="O">Open</el-checkbox>
+                <el-checkbox label="I">Inactive</el-checkbox>
+              </el-checkbox-group>
+            </div>
+          <el-tabs v-model="activeName" :class="changeLayoutflag?'':'changeLayoutflags'" style="background:#fff;margin-top:4px;">
             <el-tab-pane
               label="文档预览"
               name="first"
@@ -218,14 +225,7 @@
             <el-row >
               <el-col :span="24" style="padding:0 16px;margin-top:10px;height:100%;">
                 <div class="titleSearch detailSearch" style="margin-bottom:10px;">
-                  <div><i style="margin-right:8px;" class="el-icon-arrow-down"></i>账单信息</div>
-                  <div>
-                    <el-checkbox-group v-model="wsCheckList" @change="onWsCheck" :disabled="isHover">
-                      <el-checkbox label="C">Closed</el-checkbox>
-                      <el-checkbox label="O">Open</el-checkbox>
-                      <el-checkbox label="I">Inactive</el-checkbox>
-                    </el-checkbox-group>
-                  </div>
+                
                 </div>
                 <el-table
                   v-show="searchFlag3"
@@ -2968,7 +2968,7 @@ ul.detail-ul {
   margin-top: 10px;
   box-sizing: border-box;
   border:1px solid #eaeaea;
-  padding: 0 10px;
+  padding: 20px;
   border-radius: 3px;
 }
 li.detail-item {
@@ -2976,9 +2976,10 @@ li.detail-item {
   width: 48%;
   height: 25px;
   line-height: 25px;
+  color: #999;
 }
 .detail-ul li .detail-content {
-  color: #999;
+  color: #000;
 }
 .detailSearch {
   display: flex;
@@ -2986,6 +2987,7 @@ li.detail-item {
   justify-content: space-between;
   background:#fff;
   border-bottom: 1px solid #eaeaea;
+  border-right: 1px solid #eaeaea;
 }
 .right >>>.detailSearch {
   display: flex;
@@ -3051,6 +3053,8 @@ li.detail-item {
   right:0;
   z-index: 999;
   display: flex;
+  height: 36px;
+  line-height: 36px;
 }
 .rotuta li{
   height: 36px;
@@ -3059,4 +3063,5 @@ li.detail-item {
   line-height: 36px;
   cursor: pointer;
 }
+
 </style>

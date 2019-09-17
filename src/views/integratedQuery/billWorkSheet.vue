@@ -649,7 +649,8 @@ export default {
       this.init();
     },
     handleCurrentChange(val) {
-      this.mustData.pageNumber = val;
+      // this.mustData.pageNumber = val; 9.17让pageNumber一直为1不发生变化
+      this.mustData.pageNumber = 1;
       this.init();
     },
     ZJhandleCurrentChange(val) {
