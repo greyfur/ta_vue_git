@@ -22,7 +22,6 @@ router.beforeEach((to, from, next) => {
       let url = window.location.href.split('#');
       axios.get(`api/loginCas`,{params:{uri:url[0]}}).then(res=>{
         if(res.data.code == 0) {
-          console.log(res.data);
           sessionStorage.setItem('userCName',res.data.userCName);
           sessionStorage.setItem('nameList',JSON.stringify(res.data.usernameInfo));
           // store.dispatch('AnameList',JSON.parse(res.data.usernameInfo));
@@ -31,6 +30,8 @@ router.beforeEach((to, from, next) => {
           // 3.获取权限列表
           axios.get('api/sys/menu/list').then(res =>{
             if(res.status == 200 && res.data.data && res.data.data.length){
+              sessionStorage.setItem('mobile',res.data.mobile);
+              sessionStorage.setItem('email',res.data.email);
               sessionStorage.setItem('resMenuList',JSON.stringify(res.data.data));
               sessionStorage.setItem('roleIdList',JSON.stringify(res.data.roleIdList));
               let allRoute = detailArr.concat(menuTree(routData.root,res.data.data));
@@ -61,6 +62,8 @@ router.beforeEach((to, from, next) => {
       if(!sessionStorage.getItem('resMenuList')){
         axios.get('api/sys/menu/list').then(res =>{
           if(res.status == 200 && res.data.data && res.data.data.length){
+            sessionStorage.setItem('mobile',res.data.mobile);
+            sessionStorage.setItem('email',res.data.email);
             sessionStorage.setItem('resMenuList',JSON.stringify(res.data.data));
             sessionStorage.setItem('roleIdList',JSON.stringify(res.data.roleIdList));
             let allRoute = detailArr.concat(menuTree(routData.root,res.data.data));
