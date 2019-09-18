@@ -557,14 +557,14 @@ export default {
           this.TJRoptionsB = res.data;
         }
       });
-      this.$http.post("api/activiti/getAssigneeName", { roleName: '账单复核' })
-      .then(res => {
-        console.log(res)
-        if (res.status === 200) {
-          this.TJRoptionsC = res.data;
-        }
-        console.log(this.TJRoptionsC)
-      });
+    this.$http.post("api/activiti/getAssigneeName", { roleName: '账单复核' })
+    .then(res => {
+      console.log(res)
+      if (res.status === 200) {
+        this.TJRoptionsC = res.data;
+      }
+      console.log(this.TJRoptionsC)
+    });
   },
   methods: {
     changeWindow(){
