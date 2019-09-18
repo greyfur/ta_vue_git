@@ -677,8 +677,8 @@ export default {
       }
       if(this.cedentModel != null){
         let obj = this.cedentList[this.cedentModel];
-        this.billSearch.wsCedentCode = obj.codecode;
-        this.billSearch.wsCedentName = obj.codeName;
+        this.billSearch.cedentCode = obj.codecode;
+        this.billSearch.cedentName = obj.codeName;
       } 
       if(this.brokerModel != null){
         let obj = this.brokerList[this.brokerModel];

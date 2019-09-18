@@ -81,18 +81,17 @@
             <el-table
               v-show="searchFlag2"
               border
-              height="240px"
-              max-height="240px"
-              :data="tableData.slice((currentPage-1)*3,currentPage*3)"
+              height="390px"
+              max-height="390px"
+              :data="tableData.slice((currentPage-1)*7,currentPage*7)"
               style="width: 100%;"
               class="document">
-              <!-- .slice((1-1)*3,3) -->
-              <el-table-column label="文件名" align="center">
+              <el-table-column label="文件名" align="center" ref="redSpanPar">
                 <template slot-scope="scope">
                   <el-tooltip class="item" effect="dark" placement="top">
                     <div slot="content">{{scope.row.docName}}<br/>{{scope.row.remark}}</div>
                     <!-- <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)" v-if="!scope.row.suffixFlag">{{scope.row.docName}}</span> -->
-                    <span :class="scope.row.suffixFlag?'smallHand':''" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                    <span :class="scope.row.suffixFlag?'smallHand':''" class="abbreviate" @click="docView(scope.row,scope.row.redFlag.index)" ref="redSpan" :data-index="currentPage+'-'+scope.row.redFlag.index"><span :class="scope.row.redFlag.flag?'abbreviateRed':''">{{scope.row.docName}}</span></span>
                   </el-tooltip>
                 </template>
               </el-table-column>
@@ -134,7 +133,7 @@
               background
               layout="prev, pager, next"
               style="padding:4px 0;margin-top:10px;float:right;"
-              :page-size="3"
+              :page-size="7"
               :current-page="currentPage"
               @current-change="handleCurrentChange"
               :total="tableData.length">
@@ -1680,7 +1679,12 @@ export default {
             }
               // if(el['a']=='任务来源'){ el["b"] = this.nameList[this.chooseRow[el["c"]]]; }
             });
-
+            res.data.bscDocumentVOlist.map((item,index)=>{
+            return item.redFlag={
+              flag:false,
+              index:index%7
+            }
+          })
             let arr = res.data.bscDocumentVOlist;
             if(arr===null){return;}
             arr.forEach(el=>{
@@ -1691,10 +1695,6 @@ export default {
               }
             })
           this.tableData = arr;
-          this.tableData.map(item=>{
-            return item.redFlag=false;
-          })
-          console.log(this.tableData)
           let num = this.tableData.findIndex(el => { return el.suffix=='doc' || el.suffix=='DOCX' || el.suffix=='xlsx' || el.suffix=='PDF' || el.suffix=='pdf' || el.suffix=='XLSX'})
           setTimeout(()=>{ this.docView(this.tableData[+num]); },500)
         }
@@ -2378,16 +2378,16 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
         break;
       }
     },
-    docView(row) {
+   docView(row,index) {
+      row.redFlag.flag=true;
+      this.$forceUpdate();
+      console.log(row)
       if (row) {
         let arrr = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT','XLS','xls','ppt','PPT','pptx','PPTX'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
-        // console.log(this)
-        // console.log(this.suffixFlag)
         if(row.suffix && !this.suffixFlag){ return false; }
         this.docViewRow = row;
-         row.redFlag=true;
-      console.log(row)
+        // this.tableData= this.tableData;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
             document.getElementById("iframeId").contentWindow.postMessage(
@@ -2412,6 +2412,7 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
         document.getElementById("iframeId").contentWindow.postMessage({}, "*");
         document.getElementById("iframeId").contentWindow.location.reload(true);
       }
+      // this.getBillInfo();
     },
     getObjectURL(file) {
       let url = null;
@@ -2855,7 +2856,8 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
   border-radius: 8px;
 }
 ul.detail-ul {
-  height: 300px;
+  /* height: 300px; */
+  height: 150px;
   display: flex;
   flex-wrap: wrap;
   background-color: #fff;
