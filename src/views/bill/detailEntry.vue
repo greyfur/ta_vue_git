@@ -987,7 +987,7 @@
             </el-form-item>
             <el-form-item label="As Of Date" prop="accAsOfDate"><el-date-picker v-model="bigDisaster2.accAsOfDate" value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
             <el-form-item label="Receive Date"><el-date-picker v-model="bigDisaster2.registTimestamp" value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-            <el-form-item label="BP Reference"><el-input @blur="onCheck('bpRef')" v-model="bigDisaster2.bpRef" placeholder="please enter"></el-input></el-form-item>
+            <el-form-item label="BP Reference"><el-input v-model="bigDisaster2.bpRef" placeholder="please enter"></el-input></el-form-item>
             <el-form-item label="Currency" prop="fkCurr">
               <el-select v-model="bigDisaster2.fkCurr" filterable placeholder="please choose">
                 <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
@@ -1095,6 +1095,7 @@ export default {
       headlinelossList:[],
       bigArr:[],
       bigDisaster:{
+        claimSort:'0',
         taWorksheetDO:{},
         fkSoc:null,
         headlinelossIndex:null,
@@ -1117,6 +1118,7 @@ export default {
         section:null,
       },
       bigDisaster2:{
+        claimSort:'1',
         fkSoc:null,
         headlinelossIndex:null,
         refClaimIdentifier:null,
@@ -1163,7 +1165,7 @@ export default {
         // input
         claimName:[{ required: true, message: "please enter Claim's Name", trigger: 'change' }],
       },
-      tabsFlag:'2',
+      tabsFlag:'1',
       activeName: 'first',
       changeLayoutflag:true,
       changeLayoutflags:false,
@@ -1393,12 +1395,12 @@ export default {
         // 显示赔案编号下关联的合同编号下拉项；显示合同编号相关的合同起期-止期下拉项；显示合同编号下相关的Section下拉项；
         this.$http.get("api/claim/findClaimAndBusinessInfo",{params:{refClaimIdentifier:this.bigDisaster2.refClaimIdentifier}}).then(res => { 
           if(res.status == 200 && res.data.code==200){
-            // 获取businessInfo------缺insuredPeriod的信息
+            // 获取businessInfo
             this.businessList2 = res.data.data.businessInfoDO;
             this.claimInfoDO = res.data.data.claimInfoDO; // 这个数据是用来提交的时候，传给后端用
             this.bigDisaster2.businessId=this.businessList2[0]['identifier'];
             this.bigDisaster2.section=this.businessList2[0]['sectionName'];
-            // this.insuredPeriodList=res.data.data;          缺insuredPeriod的信息
+            this.bigDisaster2.insuredPeriod=0;
           }  
         });
       }
@@ -1454,33 +1456,59 @@ export default {
             this.insuredPeriodList=res.data.data;
           }  
         });
+        this.$http.get("api/claim/findClaimAndBusinessInfo",{params:{refClaimIdentifier:this.bigDisaster.refClaimIdentifier}}).then(res => { 
+          console.log(res,'findClaimAndBusinessInfo');
+          if(res.status == 200 && res.data.code==200){
+            // 获取businessInfo
+           
+          }  
+        });
       }
-      // if(tag==1){  
-      //   // bigDisaster
-
-      // } else{  
-      //   // bigDisaster2
-      // }
     },
-    catastrophe(tag){ 
+    async catastrophe(tag){ 
       if(this.$route.query.tag === 'billEntry'){   // 操作页面
         this.dialogFormVisibleCatastrophe = true;
         this.bigDisaster2.registTimestamp = new Date().getTime();
-      } else{  // 
-
+      } else{  // 复核回显
+      // claimSort:'0'  bigDisaster
+       await this.$http.post("api/claim/getClaimMessageByProcessId",{processId:this.chooseRow.processId,claimSort:'0'}).then(res => {
+          console.log(res,'/getClaimMessageByProcessId---0');
+          if(res.status == 200 && res.data){
+            if(Object.keys(res.data).length){
+              for(let k in this.bigDisaster){
+                if(res.data[k]!=null && res.data[k]!=undefined){
+                  this.bigDisaster[k]=res.data[k];
+                }
+              }
+            }
+          } 
+        });
+        this.dialogFormVisibleCatastrophe = true;
+      // claimSort:'0'  bigDisaster2
+       this.$http.post("api/claim/getClaimMessageByProcessId",{processId:this.chooseRow.processId,claimSort:'1'}).then(res => {
+          console.log(res,'/getClaimMessageByProcessId---1');
+          if(res.status == 200 && res.data){
+            if(Object.keys(res.data).length){
+              for(let k in this.bigDisaster2){
+                if(res.data[k]!=null && res.data[k]!=undefined){
+                  this.bigDisaster2[k]=res.data[k];
+                }
+              }
+            }
+          } 
+        });
       }
     },
     catastropheSubmite1(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.post("api/claim/createClaim",Object.assign({processId:this.chooseRow.processId},this.bigDisaster)).then(res => {
-            console.log(res);
-            if(res.status == 200 && res.data.code==200){
-            //   this.businessList=res.data.data.rows;
-            } 
-            // else if(res.data.code==500){
-            //   this.$message.error(res.data.data.errorMsg);
-            // }
+          this.$http.post("api/claim/saveClaim",Object.assign({processId:this.chooseRow.processId,createdBy:this.$store.state.userName},this.bigDisaster)).then(res => {
+            if(res.status == 200 && res.data.code==0){
+              this.$message({message:res.data.msg,type: 'success'});
+              this.dialogFormVisibleCatastrophe = false;
+            } else {
+              this.$message.error(res.data.msg);
+            }
           });
         } 
       })
@@ -1490,7 +1518,7 @@ export default {
         if (valid) {
           // 普通的字符的校验 bpRef
           let str = this.bigDisaster2.bpRef;
-          if(str.length){
+          if(str && str.length){
             let i,n=0;
             for (i = 0;i < str.length;i++){
               if(str.charCodeAt(i)<=256){ n+=2; }else{ n+=1; }
@@ -1500,12 +1528,12 @@ export default {
               }
             }
           }
-          this.$http.post("api/claim/createWorksheet",Object.assign({processId:this.chooseRow.processId},this.claimInfoDO,this.bigDisaster2)).then(res => {
-            console.log(res,'createWorksheet');
-            if(res.status == 200 && res.data.code==200){
-              // todo
-            } else if(res.data.code==500){
-              
+          this.$http.post("api/claim/saveClaim",Object.assign({processId:this.chooseRow.processId,createdBy:this.$store.state.userName},this.claimInfoDO,this.bigDisaster2)).then(res => {
+            if(res.status == 200 && res.data.code==0){
+              this.$message({message:res.data.msg,type: 'success'});
+              this.dialogFormVisibleCatastrophe = false;
+            } else {
+              this.$message.error(res.data.msg);
             }
           });
         } 
@@ -1538,8 +1566,10 @@ export default {
         if(this.tabsFlag==1){
           for(let k in this.bigDisaster){this.bigDisaster[k]=null;}
           this.bigDisaster.taWorksheetDO = {};
+          this.bigDisaster.claimSort = '0';
         } else{
           for(let k in this.bigDisaster2){this.bigDisaster2[k]=null;}
+          this.bigDisaster2.claimSort = '1';
         }
       } else{  // cleanCut重置
 
