@@ -78,7 +78,10 @@
             <el-col :span="8" v-if="urlName!=='sortOperation'">
               <span class="slable">复核人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
               <el-select clearable v-model="querySearch.closedBy" placeholder="请选择复核人">
-                <el-option v-for="(item,index) in TJRoptionsC" :key="item.username" :index="index" :label="item.name" :value="item.username"></el-option>
+                <el-option v-for="(item,index) in TJRoptionsC" :key="item.username" :index="index" :label="item.name" :value="item.username">
+                   <span style="float:left">{{item.name}}</span>
+                   <span style="float:right;color: #8492a6; font-size: 13px">{{item.username}}</span>
+                </el-option>
               </el-select>
             </el-col>
             <el-col :span="8">
