@@ -335,7 +335,7 @@ div::-webkit-scrollbar-corner{
     height:100%;
     background-color:#005C8D;
     overflow: hidden;
-    overflow-y: auto;
+    /* overflow-y: auto; 9.17注掉 */
   }
   .vertical{
     height: -webkit-fill-available;
@@ -443,6 +443,6 @@ div::-webkit-scrollbar-corner{
     cursor: pointer;
   }
   .el-submenu:nth-child(1) .el-submenu__title{
-    box-shadow:0 1px 3px inset rgba(0,0,0,.4);
+    box-shadow:0 3px 5px inset rgba(0,0,0,.4);
   }
 </style>

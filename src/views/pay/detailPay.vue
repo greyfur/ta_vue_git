@@ -358,6 +358,7 @@
                 <el-table-column label="附件名称" align="center">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
+                      <!-- scope.row.suffixFlag?'smallHand':'abbreviateRed' -->
                       <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                     </el-tooltip>
                   </template>
@@ -521,7 +522,8 @@
           <!-- <p><i class="iconfont iconGroup26"></i></p> 9.2去掉多余icon -->
         </div>
         <el-collapse-transition>
-          <el-table v-show="searchFlag4" height="400" border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
+          <!-- height="400" 9.17列表固定死高去掉 -->
+          <el-table v-show="searchFlag4"  border :data="WSData" style="width: 100%" :header-row-class-name="StableClass">
             <el-table-column label="账单号" align="center">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.wsId" placement="top-start">
@@ -951,11 +953,23 @@
         <el-form-item label="付款企业名称" prop="rmSettleCompanyName"><el-input  placeholder="请输入" v-model="oversea.rmSettleCompanyName"></el-input></el-form-item>
         <el-form-item label="组织机构代码" prop="orgCode"><el-input  placeholder="请输入" v-model="oversea.orgCode"></el-input></el-form-item>
         <el-form-item label="收款人名称" prop="compName"><el-input  placeholder="请输入" v-model="oversea.compName"></el-input></el-form-item>
-        <el-form-item label="收款人国别" prop="country"><el-input  placeholder="请输入" v-model="oversea.country"></el-input></el-form-item>
+        <!-- <el-form-item label="收款人国别" prop="country"><el-input  placeholder="请输入" v-model="oversea.country"></el-input></el-form-item> -->
+        <el-form-item label="收款人国别" prop="country">
+          <el-select clearable filterable v-model="oversea.country" placeholder="收款人国别">
+                <el-option
+                  v-for="(item,index) in areaNameList"
+                  :key="index"
+                  :label="item.areaName"
+                  :value="item.areaName">
+                  <span style="float:left">{{ item.areaCode }}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{ item.areaName }}</span>
+                </el-option>
+              </el-select>
+        </el-form-item>
         <el-form-item label="币制" prop="rmCurrency"><el-select filterable v-model="oversea.rmCurrency" placeholder="请选择" @change="zheTypeChange">
         <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option></el-select></el-form-item>
         <el-form-item label="付款金额合计" prop="toltalAmount"><el-input  placeholder="请输入" v-model="oversea.toltalAmount"></el-input></el-form-item>
-        <el-form-item label="服务贸易" prop="tradeAmount"><el-input  placeholder="请输入" v-model="oversea.tradeAmount"></el-input></el-form-item>
+        <el-form-item label="服务贸易金额" prop="tradeAmount"><el-input  placeholder="请输入" v-model="oversea.tradeAmount"></el-input></el-form-item>
         <el-form-item label="填报人" prop="operator"><el-input  placeholder="请输入" v-model="oversea.operator"></el-input></el-form-item>
         <el-form-item label="联系电话" prop="telephone"><el-input  placeholder="请输入" v-model="oversea.telephone"></el-input></el-form-item>
         <el-form-item>
@@ -1004,7 +1018,7 @@
         <el-form-item label="汇款人地址" prop="remmiterAddr"><el-input  placeholder="请输入" v-model="willis.remmiterAddr"></el-input></el-form-item>
         <!-- <el-form-item label="组织机构代码" prop="orgCode"><el-input  placeholder="请输入" v-model="willis.orgCode"></el-input></el-form-item> -->
         <el-form-item label="银行地址" prop="bankAddr"><el-input  placeholder="请输入" v-model="willis.bankAddr"></el-input></el-form-item>
-        <el-form-item label="银行相关信息" prop="bankInfo"><el-input  placeholder="请输入" v-model="willis.bankInfo"></el-input></el-form-item>
+        <el-form-item label="银行相关信息" prop="bankName"><el-input  placeholder="请输入" v-model="willis.bankName"></el-input></el-form-item>
         <el-form-item label="受款公司名称" prop="compName"><el-input  placeholder="请输入" v-model="willis.compName"></el-input></el-form-item>
         <el-form-item label="受款公司地址" prop="compAddr"><el-input  placeholder="请输入" v-model="willis.compAddr"></el-input></el-form-item>
         <!-- <el-form-item label="汇款日期" prop="payDate"><el-date-picker v-model="willis.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item> -->
@@ -1326,7 +1340,7 @@ export default {
           maek1:null,
           // mark2:null,
           bankAddr:null,
-          bankInfo:null,
+          bankName:null,
           compName:null,
           compAddr:null,
         },
@@ -1815,14 +1829,14 @@ export default {
   methods: {
     getAreaName(){
       this.$http.post("api//othersDO/bscAreaInfo/list", {}).then(res=>{
-        console.log(res)
+        // console.log(res)
         if(res.status===200&&res.statusText==='OK'){
           this.areaNameList=res.data.rows;
         }
         this.areaNameList=this.areaNameList.sort((a,b)=>{
           return a.id-b.id
         })
-        console.log(this.areaNameList)
+        // console.log(this.areaNameList)
       });
     },
     TextCapitalization(){
@@ -1884,6 +1898,7 @@ export default {
             this.oversea.compName=detail[0].compName;
             this.oversea.operator=this.approvalName;
             this.oversea.toltalAmount=this.listData[4].b;
+            this.oversea.tradeAmount=this.listData[4].b;
             this.oversea.rmCurrency=this.listData[2].b;
             this.whole.compName=detail[0].compName;
             this.whole.operator=this.approvalName;
@@ -1894,9 +1909,7 @@ export default {
             this.willis.orgAmount1=this.listData[4].b;
             this.willis.compName=detail[0].compName;
             this.willis.compAddr=detail[0].compAddr;
-            console.log(detail[0])
-            console.log(detail[0].compAddr)
-            this.willis.bankInfo=detail[0].bankInfo;
+            this.willis.bankName=detail[0].bankInfo;
             this.willis.bankAddr=detail[0].bankAddr;
             this.TextCapitalization();
           }else{
@@ -1904,6 +1917,7 @@ export default {
             this.risk.rmCurrency=this.row.rmCurrency;
             this.oversea.operator=this.approvalName;
             this.oversea.toltalAmount=this.row.rmAmount;
+            this.oversea.tradeAmount=this.listData[4].b;
             this.oversea.rmCurrency=this.row.rmCurrency;
             this.whole.operator=this.approvalName;
             this.whole.rmAmount=this.row.rmAmount;
@@ -2062,8 +2076,8 @@ export default {
                   remmiterName: this.willis.remmiterName,
                   remmiterAddr: this.willis.remmiterAddr,
                   // orgCode: this.willis.orgCode,
-                  areaName: this.willis.areaName.split('-')[1],
-                  areaCode: this.willis.areaName.split('-')[0],
+                  areaName: this.willis.areaName?this.willis.areaName.split('-')[1]:null,
+                  areaCode: this.willis.areaName?this.willis.areaName.split('-')[0]:null,
                   transacCode: this.willis.transacCode,
                   // param8: this.willis.param8,
                   mark1: this.willis.mark1,
@@ -2074,7 +2088,7 @@ export default {
                   // orgAmount3: this.willis.orgAmount3,
                   chineseAmount: this.willis.chineseAmount,
                   bankAddr: this.willis.bankAddr,
-                  bankInfo: this.willis.bankInfo,
+                  bankName: this.willis.bankName,
                   compName: this.willis.compName,
                   compAddr: this.willis.compAddr,
                   })
@@ -3394,6 +3408,7 @@ export default {
       if(row){
         let arrr = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT','XLS','xls','ppt','PPT','pptx','PPTX'];
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
+        // row.suffixFlag=false; 9.17文件变红
         if(row.suffix && !this.suffixFlag){ return false; }
         this.$http.post('api/anyShare/fileOperation/getLogInInfo').then(res =>{
         if(res.status == 200){
