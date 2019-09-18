@@ -355,7 +355,8 @@
           <el-input v-model.trim="billSearch.processName" placeholder="请输入流程名称"></el-input>
         </el-form-item>
         <el-form-item label="任务类型" prop="wsBusinessType" v-show="title==='手工创建' || title==='编辑'">
-          <el-select :disabled='RWFlag' clearable v-model="billSearch.wsBusinessType" placeholder="请选择任务类型" @change="onWsBusinessType">
+          <!-- <el-select :disabled='RWFlag' clearable v-model="billSearch.wsBusinessType" placeholder="请选择任务类型" @change="onWsBusinessType">  // 9.18 TA-889 说去掉该校验RWFlag -->
+          <el-select clearable v-model="billSearch.wsBusinessType" placeholder="请选择任务类型" @change="onWsBusinessType">
             <el-option v-for="item in YWoptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
@@ -1255,7 +1256,8 @@ export default {
           for(let k in this.billSearch){
             this.billSearch[k] = row[k];
           }
-          this.RWFlag = row.processId.indexOf('RV')>0;
+          // 9.18 TA-889 说去掉该校验
+          // this.RWFlag = row.processId.indexOf('RV')>0;
           this.fileData = [];
           this.billSearch.wsPeriod=row.wsPeriod;
             if (row.wsType) {
@@ -1364,7 +1366,8 @@ export default {
               }else{ sessionStorage.setItem('data',JSON.stringify({})); }
             }
           });
-          if(this.RWFlag){ this.billSearch.wsBusinessType='C'; } // 8.26 有RW的账单----任务类型硬核变成 修正账单
+           // 9.18 TA-889 说去掉该校验RWFlag
+          // if(this.RWFlag){ this.billSearch.wsBusinessType='C'; } // 8.26 有RW的账单----任务类型硬核变成 修正账单
           this.dialogFormVisible = true;
           this.title = "编辑";
           break;

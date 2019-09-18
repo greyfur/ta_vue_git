@@ -656,6 +656,12 @@
             <template slot-scope="{ item }"><span>{{item.contactName}}：{{item.emailAddr}}</span></template>
           </el-autocomplete>
         </el-form-item>
+        <el-form-item label="抄送人" v-show="title==='邮件通知'">
+          <el-autocomplete style="width:100%" v-model="ccUser" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="elSelect2">
+            <i class="el-icon-edit el-input__icon" slot="suffix"></i>
+            <template slot-scope="{ item }"><span>{{item.contactName}}：{{item.emailAddr}}</span></template>
+          </el-autocomplete>
+        </el-form-item>
         <el-form-item label="邮件标题" v-show="title==='邮件通知'">
           <el-input type="text" placeholder="请输入内容" v-model="mailTitle"></el-input>
         </el-form-item>
@@ -1064,6 +1070,7 @@ export default {
   name: "detailEntry",
   data() { 
     return {
+      ccUser:null,
       cleanCut:{
         refClaimIdentifier:null,
         isPending:1,
@@ -1809,12 +1816,12 @@ Attached please find our signed copy of the SOA for your record.  Please note th
 Should you have any questions concerning to the attachment,  please feel free to contact the designated technical accountant whose contact info provided as below.
 Thanks & Best Regards，
 
-Xiaoyun Li (李晓昀)
+${this.$store.state.userName} (${sessionStorage.getItem('userCName')})
 Accounting Service Center
 China Property & Casualty Reinsurance Company Limited
 On behalf of
 China Reinsurance (Group) Corporation
-Tel: 8610 6657 6455 | E-mail: lixiaoyun@chinare.com.cn
+Tel: ${sessionStorage.getItem('mobile')==null?'':sessionStorage.getItem('mobile')} | E-mail: ${sessionStorage.getItem('email')==null?'':sessionStorage.getItem('email')}
 Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing, China, 100033`
         } else{ // 国内
 this.emailContent=`敬启者：
@@ -1822,12 +1829,12 @@ this.emailContent=`敬启者：
 本邮件为系统自动发送，请勿直接回复。如有问题，请联系下方落款人。
 顺颂商祺！
 
-Xiaoyun Li (李晓昀)
+${this.$store.state.userName} (${sessionStorage.getItem('userCName')})
 Accounting Service Center
 China Property & Casualty Reinsurance Company Limited
 On behalf of
 China Reinsurance (Group) Corporation
-Tel: 8610 6657 6455 | E-mail: lixiaoyun@chinare.com.cn
+Tel: ${sessionStorage.getItem('mobile')==null?'':sessionStorage.getItem('mobile')} | E-mail: ${sessionStorage.getItem('email')==null?'':sessionStorage.getItem('email')}
 Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing, China, 100033`
         }
         this.$http.get("api/worksheet/wSEntry/getEmailContacts").then(res => {
@@ -1853,9 +1860,8 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
         return (restaurant.emailAddr.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
       };
     },
-    elSelect(item){
-      this.mailInfo = item.emailAddr
-    },
+    elSelect(item){this.mailInfo = item.emailAddr},
+    elSelect2(item){this.ccUser = item.emailAddr},
     send() {
       console.log(this.emailContent,'this.emailContent');
       console.log(this.emailContent.indexOf('\r'));
@@ -1886,7 +1892,14 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
           // });
       } else if (this.title == "邮件通知") {
         let info = {},params = null;
-        info = Object.assign({},{actOperator:this.$store.state.userName, emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle,processId:this.chooseRow.processId });
+        info = Object.assign({},{
+         actOperator:this.$store.state.userName,
+         emailAddr:this.mailInfo,
+         emailContent: this.emailContent, 
+         mailTitle: this.mailTitle,
+         processId:this.chooseRow.processId,
+         ccUser:this.ccUser,
+         });
         // 本地上传
         if (this.file.length) {
           var resFile = new FormData();
@@ -1917,7 +1930,7 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
           //         });
           //     }
           //   });
-          this.$http.post("api/worksheet/wSEntry/sendEmail", {actOperator:this.$store.state.userName,emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle, docCId:this.chooseDocList}).then(res => {
+          this.$http.post("api/worksheet/wSEntry/sendEmail", {actOperator:this.$store.state.userName,ccUser:this.ccUser,emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle, docCId:this.chooseDocList}).then(res => {
             if (res.status === 200 && res.data.code == 0) {
               this.$message({type: "success",message: res.data.msg});
               this.dialogFormVisible2 = false;

@@ -69,6 +69,12 @@
           </el-tooltip>
         </template>
       </el-table-column>
+      <!-- 9.18 TA-885 -->
+      <el-table-column width="110" label="全额付款" align="center" v-if="urlName=='payment' || urlName=='partialDone' || urlName=='payEnd'">
+        <template slot-scope="scope">
+          <span>{{scope.row.fullPaymentFlag==1?'是':'否'}}</span>
+        </template>
+      </el-table-column>
       <el-table-column width="110" label="录入人员" align="center">
         <template slot-scope="scope">
           <span>{{nameList[scope.row.curOperator]}}</span>
@@ -214,6 +220,12 @@
           <el-select filterable v-model="assignee"  placeholder="请选择">
             <el-option v-for="(item,i) in TJRoptionsA" :key="i" :label="item.name" :value="item.username"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="是否全额付款" v-show="title==='流程提交'">
+          <el-radio-group v-model="fullPaymentFlag">
+            <el-radio :label="'1'">是</el-radio>
+            <el-radio :label="'0'">否</el-radio>
+          </el-radio-group>
         </el-form-item>
         <!-- <el-form-item>
           <el-button size="small" @click="dialogFormVisible2 = false">取消</el-button>
@@ -373,6 +385,7 @@ export default {
     },
   data() {
       return {
+        fullPaymentFlag:null,
         Ename:'',
         Esignature:'',
         Edate:'',
@@ -985,11 +998,16 @@ export default {
 
           break;
         case 12: //流程提交---emailNotify
+            if(this.fullPaymentFlag==null || this.fullPaymentFlag==''){
+              this.$message({type: 'error', message:'请选择是否全额付款' }); 
+              return false;
+            }
             this.$http.post('api/pay/activitiForPay/commonActivitiForPay'
             ,{processId:this.chooseRow.processId, 
             procInstId:this.chooseRow.processInstId, 
             assignee:this.assignee, 
             type:'PAYING',
+            fullPaymentFlag:this.fullPaymentFlag,
             actOperator:this.$store.state.userName,
             })
             .then(res =>{
