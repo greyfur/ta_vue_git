@@ -38,13 +38,14 @@
             <span class="slable">录入人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
             <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人">
                 <el-option
-                  v-for="(item,index) in nameList"
-                  :key="item"
-                  :value="index"
-                  :label="item"
+                  v-for="(item,index) in TJRoptionsB"
+                  :index="index"
+                  :key="item.name"
+                  :value="item.username"
+                  :label="item.name"
                 >
-                  <span style="float:left">{{item}}</span>
-                  <span style="float:right;color: #8492a6; font-size: 13px">{{index}}</span>
+                  <span style="float:left">{{item.name}}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{item.username}}</span>
                 </el-option>
               </el-select>
           </el-col>
@@ -465,6 +466,7 @@ export default {
         options:[],
         ReportUnitList:[],
         TJRoptions:[],
+        TJRoptionsB:[],
         ZDoptions:[ //  账单类型
           {value: 'AA',label: 'Additional Account'},
           {value: 'AD',label: 'Adjustment'},
@@ -614,6 +616,12 @@ export default {
       // 国际国内
       this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
     },1000)
+    this.$http.post("api/activiti/getAssigneeName", { roleName: '账单录入' })
+      .then(res => {
+        if (res.status === 200) {
+          this.TJRoptionsB = res.data;
+        }
+      });
   },
   methods: {
     changeWindow(){

@@ -42,20 +42,21 @@
             <span class="slable">录入人 &nbsp;&nbsp;</span>
             <el-select clearable filterable v-model="formLabelAlign.createdBy" placeholder="请选择录入人">
                 <el-option
-                  v-for="(item,index) in nameList"
-                  :key="item"
-                  :value="index"
-                  :label="item"
+                  v-for="(item,index) in TJRoptionsB"
+                  :index="index"
+                  :key="item.name"
+                  :value="item.username"
+                  :label="item.name"
                 >
-                  <span style="float:left">{{item}}</span>
-                  <span style="float:right;color: #8492a6; font-size: 13px">{{index}}</span>
+                  <span style="float:left">{{item.name}}</span>
+                  <span style="float:right;color: #8492a6; font-size: 13px">{{item.username}}</span>
                 </el-option>
               </el-select>
           </el-col>
           <el-col :span="8">
             <span class="slable">复核人 &nbsp;&nbsp;</span>
             <el-select clearable v-model="formLabelAlign.closedBy" placeholder="请选择复核人">
-              <el-option v-for="(item,index) in nameList" :key="index" :label="item" :value="index"></el-option>
+              <el-option v-for="(item,index) in TJRoptionsC" :index="index" :key="item.username" :label="item.name" :value="item.username"></el-option>
             </el-select>
           </el-col>
         </el-row>
@@ -349,6 +350,8 @@ export default {
       pendingFlag:false,
       TJRoptions:[],
       TJRoptionsA:[],
+      TJRoptionsB:[],
+      TJRoptionsC:[],
       track:[],
       assignee:'',
       mustData:{
@@ -547,11 +550,26 @@ export default {
     this.rmCurrencyList = JSON.parse(sessionStorage.getItem('CurrencyList'));
 
     this.$http.post('api/activiti/getAssigneeName',{roleName:'付款录入'}).then(res =>{
+      console.log(res)
       if(res.status === 200) {
         this.TJRoptions = res.data;
       }
     })
     this.init();
+    this.$http.post("api/activiti/getAssigneeName", { roleName: "收款录入,付款录入" })
+      .then(res => {
+        if (res.status === 200) {
+          this.TJRoptionsB = res.data;
+        }
+      });
+    this.$http.post("api/activiti/getAssigneeName", { roleName: "收款复核,付款复核" })
+    .then(res => {
+      console.log(res)
+      if (res.status === 200) {
+        this.TJRoptionsC = res.data;
+      }
+      console.log(this.TJRoptionsC)
+    });
   },
   methods: {
     reverse(row){

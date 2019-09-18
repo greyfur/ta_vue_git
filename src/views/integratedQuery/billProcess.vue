@@ -39,12 +39,13 @@
           <span class="slable">录入人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
           <el-select clearable filterable v-model="billSearch.registBy" placeholder="请选择录入人">
               <el-option
-                v-for="(item,index) in nameList"
-                :key="item"
-                :value="index"
-                :label="item">
-                <span style="float:left">{{item}}</span>
-                <span style="float:right;color: #8492a6; font-size: 13px">{{index}}</span>
+                v-for="(item,index) in TJRoptionsB"
+                :key="item.name"
+                :index="index"
+                :value="item.username"
+                :label="item.name">
+                <span style="float:left">{{item.name}}</span>
+                <span style="float:right;color: #8492a6; font-size: 13px">{{item.username}}</span>
               </el-option>
             </el-select>
         </el-col>
@@ -54,7 +55,7 @@
         <el-col :span="8">
           <span class="slable">复核人 &nbsp;&nbsp; &nbsp;&nbsp;</span>
           <el-select clearable v-model="billSearch.closedBy" placeholder="请选择复核人">
-            <el-option v-for="(item,index) in nameList" :key="index" :label="item" :value="index"></el-option>
+            <el-option v-for="(item,index) in TJRoptionsC" :key="item.name" :label="item.name" :index="index" :value="item.username"></el-option>
           </el-select>
         </el-col>
         <el-col :span="8">
@@ -395,6 +396,8 @@ export default {
         options:[],
         ReportUnitList:[],
         TJRoptions:[],
+        TJRoptionsB:[],//录入人
+        TJRoptionsC:[],//复核人
         ZDoptions:[ //  账单类型
           {value: 'AA',label: 'Additional Account'},
           {value: 'AD',label: 'Adjustment'},
@@ -548,6 +551,20 @@ export default {
       // 国际国内
       this.businessOriginList = JSON.parse(sessionStorage.getItem('businessOrigin'));
     },1000)
+    this.$http.post("api/activiti/getAssigneeName", { roleName: '账单录入' })
+      .then(res => {
+        if (res.status === 200) {
+          this.TJRoptionsB = res.data;
+        }
+      });
+      this.$http.post("api/activiti/getAssigneeName", { roleName: '账单复核' })
+      .then(res => {
+        console.log(res)
+        if (res.status === 200) {
+          this.TJRoptionsC = res.data;
+        }
+        console.log(this.TJRoptionsC)
+      });
   },
   methods: {
     changeWindow(){
