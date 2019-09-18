@@ -1686,7 +1686,7 @@ export default {
             }
               // if(el['a']=='任务来源'){ el["b"] = this.nameList[this.chooseRow[el["c"]]]; }
             });
-            res.data.bscDocumentVOlist.map((item,index)=>{
+            res.data.bscDocumentVOlist&&res.data.bscDocumentVOlist.map((item,index)=>{
             return item.redFlag={
               flag:false,
               index:index%7
