@@ -1891,6 +1891,7 @@ export default {
           var detail=res.data.rows.filter(item=>{
             return item.id==this.row.recComId;
           })
+          console.log(detail)
           if(detail.length>0){
             //2 币制
             this.risk.businessAmount=this.listData[4].b;
@@ -1911,6 +1912,7 @@ export default {
             this.willis.compAddr=detail[0].compAddr;
             this.willis.bankName=detail[0].bankInfo;
             this.willis.bankAddr=detail[0].bankAddr;
+            // this.willis.telephone=this.row.telephone;
             this.TextCapitalization();
           }else{
             this.risk.businessAmount=this.row.rmAmount;
@@ -1925,6 +1927,7 @@ export default {
             this.willis.operator=this.approvalName;
             this.willis.rmCurrency=this.row.rmCurrency;
             this.willis.orgAmount1=this.row.rmAmount;
+            this.willis.telephone=this.row.telephone;
           }
         })
     },
