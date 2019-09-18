@@ -2422,7 +2422,6 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
       }
     },
    docView(row,index) {
-      row.redFlag.flag=true;
       this.$forceUpdate();
       console.log(row)
       if (row) {
@@ -2430,6 +2429,7 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
         this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
         if(row.suffix && !this.suffixFlag){ return false; }
         this.docViewRow = row;
+        row.redFlag.flag=true;
         // this.tableData= this.tableData;
         this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
           if (res.status == 200) {
