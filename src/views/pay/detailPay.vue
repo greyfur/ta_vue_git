@@ -1886,8 +1886,6 @@ export default {
       
         this.$http.post("api/othersDO/bscBankInfo/list",{})//9.9境外 全额初始化回显
         .then(res => {
-          console.log(this.row)
-          console.log(this.listData)
           var detail=res.data.rows.filter(item=>{
             return item.id==this.row.recComId;
           })
@@ -1912,7 +1910,7 @@ export default {
             this.willis.compAddr=detail[0].compAddr;
             this.willis.bankName=detail[0].bankInfo;
             this.willis.bankAddr=detail[0].bankAddr;
-            // this.willis.telephone=this.row.telephone;
+            this.willis.telephone=window.sessionStorage.getItem('mobile');
             this.TextCapitalization();
           }else{
             this.risk.businessAmount=this.row.rmAmount;
@@ -1928,6 +1926,7 @@ export default {
             this.willis.rmCurrency=this.row.rmCurrency;
             this.willis.orgAmount1=this.row.rmAmount;
             this.willis.telephone=this.row.telephone;
+            this.willis.telephone=window.sessionStorage.getItem('mobile');
           }
         })
     },
