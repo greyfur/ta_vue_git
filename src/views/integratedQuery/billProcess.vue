@@ -18,7 +18,8 @@
           <span class="slable">流程状态 &nbsp;&nbsp;</span>
           <el-select clearable v-model="billSearch.processStatus" placeholder="请选择流程状态">
             <!-- 9.9 UAT原话：综合查询－账单流程－流程状态缺失“复核驳回”项 -->
-            <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','已悬停','复核驳回']" :key="item" :label="item" :value="item"></el-option>
+            <!-- 9.19 已删除 删掉 -->
+            <el-option v-for="item in ['已创建','待处理','待复核','待签回','已置废','已关闭','已悬停','复核驳回']" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-col>
       </el-row>

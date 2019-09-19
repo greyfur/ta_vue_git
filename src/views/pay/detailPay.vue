@@ -301,7 +301,8 @@
           <!-- <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p> -->
           <!-- <p v-if="$route.query.tag === 'payOperation' && !czState "><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p> -->
         </div>
-        <el-table v-show="searchFlag3" :height="maxHeight" :data="SgData" style="width: 100%" border :header-row-class-name="StableClass">
+        <!-- :height="maxHeight" 9.18 -->
+        <el-table v-show="searchFlag3" :data="SgData" style="width: 100%" border :header-row-class-name="StableClass">
           <el-table-column type="expand" align="center">
             <template slot-scope="props">
               <el-table :data="props.row.worksheetDOList" style="width: 100%" border :header-row-class-name="StableClass">
@@ -1330,7 +1331,7 @@ export default {
           chineseAmount:null,
           accountNo1:null,
           accountNo2:null,
-          remmiterName:'CHINA REINSURANCE (GROUP) CORPORATION',
+          remmiterName:null,
           remmiterAddr:'No.11, JinRong Avenue , XiCheng District, Beijing ,China',
           orgCode:null,
           areaName:null,
@@ -1883,13 +1884,13 @@ export default {
       this.downDialogFlag=false;
     },
     EchoDisplay(){
-      
         this.$http.post("api/othersDO/bscBankInfo/list",{})//9.9境外 全额初始化回显
         .then(res => {
+          console.log(res.data.rows)
           var detail=res.data.rows.filter(item=>{
             return item.id==this.row.recComId;
           })
-          console.log(detail)
+          console.log(this.row)
           if(detail.length>0){
             //2 币制
             this.risk.businessAmount=this.listData[4].b;
@@ -1899,18 +1900,21 @@ export default {
             this.oversea.toltalAmount=this.listData[4].b;
             this.oversea.tradeAmount=this.listData[4].b;
             this.oversea.rmCurrency=this.listData[2].b;
+            this.oversea.telephone=window.sessionStorage.getItem('mobile')==='null'?'':window.sessionStorage.getItem('mobile');
             this.whole.compName=detail[0].compName;
             this.whole.operator=this.approvalName;
             this.whole.rmAmount=this.listData[4].b;
             this.whole.rmCurrency=this.listData[2].b;
+            this.whole.telephone=window.sessionStorage.getItem('mobile')==='null'?'':window.sessionStorage.getItem('mobile');
             this.willis.operator=this.approvalName;
             this.willis.rmCurrency=this.listData[2].b;
             this.willis.orgAmount1=this.listData[4].b;
             this.willis.compName=detail[0].compName;
             this.willis.compAddr=detail[0].compAddr;
-            this.willis.bankName=detail[0].bankInfo;
+            this.willis.bankName=detail[0].bankName;
             this.willis.bankAddr=detail[0].bankAddr;
-            this.willis.telephone=window.sessionStorage.getItem('mobile');
+            this.willis.telephone=window.sessionStorage.getItem('mobile')==='null'?'':window.sessionStorage.getItem('mobile');
+            this.willis.remmiterName=this.row.baseCompany==="China Re P&C"?'CHINA PROPERTY & CASUALTY REINSURANCE COMPANY LTD':'CHINA REINSURANCE (GROUP) CORPORATION';
             this.TextCapitalization();
           }else{
             this.risk.businessAmount=this.row.rmAmount;
@@ -1919,14 +1923,16 @@ export default {
             this.oversea.toltalAmount=this.row.rmAmount;
             this.oversea.tradeAmount=this.listData[4].b;
             this.oversea.rmCurrency=this.row.rmCurrency;
+            this.oversea.telephone=window.sessionStorage.getItem('mobile')==='null'?'':window.sessionStorage.getItem('mobile');
             this.whole.operator=this.approvalName;
             this.whole.rmAmount=this.row.rmAmount;
             this.whole.rmCurrency=this.row.rmCurrency;
+            this.whole.telephone=window.sessionStorage.getItem('mobile')==='null'?'':window.sessionStorage.getItem('mobile');
             this.willis.operator=this.approvalName;
             this.willis.rmCurrency=this.row.rmCurrency;
             this.willis.orgAmount1=this.row.rmAmount;
-            this.willis.telephone=this.row.telephone;
-            this.willis.telephone=window.sessionStorage.getItem('mobile');
+            this.willis.telephone=window.sessionStorage.getItem('mobile')==='null'?'':window.sessionStorage.getItem('mobile');
+            this.willis.remmiterName=this.row.baseCompany==="China Re P&C"?'CHINA PROPERTY & CASUALTY REINSURANCE COMPANY LTD':'CHINA REINSURANCE (GROUP) CORPORATION';
           }
         })
     },
