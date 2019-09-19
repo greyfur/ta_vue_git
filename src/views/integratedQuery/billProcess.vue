@@ -18,7 +18,8 @@
           <span class="slable">流程状态 &nbsp;&nbsp;</span>
           <el-select clearable v-model="billSearch.processStatus" placeholder="请选择流程状态">
             <!-- 9.9 UAT原话：综合查询－账单流程－流程状态缺失“复核驳回”项 -->
-            <el-option v-for="item in ['已创建','待处理','待复核','待签回','已删除','已置废','已关闭','已悬停','复核驳回']" :key="item" :label="item" :value="item"></el-option>
+            <!-- 9.19 已删除 删掉 -->
+            <el-option v-for="item in ['已创建','待处理','待复核','待签回','已置废','已关闭','已悬停','复核驳回']" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-col>
       </el-row>
@@ -148,7 +149,7 @@
     </div>
     <div class="btn">
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91" style="font-size:12px;"></i>手工创建</el-button>
-      <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新</el-button>
+      <el-button type="primary" plain @click="init(0)" class="borderBtn" style="margin-left:0px;"><i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新</el-button>
       <el-button type="primary" plain @click="reportClick()" class="borderBtn">导出报表</el-button>
       <!-- <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button> -->
     </div> 
@@ -156,7 +157,7 @@
       <el-table-column prop="createdAt" label="创建时间" width="160" align="center"></el-table-column>
       <el-table-column label="流程编号" width="160" align="center">
         <template slot-scope="scope">
-          <span :class="{'smallHand':urlName !== 'sortOperation'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
+          <span :class="{'smallHand BlueColor':urlName !== 'sortOperation'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>
       </el-table-column> 
       <el-table-column label="流程名称" width="350" align="center">

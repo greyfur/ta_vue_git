@@ -42,7 +42,7 @@
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'">
         <i class="iconfont iconGroup91" style="font-size:12px;"></i>创建
       </el-button>
-      <el-button type="primary" plain @click="init(0)" class="borderBtn">
+      <el-button type="primary" plain @click="init(0)" class="borderBtn" style="margin-left:0px;">
         <i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新
       </el-button>
     </div>

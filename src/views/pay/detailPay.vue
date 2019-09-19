@@ -136,7 +136,7 @@
               <el-table-column label="文件名" width="200" align="center">
                 <template slot-scope="scope">
                   <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                    <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                    <span :class="{'smallHand BlueColor':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                   </el-tooltip>
                 </template>
               </el-table-column>
@@ -301,7 +301,8 @@
           <!-- <p v-if="$route.query.tag === 'approvalDone'"><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p> -->
           <!-- <p v-if="$route.query.tag === 'payOperation' && !czState "><el-button size="mini" @click="getSGSg"><i style="margin-right:8px;" class="iconfont iconGroup77"></i>SICS回写</el-button></p> -->
         </div>
-        <el-table v-show="searchFlag3" :height="maxHeight" :data="SgData" style="width: 100%" border :header-row-class-name="StableClass">
+        <!-- :height="maxHeight" 9.18 -->
+        <el-table v-show="searchFlag3" :data="SgData" style="width: 100%" border :header-row-class-name="StableClass">
           <el-table-column type="expand" align="center">
             <template slot-scope="props">
               <el-table :data="props.row.worksheetDOList" style="width: 100%" border :header-row-class-name="StableClass">
@@ -330,7 +331,7 @@
                 <el-table-column label="附件名称" align="center">
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
-                      <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                      <span :class="{'smallHand BlueColor':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -359,7 +360,7 @@
                   <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
                       <!-- scope.row.suffixFlag?'smallHand':'abbreviateRed' -->
-                      <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                      <span :class="{'smallHand BlueColor':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -611,7 +612,7 @@
                   :content="scope.row.docName"
                   placement="top-start"
                 >
-                  <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                  <span class="smallHand BlueColor abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -1017,10 +1018,13 @@
         <el-form-item label="汇款人名称" prop="remmiterName"><el-input  placeholder="请输入" v-model="willis.remmiterName"></el-input></el-form-item>
         <el-form-item label="汇款人地址" prop="remmiterAddr"><el-input  placeholder="请输入" v-model="willis.remmiterAddr"></el-input></el-form-item>
         <!-- <el-form-item label="组织机构代码" prop="orgCode"><el-input  placeholder="请输入" v-model="willis.orgCode"></el-input></el-form-item> -->
+        <el-form-item label="代理银行名称" prop="agentBankName"><el-input  placeholder="请输入" v-model="willis.agentBankName"></el-input></el-form-item>
+        <el-form-item label="代理银行地址" prop="agentBankAddr"><el-input  placeholder="请输入" v-model="willis.agentBankAddr"></el-input></el-form-item>
         <el-form-item label="收款人银行名称" prop="bankName"><el-input  placeholder="请输入" v-model="willis.bankName"></el-input></el-form-item>
         <el-form-item label="收款人银行地址" prop="bankAddr"><el-input  placeholder="请输入" v-model="willis.bankAddr"></el-input></el-form-item>
-        <el-form-item label="受款公司名称" prop="compName"><el-input  placeholder="请输入" v-model="willis.compName"></el-input></el-form-item>
-        <el-form-item label="受款公司地址" prop="compAddr"><el-input  placeholder="请输入" v-model="willis.compAddr"></el-input></el-form-item>
+        <el-form-item label="收款人账号" prop="bankAcnt"><el-input  placeholder="请输入" v-model="willis.bankAcnt"></el-input></el-form-item>
+        <el-form-item label="收款人名称" prop="compName"><el-input  placeholder="请输入" v-model="willis.compName"></el-input></el-form-item>
+        <el-form-item label="收款人地址" prop="compAddr"><el-input  placeholder="请输入" v-model="willis.compAddr"></el-input></el-form-item>
         <!-- <el-form-item label="汇款日期" prop="payDate"><el-date-picker v-model="willis.payDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item> -->
         <el-form-item label="汇款附言" prop="mark1"><el-input  placeholder="请输入" v-model="willis.mark1"></el-input></el-form-item>
         <el-form-item label="收款人国家/地区" prop="areaName">
@@ -1040,7 +1044,7 @@
         <!-- <el-form-item label="orgAmount3" prop="orgAmount3"><el-input  placeholder="请输入" v-model="willis.orgAmount3"></el-input></el-form-item> -->
         <!-- <el-form-item label="备注2" prop="mark2"><el-input  placeholder="请输入" v-model="willis.mark2"></el-input></el-form-item> -->
         <el-form-item label="交易附言" prop="mark2"><el-input  placeholder="请输入" v-model="willis.mark2"></el-input></el-form-item>
-        <el-form-item label="经办人姓名" prop="operator"><el-input  placeholder="请输入" v-model="willis.operator"></el-input></el-form-item>
+        <el-form-item label="申请人姓名" prop="operator"><el-input  placeholder="请输入" v-model="willis.operator"></el-input></el-form-item>
         <el-form-item label="电话" prop="telephone"><el-input  placeholder="请输入" v-model="willis.telephone"></el-input></el-form-item>
         <el-form-item>
           <el-button size="small" @click="fourPopUps(0,'willis')">取消</el-button>
@@ -1330,8 +1334,8 @@ export default {
           chineseAmount:null,
           accountNo1:null,
           accountNo2:null,
-          remmiterName:'CHINA REINSURANCE (GROUP) CORPORATION',
-          remmiterAddr:'No.11, JinRong Avenue , XiCheng District, Beijing ,China',
+          remmiterName:null,
+          remmiterAddr:'No.11, JinRong Avenue, Beijing ,China',
           orgCode:null,
           areaName:null,
           areaCode:null,
@@ -1343,6 +1347,9 @@ export default {
           bankName:null,
           compName:null,
           compAddr:null,
+          agentBankName:null,
+          agentBankAddr:null,
+          bankAcnt:null,
         },
         downDialogFlag:false,
         strArr:[],
@@ -1883,15 +1890,14 @@ export default {
       this.downDialogFlag=false;
     },
     EchoDisplay(){
-      
         this.$http.post("api/othersDO/bscBankInfo/list",{})//9.9境外 全额初始化回显
         .then(res => {
-          console.log(this.row)
-          console.log(this.listData)
+          console.log(res.data.rows)
           var detail=res.data.rows.filter(item=>{
             return item.id==this.row.recComId;
           })
-          console.log(detail)
+          console.log(this.row)
+          console.log(this.bankAcnt)
           if(detail.length>0){
             //2 币制
             this.risk.businessAmount=this.listData[4].b;
@@ -1901,18 +1907,22 @@ export default {
             this.oversea.toltalAmount=this.listData[4].b;
             this.oversea.tradeAmount=this.listData[4].b;
             this.oversea.rmCurrency=this.listData[2].b;
+            this.oversea.telephone=window.sessionStorage.getItem('mobile')==='null'?'':window.sessionStorage.getItem('mobile');
             this.whole.compName=detail[0].compName;
             this.whole.operator=this.approvalName;
             this.whole.rmAmount=this.listData[4].b;
             this.whole.rmCurrency=this.listData[2].b;
+            this.whole.telephone=window.sessionStorage.getItem('mobile')==='null'?'':window.sessionStorage.getItem('mobile');
             this.willis.operator=this.approvalName;
             this.willis.rmCurrency=this.listData[2].b;
             this.willis.orgAmount1=this.listData[4].b;
             this.willis.compName=detail[0].compName;
             this.willis.compAddr=detail[0].compAddr;
-            this.willis.bankName=detail[0].bankInfo;
+            this.willis.bankName=detail[0].bankName;
             this.willis.bankAddr=detail[0].bankAddr;
-            // this.willis.telephone=this.row.telephone;
+            this.willis.telephone=window.sessionStorage.getItem('mobile')==='null'?'':window.sessionStorage.getItem('mobile');
+            this.willis.remmiterName=this.row.baseCompany==="China Re P&C"?'CHINA PROPERTY & CASUALTY REINSURANCE COMPANY LTD':'CHINA REINSURANCE (GROUP) CORPORATION';
+            this.willis.bankAcnt=detail[0].bankAcnt;
             this.TextCapitalization();
           }else{
             this.risk.businessAmount=this.row.rmAmount;
@@ -1921,13 +1931,16 @@ export default {
             this.oversea.toltalAmount=this.row.rmAmount;
             this.oversea.tradeAmount=this.listData[4].b;
             this.oversea.rmCurrency=this.row.rmCurrency;
+            this.oversea.telephone=window.sessionStorage.getItem('mobile')==='null'?'':window.sessionStorage.getItem('mobile');
             this.whole.operator=this.approvalName;
             this.whole.rmAmount=this.row.rmAmount;
             this.whole.rmCurrency=this.row.rmCurrency;
+            this.whole.telephone=window.sessionStorage.getItem('mobile')==='null'?'':window.sessionStorage.getItem('mobile');
             this.willis.operator=this.approvalName;
             this.willis.rmCurrency=this.row.rmCurrency;
             this.willis.orgAmount1=this.row.rmAmount;
-            this.willis.telephone=this.row.telephone;
+            this.willis.telephone=window.sessionStorage.getItem('mobile')==='null'?'':window.sessionStorage.getItem('mobile');
+            this.willis.remmiterName=this.row.baseCompany==="China Re P&C"?'CHINA PROPERTY & CASUALTY REINSURANCE COMPANY LTD':'CHINA REINSURANCE (GROUP) CORPORATION';
           }
         })
     },
@@ -1954,7 +1967,6 @@ export default {
 
         this.dialogFormVisibleWillis=true;
         this.EchoDisplay();
-        console.log(this.willis.rmCurrency,this.willis.orgAmount1)
         // this.$http.post("api/------", {processId: this.row.processId})
         // .then(res => {
 
@@ -2074,6 +2086,9 @@ export default {
                   currentDate: this.willis.currentDate,
                   operator: this.willis.operator,
                   telephone: this.willis.telephone,
+                  agentBankName:this.willis.agentBankName,
+                  agentBankAddr:this.willis.agentBankAddr,
+                  bankAcnt:this.willis.bankAcnt,
                   accountNo1: this.willis.accountNo1,
                   accountNo2: this.willis.accountNo2,
                   remmiterName: this.willis.remmiterName,

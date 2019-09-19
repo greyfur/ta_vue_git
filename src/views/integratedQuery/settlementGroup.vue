@@ -42,7 +42,7 @@
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'">
         <i class="iconfont iconGroup91" style="font-size:12px;"></i>创建
       </el-button>
-      <el-button type="primary" plain @click="init(0)" class="borderBtn">
+      <el-button type="primary" plain @click="init(0)" class="borderBtn" style="margin-left:0px;">
         <i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新
       </el-button>
     </div>
@@ -98,7 +98,7 @@
                   placement="top-start"
                 >
                   <span
-                    class="smallHand abbreviate"
+                    class="smallHand BlueColor abbreviate"
                     @click="docView(scope.row)"
                   >{{scope.row.docName}}</span>
                 </el-tooltip>
@@ -494,7 +494,7 @@
         <el-table-column label="文件名" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-              <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
+              <span class="smallHand BlueColor" @click="docView(scope.row)">{{scope.row.docName}}</span>
             </el-tooltip>
           </template>
         </el-table-column>

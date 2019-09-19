@@ -47,7 +47,7 @@
       </el-table-column>
       <el-table-column label="流程编号" width="150" align="center">
         <template slot-scope="scope">
-          <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
+          <span :class="{'smallHand BlueColor':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
       <el-table-column prop="rmCurrency" label="币制" align="center" width="90"></el-table-column>
@@ -133,8 +133,8 @@
       </div>
     </div>
     
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal">
-      <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign" class="SwitchingMode">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" width="432px">
+      <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
         <el-form-item label="结付公司">
           <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
             <el-option v-for="(item,index) in cedentList" :key="index" :label="item.codecode+' - '+item.codeName" :value="index">
@@ -213,8 +213,8 @@
           <el-button size="small" type="primary" plain @click="confirm('formLabelAlign')" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
-
-    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" :style="title==='流程提交'?'height:400px':''" width="1160px" class="SwitchingMode" custom-class="dialogMans">
+    <!--9.19 custom-class="dialogMans" -->
+    <el-dialog :title="title" :visible.sync="dialogFormVisible2" :close-on-click-modal="modal" :style="title==='流程提交'?'height:510px':''" width="1160px" class="SwitchingMode" >
       <el-form label-width="140px" v-show="title==='流程提交'">
         <el-form-item label="选择处理人" v-show="title==='流程提交'">
           <el-select filterable v-model="assignee"  placeholder="请选择">
@@ -290,7 +290,7 @@
         <el-table-column label="文件名" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-              <span :class="{'smallHand':!scope.row.suffixFlag && urlName!='emailNotify'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+              <span :class="{'smallHand BlueColor':!scope.row.suffixFlag && urlName!='emailNotify'}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
             </el-tooltip>
           </template>
         </el-table-column>
