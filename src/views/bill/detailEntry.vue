@@ -72,7 +72,7 @@
                 <i style="margin-right:8px;" class="el-icon-arrow-down"></i>附件列表
               </div>
               <p v-if="$route.query.tag === 'billEntry'">
-                <el-button size="small" :disabled="isHover" @click="mailSend(2)">
+                <el-button size="small" :disabled="isHover" @click.stop="mailSend(2)">
                   <i style="margin-right:8px;" class="iconfont iconGroup75"></i>上传
                 </el-button>
               </p>
@@ -695,7 +695,7 @@
             action=""
             :before-upload="beforeAvatarUpload"
             :auto-upload="true"
-            multiple
+             multiple
             :http-request="upload"
             :headers="head"
             :file-list="fileList">
@@ -1844,7 +1844,7 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
             this.mailOption = res.data;
           }
         });
-      } else {
+      } else if(tag == 2) {
         // 上传附件
         this.dialogFormVisible2 = true;
         this.title = "上传附件";
@@ -2443,6 +2443,7 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
     },
     handleClick(tag, row) {
       if (tag == 1) {
+        console.log(row)
         // 删除
         this.$confirm("是否删除？", "提示", {
           confirmButtonText: "确定",
@@ -2457,13 +2458,24 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
               actOperator: this.$store.state.userName
             })
             .then(res => {
+              
               if (res.status === 200 && res.data.errorCode == 1) {
                 this.$http
                   .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
                   .then(res => {
+                    console.log(res,'接口打印')
+                    console.log( res.data)
                     if (res.status === 200) {
+                      res.data.bscDocumentVOlist!==null&&res.data.bscDocumentVOlist.map((item,index)=>{
+                        return item.redFlag={
+                          flag:false,
+                          index:index%7
+                        }
+                      })
+                      console.log(res.data.bscDocumentVOlist)
                       // this.tableData = res.data.bscDocumentVOlist;
-                      let arr = res.data.bscDocumentVOlist;
+                      let arr = res.data.bscDocumentVOlist?res.data.bscDocumentVOlist:[];
+                      console.log(arr)
                       arr.forEach(el=>{
                         if(el.docName){
                           let suffix = el.docName.split('.');
@@ -2516,6 +2528,12 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
       this.$http.get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`).then(res => {
         if (res.status === 200) {
           // this.tableData = res.data.bscDocumentVOlist;
+          res.data.bscDocumentVOlist&&res.data.bscDocumentVOlist.map((item,index)=>{
+            return item.redFlag={
+              flag:false,
+              index:index%7
+            }
+          })
           let arr = res.data.bscDocumentVOlist;
           arr.forEach(el=>{
             if(el.docName){
