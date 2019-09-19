@@ -297,3 +297,13 @@ table th{
 .el-tabs__header{
   margin-left: 18px;
 }
+.BlueColor{
+  color: #01517C !important;
+}
+.el-radio__input.is-checked .el-radio__inner{
+  border-color: #01517C !important;
+  background: #01517C !important;
+}
+.el-radio__input.is-checked+.el-radio__label{
+  color: #01517C !important;
+}

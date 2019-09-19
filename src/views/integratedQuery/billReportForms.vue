@@ -231,7 +231,7 @@
   line-height: 30px;
 }
 .title{
-  color: #409EFF;
+  color: #01517C;
   padding: 20px;
   font-size: 20px;
 }

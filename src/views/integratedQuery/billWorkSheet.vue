@@ -128,12 +128,12 @@
     </div>
     <div class="btn" style="margin-bottom:10px;">
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91" style="font-size:12px;"></i>手工创建</el-button>
-      <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新</el-button>
+      <el-button type="primary" plain @click="init(0)" class="borderBtn" style="margin-left:0px;"><i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新</el-button>
     </div> 
     <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">
           <el-table-column label="流程编号" width="160" align="center">
             <template slot-scope="scope">
-              <span class="smallHand" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
+              <span class="smallHand BlueColor" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
             </template>
           </el-table-column> 
           <el-table-column label="账单号" align="center">
@@ -163,7 +163,7 @@
           <el-table-column label="附件名称" align="center">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top-start">
-                <span class="smallHand abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                <span class="smallHand BlueColor abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -342,7 +342,7 @@
             <el-table-column label="文件名" align="center">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-                  <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                  <span class="smallHand BlueColor" @click="docView(scope.row)">{{scope.row.docName}}</span>
                 </el-tooltip>
               </template>
             </el-table-column>

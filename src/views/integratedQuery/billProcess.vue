@@ -149,7 +149,7 @@
     </div>
     <div class="btn">
       <el-button type="primary" v-show="urlName === 'sortOperation'" plain @click="handleClick(0)"><i class="iconfont iconGroup91" style="font-size:12px;"></i>手工创建</el-button>
-      <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新</el-button>
+      <el-button type="primary" plain @click="init(0)" class="borderBtn" style="margin-left:0px;"><i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新</el-button>
       <el-button type="primary" plain @click="reportClick()" class="borderBtn">导出报表</el-button>
       <!-- <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button> -->
     </div> 
@@ -157,7 +157,7 @@
       <el-table-column prop="createdAt" label="创建时间" width="160" align="center"></el-table-column>
       <el-table-column label="流程编号" width="160" align="center">
         <template slot-scope="scope">
-          <span :class="{'smallHand':urlName !== 'sortOperation'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
+          <span :class="{'smallHand BlueColor':urlName !== 'sortOperation'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>
       </el-table-column> 
       <el-table-column label="流程名称" width="350" align="center">

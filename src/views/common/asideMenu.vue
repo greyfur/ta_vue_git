@@ -443,6 +443,13 @@ div::-webkit-scrollbar-corner{
     cursor: pointer;
   }
   .el-submenu:nth-child(1) .el-submenu__title{
-    box-shadow:0 3px 5px inset rgba(0,0,0,.4);
+    /* box-shadow:0 5px 5px inset rgba(0,0,0,.4); */
+    /* background: linear-gradient(top,red,2%,orange,100%); */
+       /* background: -moz-linear-gradient(top, #000000 0%, #ffffff 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#000000), color-stop(100%,#ffffff));
+    background: -webkit-linear-gradient(top, #000000 0%,#ffffff 100%);
+    background: -o-linear-gradient(top, #000000 0%,#ffffff 100%);
+    background: -ms-linear-gradient(top, #000000 0%,#ffffff 100%); */
+    background: linear-gradient(to bottom, #000000 -90%,#005C8D 30%);
   }
 </style>

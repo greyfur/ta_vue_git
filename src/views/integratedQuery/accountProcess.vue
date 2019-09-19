@@ -77,7 +77,7 @@
         </el-row>
         <el-row :gutter="10" class="billRow">
           <el-col :span="24">
-            <el-button type="primary" plain @click="mySubmit" class="borderBtn"><i class="iconfont iconGroup42"></i>我提交的</el-button>
+            <el-button type="primary" plain @click="mySubmit" class="borderBtn"><i class="iconfont iconGroup78" style="font-size:12px;"></i>我提交的</el-button>
             <el-button type="primary" plain @click="reset" class="borderBtn"><i class="iconfont iconGroup39"></i>重置</el-button>
             <el-button type="primary" plain @click="handleClick(4)"><i class="iconfont iconGroup42"></i>查询</el-button>
           </el-col>
@@ -87,14 +87,14 @@
     </div>
     <div class="btn">
       <el-button type="primary" plain @click="handleClick(1)" v-show="urlName === 'payOperation'"><i class="iconfont iconGroup91"></i>创建</el-button>
-      <el-button type="primary" plain @click="init(0)" class="borderBtn"><i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新</el-button>
+      <el-button type="primary" plain @click="init(0)" class="borderBtn" style="margin-left:0px;"><i class="iconfont iconGroup37" style="font-size:12px;"></i>刷新</el-button>
       <el-button type="primary" plain @click="reportClick()" class="borderBtn">导出报表</el-button>
       <!-- <el-button type="info" plain size="small" @click="dialogReport=!dialogReport" class="borderBtn">导出报表</el-button> -->
     </div>
     <el-table :data="tableData" style="width: 100%" :height="changeClientHight" border :header-row-class-name="StableClass">
       <el-table-column label="流程编号" width="160" align="center">
         <template slot-scope="scope">
-          <span :class="{'smallHand':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
+          <span :class="{'smallHand BlueColor':urlName!=='taskCreation' && urlName!=='emailNotify'}" @click="goDetail(scope.row)">{{scope.row.processId}}</span>
         </template>      
       </el-table-column>
       <el-table-column width="140" label="结付公司" align="center">
@@ -215,7 +215,7 @@
         <el-table-column label="文件名" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.docName" placement="top">
-              <span class="smallHand" @click="docView(scope.row)">{{scope.row.docName}}</span>
+              <span class="smallHand BlueColor" @click="docView(scope.row)">{{scope.row.docName}}</span>
             </el-tooltip>
           </template>
         </el-table-column>

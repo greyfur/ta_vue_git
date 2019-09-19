@@ -91,7 +91,7 @@
                   <el-tooltip class="item" effect="dark" placement="top">
                     <div slot="content">{{scope.row.docName}}<br/>{{scope.row.remark}}</div>
                     <!-- <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)" v-if="!scope.row.suffixFlag">{{scope.row.docName}}</span> -->
-                    <span :class="scope.row.suffixFlag?'smallHand':''" class="abbreviate" @click="docView(scope.row,scope.row.redFlag.index)" ref="redSpan" :data-index="currentPage+'-'+scope.row.redFlag.index"><span :class="scope.row.redFlag.flag?'abbreviateRed':''">{{scope.row.docName}}</span></span>
+                    <span :class="scope.row.suffixFlag?'smallHand BlueColor':''" class="abbreviate" @click="docView(scope.row,scope.row.redFlag.index)" ref="redSpan" :data-index="currentPage+'-'+scope.row.redFlag.index"><span :class="scope.row.redFlag.flag?'abbreviateRed':''">{{scope.row.docName}}</span></span>
                   </el-tooltip>
                 </template>
               </el-table-column>
@@ -349,7 +349,7 @@
                         effect="dark"
                         :content="scope.row.docName"
                         placement="top-start">
-                        <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                        <span :class="{'smallHand BlueColor':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
                       </el-tooltip>
                     </template>
                   </el-table-column>
@@ -555,7 +555,7 @@
                 effect="dark"
                 :content="scope.row.docName"
                 placement="top-start">
-                <span :class="{'smallHand':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                <span :class="{'smallHand BlueColor':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
               </el-tooltip>
             </template>
           </el-table-column>
