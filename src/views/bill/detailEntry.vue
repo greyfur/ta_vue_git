@@ -1010,34 +1010,26 @@
           </el-form>
         </el-tab-pane>
       </el-tabs>
-      <!-- <div slot="footer" v-show="$route.query.tag === 'billEntry'" class="dialog-footer" style="margin-top:10px;">
-        <el-button size="small" @click="reset('bigDisaster')">重置</el-button>
-        <el-button type="primary" plain @click="catastropheSubmite('bigDisaster','提交复核')">提交复核</el-button>
-      </div>
-      <div slot="footer" v-show="$route.query.tag === 'billCheck'" class="dialog-footer" style="margin-top:10px;">
-        <el-button size="small" @click="catastropheSubmite('驳回')">驳回</el-button>
-        <el-button type="primary" plain @click="catastropheSubmite('通过')">通过</el-button>
-      </div> -->
     </el-dialog>
     <el-dialog title="Clean-Cut" :visible.sync="dialogFormVisiblecleanCut" :close-on-click-modal="modal" width="1200px">
-      <el-form label-width="130px" :label-position="labelPosition" class="catastrophe">
-        <el-form-item label="赔案编号" prop="refClaimIdentifier"><el-input v-model="cleanCut.refClaimIdentifier" placeholder="请输入"></el-input></el-form-item>
-        <el-form-item label="是否转已决">
+      <el-form label-width="130px" :model="cleanCut" ref="cleanCut" :rules="rules3" :label-position="labelPosition" class="catastrophe">
+        <el-form-item label="赔案编号" prop="refClaimIdentifier"><el-input v-model="cleanCut.refClaimIdentifier" @blur="paNumChange(cleanCut.refClaimIdentifier)" placeholder="请输入"></el-input></el-form-item>
+        <el-form-item label="是否转已决" @change="onPending">
           <el-radio-group v-model="cleanCut.isPending">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="合同编号" prop="refClaimIdentifier">
+        <el-form-item label="合同编号" prop="identifier">
           <el-select v-model="cleanCut.identifier" filterable placeholder="请选择">
-            <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="(item,i) in businessList3" :key="i" :label="item.identifier" :value="item.indentifier"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="合同起期" prop="plcyStartDate"><el-date-picker v-model="cleanCut.plcyStartDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
         <el-form-item label="合同止期" prop="plcyEndDate"><el-date-picker v-model="cleanCut.plcyEndDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
         <el-form-item label="Section" prop="fkSoc">
           <el-select v-model="cleanCut.fkSoc" filterable placeholder="请选择">
-            <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="(item,i) in businessList3" :key="i" :label="item.sectionName" :value="item.fkSoc"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="未决赔款转已决" style="width:100%" v-show="cleanCut.isPending==1">
@@ -1059,11 +1051,11 @@
       </el-form>
       <div slot="footer" v-show="$route.query.tag === 'billEntry'" class="dialog-footer" style="margin-top:10px;">
         <el-button size="small" @click="reset('cleanCut')">重置</el-button>
-        <el-button type="primary" plain @click="cleanCutSubmite('提交复核')">提交复核</el-button>
+        <el-button type="primary" plain @click="catastropheSubmite3('cleanCut')">提交复核</el-button>
       </div>
       <div slot="footer" v-show="$route.query.tag === 'billCheck'" class="dialog-footer" style="margin-top:10px;">
-        <el-button size="small" @click="cleanCutSubmite('驳回')">驳回</el-button>
-        <el-button type="primary" plain @click="cleanCutSubmite('通过')">通过</el-button>
+        <el-button size="small" @click="submit(8)">驳回</el-button>
+        <el-button type="primary" plain @click="catastropheSubmite3('cleanCut')">通过</el-button>
       </div>
     </el-dialog>
   </div>
@@ -1080,7 +1072,8 @@ export default {
       claimBasisFlag:false,
       ccUser:null,
       cleanCut:{
-        refClaimIdentifier:null,
+        refClaimIdentifier:'IC201910138346',
+        // refClaimIdentifier:null,
         isPending:1,
         identifier:null,
         plcyStartDate:null,
@@ -1095,6 +1088,7 @@ export default {
       claimInfoDO:{},//这个数据是用来提交的时候，传给后端用bigDisaster2  
       headlinelossList2:[],
       businessList2:[],
+      businessList3:[],
       rmCurrencyList:[],
       claimList:[],
       causeOfLossList:[],
@@ -1146,28 +1140,16 @@ export default {
         claimName:null,
         bl:'0',
       },
-      // <el-form-item label="合同编号" prop="refClaimIdentifier">
-      //     <el-select v-model="cleanCut.identifier" filterable placeholder="请选择">
-      //       <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
-      //     </el-select>
-      //   </el-form-item>
-      //   <el-form-item label="合同起期" prop="plcyStartDate"><el-date-picker v-model="cleanCut.plcyStartDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-      //   <el-form-item label="合同止期" prop="plcyEndDate"><el-date-picker v-model="cleanCut.plcyEndDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-      //   <el-form-item label="Section" prop="fkSoc">
-      //     <el-select v-model="cleanCut.fkSoc" filterable placeholder="请选择">
-      //       <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
-      //     </el-select>
-      //   </el-form-item>
-      // rules3:{
-      //   // select
-      //   :[{ required: true, message: "请选择 Business ID", trigger: "blur" }],
-      //   :[{ required: true, message: "请选择 Insured Period", trigger: "blur" }],
-      //   // date 
-      //   :[{ type: 'date', required: true, message: '请选择 As Of Date', trigger: 'blur' }],
-      //   :[{ type: 'date', required: true, message: '请选择 As Of Date', trigger: 'blur' }],
-      //   // input
-      //   refClaimIdentifier:[{ required: true, message: "请输入赔案编号", trigger: 'change' }],
-      // },
+      rules3:{
+        // select
+        identifier:[{ required: true, message: "请选择合同编号", trigger: "change" }],
+        fkSoc:[{ required: true, message: "请选择Section", trigger: "change" }],
+        // date 
+        plcyStartDate:[{ type: 'date', required: true, message: '请选择合同起期', trigger: 'change' }],
+        plcyEndDate:[{ type: 'date', required: true, message: '请选择合同止期', trigger: 'change' }],
+        // input
+        refClaimIdentifier:[{ required: true, message: "请输入赔案编号", trigger: 'change' }],
+      },
       rules2:{
         // select
         businessId:[{ required: true, message: "please choose Business ID", trigger: "blur" }],
@@ -1195,7 +1177,7 @@ export default {
         // input
         claimName:[{ required: true, message: "please enter Claim's Name", trigger: 'change' }],
       },
-      tabsFlag:'2',
+      tabsFlag:'1',
       activeName: 'first',
       changeLayoutflag:true,
       changeLayoutflags:false,
@@ -1234,6 +1216,43 @@ export default {
       tableData: [],
       SICSData: [],
       listData: [
+        {
+          a: "流程编号",
+          b: "",
+          c: "processId"
+        },
+        {
+          a: "任务类型",
+          b: "",
+          c: "wsBusinessType"
+        },
+        {
+          a: "账期",
+          b: "",
+          c: "wsPeriod"
+        },
+        {
+          a: "分出公司",
+          b: "",
+          c: "cedent"
+        },
+        {
+          a: "经纪公司",
+          b: "",
+          c: "broker"
+        },
+        {
+          a: "流程状态",
+          b: "",
+          c: "processStatus"
+        },
+        {
+          a: "账单收到日期",
+          b: "",
+          c: "wsReceiptDate"
+        },
+      ],
+      basicList: [
         {
           a: "流程编号",
           b: "",
@@ -1398,6 +1417,19 @@ export default {
           }  
       });
      
+    },
+    paNumChange(val){
+      this.$http.get("api/claim/findClaimAndBusinessInfo",{params:{refClaimIdentifier:val}}).then(res => { 
+        if(res.status == 200 && res.data.code==200){
+          // 获取businessInfo
+          this.businessList3 = res.data.data.businessInfoDO;
+          this.claimInfoDO = res.data.data.claimInfoDO; // 这个数据是用来提交的时候，传给后端用
+          this.cleanCut.identifier=this.businessList3[0]['identifier'];
+          this.cleanCut.fkSoc = this.businessList3[0]['fkSoc'];
+          this.cleanCut.plcyStartDate = new Date(this.businessList3[0]['insrdPeriodStart']).getTime();
+          this.cleanCut.plcyEndDate = new Date(this.businessList3[0]['insrdPeriodEnd']).getTime();
+        }  
+      });
     },
     claimChange(val){
       if(val!==null && val!==''){
@@ -1643,33 +1675,44 @@ export default {
         } 
       })
     },
-    catastropheSubmite(tag){
-      switch(tag){    
-        case '提交复核': 
-          this.$refs[formName].validate((valid) => {
-            if (valid) {
-              this.$http.post("api/claim/createClaim",Object.assign({processId:this.chooseRow.processId},this.bigDisaster)).then(res => {
-                console.log(res);
-                // if(res.status == 200 && res.data.code==200){
-                //   this.businessList=res.data.data.rows;
-                // }  
-              });
-            } 
-          })
-        break;
-        case '驳回':
-
-        break;
-        case '通过':
-
-        break;
-      }
+    catastropheSubmite3(formName){
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          if(this.$route.query.tag === 'billEntry'){  // 提交复核
+            let balances=[];
+            if(this.makeDocListEctype.yuanNum && this.makeDocListEctype.yuanNum.length){
+              this.makeDocListEctype.yuanNum.forEach((el,i)=>{
+                balances.push({
+                  fkCurr:this.makeDocListEctype.yuanType[i],
+                  outStanding:el,
+                })
+              })
+            }
+            this.$http.post("api/claim/cleanCutVerifyandSave",Object.assign(this.cleanCut,{processId:this.chooseRow.processId,createdBy:this.$store.state.userName,taWorksheetDO:{'balances':balances},fkSoc:'5BDC73A384D311E888AE719E46FB9E52'})).then(res => {
+              if(res.status == 200 && res.data.code==200){
+                this.$message({message:res.data.message,type: 'success'});
+                this.dialogFormVisiblecleanCut = false;
+              } else {
+                this.$message.error(res.data.message);
+              }
+            });
+          } else{  // 通过
+            this.$http.post("api/claim/cleanCutOperation",Object.assign(this.cleanCut,{processId:this.chooseRow.processId,createdBy:this.$store.state.userName})).then(res => {
+              if(res.status == 200 && res.data.code==200){
+                this.$message({message:res.data.message,type: 'success'});
+                this.dialogFormVisiblecleanCut = false;
+              } else {
+                this.$message.error(res.data.message);
+              }
+            });
+          }
+        } 
+      })
     },
-    rebut(tag){
-      if(tag==1){
-
-      } else{
-
+    onPending(){
+      if(this.cleanCut.isPending==0){ 
+        this.makeDocListEctype.yuanType = [];
+        this.makeDocListEctype.yuanNum = [];
       }
     },
     reset(tag){   
@@ -1691,19 +1734,6 @@ export default {
         this.dialogFormVisiblecleanCut = true;
       } else{  // 复核
 
-      }
-    },
-    cleanCutSubmite(tag){
-      switch(tag){
-        case '提交复核':
-          
-        break;
-        case '驳回':
-
-        break;
-        case '通过':
-
-        break;
       }
     },
     changeLayout(){
@@ -1758,7 +1788,6 @@ export default {
           this.SICSData = res.data.workSheetVOlist;
           console.log(this.SICSData,'this.SICSData');
           // 获取详情的值
-      
           this.chooseRow.cedentCodeName=[];
           this.chooseRow.wsCedentCode&&this.chooseRow.wsCedentCode.split(';').map((item,index)=>{
              this.chooseRow.cedentCodeName.push(item&& this.chooseRow.wsCedentName.split(';')[index]?item+'-'+ this.chooseRow.wsCedentName.split(';')[index]+';':item||this.chooseRow.wsCedentName.split(';')[index]);
@@ -1766,7 +1795,7 @@ export default {
           })
         this.chooseRow.cedentCodeName=this.chooseRow.cedentCodeName.join('');
         this.chooseRow.brokerCodeName=[];
-          this.chooseRow.wsBrokerCode&&this.chooseRow.wsBrokerCode.split(';').map((item,index)=>{
+        this.chooseRow.wsBrokerCode&&this.chooseRow.wsBrokerCode.split(';').map((item,index)=>{
             console.log(this.chooseRow.wsBrokerName.split(';')[index])
              this.chooseRow.brokerCodeName.push(item!==null&& this.chooseRow.wsBrokerName.split(';')[index]!==null?item+'-'+ this.chooseRow.wsBrokerName.split(';')[index]+';':item||this.chooseRow.wsBrokerName.split(';')[index]);
                 return  this.chooseRow.brokerCodeName
@@ -1774,7 +1803,7 @@ export default {
         this.chooseRow.brokerCodeName=this.chooseRow.brokerCodeName.join('');
         console.log(this.chooseRow,'this.chooseRow');
           if(this.chooseRow["wsBusinessType"]=='O'){
-            this.listData = [...this.listData,
+            this.listData = [...this.basicList,
               {
                 a: "更正原因",
                 b: "",
@@ -1792,7 +1821,7 @@ export default {
               }
             ]
           } else if(this.chooseRow["wsBusinessType"]=='C'){
-            this.listData = [...this.listData,
+            this.listData = [...this.basicList,
               {
                 a: "更正原因",
                 b: "",
@@ -2039,38 +2068,25 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
          mailTitle: this.mailTitle,
          processId:this.chooseRow.processId,
          ccUser:this.ccUser,
+         setleType:'0',
          });
         // 本地上传
         if (this.file.length) {
           var resFile = new FormData();
           this.file.forEach(el => {resFile.append("file", el);});
-          // resFile.append("file", this.file[0]);
           for (let k in info) {resFile.append(k, info[k]);}
-        }
-            console.log(this.$route.query.num)
-
+        } 
         // docList 上传
         if (this.chooseDocList && this.chooseDocList.length) {
-          // let row = this.tableData[this.chooseDocList];
-          // this.$http.post("api/anyShare/fileOperation/previewDocument",Object.assign({}, row, { processId: this.chooseRow.processId }),{ responseType: "blob" })
-          //   .then(res => {
-          //     if (res.status === 200) {
-          //       let resFiles = new FormData();
-          //       resFiles.append("file", res.data);
-          //       for (let k in info) { resFiles.append(k, info[k]); }
-          //       this.$http.post("api/worksheet/wSEntry/sendEmail", resFiles)
-          //         .then(res => {
-          //           if (res.status === 200 && res.data.code == 0) {
-          //             this.$message({type: "success",message: res.data.msg});
-          //             this.dialogFormVisible2 = false;
-          //           } else{
-          //             this.$message({type: "error",message: res.data.msg});
-          //             this.dialogFormVisible2 = false;
-          //           }
-          //         });
-          //     }
-          //   });
-          this.$http.post("api/worksheet/wSEntry/sendEmail", {actOperator:this.$store.state.userName,ccUser:this.ccUser,emailAddr:this.mailInfo,emailContent: this.emailContent, mailTitle: this.mailTitle, docCId:this.chooseDocList}).then(res => {
+          this.$http.post("api/worksheet/wSEntry/sendEmail", {
+            actOperator:this.$store.state.userName,
+            ccUser:this.ccUser,
+            emailAddr:this.mailInfo,
+            emailContent: this.emailContent,
+            mailTitle: this.mailTitle,
+            docCId:this.chooseDocList,
+            setleType:'0',
+            }).then(res => {
             if (res.status === 200 && res.data.code == 0) {
               this.$message({type: "success",message: res.data.msg});
               this.dialogFormVisible2 = false;

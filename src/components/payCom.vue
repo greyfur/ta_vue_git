@@ -569,7 +569,14 @@ export default {
           <span style="margin-left:300px;">${document.getElementById('Esignature').value}<span></div>   `
         } 
       let info = {},params = null;
-      info = Object.assign({},{actOperator:this.$store.state.userName,emailAddr:this.mailInfo, emailContent: val, mailTitle: this.mailTitle,processId:this.chooseRow.processId });
+      info = Object.assign({},{
+        actOperator:this.$store.state.userName,
+        emailAddr:this.mailInfo,
+        emailContent: val,
+        mailTitle: this.mailTitle,
+        processId:this.chooseRow.processId,
+        setleType:'1', 
+        });
       // 本地上传
       if (this.file.length) {
         var resFile = new FormData();
@@ -580,7 +587,14 @@ export default {
       }
       // docList 上传
       if (this.chooseDocList && this.chooseDocList.length) {
-        this.$http.post("api/worksheet/wSEntry/sendEmail", {actOperator:this.$store.state.userName,emailAddr:this.mailInfo,emailContent: val, mailTitle: this.mailTitle, docCId:this.chooseDocList}).then(res => {
+        this.$http.post("api/worksheet/wSEntry/sendEmail", {
+          actOperator:this.$store.state.userName,
+          emailAddr:this.mailInfo,
+          emailContent: val,
+          mailTitle: this.mailTitle,
+          docCId:this.chooseDocList,
+          setleType:'1', 
+          }).then(res => {
           if (res.status === 200 && res.data.code == 0) {
             this.$message({type: "success",message: res.data.msg});
             this.dialogFormVisible3 = false;
