@@ -382,7 +382,8 @@
         </el-pagination>
       </div>
     </div>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" class="SwitchingMode" width="1160px"  custom-class="dialogMan">
+    <!-- custom-class="dialogMan" 9.20修改高度 -->
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" class="SwitchingMode" width="1160px" >
       <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign" style="text-align:right" class="SwitchingMode">
         <el-form-item label="结付公司">
           <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
@@ -515,9 +516,9 @@
         <!-- height="300" 9.20 -->
       <el-table
         border
-        height="300"
         :data="fileData"
         style="width: 100%;"
+        max-height="300"
         class="document"
         v-show="title==='编辑'"
         :header-row-class-name="StableClass">
@@ -547,7 +548,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="browseDoc" v-show="title=='编辑'" style="width:100%;height:400px">
+      <div class="browseDoc" v-show="fileData.length>0&&title=='编辑'" style="width:100%;height:400px">
         <iframe src="../../static/Preview/index.html" id="iframeId" name="ifrmname" style="width:100%;height:-webkit-fill-available;" ref="mapFrame" frameborder="0"></iframe>
       </div>
        <div slot="footer" class="dialog-footer">

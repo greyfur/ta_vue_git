@@ -3004,7 +3004,7 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
 }
 ul.detail-ul {
   /* height: 300px; */
-  height: 150px;
+  height: 180px;
   display: flex;
   flex-wrap: wrap;
   background-color: #fff;

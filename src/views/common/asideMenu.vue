@@ -35,13 +35,13 @@
                 <span style="color:#fff;">返回</span>
               </router-link>
             </template>
-            <el-menu-item>
+            <!-- <el-menu-item>
               <router-link :to="{name:$route.query.tag}">
               </router-link>
               <router-link :to="{name:$route.query.tag}">
                 <span style="color:#fff;">返回</span>
               </router-link>
-            </el-menu-item>
+            </el-menu-item> -->
           </el-submenu>
           <el-submenu :index="el.name" v-for="(el,index) in urlArr" :key="index" class="navFirst">
             <template slot="title">
