@@ -58,10 +58,10 @@
             <ul class="detail-ul" v-show="searchFlag1">
                 <li v-for="(item,i) in listData" :key="i" class="detail-item">
                   <span class="detail-name">{{item.a}} :</span>
-                  <el-tooltip effect="dark" :content="item.b" placement="top">
+                  <el-tooltip effect="dark" :content="item.b!==null?item.b:''" placement="top">
                     <span
                       class="detail-content abbreviate"
-                    >{{item.b}}</span>
+                    >{{item.b!==null?item.b:''}}</span>
                   </el-tooltip>
                 </li>
             </ul>
