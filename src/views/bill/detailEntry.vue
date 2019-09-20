@@ -724,7 +724,6 @@
         <el-button size="small" type="primary" plain @click="send" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
-
     <el-dialog :title="title" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal">
       <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign">
         <el-form-item label="用户名">
@@ -886,7 +885,6 @@
         <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
-
     <el-dialog title="巨灾录入" :visible.sync="dialogFormVisibleCatastrophe" :close-on-click-modal="modal" width="1300px">
       <el-tabs v-model="tabsFlag">
         <el-tab-pane label="NEW CLAIM" name="1">
@@ -1021,7 +1019,6 @@
         <el-button type="primary" plain @click="catastropheSubmite('通过')">通过</el-button>
       </div> -->
     </el-dialog>
-
     <el-dialog title="Clean-Cut" :visible.sync="dialogFormVisiblecleanCut" :close-on-click-modal="modal" width="1200px">
       <el-form label-width="130px" :label-position="labelPosition" class="catastrophe">
         <el-form-item label="赔案编号"><el-input v-model="cleanCut.refClaimIdentifier" placeholder="请输入"></el-input></el-form-item>
@@ -1383,8 +1380,6 @@ export default {
     claimChange(val){
       if(val!==null && val!==''){
         // 根据claimId 带出InsuredPeriod的值
-        let fkSoc = this.claimList[val]['fkSoc'];
-        this.bigDisaster2.fkSoc = fkSoc;
         this.bigDisaster2.refClaimIdentifier = this.claimList[val]['lossNo'];
         this.bigDisaster2.claimName = this.claimList[val]['lossName'];
         // 显示赔案编号下关联的合同编号下拉项；显示合同编号相关的合同起期-止期下拉项；显示合同编号下相关的Section下拉项；
@@ -1395,6 +1390,7 @@ export default {
             this.claimInfoDO = res.data.data.claimInfoDO; // 这个数据是用来提交的时候，传给后端用
             this.bigDisaster2.businessId=this.businessList2[0]['identifier'];
             this.bigDisaster2.section=this.businessList2[0]['sectionName'];
+            this.bigDisaster2.fkSoc = this.businessList2[0]['fkSoc'];
             this.bigDisaster2.insuredPeriod=0;
           }  
         });

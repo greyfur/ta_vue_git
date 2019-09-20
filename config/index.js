@@ -17,7 +17,7 @@ module.exports = {
         // target: "http://172.17.106.69:9999", //fanzhiyuan
         // target: "http://172.17.106.129:9999", //ligang
         // target: cip.apiUrl,
-        changOrigin: true, //允许跨域
+        // changOrigin: true, //允许跨域
         pathRewrite: {
           // "^/api": "/ta_server" //请求的时候使用这个api就可以 网关需要
           "^/api": ""  // 不走网关时用的
