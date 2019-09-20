@@ -449,7 +449,8 @@
         <el-form-item label="原流程编号" :prop="!historicalBill&&title==='编辑'&& billSearch.wsBusinessType=='C'?'parentProcessId':''" v-show="title!=='流程提交'&&title!=='踪迹'&&billSearch.wsBusinessType=='C'&&!historicalBill">
           <el-input v-model.trim="billSearch.parentProcessId" placeholder="请输入原流程编号"></el-input>
         </el-form-item>
-        <el-form-item label="收到邮件更正期" v-show="title!=='流程提交'&&title!=='踪迹'&&billSearch.wsBusinessType=='C'">
+        <!-- <el-form-item label="收到邮件更正期" :prop="title=='编辑'&&billSearch.wsBusinessType=='C'?'correctMailDate':''"  v-show="title!=='流程提交'&&title!=='踪迹'&&billSearch.wsBusinessType=='C'"> -->
+        <el-form-item label="收到邮件更正期" :prop="title!='流程提交'&&title!='踪迹'&&billSearch.wsBusinessType=='C'?'correctMailDate':''"  v-show="title!=='流程提交'&&title!=='踪迹'&&billSearch.wsBusinessType=='C'">
           <el-date-picker value-format="timestamp" v-model="billSearch.correctMailDate" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="更正原因" :prop="title==='编辑'&&billSearch.wsBusinessType=='C'?'correctMailReason':''" v-show="title!=='流程提交'&&title!=='踪迹'&&billSearch.wsBusinessType=='C'&&billSearch.wsBusinessType">
@@ -811,8 +812,8 @@ export default {
         reason: [{ required: true, message: '请输入拆分理由', trigger: 'blur' }],
         cedentModel:[{ required: true, message: "请选择分出公司", trigger: "blur" }],
         wsReceiptDate:[{ type: 'date', required: true, message: '请选择账单收到期', trigger: 'blur' }],
-        brokerModel:[{ required: true, message: "请选择经纪公司", trigger: "blur" }],
         correctMailDate:[{ type: 'date', required: true, message: '请选择收到邮件更正期', trigger: 'blur' }],
+        brokerModel:[{ required: true, message: "请选择经纪公司", trigger: "blur" }],
         occId: [{ required: true, message: '请输入母合同编号', trigger: 'blur' }],
         parentProcessId: [{ required: true, message: '请输入原流程编号', trigger: 'blur' }],
         correctMailReason: [{ required: true, message: '请输入更正原因', trigger: 'blur' }],
