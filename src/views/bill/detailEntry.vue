@@ -690,7 +690,7 @@
             </el-tab-pane>
           </el-tabs>
         </el-form-item>
-        <el-form-item label="上传附件" v-show="title==='上传附件'">
+        <el-form-item label="上传附件" v-if="title==='上传附件'">
           <el-upload
             action=""
             :before-upload="beforeAvatarUpload"
@@ -1692,7 +1692,7 @@ export default {
               index:index%7
             }
           })
-            let arr = res.data.bscDocumentVOlist;
+            let arr = res.data.bscDocumentVOlist?res.data.bscDocumentVOlist:[];
             if(arr===null){return;}
             arr.forEach(el=>{
               if(el.docName){
@@ -1839,15 +1839,16 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
         }
         this.$http.get("api/worksheet/wSEntry/getEmailContacts").then(res => {
           if (res.status === 200) {
-            this.dialogFormVisible2 = true;
             this.title = "邮件通知";
+            this.dialogFormVisible2 = true;
             this.mailOption = res.data;
           }
         });
       } else if(tag == 2) {
         // 上传附件
-        this.dialogFormVisible2 = true;
         this.title = "上传附件";
+        this.dialogFormVisible2 = true;
+        console.log(1)
       }
     },
     querySearch(queryString, cb) {
@@ -2463,10 +2464,8 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
                 this.$http
                   .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
                   .then(res => {
-                    console.log(res,'接口打印')
-                    console.log( res.data)
                     if (res.status === 200) {
-                      res.data.bscDocumentVOlist!==null&&res.data.bscDocumentVOlist.map((item,index)=>{
+                      res.data.bscDocumentVOlist&&res.data.bscDocumentVOlist.map((item,index)=>{
                         return item.redFlag={
                           flag:false,
                           index:index%7
@@ -2534,7 +2533,7 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
               index:index%7
             }
           })
-          let arr = res.data.bscDocumentVOlist;
+          let arr = res.data.bscDocumentVOlist?res.data.bscDocumentVOlist:[];
           arr.forEach(el=>{
             if(el.docName){
               let suffix = el.docName.split('.');

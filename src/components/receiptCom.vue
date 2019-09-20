@@ -383,7 +383,7 @@
       </div>
     </div>
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" class="SwitchingMode" width="1160px"  custom-class="dialogMan">
-      <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign" style="text-align:right">
+      <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign" style="text-align:right" class="SwitchingMode">
         <el-form-item label="结付公司">
           <el-select clearable filterable v-model="cedentModel" placeholder="请选择结付公司">
             <el-option
@@ -512,6 +512,7 @@
           >确 定</el-button>
         </el-form-item> hyd -->
       </el-form>
+        <!-- height="300" 9.20 -->
       <el-table
         border
         height="300"
