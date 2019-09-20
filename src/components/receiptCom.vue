@@ -382,7 +382,7 @@
         </el-pagination>
       </div>
     </div>
-    <!-- custom-class="dialogMan" 9.20修改高度 -->
+    <!-- custom-class="dialogMan" 9.20修改高度  -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" class="SwitchingMode" width="1160px" >
       <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign" style="text-align:right" class="SwitchingMode">
         <el-form-item label="结付公司">
