@@ -25,8 +25,8 @@
           <el-button plain :disabled="isHover" size="small" @click="exportBill">导出账单</el-button>
           <el-button plain :disabled="isHover" size="small" @click="submit(6,'录入提交')">流程提交</el-button>
           <el-button plain :disabled="isHover" size="small" @click="changeLayout">更改布局</el-button>
-          <!-- <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button> -->
-          <!-- <el-button plain :disabled="isHover" size="small" @click="onCleanCut()">Clean-Cut</el-button> -->
+          <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button>
+          <el-button plain :disabled="isHover" size="small" @click="onCleanCut()">Clean-Cut</el-button>
         </div>
         <!-- 复核 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'billCheck'">
@@ -36,8 +36,8 @@
           <el-button size="small" @click="onSics()">账单回写</el-button>
           <el-button size="small" @click="exportBill">导出账单</el-button>
           <el-button plain :disabled="isHover" size="small" @click="changeLayout">更改布局</el-button>
-          <!-- <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button> -->
-          <!-- <el-button plain :disabled="isHover" size="small" @click="onCleanCut()">Clean-Cut</el-button> -->
+          <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button>
+          <el-button plain :disabled="isHover" size="small" @click="onCleanCut()">Clean-Cut</el-button>
         </div>
         <div class="left" style="height:100%;width:98%;">
           <div class="leftTop" style="background:#fff;margin-bottom:10px;padding:0 0 10px 0;">
@@ -1021,21 +1021,21 @@
     </el-dialog>
     <el-dialog title="Clean-Cut" :visible.sync="dialogFormVisiblecleanCut" :close-on-click-modal="modal" width="1200px">
       <el-form label-width="130px" :label-position="labelPosition" class="catastrophe">
-        <el-form-item label="赔案编号"><el-input v-model="cleanCut.refClaimIdentifier" placeholder="请输入"></el-input></el-form-item>
+        <el-form-item label="赔案编号" prop="refClaimIdentifier"><el-input v-model="cleanCut.refClaimIdentifier" placeholder="请输入"></el-input></el-form-item>
         <el-form-item label="是否转已决">
           <el-radio-group v-model="cleanCut.isPending">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="合同编号">
+        <el-form-item label="合同编号" prop="refClaimIdentifier">
           <el-select v-model="cleanCut.identifier" filterable placeholder="请选择">
             <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="合同起期"><el-date-picker v-model="cleanCut.plcyStartDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-        <el-form-item label="合同止期"><el-date-picker v-model="cleanCut.plcyEndDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-        <el-form-item label="Section">
+        <el-form-item label="合同起期" prop="plcyStartDate"><el-date-picker v-model="cleanCut.plcyStartDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="合同止期" prop="plcyEndDate"><el-date-picker v-model="cleanCut.plcyEndDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="Section" prop="fkSoc">
           <el-select v-model="cleanCut.fkSoc" filterable placeholder="请选择">
             <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
           </el-select>
@@ -1146,6 +1146,28 @@ export default {
         claimName:null,
         bl:'0',
       },
+      // <el-form-item label="合同编号" prop="refClaimIdentifier">
+      //     <el-select v-model="cleanCut.identifier" filterable placeholder="请选择">
+      //       <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+      //     </el-select>
+      //   </el-form-item>
+      //   <el-form-item label="合同起期" prop="plcyStartDate"><el-date-picker v-model="cleanCut.plcyStartDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+      //   <el-form-item label="合同止期" prop="plcyEndDate"><el-date-picker v-model="cleanCut.plcyEndDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+      //   <el-form-item label="Section" prop="fkSoc">
+      //     <el-select v-model="cleanCut.fkSoc" filterable placeholder="请选择">
+      //       <el-option v-for="item in bigArr" :key="item" :label="item" :value="item"></el-option>
+      //     </el-select>
+      //   </el-form-item>
+      // rules3:{
+      //   // select
+      //   :[{ required: true, message: "请选择 Business ID", trigger: "blur" }],
+      //   :[{ required: true, message: "请选择 Insured Period", trigger: "blur" }],
+      //   // date 
+      //   :[{ type: 'date', required: true, message: '请选择 As Of Date', trigger: 'blur' }],
+      //   :[{ type: 'date', required: true, message: '请选择 As Of Date', trigger: 'blur' }],
+      //   // input
+      //   refClaimIdentifier:[{ required: true, message: "请输入赔案编号", trigger: 'change' }],
+      // },
       rules2:{
         // select
         businessId:[{ required: true, message: "please choose Business ID", trigger: "blur" }],
@@ -1608,7 +1630,7 @@ export default {
               }
             });
           } else{  // 通过
-            this.$http.post("api/claim/createWorksheet",Object.assign(this.fhSheet2Params,this.bigDisaster2,{processId:this.chooseRow.processId,createdBy:this.$store.state.userName,closedId:this.$store.state.userName})).then(res => {
+            this.$http.post("api/claim/createWorksheet",Object.assign(this.fhSheet2Params,this.bigDisaster2,{processId:this.chooseRow.processId,createdBy:this.$store.state.userName,closedId:this.$store.state.userName,lossDateStart:this.fhSheet2Params['lossDate']})).then(res => {
               if(res.status == 200 && res.data.code==200){
                 this.$message({message:res.data.message,type: 'success'});
                 this.dialogFormVisibleCatastrophe = false;
@@ -1983,8 +2005,6 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
     elSelect(item){this.mailInfo = item.emailAddr},
     elSelect2(item){this.ccUser = item.emailAddr},
     send() {
-      console.log(this.emailContent,'this.emailContent');
-      console.log(this.emailContent.indexOf('\r'));
       // return false;
       if (this.title == "OCR上传") {
         // this.$http.post("api/anyShare/fileOperation/previewDocument",Object.assign({}, this.ocrRow, { processId: this.chooseRow.processId}),{ responseType: "blob" })
