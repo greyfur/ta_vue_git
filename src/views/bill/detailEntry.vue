@@ -25,8 +25,8 @@
           <el-button plain :disabled="isHover" size="small" @click="exportBill">导出账单</el-button>
           <el-button plain :disabled="isHover" size="small" @click="submit(6,'录入提交')">流程提交</el-button>
           <el-button plain :disabled="isHover" size="small" @click="changeLayout">更改布局</el-button>
-          <!-- <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button> -->
-          <!-- <el-button plain :disabled="isHover" size="small" @click="onCleanCut()">Clean-Cut</el-button> -->
+          <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button>
+          <el-button plain :disabled="isHover" size="small" @click="onCleanCut()">Clean-Cut</el-button>
         </div>
         <!-- 复核 -->
         <div :class="this.$store.state.flod?'btn':'btns'" v-if="$route.query.tag === 'billCheck'">
@@ -36,8 +36,8 @@
           <el-button size="small" @click="onSics()">账单回写</el-button>
           <el-button size="small" @click="exportBill">导出账单</el-button>
           <el-button plain :disabled="isHover" size="small" @click="changeLayout">更改布局</el-button>
-          <!-- <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button> -->
-          <!-- <el-button plain :disabled="isHover" size="small" @click="onCleanCut()">Clean-Cut</el-button> -->
+          <el-button plain :disabled="isHover" size="small" @click="catastrophe()">巨灾录入</el-button>
+          <el-button plain :disabled="isHover" size="small" @click="onCleanCut()">Clean-Cut</el-button>
         </div>
         <div class="left" style="height:100%;width:98%;">
           <div class="leftTop" style="background:#fff;margin-bottom:10px;padding:0 0 10px 0;">
@@ -909,8 +909,9 @@
             <el-form-item prop="claimName" label="Claim's Name"><el-input v-model="bigDisaster.claimName" placeholder="please enter"></el-input></el-form-item>
             <el-form-item prop="lossDateStart" label="Date of Loss From"><el-date-picker value-format="timestamp" v-model="bigDisaster.lossDateStart" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
             <el-form-item prop="lossDateEnd" label="Date of Loss To"><el-date-picker value-format="timestamp" v-model="bigDisaster.lossDateEnd" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-            <el-form-item prop="plcyStartDate" label="Original Policy Period From"><el-date-picker value-format="timestamp" v-model="bigDisaster.plcyStartDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-            <el-form-item prop="plcyEndDate" label="Original Policy Period To"><el-date-picker value-format="timestamp" v-model="bigDisaster.plcyEndDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+            <!-- 以下这俩在复核不显示 -->
+            <el-form-item :prop="$route.query.tag === 'billEntry'?'plcyStartDate':''" v-show="$route.query.tag === 'billEntry'" label="Original Policy Period From"><el-date-picker value-format="timestamp" :disabled="claimBasisFlag" v-model="bigDisaster.plcyStartDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+            <el-form-item :prop="$route.query.tag === 'billEntry'?'plcyEndDate':''" v-show="$route.query.tag === 'billEntry'" label="Original Policy Period To"><el-date-picker value-format="timestamp" :disabled="claimBasisFlag" v-model="bigDisaster.plcyEndDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
             <el-form-item prop="causeOfLossGroup" label="Claim Cause Of Loss Group">
               <el-select v-model="bigDisaster.causeOfLossGroup" filterable placeholder="please choose" @change="lossGroupChange">
                 <el-option v-for="item in [{a:'Accident',b:'ACCIDENT'},{a:'Act of God',b:'ACTOFGOD'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
@@ -937,9 +938,13 @@
                 <el-option v-for="(item,i) in headlinelossList" :key="i" :label="item.lossName" :value="i"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item style="width: 100%;text-align: right;padding-right: 50px;">
+            <el-form-item v-show="$route.query.tag === 'billEntry'" style="width: 100%;text-align: right;padding-right: 50px;">
               <el-button size="small" @click="reset('bigDisaster')">重置</el-button>
               <el-button type="primary" plain @click="catastropheSubmite1('bigDisaster')">提交复核</el-button>
+            </el-form-item>
+            <el-form-item v-show="$route.query.tag === 'billCheck'" style="width: 100%;text-align: right;padding-right: 50px;">
+              <el-button size="small" @click="submit(8)">驳回</el-button>
+              <el-button type="primary" plain @click="catastropheSubmite1('bigDisaster')">通过</el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -950,7 +955,7 @@
                 <el-option v-for="(item,i) in claimList" :key="i" :label="item.lossNo" :value="i"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Claim Name" prop="claimIndex">
+            <el-form-item label="Claim Name" v-show="$route.query.tag === 'billEntry'" prop="claimIndex">
               <el-select v-model="bigDisaster2.claimIndex" disabled filterable placeholder="please choose">
                 <el-option v-for="(item,i) in claimList" :key="i" :label="item.lossName" :value="i"></el-option>
               </el-select>
@@ -981,13 +986,13 @@
               </el-select>
             </el-form-item>
             <el-form-item label="To be booked in B/L">
-              <el-select v-model="bigDisaster2.BL" filterable placeholder="please choose">
+              <el-select v-model="bigDisaster2.bl" filterable placeholder="please choose">
                 <el-option v-for="item in [{a:'NO',b:'0'},{a:'YES',b:'1'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="As Of Date" prop="accAsOfDate"><el-date-picker v-model="bigDisaster2.accAsOfDate" value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
             <el-form-item label="Receive Date"><el-date-picker v-model="bigDisaster2.registTimestamp" value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-            <el-form-item label="BP Reference"><el-input @blur="onCheck('bpRef')" v-model="bigDisaster2.bpRef" placeholder="please enter"></el-input></el-form-item>
+            <el-form-item label="BP Reference"><el-input v-model="bigDisaster2.bpRef" placeholder="please enter"></el-input></el-form-item>
             <el-form-item label="Currency" prop="fkCurr">
               <el-select v-model="bigDisaster2.fkCurr" filterable placeholder="please choose">
                 <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
@@ -996,9 +1001,13 @@
             <el-form-item label="To be Paid"><el-input v-model="bigDisaster2.paid" placeholder="please enter"></el-input></el-form-item>
             <el-form-item label="Outstanding"><el-input v-model="bigDisaster2.outStanding" placeholder="please enter"></el-input></el-form-item>
             <el-form-item label="IBNR"><el-input v-model="bigDisaster2.ibnr" placeholder="please enter"></el-input></el-form-item>
-            <el-form-item style="width: 100%;text-align: right;padding-right: 50px;">
+            <el-form-item v-show="$route.query.tag === 'billEntry'" style="width: 100%;text-align: right;padding-right: 50px;">
               <el-button size="small" @click="reset('bigDisaster')">重置</el-button>
               <el-button type="primary" plain @click="catastropheSubmite2('bigDisaster2')">提交复核</el-button>
+            </el-form-item>
+            <el-form-item v-show="$route.query.tag === 'billCheck'" style="width: 100%;text-align: right;padding-right: 50px;">
+              <el-button size="small" @click="submit(8)">驳回</el-button>
+              <el-button type="primary" plain @click="catastropheSubmite2('bigDisaster2')">通过</el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -1070,6 +1079,8 @@ export default {
   name: "detailEntry",
   data() { 
     return {
+      fhSheet2Params:{},
+      claimBasisFlag:false,
       ccUser:null,
       cleanCut:{
         refClaimIdentifier:null,
@@ -1095,6 +1106,7 @@ export default {
       headlinelossList:[],
       bigArr:[],
       bigDisaster:{
+        claimSort:'0',
         taWorksheetDO:{},
         fkSoc:null,
         headlinelossIndex:null,
@@ -1117,7 +1129,9 @@ export default {
         section:null,
       },
       bigDisaster2:{
+        claimSort:'1',
         fkSoc:null,
+        registedId:null,
         headlinelossIndex:null,
         refClaimIdentifier:null,
         headlinelossCode:null,
@@ -1133,18 +1147,17 @@ export default {
         insuredPeriod:null,
         section:null,
         claimName:null,
-        BL:'0',
-        taWorksheetDO:{},
+        bl:'0',
       },
       rules2:{
         // select
-        businessId:[{ required: true, message: "please choose Business ID", trigger: "change" }],
-        insuredPeriod:[{ required: true, message: "please choose Insured Period", trigger: "change" }],
-        section:[{ required: true, message: "please choose Section", trigger: "change" }],
-        claimIndex:[{ required: true, message: "please choose Claim ID", trigger: "change" }],
-        fkCurr:[{ required: true, message: "please choose Currency", trigger: "change" }],
+        businessId:[{ required: true, message: "please choose Business ID", trigger: "blur" }],
+        insuredPeriod:[{ required: true, message: "please choose Insured Period", trigger: "blur" }],
+        section:[{ required: true, message: "please choose Section", trigger: "blur" }],
+        // claimIndex:[{ required: true, message: "please choose Claim ID", trigger: "blur" }],
+        fkCurr:[{ required: true, message: "please choose Currency", trigger: "blur" }],
         // date 
-        accAsOfDate:[{ type: 'date', required: true, message: 'please choose As Of Date', trigger: 'change' }],
+        accAsOfDate:[{ type: 'date', required: true, message: 'please choose As Of Date', trigger: 'blur' }],
       },
       rules1:{
         // select
@@ -1314,7 +1327,7 @@ export default {
     this.getBillInfo();
 
     // 以下调用理赔接口，获取数据
-    // this.getClaimInfo();
+    this.getClaimInfo();
   },
   methods: {
     getClaimInfo(){
@@ -1336,44 +1349,28 @@ export default {
           }  
       });
       // 获取赔案列表Claim ID
-      this.claimList = [
-        {
-          currName: "CHINA PACIFIC INS",
-          currNo: "BP52950",
-          fkSoc: "255741D859394901B9C2797B52401164",
-          indentifier: "PIPF31802A",
-          lossDate: "2019-07-01 00:00:00",
-          lossName: "122112",
-          lossNo: "IC201910138222",
-          objectId: "84A80D5740144BC0A586371841FD1996",
-          refName: "Property",
-          section: "Main Section",
-          title: "运营 PV 2x612MW Coal Fired Thermal Power Plant at Bangladesh",
-          typeOfBus: "PROPFAC",
-          underwritingYear: 2022,
-        },
-        {
-          currName: "NNI.",
-          currNo: "BP60225",
-          fkSoc: "7300208297A9497A9F9916567B57FAFF",
-          indentifier: "NIPF847A",
-          lossDate: "2019-05-05 00:00:00",
-          lossName: "RINGHALS NPS",
-          lossNo: "IC201910138343",
-          objectId: "365626D6192C4F618AE7DE612FBCECEC",
-          refName: "Nuclear",
-          section: "NF11182517-RINGHALS NPS",
-          title: "RINGHALS NPS",
-          typeOfBus: "PROPFAC",
-          underwritingYear: 2019,
-        },
-      ];
-      // this.$http.post("api/claim/getClaimId",{}).then(res => {
-      //     console.log(res,'getClaimId');
-      //     if(res.status == 200 && res.data.code==200){
-      //       this.claimList=res.data.data.rows;
-      //     }  
-      // });
+      // this.claimList = [
+      //   {
+      //     currName: "CHINA PACIFIC INS",
+      //     currNo: "BP52950",
+      //     fkSoc: "255741D859394901B9C2797B52401164",
+      //     indentifier: "PIPF31802A",
+      //     lossDate: "2019-07-01 00:00:00",
+      //     lossName: "122112",
+      //     lossNo: "IC201910138222",
+      //     objectId: "84A80D5740144BC0A586371841FD1996",
+      //     refName: "Property",
+      //     section: "Main Section",
+      //     title: "运营 PV 2x612MW Coal Fired Thermal Power Plant at Bangladesh",
+      //     typeOfBus: "PROPFAC",
+      //     underwritingYear: 2022,
+      //   },
+      // ];
+      this.$http.post("api/claim/getClaimId",{}).then(res => {
+          if(res.status == 200 && res.data.code==200){
+            this.claimList=res.data.data.rows;
+          }  
+      });
       // getHeadlineId获取巨灾代码
       this.$http.post("api/claim/getHeadlineId",{}).then(res => {
           console.log(res,'getHeadlineId');
@@ -1393,12 +1390,12 @@ export default {
         // 显示赔案编号下关联的合同编号下拉项；显示合同编号相关的合同起期-止期下拉项；显示合同编号下相关的Section下拉项；
         this.$http.get("api/claim/findClaimAndBusinessInfo",{params:{refClaimIdentifier:this.bigDisaster2.refClaimIdentifier}}).then(res => { 
           if(res.status == 200 && res.data.code==200){
-            // 获取businessInfo------缺insuredPeriod的信息
+            // 获取businessInfo
             this.businessList2 = res.data.data.businessInfoDO;
             this.claimInfoDO = res.data.data.claimInfoDO; // 这个数据是用来提交的时候，传给后端用
             this.bigDisaster2.businessId=this.businessList2[0]['identifier'];
             this.bigDisaster2.section=this.businessList2[0]['sectionName'];
-            // this.insuredPeriodList=res.data.data;          缺insuredPeriod的信息
+            this.bigDisaster2.insuredPeriod=0;
           }  
         });
       }
@@ -1440,48 +1437,131 @@ export default {
         }
       }
     },
-    businessChange(tag,val){
-      console.log(val,'val');
+    async businessChange(tag,val){
       if(val!==null && val!==''){
-        // 根据businessId 带出InsuredPeriod的值
+        // 根据businessId 带出InsuredPeriod的值------再保险合同的起止期 默认值
         let fkSoc = this.businessList[val]['fkSoc'];
         this.bigDisaster.fkSoc = fkSoc;
         this.bigDisaster.refClaimIdentifier = this.businessList[val]['indentifier'];
-        this.$http.post("api/claim/getInsuredPeriod",{fkSoc:fkSoc}).then(res => { 
+        await this.$http.post("api/claim/getInsuredPeriod",{fkSoc:fkSoc}).then(res => { 
           if(res.status == 200 && res.data.code==200){
             this.bigDisaster.insuredPeriod=0;
-            // this.bigDisaster2.insuredPeriod=0;
             this.insuredPeriodList=res.data.data;
+            this.bigDisaster.plcyStartDate = new Date(this.insuredPeriodList[0]['insrdPeriodStart']).getTime();
+            this.bigDisaster.plcyEndDate = new Date(this.insuredPeriodList[0]['insrdPeriodEnd']).getTime();
+          }  
+        });
+
+        this.$http.post("api/claim/getPcyMessage",{fkSoc:this.bigDisaster.fkSoc}).then(res => {
+          if(res.status == 200 && res.data.code==200){
+            // claimBasis==RISKATT  支持修改原保单起期，否则不允许修改；
+            this.claimBasisFlag = res.data.data.listCmsBussinessInfoDetail[0]['claimBasis']!='RISKATT'; 
+            console.log(this.claimBasisFlag,'this.claimBasisFlag');         
           }  
         });
       }
-      // if(tag==1){  
-      //   // bigDisaster
-
-      // } else{  
-      //   // bigDisaster2
-      // }
     },
-    catastrophe(tag){ 
+    async catastrophe(tag){ 
       if(this.$route.query.tag === 'billEntry'){   // 操作页面
         this.dialogFormVisibleCatastrophe = true;
         this.bigDisaster2.registTimestamp = new Date().getTime();
-      } else{  // 
+      } else{  // 复核回显
+      // claimSort:'0'  bigDisaster
+       await this.$http.post("api/claim/getClaimMessageByProcessId",{processId:this.chooseRow.processId,claimSort:'0'}).then(res => {
+          if(res.status == 200 && res.data){
+            if(Object.keys(res.data).length){
+               if(res.data.businessId!=null&&res.data.businessId!=''){
+                  this.businessChange('1',res.data.businessId);
+                }
+              for(let k in this.bigDisaster){
+                if(res.data[k]!=null && res.data[k]!=undefined){
+                  this.bigDisaster[k]=res.data[k];
+                }
+              }
+              this.bigDisaster.businessId = this.bigDisaster.refClaimIdentifier;
+              // 回显数据后，请求关联数据
+             
+              if(this.bigDisaster.causeOfLossGroup){
+                // console.log(this.bigDisaster.causeOfLossGroup,'this.bigDisaster.causeOfLossGroup');
+                this.lossGroupChange();  // 根据causeOfLossGroup，获取巨灾列表
+                setTimeout(()=>{
+                  console.log(this.bigDisaster.headlinelossCode,'this.bigDisaster.headlinelossCode');
+                  if(this.bigDisaster.headlinelossCode){
+                    if(this.headlinelossList && this.headlinelossList.length){
+                      this.headlinelossList.forEach((el,i)=>{
+                        if(el.lossCode == this.bigDisaster.headlinelossCode){
+                          console.log(i,'i');
+                          this.bigDisaster.headlinelossIndex = i;
+                        }
+                      })
+                    }
+                  }
+                },2000)
+              }
+            }
+          } 
+        });
+        this.dialogFormVisibleCatastrophe = true;
+      
+      // claimSort:'0'  bigDisaster2
+       this.$http.post("api/claim/getClaimMessageByProcessId",{processId:this.chooseRow.processId,claimSort:'1'}).then(res => {
+          console.log(res,'/getClaimMessageByProcessId---1');
+          if(res.status == 200 && res.data){
+            if(Object.keys(res.data).length){
+              let param = Object.assign(res.data,res.data['taWorksheetDO'],res.data['taWorksheetDO']['balances'][0]);
+              this.fhSheet2Params = param;
+              for(let k in this.bigDisaster2){
+                if(param[k]!=null && param[k]!=undefined){
+                  this.bigDisaster2[k]=param[k];
+                }
+              }
+              // 回显数据后，请求关联数据 
+              if(this.bigDisaster2.refClaimIdentifier){
+                  this.claimList.forEach((el,i)=>{
+                    if(el.lossNo == this.bigDisaster2.refClaimIdentifier){
+                      console.log(i,'i');
+                      this.bigDisaster2.claimIndex = i;
+                      this.claimChange(i);
+                    }
+                  })
+              }
+              if(this.bigDisaster2.headlinelossCode){
+                  this.headlinelossList2.forEach((el,i)=>{
+                    if(el.lossCode == this.bigDisaster2.headlinelossCode){
+                      console.log(i,'i');
+                      this.bigDisaster2.headlinelossIndex = i;
+                    }
+                  })
+              }
 
+            }
+          } 
+        });
+        // this.dialogFormVisibleCatastrophe = true;
       }
     },
     catastropheSubmite1(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.post("api/claim/createClaim",Object.assign({processId:this.chooseRow.processId},this.bigDisaster)).then(res => {
-            console.log(res);
-            if(res.status == 200 && res.data.code==200){
-            //   this.businessList=res.data.data.rows;
-            } 
-            // else if(res.data.code==500){
-            //   this.$message.error(res.data.data.errorMsg);
-            // }
-          });
+          if(this.$route.query.tag === 'billEntry'){  // 提交复核
+            this.$http.post("api/claim/saveClaim",Object.assign(this.bigDisaster,{processId:this.chooseRow.processId,createdBy:this.$store.state.userName})).then(res => {
+              if(res.status == 200 && res.data.code==0){
+                this.$message({message:res.data.msg,type: 'success'});
+                this.dialogFormVisibleCatastrophe = false;
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            });
+          } else{  // 通过
+            this.$http.post("api/claim/createClaim",Object.assign(this.bigDisaster,{processId:this.chooseRow.processId,createdBy:this.$store.state.userName})).then(res => {
+              if(res.status == 200 && res.data.code==200){
+                this.$message({message:res.data.message,type: 'success'});
+                this.dialogFormVisibleCatastrophe = false;
+              } else {
+                this.$message.error(res.data.message);
+              }
+            });
+          }
         } 
       })
     },
@@ -1490,7 +1570,7 @@ export default {
         if (valid) {
           // 普通的字符的校验 bpRef
           let str = this.bigDisaster2.bpRef;
-          if(str.length){
+          if(str && str.length){
             let i,n=0;
             for (i = 0;i < str.length;i++){
               if(str.charCodeAt(i)<=256){ n+=2; }else{ n+=1; }
@@ -1500,14 +1580,48 @@ export default {
               }
             }
           }
-          this.$http.post("api/claim/createWorksheet",Object.assign({processId:this.chooseRow.processId},this.claimInfoDO,this.bigDisaster2)).then(res => {
-            console.log(res,'createWorksheet');
-            if(res.status == 200 && res.data.code==200){
-              // todo
-            } else if(res.data.code==500){
-              
+          if(this.$route.query.tag === 'billEntry'){  // 提交复核
+            let params = Object.assign(this.claimInfoDO,this.bigDisaster2,{processId:this.chooseRow.processId,createdBy:this.$store.state.userName});
+            let taWorksheetDO={
+              bl:null,
+              receiveDate:null,
+              wsIdentifier:null,
+              bpRef:null,
+              registTimestamp:null,
+              balances:null,
+              registedId:null,
+              closedId:null,
             }
-          });
+            let taLedgerBalanceDO={
+              accAsOfDate:null,
+              fkCurr:null,
+              paid:null,
+              outStanding:null,
+              ibnr:null,
+              fkSoc:null,
+            }
+            for(let k in taWorksheetDO){taWorksheetDO[k] = params[k];}
+            for(let k in taLedgerBalanceDO){taLedgerBalanceDO[k] = params[k];}
+            taWorksheetDO['balances'] = [taLedgerBalanceDO];
+            this.$http.post("api/claim/saveClaim",{...params,'taWorksheetDO':taWorksheetDO}).then(res => {
+              if(res.status == 200 && res.data.code==0){
+                this.$message({message:res.data.msg,type: 'success'});
+                this.dialogFormVisibleCatastrophe = false;
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            });
+          } else{  // 通过
+            this.$http.post("api/claim/createWorksheet",Object.assign(this.fhSheet2Params,this.bigDisaster2,{processId:this.chooseRow.processId,createdBy:this.$store.state.userName,closedId:this.$store.state.userName})).then(res => {
+              if(res.status == 200 && res.data.code==200){
+                this.$message({message:res.data.message,type: 'success'});
+                this.dialogFormVisibleCatastrophe = false;
+              } else {
+                this.$message.error(res.data.message);
+              }
+            });
+          }
+          
         } 
       })
     },
@@ -1533,13 +1647,22 @@ export default {
         break;
       }
     },
+    rebut(tag){
+      if(tag==1){
+
+      } else{
+
+      }
+    },
     reset(tag){   
       if(tag=='bigDisaster'){  // 巨灾重置
         if(this.tabsFlag==1){
           for(let k in this.bigDisaster){this.bigDisaster[k]=null;}
           this.bigDisaster.taWorksheetDO = {};
+          this.bigDisaster.claimSort = '0';
         } else{
           for(let k in this.bigDisaster2){this.bigDisaster2[k]=null;}
+          this.bigDisaster2.claimSort = '1';
         }
       } else{  // cleanCut重置
 
@@ -2451,15 +2574,13 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          this.$http
-            .post("api/anyShare/fileOperation/deleteFilesForPage", {
+          this.$http.post("api/anyShare/fileOperation/deleteFilesForPage", {
               docPath: row.docPath,
               docName: row.docName,
               processId: this.chooseRow.processId,
               actOperator: this.$store.state.userName
             })
             .then(res => {
-              
               if (res.status === 200 && res.data.errorCode == 1) {
                 this.$http
                   .get(`api/worksheet/wSEntry/edit/${this.chooseRow.processId}`)
