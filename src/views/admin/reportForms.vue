@@ -82,6 +82,9 @@
         },{
           name:'账单流程汇总报表',
           type:'7'
+        },{
+          name:'修正账单统计表',
+          type:'8'
         }],
         ReportFormArrs:[{
           name:'结算Process汇总报表',
