@@ -1764,6 +1764,13 @@ export default {
       };
     },
   created(){
+    if(this.$route.query.tag === 'payment'){
+      this.listData.push({
+        a:'全额付款',
+        b:'',
+        c:'fullPaymentFlag'
+      })
+    }
     this.getJson();
     sessionStorage.setItem('data',JSON.stringify({}));
     // this.getJson(); 9.3注释
@@ -1778,6 +1785,7 @@ export default {
       this.listData.forEach(el=>{
         el['b'] = this.row[el['c']];
         if(el['a']=='任务来源'){ el["b"] = this.nameList[this.row[el["c"]]]; }
+        if(el['a']=='全额付款'){ el["b"] = this.row[el["c"]]==1?'是':'否'; }
       })
     }
   },

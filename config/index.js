@@ -19,8 +19,8 @@ module.exports = {
         target: cip.apiUrl,
         changOrigin: true, //允许跨域
         pathRewrite: {
-          // "^/api": "/ta_server" //请求的时候使用这个api就可以 网关需要
-          "^/api": ""  // 不走网关时用的
+          "^/api": "/ta_server" //请求的时候使用这个api就可以 网关需要
+          // "^/api": ""  // 不走网关时用的
         }
       }, 
       "/loginApi": {

@@ -132,7 +132,6 @@
         </el-pagination>
       </div>
     </div>
-    
     <el-dialog :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="modal" width="432px">
       <el-form :label-position="labelPosition" label-width="140px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
         <el-form-item label="结付公司">
@@ -319,7 +318,6 @@
       
 
     </el-dialog>
- 
     <el-dialog :title="title" :visible.sync="dialogFormVisible3" :close-on-click-modal="modal" class="SwitchingMode">
       <el-form label-width="120px">
         <el-form-item label="收件人" v-show="title==='邮件通知'" style="width:100%">
