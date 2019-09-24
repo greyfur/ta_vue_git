@@ -885,10 +885,10 @@
         <el-button size="small" type="primary" plain @click="confirm" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="巨灾录入" :visible.sync="dialogFormVisibleCatastrophe" :close-on-click-modal="modal" width="1300px">
+    <el-dialog title="巨灾录入" :visible.sync="dialogFormVisibleCatastrophe" :close-on-click-modal="modal" width="1400px">
       <el-tabs v-model="tabsFlag">
         <el-tab-pane label="NEW CLAIM" name="1">
-          <el-form label-width="190px" :model="bigDisaster" ref="bigDisaster" :rules="rules1" :label-position="labelPosition" class="catastrophe">
+          <el-form label-width="210px" :model="bigDisaster" ref="bigDisaster" :rules="rules1" :label-position="labelPosition" class="catastrophe">
             <el-form-item prop="businessId" label="Business ID">
               <el-select v-model="bigDisaster.businessId" filterable placeholder="please choose" @change="businessChange('1',bigDisaster.businessId)">
                 <el-option v-for="(item,i) in businessList" :key="i" :label="item.indentifier" :value="i"></el-option>
@@ -901,12 +901,12 @@
             </el-form-item>
             <el-form-item prop="section" label="Section">
               <el-select v-model="bigDisaster.section" filterable placeholder="please choose">
-                <el-option v-for="(item,i) in businessList" :key="i" :label="item.section" :value="item.section"></el-option>
+                <el-option v-for="(item,i) in sectionList" :key="i" :label="item.section" :value="item.section"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item prop="claimName" label="Claim's Name"><el-input v-model="bigDisaster.claimName" placeholder="please enter"></el-input></el-form-item>
-            <el-form-item prop="lossDateStart" label="Date of Loss From"><el-date-picker value-format="timestamp" v-model="bigDisaster.lossDateStart" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-            <el-form-item prop="lossDateEnd" label="Date of Loss To"><el-date-picker value-format="timestamp" v-model="bigDisaster.lossDateEnd" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+            <el-form-item prop="lossDateStart" label="Date of Loss From"><el-date-picker @change="riskChange" value-format="timestamp" v-model="bigDisaster.lossDateStart" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+            <el-form-item prop="lossDateEnd" label="Date of Loss To"><el-date-picker @change="riskChange" value-format="timestamp" v-model="bigDisaster.lossDateEnd" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
             <!-- 以下这俩在复核不显示 -->
             <el-form-item :prop="$route.query.tag === 'billEntry'?'plcyStartDate':''" v-show="$route.query.tag === 'billEntry'" label="Original Policy Period From"><el-date-picker value-format="timestamp" :disabled="claimBasisFlag" v-model="bigDisaster.plcyStartDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
             <el-form-item :prop="$route.query.tag === 'billEntry'?'plcyEndDate':''" v-show="$route.query.tag === 'billEntry'" label="Original Policy Period To"><el-date-picker value-format="timestamp" :disabled="claimBasisFlag" v-model="bigDisaster.plcyEndDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
@@ -920,7 +920,7 @@
                 <el-option v-for="(item,i) in causeOfLossList" :key="i" :label="item.name" :value="item.code"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item prop="advisedDate" label="Advise Date"><el-date-picker value-format="timestamp" v-model="bigDisaster.advisedDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+            <el-form-item prop="advisedDate" label="Advise Date"><el-date-picker @change="riskChange" value-format="timestamp" v-model="bigDisaster.advisedDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
             <el-form-item prop="riskEvnt" label="Claim Risk Event Indicator"><!-- R  E -->
               <el-select v-model="bigDisaster.riskEvnt" filterable placeholder="please choose">
                 <el-option v-for="item in [{a:'Risk',b:'R'},{a:'Event',b:'E'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
@@ -947,7 +947,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="INCURRED CLAIM" name="2">
-          <el-form label-width="140px" :model="bigDisaster2" ref="bigDisaster2" :rules="rules2" :inline="true" class="catastrophe">
+          <el-form label-width="160px" :model="bigDisaster2" ref="bigDisaster2" :rules="rules2" :inline="true" class="catastrophe">
             <el-form-item label="Claim ID" prop="claimIndex">
               <el-select v-model="bigDisaster2.claimIndex" filterable placeholder="please choose" @change="claimChange(bigDisaster2.claimIndex)">
                 <el-option v-for="(item,i) in claimList" :key="i" :label="item.lossNo" :value="i"></el-option>
@@ -1087,6 +1087,7 @@ export default {
       makeDocNum:0,
       claimInfoDO:{},//这个数据是用来提交的时候，传给后端用bigDisaster2  
       headlinelossList2:[],
+      sectionList:[],
       businessList2:[],
       businessList3:[],
       rmCurrencyList:[],
@@ -1368,6 +1369,38 @@ export default {
     this.getClaimInfo();
   },
   methods: {
+    riskChange(){  // 出险起期    lossDateStart出险起期 lossDateEnd出险止期
+      // 3)若出险日期起期晚于当前日期，则弹出提示框“出险日期不允许晚于当前日期！”。
+      if(this.bigDisaster.lossDateStart){
+        if(this.bigDisaster.lossDateStart<new Date().getTime()){
+          this.$message.error('出险日期不允许晚于当前日期！');
+          this.bigDisaster.lossDateStart = null;
+        }
+      }
+      // 2)若出险日期 起期 不在 原保单 起止期 内，则弹出提示框“出险日期起期不在原保单起止期内！”。
+      //  plcyStartDate plcyEndDate
+      if(this.bigDisaster.plcyStartDate && this.bigDisaster.plcyEndDate && this.bigDisaster.lossDateStart){
+        if(this.bigDisaster.lossDateStart<this.bigDisaster.plcyStartDate || this.bigDisaster.lossDateStart>this.bigDisaster.plcyEndDate){
+          this.$message.error('出险日期起期不在原保单起止期内！');
+          this.bigDisaster.lossDateStart = null;
+        }
+      }
+      // 1)若出险日期 止期 早于 出险日期 起期 ，则弹出提示框“出险日期止期应晚于出险日期起期！”。
+      if(this.bigDisaster.lossDateEnd && this.bigDisaster.lossDateStart){
+        if(this.bigDisaster.lossDateEnd<this.bigDisaster.lossDateStart){
+          this.this.bigDisaster.lossDateEnd = null;
+          this.$message.error('出险日期止期应晚于出险日期起期！');
+        }
+      }
+      // 4)若 通知日期advisedDate 不在 出险日期 起期 与 当前日期 之内，则弹出提示框“通知日期应在出险日期与当前日期之内！”。
+      if(this.bigDisaster.advisedDate && this.bigDisaster.lossDateStart){
+        if(this.bigDisaster.advisedDate>this.bigDisaster.lossDateStart || this.bigDisaster.advisedDate<new Date().getTime()){
+          this.$message.error('通知日期应在出险日期与当前日期之内！');
+          this.bigDisaster.advisedDate = null;
+        }
+      }
+
+    },
     numfilter(val,tag){    
       if(tag=='ibnr'){
         if(Number(val)=='NaN' || Number(val)<0){
@@ -1379,16 +1412,6 @@ export default {
         let filterVal = Number(val).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
         this.bigDisaster2[tag] = filterVal=='NaN'?'':filterVal;
       
-    },
-    get_thousand_num(num) {
-      return (num || 0).toString().replace(/\d+/, function (n) {
-          var len = n.length;
-          if (len % 3 === 0) {
-              return n.replace(/(\d{3})/g, ',$1').slice(1);
-          } else {
-              return n.slice(0, len % 3) + n.slice(len % 3).replace(/(\d{3})/g, ',$1');
-          }
-      });
     },
     getClaimInfo(){
       // currName: "中路交通财险"
@@ -1527,7 +1550,6 @@ export default {
             this.bigDisaster.plcyEndDate = new Date(this.insuredPeriodList[0]['insrdPeriodEnd']).getTime();
           }  
         });
-
         this.$http.post("api/claim/getPcyMessage",{fkSoc:this.bigDisaster.fkSoc}).then(res => {
           if(res.status == 200 && res.data.code==200){
             // claimBasis==RISKATT  支持修改原保单起期，否则不允许修改；
@@ -1535,6 +1557,13 @@ export default {
             console.log(this.claimBasisFlag,'this.claimBasisFlag');         
           }  
         });
+
+        this.$http.post("api/claim/getBusinessMessage",{fkSoc:this.bigDisaster.fkSoc}).then(res => {
+          console.log(res,'getBusinessMessage');
+          if(res.status == 200 && res.data.code==200){
+            this.sectionList=[...res.data.data.rows,...this.businessList];
+          }  
+      });
       }
     },
     async catastrophe(tag){ 
@@ -1657,9 +1686,12 @@ export default {
               }
             }
           }
-
-          return false;
           if(this.$route.query.tag === 'billEntry'){  // 提交复核
+            // 校验 To be Paid、Outstanding、IBNR必须输入任一金额，否则弹出提示框“To be Paid、Outstanding、IBNR不允许均为空！”。
+            if(!this.bigDisaster2.paid && !this.bigDisaster2.outStanding && !this.bigDisaster2.ibnr){
+              this.$message.error('To be Paid、Outstanding、IBNR不允许均为空！');
+              return false;
+            }
             let params = Object.assign(this.claimInfoDO,this.bigDisaster2,{processId:this.chooseRow.processId,createdBy:this.$store.state.userName});
             let taWorksheetDO={
               bl:null,
@@ -1755,8 +1787,9 @@ export default {
           this.bigDisaster2.claimSort = '1';
         }
       } else{  // cleanCut重置
-
-      }
+        for(let k in this.cleanCut){this.cleanCut[k]=null;}
+          this.cleanCut.isPending = 1;
+        }
     },
     onCleanCut(tag){
       if(this.$route.query.tag === 'billEntry'){   // 操作页面
@@ -2845,9 +2878,13 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
 </script>
 
 <style scoped>
+.el-form-item__label{
+  white-space: nowrap;
+}
 .catastrophe .el-form-item{
   width: 32%;
   display: inline-block;
+  margin-bottom: 40px;
 }
 .catastrophe .el-form-item .el-select{
   width: 220px;
