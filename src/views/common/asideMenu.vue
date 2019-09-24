@@ -23,8 +23,8 @@
           :default-active="$route.name"
           class="el-menu-vertical-demo"
           background-color="#005C8D"
+          @select='handleSelect'
           text-color="#fff"
-          @open="handleOpen"
           active-text-color="#fff">
           <el-submenu v-if="$route.name==='detailEntry'|| $route.name==='detailCred'||$route.name==='detailPay'" style="background:#005C8D !important;" key="hyd" index="hyd">
             <template slot="title">
@@ -48,12 +48,11 @@
               <i style="color:#fff;" :class="iconEmnu[el.name]"></i>
               <span>{{el.title}}</span>
             </template>
-              <el-menu-item v-for="(item,i) in el.children" :key="i" :index="item.name" :class="{'is-active':$route.name == item.name}">
-                <el-badge :value="item.redPoint" class="item" :hidden="item.redPoint==0">
-                  <div>{{item.title}}</div>
-                  <!-- <span slot="title"></span> -->
-                </el-badge>
-              </el-menu-item>
+            <el-menu-item v-for="(item,i) in el.children" :key="i" :index="item.name" :class="{'is-active':$route.name == item.name}">
+              <el-badge :value="item.redPoint" class="item" :hidden="item.redPoint==0">
+                <div>{{item.title}}</div>
+              </el-badge>
+            </el-menu-item>
           </el-submenu>
         </el-menu>
       </div>
@@ -226,10 +225,8 @@ import { mapState } from "vuex";
     // },
     methods: {
       handleSelect(key, keyPath) {
-        this.$router.push({name:key})
-      },
-      handleOpen(){
-
+        console.log('111');
+        // this.$router.push({name:key})
       },
       changeExtend(str){
         if(str==='伸'){
@@ -286,6 +283,9 @@ import { mapState } from "vuex";
   }
 </script>
 <style>
+/* .el-menu--vertical{
+  display: none!important;
+} */
 div.asideMenu::-webkit-scrollbar{
   width:0px;
   height:0px;

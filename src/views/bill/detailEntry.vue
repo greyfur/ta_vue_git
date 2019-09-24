@@ -996,9 +996,9 @@
                 <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="To be Paid"><el-input v-model="bigDisaster2.paid" placeholder="please enter"></el-input></el-form-item>
-            <el-form-item label="Outstanding"><el-input v-model="bigDisaster2.outStanding" placeholder="please enter"></el-input></el-form-item>
-            <el-form-item label="IBNR"><el-input v-model="bigDisaster2.ibnr" placeholder="please enter"></el-input></el-form-item>
+            <el-form-item label="To be Paid"><el-input @blur="numfilter(bigDisaster2.paid,'paid')" v-model="bigDisaster2.paid" placeholder="please enter"></el-input></el-form-item>
+            <el-form-item label="Outstanding"><el-input @blur="numfilter(bigDisaster2.outStanding,'outStanding')" v-model="bigDisaster2.outStanding" placeholder="please enter"></el-input></el-form-item>
+            <el-form-item label="IBNR"><el-input @blur="numfilter(bigDisaster2.ibnr,'ibnr')" v-model="bigDisaster2.ibnr" placeholder="please enter"></el-input></el-form-item>
             <el-form-item v-show="$route.query.tag === 'billEntry'" style="width: 100%;text-align: right;padding-right: 50px;">
               <el-button size="small" @click="reset('bigDisaster')">重置</el-button>
               <el-button type="primary" plain @click="catastropheSubmite2('bigDisaster2')">提交复核</el-button>
@@ -1368,6 +1368,28 @@ export default {
     this.getClaimInfo();
   },
   methods: {
+    numfilter(val,tag){    
+      if(tag=='ibnr'){
+        if(Number(val)=='NaN' || Number(val)<0){
+          this.bigDisaster2[tag] = '';
+          this.$message.error('请输入正数');
+          return false;
+        }
+      } 
+        let filterVal = Number(val).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        this.bigDisaster2[tag] = filterVal=='NaN'?'':filterVal;
+      
+    },
+    get_thousand_num(num) {
+      return (num || 0).toString().replace(/\d+/, function (n) {
+          var len = n.length;
+          if (len % 3 === 0) {
+              return n.replace(/(\d{3})/g, ',$1').slice(1);
+          } else {
+              return n.slice(0, len % 3) + n.slice(len % 3).replace(/(\d{3})/g, ',$1');
+          }
+      });
+    },
     getClaimInfo(){
       // currName: "中路交通财险"
       // currNo: "BP50276"
@@ -1428,7 +1450,9 @@ export default {
           this.cleanCut.fkSoc = this.businessList3[0]['fkSoc'];
           this.cleanCut.plcyStartDate = new Date(this.businessList3[0]['insrdPeriodStart']).getTime();
           this.cleanCut.plcyEndDate = new Date(this.businessList3[0]['insrdPeriodEnd']).getTime();
-        }  
+        }  else{
+          this.$message.error(res.data.message+'无数据返回，流程');
+        }
       });
     },
     claimChange(val){
@@ -1446,7 +1470,9 @@ export default {
             this.bigDisaster2.section=this.businessList2[0]['sectionName'];
             this.bigDisaster2.fkSoc = this.businessList2[0]['fkSoc'];
             this.bigDisaster2.insuredPeriod=0;
-          }  
+          } else{
+            this.$message.error(res.data.message+'无数据返回，流程');
+          }
         });
       }
     },
@@ -1623,13 +1649,16 @@ export default {
           if(str && str.length){
             let i,n=0;
             for (i = 0;i < str.length;i++){
-              if(str.charCodeAt(i)<=256){ n+=2; }else{ n+=1; }
+              if(/^[\u4e00-\u9fa5]{1}/.test(str.substr(i,1))){ n+=2; }else{ n+=1; }
+              console.log(n,'n');
               if(n>20){
                 this.$message.error('BP备注信息不能超过20个字符，中文为2个字符');
                 return false;
               }
             }
           }
+
+          return false;
           if(this.$route.query.tag === 'billEntry'){  // 提交复核
             let params = Object.assign(this.claimInfoDO,this.bigDisaster2,{processId:this.chooseRow.processId,createdBy:this.$store.state.userName});
             let taWorksheetDO={
