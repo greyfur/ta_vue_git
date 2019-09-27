@@ -143,282 +143,226 @@
       </el-col>
       <!-- padding-bottom:10px; -->
       <el-col :span="16" :class="changeLayoutflag?'':'changeLayoutflags'">
-          <ul class="rotuta" style="background:#fff;" v-if="activeName==='first'">
-            <a href="../../../static/Preview/index.html" target="_blank"><li><i class="iconfont iconquanping" style="color:#000;font-size:18px;"></i></li></a>
-            <li @click="rotateMua"><i class="iconfont iconshunshizhenxuanzhuan" style="color:#000;font-size:18px;"></i></li>
-            <li @click="rotateMuas"><i class="iconfont iconnishizhenxuanzhuan" style="color:#000;font-size:18px;"></i></li>
-          </ul>
-            <div class="rotuta" v-if="activeName==='second'">
-              <el-checkbox-group v-model="wsCheckList" @change="onWsCheck" :disabled="isHover" class="rotuta">
-                <el-checkbox label="C">Closed</el-checkbox>
-                <el-checkbox label="O">Open</el-checkbox>
-                <el-checkbox label="I">Inactive</el-checkbox>
-              </el-checkbox-group>
-            </div>
-          <el-tabs v-model="activeName" :class="changeLayoutflag?'':'changeLayoutflags'" style="background:#fff;margin-top:4px;">
-            <el-tab-pane
-              label="文档预览"
-              name="first"
-              style="padding-left:10px;"
-            >
-            <div class="right" :class="changeLayoutflag?'':'changeLayoutflags'">
-            <!-- <div class="titleSearch detailSearch" style="background:#fff;">
-              <p>
-                <el-dropdown placement="top-start">
-                  <span class="el-dropdown-link" style="margin-right:20px"><i class="iconfont iconcaozuoliebiao"></i></span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>
-                    <a href="../../../static/Preview/index.html" target="_blank"><span>全屏</span></a>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <span @click="rotateMua">顺时针旋转</span>
-                    </el-dropdown-item>
-                    <el-dropdown-item> 
-                      <span @click="rotateMuas">逆时针旋转</span>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </p>
-            </div> -->
+        <ul class="rotuta" style="background:#fff;" v-if="activeName==='first'">
+          <a href="../../../static/Preview/index.html" target="_blank"><li><i class="iconfont iconquanping" style="color:#000;font-size:18px;"></i></li></a>
+          <!-- <li @click="onRotate('s')"><i class="iconfont iconshunshizhenxuanzhuan" style="color:#000;font-size:18px;"></i></li>
+          <li @click="onRotate('n')"><i class="iconfont iconnishizhenxuanzhuan" style="color:#000;font-size:18px;"></i></li> -->
+          <li @click="rotateMua"><i class="iconfont iconshunshizhenxuanzhuan" style="color:#000;font-size:18px;"></i></li>
+          <li @click="rotateMuas"><i class="iconfont iconnishizhenxuanzhuan" style="color:#000;font-size:18px;"></i></li>
+        </ul>
+        <div class="rotuta" v-if="activeName==='second'">
+          <el-checkbox-group v-model="wsCheckList" @change="onWsCheck" :disabled="isHover" class="rotuta">
+            <el-checkbox label="C">Closed</el-checkbox>
+            <el-checkbox label="O">Open</el-checkbox>
+            <el-checkbox label="I">Inactive</el-checkbox>
+          </el-checkbox-group>
+        </div>
+        <el-tabs v-model="activeName" :class="changeLayoutflag?'':'changeLayoutflags'" style="background:#fff;margin-top:4px;">
+          <el-tab-pane label="文档预览" name="first" style="padding-left:10px;">
+          <div class="right" :class="changeLayoutflag?'':'changeLayoutflags'">
             <div class="browseDoc browseDocs" :class="changeLayoutflag?'':'changeLayoutflags'">
-              <iframe src="../../../static/Preview/index.html" id="iframeId" name="ifrmname" ref="mapFrame" style="width:100%;height:100%" frameborder="0"></iframe>
+              <iframe v-if="!isPdf" src="../../../static/Preview/index.html" id="iframeId" name="ifrmname" ref="mapFrame" style="width:100%;height:100%" frameborder="0"></iframe>
+              <iframe v-if="isPdf" id='previewPdf' :src="'../../../static/pdf/web/viewer.html?file=' + fileUrl" style="width:100%;height:100%" frameborder="0"></iframe>
             </div>
-            </div>
-
-            <!-- <div class="right" v-html="item.content"></div> -->
-              <!-- <div class="titleSearch detailSearch" style="background:#fff;"> -->
-              <!-- <i style="margin-right:8px;" class="el-icon-arrow-down"></i> 9.2去掉无用icon -->
-              <!-- <div>
-                文档预览
+          </div>
+          </el-tab-pane>
+          <el-tab-pane name="second" v-if="changeLayoutflags" label="账单信息">
+          <el-row >
+            <el-col :span="24" style="padding:0 16px;margin-top:10px;height:100%;">
+              <div class="titleSearch detailSearch" style="margin-bottom:10px;">
               </div>
-              <p>
-                <el-dropdown placement="top-start">
-                  <span class="el-dropdown-link" style="margin-right:20px"><i class="iconfont iconcaozuoliebiao"></i></span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item> -->
-                      <!-- <el-button size="mini" :disabled="isHover">
-                      <i style="margin-right:8px;font-size:8px;" class="iconfont iconGroup26"></i> -->
-                    <!-- <a href="../../../static/Preview/index.html" target="_blank"><span>全屏</span></a> -->
-                    <!-- </el-button> -->
-                    <!-- </el-dropdown-item>
-                    <el-dropdown-item>
-                      <span @click="rotateMua">顺时针旋转</span> -->
-                      <!-- <el-button class="rotate" size="mini" @click="rotateMua" style="">顺时针旋转</el-button> -->
-                    <!-- </el-dropdown-item>
-                    <el-dropdown-item> 
-                      <span @click="rotateMuas">逆时针旋转</span> -->
-                      <!-- <el-button class="rotate" size="mini" @click="rotateMuas">逆时针旋转</el-button> -->
-                    <!-- </el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </p>
-            </div>
-            <div class="browseDoc">
-              <iframe src="../../../static/Preview/index.html" id="iframeId" name="ifrmname" ref="mapFrame" style="width:100%;height:100%" frameborder="0"></iframe>
-            </div> -->
-            </el-tab-pane>
-            <el-tab-pane
-              name="second"
-              v-if="changeLayoutflags"
-              label="账单信息"
-            >
-            <el-row >
-              <el-col :span="24" style="padding:0 16px;margin-top:10px;height:100%;">
-                <div class="titleSearch detailSearch" style="margin-bottom:10px;">
-                
-                </div>
-                <el-table
-                  v-show="searchFlag3"
-                  :data="SICSData"
-                  border
-                  width="100%"
-                  height="88%"
-                  :header-row-class-name="StableClass">
-                  <el-table-column type="index" width="50" align="center"></el-table-column>
-                  <el-table-column label="账单号" width="160" align="center">
-                    <template slot-scope="scope">
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        :content="scope.row.wsId"
-                        placement="top-start"
-                      >
-                        <span class="abbreviate">{{scope.row.wsId}}</span>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="wsCurrency" label="币制" width="80" align="center"></el-table-column>
-                  <el-table-column label="金额" align="right" width="120">
-                    <template slot-scope="scope">
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
-                        placement="top-start">
-                        <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="业务编号" align="center" width="110">
-                    <template slot-scope="scope">
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        :content="scope.row.businessId"
-                        placement="top-start"
-                      >
-                        <span class="abbreviate">{{scope.row.businessId}}</span>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="SECTION" width="110" align="center">
-                    <template slot-scope="scope">
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        :content="scope.row.section"
-                        placement="top-start"
-                      >
-                        <span class="abbreviate">{{scope.row.section}}</span>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="uwYear" label="业务年度" align="center"></el-table-column>
-                  <el-table-column label="NOTE" align="center">
-                    <template slot-scope="scope">
-                      <el-tooltip class="item" effect="dark" :content="scope.row.note" placement="top-start">
-                        <span class="abbreviate">{{scope.row.note}}</span>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="wsPeriod" label="账单期" width="120" align="center"></el-table-column>
-                  <el-table-column label="账单标题" align="center">
-                    <template slot-scope="scope">
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        :content="scope.row.wsTitle"
-                        placement="top-start"
-                      >
-                        <span class="abbreviate">{{scope.row.wsTitle}}</span>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="wsStatus" label="账单状态" width="100" align="center">
-                    <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
-                  </el-table-column>
-                  <el-table-column prop="registBy" label="录入人" width="130" align="center"></el-table-column>
-                  <el-table-column prop="closedBy" label="复核人" width="130" align="center"></el-table-column>
-                  <!-- <el-table-column label="驳回原因类型" width="160" align="center">
-                    <template slot-scope="scope">
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        :content="scope.row.rejectType"
-                        placement="top-start">
-                        <span class="abbreviate">{{scope.row.rejectType}}</span>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="修改意见" align="left">
-                    <template slot-scope="scope">
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        :content="scope.row.remark"
-                        placement="top-start">
-                        <span class="abbreviate">{{scope.row.remark}}</span>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column> -->
-                  <el-table-column width="180" label="修改意见" align="center">
-                    <template slot-scope="scope">
-                      <!-- <el-tooltip class="item" effect="dark"  :content="scope.row.rejectType&&scope.row.remark?scope.row.remark+'-'+scope.row.rejectType:''" placement="top-start"> -->
-                      <el-tooltip class="item" effect="dark"  :content="scope.row.remark+'-'+scope.row.rejectType" placement="top-start">
-                        <span class="abbreviate">{{scope.row.rejectType}}-{{scope.row.remark}}</span>
-                        <!-- <span class="abbreviate" v-if="scope.row.rejectType&&scope.row.remark">{{scope.row.rejectType}}-{{scope.row.remark}}</span>
-                        <span class="abbreviate" v-else></span> -->
-                        <!-- 8.21 v-else有问题  -->
-                      </el-tooltip>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="附件名称" align="center">
-                    <template slot-scope="scope">
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        :content="scope.row.docName"
-                        placement="top-start">
-                        <span :class="{'smallHand BlueColor':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="registAt" label="录入时间" width="160" align="center"></el-table-column>
-                  <el-table-column prop="closedAt" label="复核时间" width="160" align="center"></el-table-column>
-                  <!-- <el-table-column label="任务类型">
-                    <template slot-scope="scope">
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        :content="scope.row.businessType"
-                        placement="top-start"
-                      >
-                        <span class="abbreviate">{{scope.row.businessType}}</span>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column> -->
-                  <!-- <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column> -->
-                  <!-- <el-table-column label="分出公司" width="120">
-                    <template slot-scope="scope">
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        :content="scope.row.cedentCode+'-'+scope.row.cedentName"
-                        placement="top-start"
-                      >
-                        <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column> -->
-                  <!-- <el-table-column label="经纪公司" width="120">
-                    <template slot-scope="scope">
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        :content="scope.row.brokerCode+'-'+scope.row.brokerName"
-                        placement="top-start"
-                      >
-                        <span class="abbreviate">{{scope.row.brokerCode}}-{{scope.row.brokerName}}</span>
-                      </el-tooltip>
-                    </template>
-                  </el-table-column> -->
-                  <!-- <el-table-column prop="wsType" label="账单类型"></el-table-column> -->
-                  <!-- <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column> -->
-                  <!-- <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column> -->
-                  <!-- <el-table-column prop="dept" label="经营机构"></el-table-column> -->
-                  <el-table-column fixed="right" label="操作" width="80" align="center">
-                    <template slot-scope="scope">
-                      <el-dropdown placement="top-start">
-                        <span class="el-dropdown-link"><i class="iconfont iconcaozuoliebiao"></i></span>
-                        <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item>
-                            <span class="blueColor" @click.stop="openSics(scope.row)">打开SICS</span>
-                          </el-dropdown-item>
-                          <el-dropdown-item>
-                            <span class="blueColor" v-show="$route.query.tag == 'billCheck'" @click.stop="submit(2,'添加意见',scope.row.wsId)">添加意见</span>
-                          </el-dropdown-item>
-                          <el-dropdown-item> 
-                            <span class="blueColor" v-show="scope.row.wsStatus=='Closed' && $route.query.tag !== 'billCheck' && $route.query.tag !== 'billProcess'" @click.stop="reverse(scope.row)">Reverse</span>
-                          </el-dropdown-item>
-                        </el-dropdown-menu>
-                      </el-dropdown>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </el-col>
-            </el-row>
-            </el-tab-pane>
-          </el-tabs> 
+              <el-table
+                v-show="searchFlag3"
+                :data="SICSData"
+                border
+                width="100%"
+                height="88%"
+                :header-row-class-name="StableClass">
+                <el-table-column type="index" width="50" align="center"></el-table-column>
+                <el-table-column label="账单号" width="160" align="center">
+                  <template slot-scope="scope">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      :content="scope.row.wsId"
+                      placement="top-start"
+                    >
+                      <span class="abbreviate">{{scope.row.wsId}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="wsCurrency" label="币制" width="80" align="center"></el-table-column>
+                <el-table-column label="金额" align="right" width="120">
+                  <template slot-scope="scope">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      :content="Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')"
+                      placement="top-start">
+                      <span class="abbreviate">{{Number(scope.row.wsAmount).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+                <el-table-column label="业务编号" align="center" width="110">
+                  <template slot-scope="scope">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      :content="scope.row.businessId"
+                      placement="top-start"
+                    >
+                      <span class="abbreviate">{{scope.row.businessId}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+                <el-table-column label="SECTION" width="110" align="center">
+                  <template slot-scope="scope">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      :content="scope.row.section"
+                      placement="top-start"
+                    >
+                      <span class="abbreviate">{{scope.row.section}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="uwYear" label="业务年度" align="center"></el-table-column>
+                <el-table-column label="NOTE" align="center">
+                  <template slot-scope="scope">
+                    <el-tooltip class="item" effect="dark" :content="scope.row.note" placement="top-start">
+                      <span class="abbreviate">{{scope.row.note}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="wsPeriod" label="账单期" width="120" align="center"></el-table-column>
+                <el-table-column label="账单标题" align="center">
+                  <template slot-scope="scope">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      :content="scope.row.wsTitle"
+                      placement="top-start"
+                    >
+                      <span class="abbreviate">{{scope.row.wsTitle}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="wsStatus" label="账单状态" width="100" align="center">
+                  <!-- <template slot-scope="scope">{{scope.row.wsStatus=='O'?'Open':'Close'}}</template> -->
+                </el-table-column>
+                <el-table-column prop="registBy" label="录入人" width="130" align="center"></el-table-column>
+                <el-table-column prop="closedBy" label="复核人" width="130" align="center"></el-table-column>
+                <!-- <el-table-column label="驳回原因类型" width="160" align="center">
+                  <template slot-scope="scope">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      :content="scope.row.rejectType"
+                      placement="top-start">
+                      <span class="abbreviate">{{scope.row.rejectType}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+                <el-table-column label="修改意见" align="left">
+                  <template slot-scope="scope">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      :content="scope.row.remark"
+                      placement="top-start">
+                      <span class="abbreviate">{{scope.row.remark}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column> -->
+                <el-table-column width="180" label="修改意见" align="center">
+                  <template slot-scope="scope">
+                    <!-- <el-tooltip class="item" effect="dark"  :content="scope.row.rejectType&&scope.row.remark?scope.row.remark+'-'+scope.row.rejectType:''" placement="top-start"> -->
+                    <el-tooltip class="item" effect="dark"  :content="scope.row.remark+'-'+scope.row.rejectType" placement="top-start">
+                      <span class="abbreviate">{{scope.row.rejectType}}-{{scope.row.remark}}</span>
+                      <!-- <span class="abbreviate" v-if="scope.row.rejectType&&scope.row.remark">{{scope.row.rejectType}}-{{scope.row.remark}}</span>
+                      <span class="abbreviate" v-else></span> -->
+                      <!-- 8.21 v-else有问题  -->
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+                <el-table-column label="附件名称" align="center">
+                  <template slot-scope="scope">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      :content="scope.row.docName"
+                      placement="top-start">
+                      <span :class="{'smallHand BlueColor':scope.row.suffixFlag}" class="abbreviate" @click="docView(scope.row)">{{scope.row.docName}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="registAt" label="录入时间" width="160" align="center"></el-table-column>
+                <el-table-column prop="closedAt" label="复核时间" width="160" align="center"></el-table-column>
+                <!-- <el-table-column label="任务类型">
+                  <template slot-scope="scope">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      :content="scope.row.businessType"
+                      placement="top-start"
+                    >
+                      <span class="abbreviate">{{scope.row.businessType}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column> -->
+                <!-- <el-table-column prop="receiptDate" label="收到账单日期" width="120"></el-table-column> -->
+                <!-- <el-table-column label="分出公司" width="120">
+                  <template slot-scope="scope">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      :content="scope.row.cedentCode+'-'+scope.row.cedentName"
+                      placement="top-start"
+                    >
+                      <span class="abbreviate">{{scope.row.cedentCode}}-{{scope.row.cedentName}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column> -->
+                <!-- <el-table-column label="经纪公司" width="120">
+                  <template slot-scope="scope">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      :content="scope.row.brokerCode+'-'+scope.row.brokerName"
+                      placement="top-start"
+                    >
+                      <span class="abbreviate">{{scope.row.brokerCode}}-{{scope.row.brokerName}}</span>
+                    </el-tooltip>
+                  </template>
+                </el-table-column> -->
+                <!-- <el-table-column prop="wsType" label="账单类型"></el-table-column> -->
+                <!-- <el-table-column prop="businessOrigin" label="Business Origin" width="130"></el-table-column> -->
+                <!-- <el-table-column prop="baseCompany" label="Base Company" width="120"></el-table-column> -->
+                <!-- <el-table-column prop="dept" label="经营机构"></el-table-column> -->
+                <el-table-column fixed="right" label="操作" width="80" align="center">
+                  <template slot-scope="scope">
+                    <el-dropdown placement="top-start">
+                      <span class="el-dropdown-link"><i class="iconfont iconcaozuoliebiao"></i></span>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>
+                          <span class="blueColor" @click.stop="openSics(scope.row)">打开SICS</span>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                          <span class="blueColor" v-show="$route.query.tag == 'billCheck'" @click.stop="submit(2,'添加意见',scope.row.wsId)">添加意见</span>
+                        </el-dropdown-item>
+                        <el-dropdown-item> 
+                          <span class="blueColor" v-show="scope.row.wsStatus=='Closed' && $route.query.tag !== 'billCheck' && $route.query.tag !== 'billProcess'" @click.stop="reverse(scope.row)">Reverse</span>
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-col>
+          </el-row>
+          </el-tab-pane>
+        </el-tabs> 
       </el-col>
     </el-row>
     <el-row v-if="changeLayoutflag">
@@ -818,6 +762,33 @@
         <el-button size="small" type="primary" plain @click="dialogFormVisible3 = false" style="padding:0 16px;">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="title" :visible.sync="dialogFormVisible0926" :close-on-click-modal="modal" width="782px">
+      <el-form label-position="right" label-width="140px">
+        <el-form-item label="驳回原因类型" v-show="title==='驳回原因'">
+          <el-select v-model="opinion" placeholder="请选择" style="width:100%" @change="yijian">
+            <el-option v-for="item in BHoptions" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="输入悬停原因" v-show="title==='悬停'">
+          <el-input type="textarea" :rows="2" placeholder="请输入原因" v-model.trim="pendingReason"></el-input>
+        </el-form-item>
+        <el-form-item label="驳回原因" v-show="title==='驳回原因'">
+          <el-input
+            :disabled="opinion!='其它'"
+            type="textarea"
+            :rows="4"
+            placeholder="请输入原因"
+            v-model="textareaOpinion"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="dialogFormVisible0926 = false">取 消</el-button>
+        <el-button size="small" type="primary" plain @click="change0926" style="padding:0 16px;">确 定</el-button>
+      </div>
+    </el-dialog>
+
     <el-dialog :title="title" :visible.sync="dialogFormVisible5" :close-on-click-modal="modal" width="782px">
       <el-form label-position="right" label-width="140px">
         <el-form-item label="驳回原因类型" v-show="title==='添加意见'">
@@ -889,56 +860,64 @@
       <el-tabs v-model="tabsFlag">
         <el-tab-pane label="NEW CLAIM" name="1">
           <el-form label-width="210px" :model="bigDisaster" ref="bigDisaster" :rules="rules1" :label-position="labelPosition" class="catastrophe">
-            <el-form-item prop="businessId" label="Business ID">
-              <el-select v-model="bigDisaster.businessId" filterable placeholder="please choose" @change="businessChange('1',bigDisaster.businessId)">
-                <el-option v-for="(item,i) in businessList" :key="i" :label="item.indentifier" :value="i"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item prop="insuredPeriod" label="Insured Period">
-              <el-select v-model="bigDisaster.insuredPeriod" filterable placeholder="please choose">
-                <el-option v-for="(item,i) in insuredPeriodList" :key="i" :label="item.insrdPeriodStart+'—'+item.insrdPeriodEnd" :value="i"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item prop="section" label="Section">
-              <el-select v-model="bigDisaster.section" filterable placeholder="please choose">
-                <el-option v-for="(item,i) in sectionList" :key="i" :label="item.section" :value="item.section"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item prop="claimName" label="Claim's Name"><el-input v-model="bigDisaster.claimName" placeholder="please enter"></el-input></el-form-item>
-            <el-form-item prop="lossDateStart" label="Date of Loss From"><el-date-picker @change="riskChange" value-format="timestamp" v-model="bigDisaster.lossDateStart" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-            <el-form-item prop="lossDateEnd" label="Date of Loss To"><el-date-picker @change="riskChange" value-format="timestamp" v-model="bigDisaster.lossDateEnd" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-            <!-- 以下这俩在复核不显示 -->
-            <el-form-item :prop="$route.query.tag === 'billEntry'?'plcyStartDate':''" v-show="$route.query.tag === 'billEntry'" label="Original Policy Period From"><el-date-picker value-format="timestamp" :disabled="claimBasisFlag" v-model="bigDisaster.plcyStartDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-            <el-form-item :prop="$route.query.tag === 'billEntry'?'plcyEndDate':''" v-show="$route.query.tag === 'billEntry'" label="Original Policy Period To"><el-date-picker value-format="timestamp" :disabled="claimBasisFlag" v-model="bigDisaster.plcyEndDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-            <el-form-item prop="causeOfLossGroup" label="Claim Cause Of Loss Group">
-              <el-select v-model="bigDisaster.causeOfLossGroup" filterable placeholder="please choose" @change="lossGroupChange">
-                <el-option v-for="item in [{a:'Accident',b:'ACCIDENT'},{a:'Act of God',b:'ACTOFGOD'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item prop="causeOfLoss" label="Cause Of Loss">
-              <el-select v-model="bigDisaster.causeOfLoss" filterable placeholder="please choose">
-                <el-option v-for="(item,i) in causeOfLossList" :key="i" :label="item.name" :value="item.code"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item prop="advisedDate" label="Advise Date"><el-date-picker @change="riskChange" value-format="timestamp" v-model="bigDisaster.advisedDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-            <el-form-item prop="riskEvnt" label="Claim Risk Event Indicator"><!-- R  E -->
-              <el-select v-model="bigDisaster.riskEvnt" filterable placeholder="please choose">
-                <el-option v-for="item in [{a:'Risk',b:'R'},{a:'Event',b:'E'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Headline Loss ID">
-              <el-select v-model="bigDisaster.headlinelossIndex" filterable placeholder="please choose" @change="headlinelossChange('1',bigDisaster.headlinelossIndex)">
-                <el-option v-for="(item,i) in headlinelossList" :key="i" :label="item.lossCode" :value="i"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Headline Loss Name">
-              <el-select v-model="bigDisaster.headlinelossIndex" filterable placeholder="please choose" disabled>
-                <el-option v-for="(item,i) in headlinelossList" :key="i" :label="item.lossName" :value="i"></el-option>
-              </el-select>
-            </el-form-item>
+            <div class="lineTitle">BUSINESS</div>
+            <div class="Wireframe">
+              <el-form-item prop="businessId" label="Business ID">   
+                <el-select v-model="bigDisaster.businessId" :disabled="disableFlag" filterable placeholder="please choose" @change="businessChange('1',bigDisaster.businessId)">
+                  <el-option v-for="(item,i) in businessList" :key="i" :label="item.identifier" :value="item.identifier"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item prop="insuredPeriod" label="Insured Period">
+                <el-select v-model="bigDisaster.insuredPeriod" :disabled="disableFlag" filterable placeholder="please choose" @change="onInsuredPeriod(bigDisaster.insuredPeriod)">
+                  <el-option v-for="(item,i) in insuredPeriodList" :key="i" :label="item.insrdPeriodStart+'—'+item.insrdPeriodEnd" :value="i"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item prop="sectionIndex" label="Section">
+                <el-select v-model="bigDisaster.sectionIndex" :disabled="disableFlag" filterable placeholder="please choose" @change="sectionChange(bigDisaster.sectionIndex)">
+                  <el-option v-for="(item,i) in sectionList" :key="i" :label="item.section" :value="i"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="lineTitle" style="margin-top:20px">CLAIM</div>
+            <div class="Wireframe">
+              <el-form-item prop="claimName" label="Claim's Name"><el-input :disabled="disableFlag" v-model="bigDisaster.claimName" placeholder="please enter"></el-input></el-form-item>
+              <el-form-item prop="lossDateStart" label="Date of Loss From"><el-date-picker @change="riskChange" :disabled="disableFlag" value-format="timestamp" v-model="bigDisaster.lossDateStart" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+              <el-form-item prop="lossDateEnd" label="Date of Loss To"><el-date-picker @change="riskChange2" :disabled="disableFlag" value-format="timestamp" v-model="bigDisaster.lossDateEnd" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+              <!-- 以下这俩在复核不显示 -->
+              <!-- <el-form-item prop="plcyStartDate" label="Original Policy Period From"><el-date-picker value-format="timestamp" :disabled="claimBasisFlag" v-model="bigDisaster.plcyStartDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+              <el-form-item prop="plcyEndDate" label="Original Policy Period To"><el-date-picker value-format="timestamp" :disabled="claimBasisFlag" v-model="bigDisaster.plcyEndDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item> -->
+              <el-form-item :prop="$route.query.tag === 'billEntry'?'plcyStartDate':''" v-show="$route.query.tag === 'billEntry'" label="Original Policy Period From"><el-date-picker value-format="timestamp" :disabled="claimBasisFlag" v-model="bigDisaster.plcyStartDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+              <el-form-item :prop="$route.query.tag === 'billEntry'?'plcyEndDate':''" v-show="$route.query.tag === 'billEntry'" label="Original Policy Period To"><el-date-picker value-format="timestamp" :disabled="claimBasisFlag" v-model="bigDisaster.plcyEndDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+              <el-form-item prop="causeOfLossGroup" label="Claim Cause Of Loss Group">
+                <el-select v-model="bigDisaster.causeOfLossGroup" :disabled="disableFlag" filterable placeholder="please choose" @change="lossGroupChange">
+                  <el-option v-for="item in [{a:'Accident',b:'ACCIDENT'},{a:'Act of God',b:'ACTOFGOD'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item prop="causeOfLoss" label="Cause Of Loss">
+                <el-select v-model="bigDisaster.causeOfLoss" :disabled="disableFlag" filterable placeholder="please choose">
+                  <el-option v-for="(item,i) in causeOfLossList" :key="i" :label="item.name" :value="item.code"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item prop="advisedDate" label="Advise Date"><el-date-picker :disabled="disableFlag" @change="riskChange" value-format="timestamp" v-model="bigDisaster.advisedDate" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+              <el-form-item prop="riskEvnt" label="Claim Risk Event Indicator"><!-- R  E -->
+                <el-select v-model="bigDisaster.riskEvnt" :disabled="disableFlag" filterable placeholder="please choose">
+                  <el-option v-for="item in [{a:'Risk',b:'R'},{a:'Event',b:'E'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Headline Loss ID">
+                <el-select v-model="bigDisaster.headlinelossIndex" :disabled="disableFlag" filterable placeholder="please choose" @change="headlinelossChange('1',bigDisaster.headlinelossIndex)">
+                  <el-option v-for="(item,i) in headlinelossList" :key="i" :label="item.lossCode" :value="i"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Headline Loss Name">
+                <el-select v-model="bigDisaster.headlinelossIndex" filterable placeholder="please choose" disabled>
+                  <el-option v-for="(item,i) in headlinelossList" :key="i" :label="item.lossName" :value="i"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
             <el-form-item v-show="$route.query.tag === 'billEntry'" style="width: 100%;text-align: right;padding-right: 50px;">
               <el-button size="small" @click="reset('bigDisaster')">重置</el-button>
-              <el-button type="primary" plain @click="catastropheSubmite1('bigDisaster')">提交复核</el-button>
+              <el-button type="primary" plain @click="catastropheSubmite1('bigDisaster')">保存</el-button>
             </el-form-item>
             <el-form-item v-show="$route.query.tag === 'billCheck'" style="width: 100%;text-align: right;padding-right: 50px;">
               <el-button size="small" @click="submit(8)">驳回</el-button>
@@ -948,60 +927,102 @@
         </el-tab-pane>
         <el-tab-pane label="INCURRED CLAIM" name="2">
           <el-form label-width="160px" :model="bigDisaster2" ref="bigDisaster2" :rules="rules2" :inline="true" class="catastrophe">
-            <el-form-item label="Claim ID" prop="claimIndex">
-              <el-select v-model="bigDisaster2.claimIndex" filterable placeholder="please choose" @change="claimChange(bigDisaster2.claimIndex)">
-                <el-option v-for="(item,i) in claimList" :key="i" :label="item.lossNo" :value="i"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Claim Name" v-show="$route.query.tag === 'billEntry'" prop="claimIndex">
-              <el-select v-model="bigDisaster2.claimIndex" disabled filterable placeholder="please choose">
-                <el-option v-for="(item,i) in claimList" :key="i" :label="item.lossName" :value="i"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Headline Loss ID">
-              <el-select v-model="bigDisaster2.headlinelossIndex" filterable placeholder="please choose" @change="headlinelossChange('2',bigDisaster2.headlinelossIndex)">
-                <el-option v-for="(item,i) in headlinelossList2" :key="i" :label="item.lossCode" :value="i"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Headline Loss Name">
-              <el-select v-model="bigDisaster2.headlinelossIndex" filterable placeholder="please choose" disabled>
-                <el-option v-for="(item,i) in headlinelossList2" :key="i" :label="item.lossName" :value="i"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Business ID" prop="businessId">
-              <el-select v-model="bigDisaster2.businessId" filterable placeholder="please choose" @change="businessChange('2',bigDisaster2.businessId)">
-                <el-option v-for="(item,i) in businessList2" :key="i" :label="item.identifier" :value="item.indentifier"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Insured Period" prop="insuredPeriod">
-              <el-select v-model="bigDisaster2.insuredPeriod" filterable placeholder="please choose">
-                <el-option v-for="(item,i) in businessList2" :key="i" :label="item.insrdPeriodStart+'——'+item.insrdPeriodEnd" :value="i"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Section" prop="section">
-              <el-select v-model="bigDisaster2.section" filterable placeholder="please choose">
-                <el-option v-for="(item,i) in businessList2" :key="i" :label="item.sectionName" :value="item.sectionName"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="To be booked in B/L">
-              <el-select v-model="bigDisaster2.bl" filterable placeholder="please choose">
-                <el-option v-for="item in [{a:'NO',b:'0'},{a:'YES',b:'1'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="As Of Date" prop="accAsOfDate"><el-date-picker v-model="bigDisaster2.accAsOfDate" value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-            <el-form-item label="Receive Date"><el-date-picker v-model="bigDisaster2.registTimestamp" value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
-            <el-form-item label="BP Reference"><el-input v-model="bigDisaster2.bpRef" placeholder="please enter"></el-input></el-form-item>
-            <el-form-item label="Currency" prop="fkCurr">
-              <el-select v-model="bigDisaster2.fkCurr" filterable placeholder="please choose">
-                <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="To be Paid"><el-input @blur="numfilter(bigDisaster2.paid,'paid')" v-model="bigDisaster2.paid" placeholder="please enter"></el-input></el-form-item>
-            <el-form-item label="Outstanding"><el-input @blur="numfilter(bigDisaster2.outStanding,'outStanding')" v-model="bigDisaster2.outStanding" placeholder="please enter"></el-input></el-form-item>
-            <el-form-item label="IBNR"><el-input @blur="numfilter(bigDisaster2.ibnr,'ibnr')" v-model="bigDisaster2.ibnr" placeholder="please enter"></el-input></el-form-item>
+            <div class="lineTitle">CLAIM</div>
+            <div class="Wireframe">
+              <el-form-item label="Claim ID" prop="claimIndex">
+                <el-select v-model="bigDisaster2.claimIndex" :disabled="disableFlag" filterable placeholder="please choose" @change="claimChange(bigDisaster2.claimIndex)">
+                  <el-option v-for="(item,i) in claimList" :key="i" :label="item.lossNo" :value="i"></el-option>
+                </el-select>
+              </el-form-item>
+              <!-- <el-form-item label="Claim Name" v-show="$route.query.tag === 'billEntry'" prop="claimIndex">
+                <el-select v-model="bigDisaster2.claimIndex" disabled filterable placeholder="please choose">
+                  <el-option v-for="(item,i) in claimList" :key="i" :label="item.lossName" :value="i"></el-option>
+                </el-select>
+              </el-form-item> -->
+              <el-form-item label="Headline Loss ID">
+                <el-select v-model="bigDisaster2.headlinelossIndex" :disabled="disableFlag" filterable placeholder="please choose" @change="headlinelossChange('2',bigDisaster2.headlinelossIndex)">
+                  <el-option v-for="(item,i) in headlinelossList2" :key="i" :label="item.lossCode" :value="i"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Headline Loss Name">
+                <el-select v-model="bigDisaster2.headlinelossIndex" filterable placeholder="please choose" disabled>
+                  <el-option v-for="(item,i) in headlinelossList2" :key="i" :label="item.lossName" :value="i"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="lineTitle" style="margin-top:20px">BUSINESS</div>
+            <div class="Wireframe">
+              <el-form-item label="Business ID" prop="businessId">
+                <el-select v-model="bigDisaster2.businessId" :disabled="disableFlag" filterable placeholder="please choose" @change="businessChange('2',bigDisaster2.businessId)">
+                  <el-option v-for="(item,i) in businessList2" :key="i" :label="item.identifier" :value="item.indentifier"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Insured Period" prop="insuredPeriod">
+                <el-select v-model="bigDisaster2.insuredPeriod" :disabled="disableFlag" filterable placeholder="please choose">
+                  <el-option v-for="(item,i) in businessList2" :key="i" :label="item.insrdPeriodStart+'——'+item.insrdPeriodEnd" :value="i"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Section" prop="section">
+                <el-select v-model="bigDisaster2.section" :disabled="disableFlag" filterable placeholder="please choose">
+                  <el-option v-for="(item,i) in businessList2" :key="i" :label="item.sectionName" :value="item.sectionName"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="lineTitle" style="margin-top:20px">WORK SHEET</div>
+            <div class="Wireframe">
+              <el-form-item label="To be booked in B/L">
+                <el-select v-model="bigDisaster2.bl" :disabled="disableFlag" filterable placeholder="please choose">
+                  <el-option v-for="item in [{a:'NO',b:'0'},{a:'YES',b:'1'}]" :key="item.b" :label="item.a" :value="item.b"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="As Of Date" prop="accAsOfDate"><el-date-picker :disabled="disableFlag" v-model="bigDisaster2.accAsOfDate" value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+              <el-form-item label="Receive Date"><el-date-picker :disabled="disableFlag" v-model="bigDisaster2.registTimestamp" value-format="timestamp" type="date" placeholder="Please select a date"></el-date-picker></el-form-item>
+              <el-form-item label="BP Reference"><el-input :disabled="disableFlag" v-model="bigDisaster2.bpRef" placeholder="please enter"></el-input></el-form-item>
+              <!-- <el-form-item label="Currency" prop="fkCurr">
+                <el-select v-model="bigDisaster2.fkCurr" :disabled="disableFlag" filterable placeholder="please choose">
+                  <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="To be Paid"><el-input :disabled="disableFlag" @blur="numfilter(bigDisaster2.paid,'paid')" v-model="bigDisaster2.paid" placeholder="please enter"></el-input></el-form-item>
+              <el-form-item label="Outstanding"><el-input :disabled="disableFlag" @blur="numfilter(bigDisaster2.outStanding,'outStanding')" v-model="bigDisaster2.outStanding" placeholder="please enter"></el-input></el-form-item>
+              <el-form-item label="IBNR"><el-input :disabled="disableFlag" @blur="numfilter(bigDisaster2.ibnr,'ibnr')" v-model="bigDisaster2.ibnr" placeholder="please enter"></el-input></el-form-item> -->
+            </div>
+
+            <div class="wrapCurr" style="width: calc(100% - 20px);margin-left:20px;border:1px solid #ccc;border-radius:4px;position:relative;">
+              <el-table border :data="currList" :header-cell-style="{background:'#eee',color:'#606266'}" style="width:100%;">
+                <el-table-column label="Currency" width="300">
+                  <template slot-scope="scope">
+                    <el-select style="position:absolute;z-index:1;top: 5px;" v-model="scope.row.fkCurr" :disabled="disableFlag" filterable placeholder="please choose" @change="currChange(scope.row.fkCurr,scope.$index)">
+                      <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
+                    </el-select>
+                  </template>
+                </el-table-column>
+                <el-table-column label="To be Paid" width="300">
+                  <template slot-scope="scope">
+                    <el-input style="position:absolute;z-index:1;top: 5px;width:200px;" :disabled="disableFlag" @blur="numfilter2(scope.row.paid,'paid',scope.$index)" v-model="scope.row.paid" placeholder="please enter"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="Outstanding" width="300">
+                  <template slot-scope="scope">
+                    <el-input style="position:absolute;z-index:1;top: 5px;width:200px;" :disabled="disableFlag" @blur="numfilter2(scope.row.outStanding,'outStanding',scope.$index)" v-model="scope.row.outStanding" placeholder="please enter"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="IBNR" width="300">
+                  <template slot-scope="scope">
+                    <el-input style="position:absolute;z-index:1;top: 5px;width:200px;" :disabled="disableFlag" @blur="numfilter2(scope.row.ibnr,'ibnr',scope.$index)" v-model="scope.row.ibnr" placeholder="please enter"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column>
+                  <template slot-scope="scope" align="center">
+                    <el-button style="transform:scale(0.6);" size="mini"  @click="currOperate(scope)" :disabled="disableFlag" plain type="danger" circle>—</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-button type="success" size="mini" style="position: absolute;top: 10px;right:90px;" plain @click="currOperate()">+</el-button>
+            </div>
             <el-form-item v-show="$route.query.tag === 'billEntry'" style="width: 100%;text-align: right;padding-right: 50px;">
               <el-button size="small" @click="reset('bigDisaster')">重置</el-button>
-              <el-button type="primary" plain @click="catastropheSubmite2('bigDisaster2')">提交复核</el-button>
+              <el-button type="primary" plain @click="catastropheSubmite2('bigDisaster2')">保存</el-button>
             </el-form-item>
             <el-form-item v-show="$route.query.tag === 'billCheck'" style="width: 100%;text-align: right;padding-right: 50px;">
               <el-button size="small" @click="submit(8)">驳回</el-button>
@@ -1013,22 +1034,22 @@
     </el-dialog>
     <el-dialog title="Clean-Cut" :visible.sync="dialogFormVisiblecleanCut" :close-on-click-modal="modal" width="1200px">
       <el-form label-width="130px" :model="cleanCut" ref="cleanCut" :rules="rules3" :label-position="labelPosition" class="catastrophe">
-        <el-form-item label="赔案编号" prop="refClaimIdentifier"><el-input v-model="cleanCut.refClaimIdentifier" @blur="paNumChange(cleanCut.refClaimIdentifier)" placeholder="请输入"></el-input></el-form-item>
+        <el-form-item label="赔案编号" prop="refClaimIdentifier"><el-input :disabled="disableFlag" v-model="cleanCut.refClaimIdentifier" @blur="paNumChange(cleanCut.refClaimIdentifier)" placeholder="请输入"></el-input></el-form-item>
         <el-form-item label="是否转已决" @change="onPending">
-          <el-radio-group v-model="cleanCut.isPending">
+          <el-radio-group :disabled="disableFlag" v-model="cleanCut.isPending">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="合同编号" prop="identifier">
-          <el-select v-model="cleanCut.identifier" filterable placeholder="请选择">
+          <el-select v-model="cleanCut.identifier" :disabled="disableFlag" filterable placeholder="请选择">
             <el-option v-for="(item,i) in businessList3" :key="i" :label="item.identifier" :value="item.indentifier"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="合同起期" prop="plcyStartDate"><el-date-picker v-model="cleanCut.plcyStartDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
-        <el-form-item label="合同止期" prop="plcyEndDate"><el-date-picker v-model="cleanCut.plcyEndDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="合同起期" prop="plcyStartDate"><el-date-picker :disabled="disableFlag" v-model="cleanCut.plcyStartDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
+        <el-form-item label="合同止期" prop="plcyEndDate"><el-date-picker :disabled="disableFlag" v-model="cleanCut.plcyEndDate" value-format="timestamp" type="date" placeholder="选择日期"></el-date-picker></el-form-item>
         <el-form-item label="Section" prop="fkSoc">
-          <el-select v-model="cleanCut.fkSoc" filterable placeholder="请选择">
+          <el-select v-model="cleanCut.fkSoc" :disabled="disableFlag" filterable placeholder="请选择">
             <el-option v-for="(item,i) in businessList3" :key="i" :label="item.sectionName" :value="item.fkSoc"></el-option>
           </el-select>
         </el-form-item>
@@ -1036,14 +1057,14 @@
           <el-card style="width: calc(100% - 60px);">
             <el-form-item style="width:100%;dispaly:block;">
               <span>币制 </span>
-              <el-select style="height:40px;line-height:40px;width:calc(100% - 50px);" filterable placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount">
+              <el-select :disabled="disableFlag" style="height:40px;line-height:40px;width:calc(100% - 50px);" filterable placeholder="请选择" multiple v-model="makeDocListEctype.yuanType" class="curAmount">
                 <el-option v-for="item in rmCurrencyList" :key="item.alpha" :label="item.alpha" :value="item.alpha"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item style="width:100%;dispaly:block;">
               <div class="wrapInput" v-for="(item,i) in makeDocNum" :key='i'>
                 <span class="bizhi">{{makeDocListEctype.yuanType[i]}} </span>&nbsp;
-                <el-input type="number" style="width:calc(100% - 50px);" v-model="makeDocListEctype.yuanNum[i]" placeholder="请输入金额" size="small"></el-input>
+                <el-input type="number" :disabled="disableFlag" style="width:calc(100% - 50px);" v-model="makeDocListEctype.yuanNum[i]" placeholder="请输入金额" size="small"></el-input>
               </div>
             </el-form-item>
           </el-card>
@@ -1051,7 +1072,7 @@
       </el-form>
       <div slot="footer" v-show="$route.query.tag === 'billEntry'" class="dialog-footer" style="margin-top:10px;">
         <el-button size="small" @click="reset('cleanCut')">重置</el-button>
-        <el-button type="primary" plain @click="catastropheSubmite3('cleanCut')">提交复核</el-button>
+        <el-button type="primary" plain @click="catastropheSubmite3('cleanCut')">保存</el-button>
       </div>
       <div slot="footer" v-show="$route.query.tag === 'billCheck'" class="dialog-footer" style="margin-top:10px;">
         <el-button size="small" @click="submit(8)">驳回</el-button>
@@ -1060,14 +1081,24 @@
     </el-dialog>
   </div>
 </template>
-
-
 <script>
 import { Loading } from "element-ui";
 export default {
   name: "detailEntry",
   data() { 
     return {
+      businessFlag:false,
+      currList:[
+        {accAsOfDate:null,
+        fkCurr:null,
+        paid:null,
+        outStanding:null,
+        ibnr:null,
+        fkSoc:null,},
+      ],
+      disableFlag:false,
+      fileUrl:null,
+      isPdf:false,
       fhSheet2Params:{},
       claimBasisFlag:false,
       ccUser:null,
@@ -1098,6 +1129,8 @@ export default {
       headlinelossList:[],
       bigArr:[],
       bigDisaster:{
+        insurpedPeriod:null,
+        sectionIndex:null,
         claimSort:'0',
         taWorksheetDO:{},
         fkSoc:null,
@@ -1165,7 +1198,7 @@ export default {
         // select
         businessId:[{ required: true, message: "please choose Business ID", trigger: "change" }],
         insuredPeriod:[{ required: true, message: "please choose Insured Period", trigger: "change" }],
-        section:[{ required: true, message: "please choose Section", trigger: "change" }],
+        sectionIndex:[{ required: true, message: "please choose Section", trigger: "blur" }],
         causeOfLossGroup:[{ required: true, message: "please choose Claim Cause Of Loss Group", trigger: "change" }],
         causeOfLoss:[{ required: true, message: "please choose Cause Of Loss", trigger: "change" }],
         riskEvnt:[{ required: true, message: "please choose riskEvnt", trigger: "change" }],
@@ -1309,6 +1342,7 @@ export default {
       dialogFormVisible3: false,
       dialogFormVisible5: false,
       dialogFormVisibleCatastrophe: false,
+      dialogFormVisible0926:false,
       dialogFormVisiblecleanCut: false,
       title: "",
       dialogState: "",
@@ -1338,7 +1372,8 @@ export default {
       subProcessFlag: false,
       billCheckType: null,
       rotateCount:0,
-      rotateCounts:4
+      rotateCounts:4,
+      degreeFlag:0,
     };
   },
   created() {
@@ -1348,6 +1383,7 @@ export default {
   },
   beforeMount(){ this.copy('proNum',1) },
   mounted(){
+    if(this.$route.query.tag=="billCheck"){this.disableFlag=true;}else{this.disableFlag=false;}
     if(this.$route.name === 'detailEntry' || this.$route.name === 'detailCred' || this.$route.name === 'detailPay'){
         this.$store.commit('ChangeFlod',true)
       } else{ this.$store.commit('ChangeFlod',false) }
@@ -1369,10 +1405,50 @@ export default {
     this.getClaimInfo();
   },
   methods: {
+    currOperate(row){
+      if(row){  // 删除
+        this.currList.splice(row.$index,1);        
+        console.log(this.currList,'currList');
+        console.log(row);
+      } else{  // 增加
+        let obj = {
+          accAsOfDate:null,
+          fkCurr:null,
+          paid:null,
+          outStanding:null,
+          ibnr:null,
+          fkSoc:null,
+        }
+        this.currList.push(obj);
+      }
+    },
+    currChange(val,index){
+      if(this.currList.length>1){
+        let num = 0;
+        this.currList.forEach(el=>{
+          if(el.fkCurr==val){
+            num+=1;
+            if(num>1){
+              this.$message.error('不支持相同的币制！');
+              this.currList[index].fkCurr = null;
+            }
+          }
+        })
+      }
+    },
+    riskChange2(){
+      // 1)若出险日期 止期 早于 出险日期 起期 ，则弹出提示框“出险日期止期应晚于出险日期起期！”。
+      if(this.bigDisaster.lossDateEnd && this.bigDisaster.lossDateStart){
+        if(this.bigDisaster.lossDateEnd<this.bigDisaster.lossDateStart){
+          this.bigDisaster.lossDateEnd = null;
+          this.$message.error('出险日期止期应晚于出险日期起期！');
+        }
+      }
+    },
     riskChange(){  // 出险起期    lossDateStart出险起期 lossDateEnd出险止期
       // 3)若出险日期起期晚于当前日期，则弹出提示框“出险日期不允许晚于当前日期！”。
       if(this.bigDisaster.lossDateStart){
-        if(this.bigDisaster.lossDateStart<new Date().getTime()){
+        if(this.bigDisaster.lossDateStart>new Date().getTime()){
           this.$message.error('出险日期不允许晚于当前日期！');
           this.bigDisaster.lossDateStart = null;
         }
@@ -1385,16 +1461,9 @@ export default {
           this.bigDisaster.lossDateStart = null;
         }
       }
-      // 1)若出险日期 止期 早于 出险日期 起期 ，则弹出提示框“出险日期止期应晚于出险日期起期！”。
-      if(this.bigDisaster.lossDateEnd && this.bigDisaster.lossDateStart){
-        if(this.bigDisaster.lossDateEnd<this.bigDisaster.lossDateStart){
-          this.this.bigDisaster.lossDateEnd = null;
-          this.$message.error('出险日期止期应晚于出险日期起期！');
-        }
-      }
       // 4)若 通知日期advisedDate 不在 出险日期 起期 与 当前日期 之内，则弹出提示框“通知日期应在出险日期与当前日期之内！”。
       if(this.bigDisaster.advisedDate && this.bigDisaster.lossDateStart){
-        if(this.bigDisaster.advisedDate>this.bigDisaster.lossDateStart || this.bigDisaster.advisedDate<new Date().getTime()){
+        if(this.bigDisaster.advisedDate<this.bigDisaster.lossDateStart || this.bigDisaster.advisedDate>new Date().getTime()){
           this.$message.error('通知日期应在出险日期与当前日期之内！');
           this.bigDisaster.advisedDate = null;
         }
@@ -1411,55 +1480,29 @@ export default {
       } 
         let filterVal = Number(val).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
         this.bigDisaster2[tag] = filterVal=='NaN'?'':filterVal;
-      
+    },
+    numfilter2(val,tag,index){ 
+      if(tag=='ibnr'){
+        if(Number(val)=='NaN' || Number(val)<0){
+          this.currList[index][tag] = '';
+          this.$message.error('请输入正数');
+          return false;
+        }
+      } 
+        let filterVal = Number(val).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        this.currList[index][tag] = filterVal=='NaN'?'':filterVal;
     },
     getClaimInfo(){
-      // currName: "中路交通财险"
-      // currNo: "BP50276"
-      // fkSoc: "711568A017974EED86D0493215DBECF8"
-      // indentifier: "PIPT1183A"
-      // objectId: "54896F629420459398D8A221D33EDF59"
-      // refName: "Engineering, Liability, Property"
-      // section: "Non-Marine QS & Surplus Treaty 2019"
-      // socIsLeaf: "N"
-      // title: "Zhonglu Non-Marine QS & Surplus Treaty"
-      // typeOfBus: "PROPTTY"
-      // underwritingYear: 2019
-
-      this.$http.post("api/claim/getBusinessMessage",{}).then(res => {
-          if(res.status == 200 && res.data.code==200){
-            this.businessList=res.data.data.rows;
-          }  
-      });
-      // 获取赔案列表Claim ID
-      // this.claimList = [
-      //   {
-      //     currName: "CHINA PACIFIC INS",
-      //     currNo: "BP52950",
-      //     fkSoc: "255741D859394901B9C2797B52401164",
-      //     indentifier: "PIPF31802A",
-      //     lossDate: "2019-07-01 00:00:00",
-      //     lossName: "122112",
-      //     lossNo: "IC201910138222",
-      //     objectId: "84A80D5740144BC0A586371841FD1996",
-      //     refName: "Property",
-      //     section: "Main Section",
-      //     title: "运营 PV 2x612MW Coal Fired Thermal Power Plant at Bangladesh",
-      //     typeOfBus: "PROPFAC",
-      //     underwritingYear: 2022,
-      //   },
-      // ];
       this.$http.post("api/claim/getClaimId",{}).then(res => {
-          if(res.status == 200 && res.data.code==200){
-            this.claimList=res.data.data.rows;
-          }  
+        if(res.status == 200 && res.data.code==200){
+          this.claimList=res.data.data.rows;
+        }
       });
       // getHeadlineId获取巨灾代码
       this.$http.post("api/claim/getHeadlineId",{}).then(res => {
-          console.log(res,'getHeadlineId');
-          if(res.status == 200 && res.data.code==200){
-            this.headlinelossList2=res.data.data.rows;
-          }  
+        if(res.status == 200 && res.data.code==200){
+          this.headlinelossList2=res.data.data.rows;
+        } 
       });
      
     },
@@ -1526,64 +1569,129 @@ export default {
           this.bigDisaster.headlinelossCode = this.headlinelossList[val].lossCode;
           this.bigDisaster.headlinelossName = this.headlinelossList[val].lossName;
         } else{
-          this.bigDisaster2.headlinelossCode = this.headlinelossList2[val].lossCode;
-          this.bigDisaster2.headlinelossName = this.headlinelossList2[val].lossName;
-          // this.$http.get("api/claim/getHeadlineName",{params:{lossCode:this.bigDisaster2.headlinelossCode}}).then(res => {
-          //     if(res.status == 200 && res.data.code==200){
-          //       // this.businessList=res.data.data.rows;
-          //     }  
-          // });
+          // 用lossDate做校验
+          let lossEndDate = new Date(this.headlinelossList2[val].lossEndDate).getTime();
+          let lossStartDate = new Date(this.headlinelossList2[val].lossStartDate).getTime();
+          if(this.claimInfoDO && this.claimInfoDO.lossDate){  // 已选择了claim id
+            let lossDate = new Date(this.claimInfoDO.lossDate).getTime();
+            if(lossDate<lossStartDate || lossDate>lossEndDate){
+              console.log(this.headlinelossList2[val].lossStartDate+'~'+this.headlinelossList2[val].lossEndDate);
+              console.log(this.claimInfoDO.lossDate,'lossDate');
+              this.$message.error('赔案的出险时间应该在巨灾的起止时间之内。');
+              this.bigDisaster2.headlinelossCode = null;
+              this.bigDisaster2.headlinelossName = null;
+              this.bigDisaster2.headlinelossIndex = null;
+               return false;
+            } else{
+              this.bigDisaster2.headlinelossCode = this.headlinelossList2[val].lossCode;
+              this.bigDisaster2.headlinelossName = this.headlinelossList2[val].lossName;
+            }
+          } else{  // 没选 claim id
+            this.bigDisaster2.headlinelossCode = this.headlinelossList2[val].lossCode;
+            this.bigDisaster2.headlinelossName = this.headlinelossList2[val].lossName;
+          }
+          
         }
       }
     },
-    async businessChange(tag,val){
-      if(val!==null && val!==''){
-        // 根据businessId 带出InsuredPeriod的值------再保险合同的起止期 默认值
-        let fkSoc = this.businessList[val]['fkSoc'];
-        this.bigDisaster.fkSoc = fkSoc;
-        this.bigDisaster.refClaimIdentifier = this.businessList[val]['indentifier'];
-        await this.$http.post("api/claim/getInsuredPeriod",{fkSoc:fkSoc}).then(res => { 
-          if(res.status == 200 && res.data.code==200){
-            this.bigDisaster.insuredPeriod=0;
-            this.insuredPeriodList=res.data.data;
-            this.bigDisaster.plcyStartDate = new Date(this.insuredPeriodList[0]['insrdPeriodStart']).getTime();
-            this.bigDisaster.plcyEndDate = new Date(this.insuredPeriodList[0]['insrdPeriodEnd']).getTime();
-          }  
-        });
-        this.$http.post("api/claim/getPcyMessage",{fkSoc:this.bigDisaster.fkSoc}).then(res => {
-          if(res.status == 200 && res.data.code==200){
-            // claimBasis==RISKATT  支持修改原保单起期，否则不允许修改；
-            this.claimBasisFlag = res.data.data.listCmsBussinessInfoDetail[0]['claimBasis']!='RISKATT'; 
-            console.log(this.claimBasisFlag,'this.claimBasisFlag');         
-          }  
-        });
+    onInsuredPeriod(index){
+      // 9.27 更改需求，根据选择的InsuredPeriod，通过选择的fkSoc,来请求section
+      // let fkSoc = this.insuredPeriodList[index]['fkSoc'];
+      let obj = this.insuredPeriodList[index];
 
-        this.$http.post("api/claim/getBusinessMessage",{fkSoc:this.bigDisaster.fkSoc}).then(res => {
-          console.log(res,'getBusinessMessage');
+      // fkSoc: "10ED8A9473E54B47AEC7FABF86A0EC74"
+      // insrdPeriodEnd: "2019-12-31 23:59:59"
+      // insrdPeriodStart: "2019-01-01 00:00:00"
+      // 鱿鱼insuredPeriodList的数据结构是酱紫的，回显的时候以fkSoc为标识；
+      this.bigDisaster.insurpedPeriod = obj.fkSoc;
+
+      this.bigDisaster.plcyStartDate = new Date(obj.insrdPeriodStart).getTime();
+      this.bigDisaster.plcyEndDate = new Date(obj.insrdPeriodEnd).getTime();
+      // 根据选择的InsuredPeriod，通过选择的fkSoc,来请求section
+      this.$http.post("api/claim/getBusinessMessage",{fkSoc:obj.fkSoc}).then(res => {
+          console.log(res,'section');
           if(res.status == 200 && res.data.code==200){
-            this.sectionList=[...res.data.data.rows,...this.businessList];
-          }  
+            if(res.data.data.rows.length){
+              this.sectionList= res.data.data.rows;
+            } else{
+               this.sectionList= [obj];
+            }
+          } else{
+            this.$message({ message: res.data.msg+'无法获取Section数据', type: 'error',duration:2000});
+          }
       });
+
+    },
+    sectionChange(index){
+      this.bigDisaster.fkSoc = this.sectionList[index]['fkSoc'];
+      this.bigDisaster.section = this.sectionList[index]['section'];
+      // claimBasis==RISKATT  支持修改原保单起期，否则不允许修改；-------9.27 用section里的fkSoc校验
+      this.$http.post("api/claim/getPcyMessage",{fkSoc:this.bigDisaster.fkSoc}).then(res => {
+        if(res.status == 200 && res.data.code==200){
+          this.claimBasisFlag = res.data.data.listCmsBussinessInfoDetail[0]['claimBasis']!='RISKATT'; 
+        }  
+      });
+    },
+    async businessChange(tag,val,flag){
+      // 更改：val直接是businessId
+      if(val){
+        // 根据businessId 获取索引
+        let index = null;
+        this.businessList.forEach((el,i)=>{ if(el.identifier == val){ index = i; } })
+        // 获得insuredPeriod列表
+        this.insuredPeriodList = this.businessList[index]['businessList'];
       }
     },
-    async catastrophe(tag){ 
-      if(this.$route.query.tag === 'billEntry'){   // 操作页面
-        this.dialogFormVisibleCatastrophe = true;
-        this.bigDisaster2.registTimestamp = new Date().getTime();
-      } else{  // 复核回显
+    async catastrophe(tag){  // 录入页面，保存完了，未推流程，下次点开也要回显
+      // await this.$http.post("api/claim/getBusinessMessage",{limit:'1000'}).then(res => {
+      await this.$http.post("api/claim/getBusinessMessage",{}).then(res => {
+          if(res.status == 200 && res.data.code==200){
+            this.businessList=res.data.data;
+          }  
+      });
       // claimSort:'0'  bigDisaster
        await this.$http.post("api/claim/getClaimMessageByProcessId",{processId:this.chooseRow.processId,claimSort:'0'}).then(res => {
           if(res.status == 200 && res.data){
             if(Object.keys(res.data).length){
-               if(res.data.businessId!=null&&res.data.businessId!=''){
-                  this.businessChange('1',res.data.businessId);
+              // 返回的businessId===identifier,合同号
+                for(let k in this.bigDisaster){
+                  if(res.data[k]!=null && res.data[k]!=undefined){
+                    this.bigDisaster[k]=res.data[k];
+                  }
                 }
-              for(let k in this.bigDisaster){
-                if(res.data[k]!=null && res.data[k]!=undefined){
-                  this.bigDisaster[k]=res.data[k];
+               if(res.data.businessId){
+                  // this.businessChange('1',res.data.businessId,1);
+                  let index = null;
+                  this.businessList.forEach((el,i)=>{ if(el.identifier == res.data.businessId){ index = i; } })
+                  this.insuredPeriodList = this.businessList[index]['businessList'];
+                  // 回显 insurpedPeriod
+                  if(res.data.insurpedPeriod && this.insuredPeriodList.length){
+                    this.insuredPeriodList.forEach((el,i)=>{
+                      if(res.data.insurpedPeriod==el.fkSoc){
+                        this.bigDisaster.insuredPeriod = i;
+                      }
+                    })
+                    // 回显section
+                    this.$http.post("api/claim/getBusinessMessage",{fkSoc:res.data.insurpedPeriod}).then(res => {
+                      if(res.status == 200 && res.data.code==200){
+                        this.sectionList= res.data.data.rows;
+                        if(!this.sectionList.length){
+                          this.sectionList = [this.insuredPeriodList[this.bigDisaster.insuredPeriod]];
+                          this.bigDisaster.sectionIndex = 0;
+                        } else{
+                          this.sectionList.forEach((el,i)=>{
+                            if(el.fkSoc == this.bigDisaster.fkSoc){ this.bigDisaster.sectionIndex = i; }
+                          })
+                        }
+                        console.log(this.bigDisaster.sectionIndex,'this.bigDisaster.sectionIndex');
+                      } else{
+                        this.$message({ message: res.data.msg+'无法获取Section数据', type: 'error',duration:2000});
+                      }
+                    });
+
+                  }
                 }
-              }
-              this.bigDisaster.businessId = this.bigDisaster.refClaimIdentifier;
+              this.dialogFormVisibleCatastrophe = true;
               // 回显数据后，请求关联数据
              
               if(this.bigDisaster.causeOfLossGroup){
@@ -1603,10 +1711,11 @@ export default {
                   }
                 },2000)
               }
-            }
+            } else{ this.dialogFormVisibleCatastrophe = true; }
           } 
         });
-        this.dialogFormVisibleCatastrophe = true;
+        // setTimeout(()=>{this.dialogFormVisibleCatastrophe = true;},1000);
+        this.bigDisaster2.registTimestamp = new Date().getTime();
       
       // claimSort:'0'  bigDisaster2
        this.$http.post("api/claim/getClaimMessageByProcessId",{processId:this.chooseRow.processId,claimSort:'1'}).then(res => {
@@ -1620,6 +1729,10 @@ export default {
                   this.bigDisaster2[k]=param[k];
                 }
               }
+               // 此处需要回显币制列表
+               if(res.data.taWorksheetDO.balances.length){
+                 this.currList = res.data.taWorksheetDO.balances;
+               }
               // 回显数据后，请求关联数据 
               if(this.bigDisaster2.refClaimIdentifier){
                   this.claimList.forEach((el,i)=>{
@@ -1638,23 +1751,24 @@ export default {
                     }
                   })
               }
+             
 
             }
           } 
         });
         // this.dialogFormVisibleCatastrophe = true;
-      }
+      // }
     },
     catastropheSubmite1(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if(this.$route.query.tag === 'billEntry'){  // 提交复核
+          if(this.$route.query.tag === 'billEntry'){  // 保存
             this.$http.post("api/claim/saveClaim",Object.assign(this.bigDisaster,{processId:this.chooseRow.processId,createdBy:this.$store.state.userName})).then(res => {
               if(res.status == 200 && res.data.code==0){
                 this.$message({message:res.data.msg,type: 'success'});
                 this.dialogFormVisibleCatastrophe = false;
               } else {
-                this.$message.error(res.data.msg);
+                this.$message({ message: res.data.msg, type: 'error',duration:2000});
               }
             });
           } else{  // 通过
@@ -1663,7 +1777,7 @@ export default {
                 this.$message({message:res.data.message,type: 'success'});
                 this.dialogFormVisibleCatastrophe = false;
               } else {
-                this.$message.error(res.data.message);
+                this.$message({ message: res.data.message, type: 'error',duration:2000});
               }
             });
           }
@@ -1686,10 +1800,25 @@ export default {
               }
             }
           }
-          if(this.$route.query.tag === 'billEntry'){  // 提交复核
+          if(this.$route.query.tag === 'billEntry'){  // 保存
             // 校验 To be Paid、Outstanding、IBNR必须输入任一金额，否则弹出提示框“To be Paid、Outstanding、IBNR不允许均为空！”。
-            if(!this.bigDisaster2.paid && !this.bigDisaster2.outStanding && !this.bigDisaster2.ibnr){
-              this.$message.error('To be Paid、Outstanding、IBNR不允许均为空！');
+            // if(!this.bigDisaster2.paid && !this.bigDisaster2.outStanding && !this.bigDisaster2.ibnr){
+            //   this.$message.error('To be Paid、Outstanding、IBNR不允许均为空！');
+            //   return false;
+            // }
+            if(this.currList.length){
+              if(!this.currList.some(el=>{ return !!el.fkCurr; })){
+                this.$message.error('至少选择一个Currency');
+                return false;
+              }
+              for(let i = 0; i < this.currList.length; i++){
+                 if(!this.currList[i].paid && !this.currList[i].outStanding && !this.currList[i].ibnr){
+                    this.$message.error('To be Paid、Outstanding、IBNR不允许均为空！');
+                    return false;
+                  }
+              } 
+            } else{ 
+              this.$message.error('至少选择一个Currency'); 
               return false;
             }
             let params = Object.assign(this.claimInfoDO,this.bigDisaster2,{processId:this.chooseRow.processId,createdBy:this.$store.state.userName});
@@ -1703,23 +1832,29 @@ export default {
               registedId:null,
               closedId:null,
             }
-            let taLedgerBalanceDO={
-              accAsOfDate:null,
-              fkCurr:null,
-              paid:null,
-              outStanding:null,
-              ibnr:null,
-              fkSoc:null,
-            }
+            // let taLedgerBalanceDO={
+            //   accAsOfDate:null,
+            //   fkCurr:null,
+            //   paid:null,
+            //   outStanding:null,
+            //   ibnr:null,
+            //   fkSoc:null,
+            // }
+            
+            this.currList.forEach(el=>{
+              el.accAsOfDate = params.accAsOfDate;
+              el.fkSoc = params.fkSoc;
+            })
             for(let k in taWorksheetDO){taWorksheetDO[k] = params[k];}
-            for(let k in taLedgerBalanceDO){taLedgerBalanceDO[k] = params[k];}
-            taWorksheetDO['balances'] = [taLedgerBalanceDO];
+            // for(let k in taLedgerBalanceDO){taLedgerBalanceDO[k] = params[k];}
+            // taWorksheetDO['balances'] = [taLedgerBalanceDO];
+            taWorksheetDO['balances'] = this.currList;
             this.$http.post("api/claim/saveClaim",{...params,'taWorksheetDO':taWorksheetDO}).then(res => {
               if(res.status == 200 && res.data.code==0){
                 this.$message({message:res.data.msg,type: 'success'});
                 this.dialogFormVisibleCatastrophe = false;
               } else {
-                this.$message.error(res.data.msg);
+                this.$message({ message: res.data.msg, type: 'error',duration:2000});
               }
             });
           } else{  // 通过
@@ -1728,7 +1863,7 @@ export default {
                 this.$message({message:res.data.message,type: 'success'});
                 this.dialogFormVisibleCatastrophe = false;
               } else {
-                this.$message.error(res.data.message);
+                this.$message({ message: res.data.message, type: 'error',duration:2000});
               }
             });
           }
@@ -1739,7 +1874,7 @@ export default {
     catastropheSubmite3(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if(this.$route.query.tag === 'billEntry'){  // 提交复核
+          if(this.$route.query.tag === 'billEntry'){  // 保存
             let balances=[];
             if(this.makeDocListEctype.yuanNum && this.makeDocListEctype.yuanNum.length){
               this.makeDocListEctype.yuanNum.forEach((el,i)=>{
@@ -1754,7 +1889,7 @@ export default {
                 this.$message({message:res.data.message,type: 'success'});
                 this.dialogFormVisiblecleanCut = false;
               } else {
-                this.$message.error(res.data.message);
+                this.$message({ message: res.data.message, type: 'error',duration:2000});
               }
             });
           } else{  // 通过
@@ -1763,7 +1898,7 @@ export default {
                 this.$message({message:res.data.message,type: 'success'});
                 this.dialogFormVisiblecleanCut = false;
               } else {
-                this.$message.error(res.data.message);
+                this.$message({ message: res.data.message, type: 'error',duration:2000});
               }
             });
           }
@@ -1785,6 +1920,7 @@ export default {
         } else{
           for(let k in this.bigDisaster2){this.bigDisaster2[k]=null;}
           this.bigDisaster2.claimSort = '1';
+          this.currList = [];
         }
       } else{  // cleanCut重置
         for(let k in this.cleanCut){this.cleanCut[k]=null;}
@@ -1795,7 +1931,7 @@ export default {
       if(this.$route.query.tag === 'billEntry'){   // 操作页面
         this.dialogFormVisiblecleanCut = true;
       } else{  // 复核
-
+        this.dialogFormVisiblecleanCut = true;
       }
     },
     changeLayout(){
@@ -1963,6 +2099,16 @@ export default {
         case 1:document.querySelector('.browseDoc').className='browseDoc muas4';break;
       }
     },
+    onRotate(tag){
+      if(this.docViewRow){
+        if(this.docViewRow.suffix=='pdf'||this.docViewRow.suffix=='PDF'){
+          tag=='s'?this.degreeFlag+=90:this.degreeFlag-=90;
+          this.fileStream(this.degreeFlag);
+        } else{
+          this.$message.error('只支持pdf格式的旋转');
+        }
+      }
+    },
     reverse(row){
       this.$http.post("api/sics/liveDesktop/openBusiness",{businessId:row.businessId,modifiedBy:this.$store.state.userName})
         .then(res => {
@@ -2036,6 +2182,14 @@ export default {
         if (res.status === 200 && res.data) {
           this.SICSData = res.data;
           this.getBillInfo();
+          if(this.$route.query.tag === 'billEntry'){
+            // this.$http.post(`api/worksheet/wSCheck/checkBusinessId`,{processId: 'TAT690924007',}).then(res => {
+            this.$http.post(`api/worksheet/wSCheck/checkBusinessId`,{processId: this.chooseRow.processId,}).then(res => {
+              if (res.status === 200 && res.data.code==2) { this.$message({ message: res.data.msg, type: 'warning',duration:2000}); }
+            })
+          }
+          
+          
         }
       });
     },
@@ -2173,6 +2327,31 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
         }
       }
     },
+    change0926(){  // 9.26 修改需求的提交
+       if (!this.opinion) {
+          this.$message.error("请选择原因");
+          return;
+        }
+        if (this.opinion == "其它" && !this.textareaOpinion) {
+          this.$message.error("请填写原因");
+          return;
+        }
+        this.$http.post("api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",{
+          processId: this.chooseRow.processId,
+          procInstId: this.chooseRow.processInstId,
+          assignee: this.chooseRow.entryOperator,
+          actOperator: this.chooseRow.curOperator,
+          rejectOpinion:this.opinion == "其它"?`${this.opinion}:${this.textareaOpinion}`:`${this.opinion}`,
+          type: "REJECT"
+        }).then(res=>{
+          if (res.status === 200 && res.data.errorCode == 1) {
+            this.$router.push({ name: this.$route.query.tag });
+          } else if (res.data.errorCode == 0) {
+            this.$message({ type: "error", message: res.data.errorMessage});
+          }
+        })
+
+    },
     submit(tag, name,wsId) {
       this.dialogState = tag;
       this.tagName = name;
@@ -2224,8 +2403,8 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
                       confirmButtonText: "确定",
                       cancelButtonText: "取消",
                       type: "warning"
-                    }).then(() => {
-                      this.$http.post("api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
+                      }).then(() => {
+                        this.$http.post("api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",
                           {
                             processStatus: "SIGNBACK",
                             wsSignbackFlag: "1",
@@ -2415,26 +2594,35 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
               });
           });
           break;
-          case 8: // 复核驳回
-          this.$confirm("是否复核驳回？", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
-          }).then(() => {
-            this.$http.post("api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",{
-              processId: this.chooseRow.processId,
-              procInstId: this.chooseRow.processInstId,
-              assignee: this.chooseRow.entryOperator,
-              actOperator: this.chooseRow.curOperator,
-              type: "REJECT"
-            }).then(res=>{
-              if (res.status === 200 && res.data.errorCode == 1) {
-                this.$router.push({ name: this.$route.query.tag });
-              } else if (res.data.errorCode == 0) {
-                this.$message({ type: "error", message: res.data.errorMessage});
-              }
-            })
-          });
+        case 8: // 复核驳回
+          // TA-910  9.26 李丹琳需求更改：复核驳回时，无账单信息需要填写原因，有账单信息则正常
+          if (this.SICSData == null || !this.SICSData.length) {    
+            // this.$message({ type: "warning", message: "无账单信息" });
+            this.dialogFormVisible0926 = true;
+            this.title = "驳回原因";
+          } else{
+            this.$confirm("是否复核驳回？", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            }).then(() => {
+              this.$http.post("api/worksheet/activitiForWorksheet/commonActivitiForWorksheet",{
+                processId: this.chooseRow.processId,
+                procInstId: this.chooseRow.processInstId,
+                assignee: this.chooseRow.entryOperator,
+                actOperator: this.chooseRow.curOperator,
+                type: "REJECT"
+              }).then(res=>{
+                if (res.status === 200 && res.data.errorCode == 1) {
+                  this.$router.push({ name: this.$route.query.tag });
+                } else if (res.data.errorCode == 0) {
+                  this.$message({ type: "error", message: res.data.errorMessage});
+                }
+              })
+            });
+          }
+          
+          
           break;
       }
     },
@@ -2498,7 +2686,7 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
             this.$message.error("请选择原因");
             return;
           }
-          if (this.opinion == "其它" && !this.opinion) {
+          if (this.opinion == "其它" && !this.textareaOpinion) {
             this.$message.error("请填写原因");
             return;
           }
@@ -2592,8 +2780,7 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
             this.$message({ type: "error", message: "请添加意见" });
             return false;
           }
-          this.$http
-          .post("api/worksheet/wSCheck/update", { wsId:this.remarkRow.wsId,remark:this.textareaOpinion })
+          this.$http.post("api/worksheet/wSCheck/update", { wsId:this.remarkRow.wsId,remark:this.textareaOpinion })
           .then(res => {
             if (res.status === 200 && res.data.code == '0') {
               this.$message({ type: "success", message: res.data.msg });
@@ -2609,35 +2796,46 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
         break;
       }
     },
-   docView(row,index) {
-      this.$forceUpdate();
-      console.log(row)
-      if (row) {
-        let arrr = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT','XLS','xls','ppt','PPT','pptx','PPTX'];
-        this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
-        if(row.suffix && !this.suffixFlag){ return false; }
-        this.docViewRow = row;
-        row.redFlag.flag=true;
-        // this.tableData= this.tableData;
-        this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
+    fileStream(deg){
+      this.$http.post("api/anyShare/fileOperation/previewDocument",{docCloudId:row.docCloudId,degree:deg},{ responseType: "blob" }).then(res => {
           if (res.status == 200) {
-            document.getElementById("iframeId").contentWindow.postMessage(
-              {
-                tokenId: res.data.tokenId,
-                userId: res.data.userId,
-                docCloudId: row.docCloudId,
-                docName: row.docName,
-                ip: res.data.ip,
-                acPort: res.data.acPort,
-                fsPort: res.data.fsPort
-              },
-              "*"
-            );
-            document
-              .getElementById("iframeId")
-              .contentWindow.location.reload(true);
+            this.fileUrl = this.getObjectURL(res.data);
           }
-        });
+        })
+    },
+    docView(row,index) {
+      this.isPdf=false;
+      this.$forceUpdate();
+      if (row) {
+        // 9.25  pdf预览用别的插件
+        // if(row.suffix=='pdf'||row.suffix=='PDF'){
+        //   this.isPdf=true;
+        //   this.fileStream(0);
+        // } else{
+          let arrr = ['doc','DOC','docx','DOCX','pdf','PDF','xlsx','XLSX','txt','TXT','XLS','xls','ppt','PPT','pptx','PPTX'];
+          this.suffixFlag = arrr.some(el=>{ return el==row.suffix; })
+          if(row.suffix && !this.suffixFlag){ return false; }
+          this.docViewRow = row;
+          row.redFlag.flag=true;
+          // this.tableData= this.tableData;
+          this.$http.post("api/anyShare/fileOperation/getLogInInfo").then(res => {
+            if (res.status == 200) {
+              document.getElementById("iframeId").contentWindow.postMessage(
+                {
+                  tokenId: res.data.tokenId,
+                  userId: res.data.userId,
+                  docCloudId: row.docCloudId,
+                  docName: row.docName,
+                  ip: res.data.ip,
+                  acPort: res.data.acPort,
+                  fsPort: res.data.fsPort
+                },
+                "*"
+              );
+              document.getElementById("iframeId").contentWindow.location.reload(true);
+            }
+          });
+        // }
       } else {
         this.docViewRow = {};
         document.getElementById("iframeId").contentWindow.postMessage({}, "*");
@@ -2878,13 +3076,34 @@ Address: China Re Building 1705, No.11 Jinrong Avenue, Xicheng District, Beijing
 </script>
 
 <style scoped>
+/* .xing ::before{
+  content: '*';
+  color: #F56C6C;
+  margin-right: 4px;
+  position: absolute;
+  top: 10px;
+  left: 20px;;
+} */
+.lineTitle{
+  font-weight: 700;
+  color: #01517c;
+  border-left: 3px solid #01517c;
+  padding-left: 10px;
+  margin-left: 20px;
+}
+.Wireframe{
+  padding-top: 25px;
+  border: 1px solid #ccc;
+  width: calc(100% - 20px);
+  margin: 10px 0 10px 20px;
+}
 .el-form-item__label{
   white-space: nowrap;
 }
 .catastrophe .el-form-item{
   width: 32%;
   display: inline-block;
-  margin-bottom: 40px;
+  margin-bottom: 33px;
 }
 .catastrophe .el-form-item .el-select{
   width: 220px;
